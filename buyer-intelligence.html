@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Buyer Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f0e;
+  --ink-2:#141715;
+  --ink-3:#1a1e1d;
+  --paper:#f5f2ec;
+  --cream:#faf8f3;
+  --gold:#c9a84c;
+  --gold-light:#e8d08a;
+  --gold-dim:rgba(201,168,76,0.13);
+  --slate:#3a4a52;
+  --muted:#7a8a82;
+  --border:rgba(255,255,255,0.07);
+  --success:#6dba8f;
+  --warn:#e8a050;
+  --danger:#e8a87c;
+  --indigo:#8b9ee8;
+  --indigo-dim:rgba(139,158,232,0.15);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.3}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.93);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
+.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.8rem;border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-live{display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--success);text-transform:uppercase}
+.nav-live-dot{width:6px;height:6px;background:var(--success);border-radius:50%;animation:pulseDot 2s infinite}
+@keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(109,186,143,0.4)}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(109,186,143,0)}}
+.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.32);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--gold)}
+
+/* HEADER */
+.page-header{padding:2rem 2.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.ph-left{}
+.ph-eyebrow{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.6rem}
+.ph-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold)}
+.ph-title{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--paper);line-height:1.1;margin-bottom:0.4rem}
+.ph-sub{font-size:0.9rem;color:rgba(255,255,255,0.4);max-width:580px;line-height:1.65}
+.ph-right{display:flex;gap:0.65rem;align-items:center}
+
+/* TARGETING / FILTER BAR */
+.filter-bar{padding:1rem 2.25rem;border-bottom:1px solid var(--border);background:rgba(13,15,14,0.5);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap}
+.fb-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.fb-chip{padding:0.4rem 0.85rem;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.55);font-family:var(--sans);font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-weight:500}
+.fb-chip:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.fb-chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.fb-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.82rem;padding:0.4rem 0.7rem;border-radius:2px;outline:none;cursor:pointer}
+.fb-select option{background:var(--ink)}
+.fb-divider{width:1px;height:20px;background:rgba(255,255,255,0.08)}
+
+/* MAIN */
+.main{padding:2rem 2.25rem 4rem}
+
+/* TOP STATS ROW */
+.top-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.ts-card{background:var(--ink-2);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.4rem;position:relative;overflow:hidden;transition:border-color 0.2s}
+.ts-card:hover{border-color:rgba(201,168,76,0.2)}
+.ts-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.5rem;display:flex;align-items:center;justify-content:space-between}
+.ts-label-icon{font-size:0.85rem;opacity:0.7}
+.ts-val{font-family:var(--serif);font-size:1.75rem;font-weight:700;color:var(--paper);line-height:1;margin-bottom:0.35rem}
+.ts-val.indigo{color:var(--indigo)}
+.ts-val.gold{color:var(--gold-light)}
+.ts-sub{font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.4}
+.ts-trend{display:inline-flex;align-items:center;gap:0.2rem;font-family:var(--mono);font-size:0.62rem;margin-top:0.3rem;padding:0.1rem 0.4rem;border-radius:2px;background:rgba(109,186,143,0.12);color:var(--success);border:1px solid rgba(109,186,143,0.2)}
+
+/* GRID LAYOUT */
+.grid{display:grid;grid-template-columns:1fr 340px;gap:1.25rem;margin-bottom:1.25rem}
+
+/* PANEL */
+.panel{background:var(--ink-2);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.panel-hd{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem}
+.panel-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper)}
+.panel-sub{font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:0.15rem}
+.panel-actions{display:flex;gap:0.4rem;align-items:center}
+.panel-link{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:opacity 0.2s;cursor:pointer}
+.panel-link:hover{opacity:0.75}
+
+/* BUYER CARDS */
+.buyer-grid{padding:1rem}
+.buyer-card{
+  background:var(--ink-3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;
+  padding:1.25rem 1.4rem;margin-bottom:0.75rem;
+  transition:all 0.2s;cursor:pointer;
+}
+.buyer-card:last-child{margin-bottom:0}
+.buyer-card:hover{border-color:rgba(201,168,76,0.3);background:#1f2322;transform:translateX(2px)}
+.buyer-card.selected{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+
+.bc-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.bc-avatar{
+  width:46px;height:46px;border-radius:4px;flex-shrink:0;
+  background:var(--indigo-dim);border:1px solid rgba(139,158,232,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:1rem;font-weight:700;color:#b8c5ed;
+}
+.bc-avatar.gold{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);color:var(--gold-light)}
+.bc-avatar.success{background:rgba(109,186,143,0.12);border-color:rgba(109,186,143,0.3);color:var(--success)}
+
+.bc-info{flex:1;min-width:0}
+.bc-name-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;flex-wrap:wrap}
+.bc-name{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper)}
+.bc-verified{font-size:0.7rem;color:var(--gold);flex-shrink:0}
+.bc-sub{font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.03em}
+.bc-tags{display:flex;gap:0.35rem;margin-top:0.5rem;flex-wrap:wrap}
+.bc-tag{font-family:var(--mono);font-size:0.58rem;padding:0.15rem 0.45rem;border-radius:2px;letter-spacing:0.04em;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.07)}
+
+.bc-score{
+  text-align:right;flex-shrink:0;
+}
+.bc-score-ring{
+  width:54px;height:54px;border-radius:50%;
+  background:conic-gradient(var(--success) var(--p),rgba(255,255,255,0.08) 0);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:0.3rem;
+}
+.bc-score-ring::before{
+  content:'';position:absolute;inset:3px;border-radius:50%;background:var(--ink-3);
+}
+.bc-score-num{
+  position:relative;z-index:1;
+  font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--success);
+}
+.bc-score-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.08em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:center}
+
+.bc-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;
+  padding:0.9rem 0;border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.bc-metric-label{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:0.2rem}
+.bc-metric-val{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--paper);line-height:1}
+
+.bc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:0.9rem;flex-wrap:wrap;gap:0.5rem}
+.bc-match-reason{font-size:0.72rem;color:rgba(255,255,255,0.5);line-height:1.5;flex:1;min-width:220px}
+.bc-match-reason b{color:var(--gold-light);font-weight:600}
+.bc-actions{display:flex;gap:0.4rem;flex-shrink:0}
+.bc-btn{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.05em;padding:0.35rem 0.7rem;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;text-transform:uppercase}
+.bc-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.bc-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.bc-btn-gold:hover{background:var(--gold-light);color:var(--ink)}
+
+/* SIDE COLUMN */
+.side-col{display:flex;flex-direction:column;gap:1.25rem}
+
+/* INSIGHT BOX */
+.insight-box{
+  background:linear-gradient(135deg,rgba(201,168,76,0.09),rgba(201,168,76,0.02));
+  border:1px solid rgba(201,168,76,0.25);border-radius:4px;
+  padding:1.25rem 1.4rem;position:relative;overflow:hidden;
+}
+.insight-box::before{content:'';position:absolute;top:0;right:0;width:160px;height:100%;background:radial-gradient(circle at right,rgba(201,168,76,0.12),transparent 70%);pointer-events:none}
+.ib-label{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;position:relative;z-index:1}
+.ib-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--paper);margin-bottom:0.5rem;line-height:1.35;position:relative;z-index:1}
+.ib-text{font-size:0.78rem;color:rgba(255,255,255,0.55);line-height:1.6;position:relative;z-index:1}
+.ib-text b{color:var(--gold-light);font-weight:600}
+.ib-stat{display:flex;align-items:center;gap:0.85rem;margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid rgba(201,168,76,0.15);position:relative;z-index:1}
+.ib-stat-val{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--gold-light);line-height:1}
+.ib-stat-label{font-size:0.7rem;color:rgba(255,255,255,0.45);line-height:1.4}
+
+/* ACTIVITY PANEL */
+.act-list{padding:0.5rem 0}
+.act-item{display:flex;gap:0.75rem;padding:0.7rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s}
+.act-item:last-child{border-bottom:none}
+.act-item:hover{background:rgba(255,255,255,0.02)}
+.act-dot{width:6px;height:6px;border-radius:50%;margin-top:0.55rem;flex-shrink:0;background:var(--gold)}
+.act-dot.buyer{background:var(--indigo)}
+.act-dot.success{background:var(--success)}
+.act-dot.warn{background:var(--warn)}
+.act-content{flex:1;min-width:0}
+.act-title{font-size:0.78rem;color:rgba(255,255,255,0.75);line-height:1.45;margin-bottom:0.15rem}
+.act-title b{color:var(--paper);font-weight:600}
+.act-title .tag{color:var(--gold);font-weight:500}
+.act-time{font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.3);letter-spacing:0.04em}
+
+/* DEAL BY CAPITAL TYPE CHART */
+.pc-section{padding:1.1rem 1.4rem 1.4rem}
+.pc-row{display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0;font-size:0.78rem}
+.pc-label{color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:0.55rem}
+.pc-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.pc-val{font-family:var(--mono);color:rgba(255,255,255,0.7);font-size:0.72rem}
+
+/* STACKED BAR */
+.stacked-bar{display:flex;height:10px;border-radius:2px;overflow:hidden;margin-bottom:1rem;background:rgba(255,255,255,0.04)}
+.stacked-bar > div{transition:width 0.5s ease}
+
+/* RECENT TX TABLE */
+.tx-list{padding:0 1.4rem 1rem}
+.tx-item{display:flex;align-items:center;gap:0.85rem;padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.tx-item:last-child{border-bottom:none}
+.tx-thumb{width:34px;height:34px;border-radius:3px;flex-shrink:0;background:var(--ink-3);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:0.85rem}
+.tx-info{flex:1;min-width:0}
+.tx-addr{font-size:0.78rem;color:var(--paper);font-weight:600;margin-bottom:0.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-sub{font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.35);letter-spacing:0.03em}
+.tx-price{font-family:var(--serif);font-size:0.9rem;color:var(--gold-light);font-weight:700;text-align:right;flex-shrink:0}
+.tx-price-sub{font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);text-align:right}
+
+/* BUYER PROFILE (selected) */
+.profile-modal{display:none}
+.profile-modal.open{display:block}
+
+/* Animations */
+.fade-up{opacity:0;transform:translateY(8px);animation:fadeUp 0.45s ease forwards}
+.fade-up:nth-child(1){animation-delay:0.05s}
+.fade-up:nth-child(2){animation-delay:0.1s}
+.fade-up:nth-child(3){animation-delay:0.15s}
+.fade-up:nth-child(4){animation-delay:0.2s}
+.fade-up:nth-child(5){animation-delay:0.25s}
+.fade-up:nth-child(6){animation-delay:0.3s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+/* Privacy banner */
+.privacy-banner{
+  margin-top:2rem;padding:1rem 1.4rem;
+  background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:4px;
+  font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.6;font-family:var(--mono);letter-spacing:0.02em;
+  display:flex;align-items:flex-start;gap:0.85rem;
+}
+.privacy-icon{color:var(--gold);flex-shrink:0}
+
+/* Responsive */
+@media(max-width:1100px){
+  .grid{grid-template-columns:1fr}
+  .top-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .page-header{padding:1.5rem 1.25rem 1rem}
+  .filter-bar{padding:0.85rem 1.25rem}
+  .main{padding:1.5rem 1.25rem 3rem}
+  .top-stats{grid-template-columns:1fr}
+  .bc-metrics{grid-template-columns:1fr 1fr}
+  .bc-top{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
+  <span class="nav-badge">Buyer Intelligence</span>
+  <div class="nav-right">
+    <span class="nav-live"><span class="nav-live-dot"></span>Live Data</span>
+    <a href="dashboard.html" class="nav-back">← Dashboard</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="ph-left">
+    <div class="ph-eyebrow">Data Intelligence Layer</div>
+    <h1 class="ph-title">Buyer Intelligence Engine</h1>
+    <p class="ph-sub">Identify and understand the real buyers in your submarket — based on transaction history, ownership patterns, and acquisition behavior.</p>
+  </div>
+  <div class="ph-right">
+    <button class="fb-chip" style="padding:0.55rem 1rem">⬆ Export List</button>
+    <button class="fb-chip active" style="padding:0.55rem 1rem;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700">Target Buyers →</button>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="fb-label">Matching</span>
+  <select class="fb-select" id="propertySelect">
+    <option value="all">All My Properties</option>
+    <option value="bedford" selected>142 Bedford Ave (Williamsburg)</option>
+    <option value="grand">88 Grand Street (Bushwick)</option>
+    <option value="prospect">320 Prospect Ave (Crown Heights)</option>
+  </select>
+  <div class="fb-divider"></div>
+  <span class="fb-label">Filter</span>
+  <button class="fb-chip active">All Types</button>
+  <button class="fb-chip">Institutional</button>
+  <button class="fb-chip">Private Investor</button>
+  <button class="fb-chip">Family Office</button>
+  <button class="fb-chip">Owner-Operator</button>
+  <div class="fb-divider"></div>
+  <span class="fb-label">Price Range</span>
+  <select class="fb-select">
+    <option>$1M – $5M</option>
+    <option>$5M – $15M</option>
+    <option>$15M+</option>
+    <option>Any</option>
+  </select>
+  <div class="fb-divider"></div>
+  <span class="fb-label">Sort</span>
+  <select class="fb-select">
+    <option>Match Score (High → Low)</option>
+    <option>Recent Activity</option>
+    <option>Deal Volume</option>
+    <option>Avg. Price Match</option>
+  </select>
+</div>
+
+<div class="main">
+
+  <!-- TOP STATS -->
+  <div class="top-stats">
+    <div class="ts-card fade-up">
+      <div class="ts-label"><span>Active Buyers in Your Submarket</span><span class="ts-label-icon">◉</span></div>
+      <div class="ts-val indigo">247</div>
+      <div class="ts-sub">Tracked across Williamsburg, Bushwick & Crown Heights</div>
+      <span class="ts-trend">↑ 18 this quarter</span>
+    </div>
+    <div class="ts-card fade-up">
+      <div class="ts-label"><span>Matched to Your Portfolio</span><span class="ts-label-icon">◈</span></div>
+      <div class="ts-val gold">12</div>
+      <div class="ts-sub">≥85% match score · ready to target</div>
+      <span class="ts-trend">↑ 3 new matches</span>
+    </div>
+    <div class="ts-card fade-up">
+      <div class="ts-label"><span>Avg. Days to Close</span><span class="ts-label-icon">◐</span></div>
+      <div class="ts-val">47 <span style="font-size:0.85rem;color:rgba(255,255,255,0.4);font-weight:400">days</span></div>
+      <div class="ts-sub">Submarket avg for 6–8 unit multifamily</div>
+      <span class="ts-trend">↓ 12 days vs last year</span>
+    </div>
+    <div class="ts-card fade-up">
+      <div class="ts-label"><span>Avg. Deal Size</span><span class="ts-label-icon">◆</span></div>
+      <div class="ts-val">$3.4M</div>
+      <div class="ts-sub">Trailing 12 months, your price band</div>
+      <span class="ts-trend">↑ 8.2% YoY</span>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid">
+
+    <!-- BUYERS LIST -->
+    <div class="panel fade-up">
+      <div class="panel-hd">
+        <div>
+          <div class="panel-title">Top Matched Buyers</div>
+          <div class="panel-sub">For 142 Bedford Ave · Williamsburg · 6 units · ~$3.2M</div>
+        </div>
+        <div class="panel-actions">
+          <span style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">12 MATCHES</span>
+        </div>
+      </div>
+
+      <div class="buyer-grid">
+
+        <!-- BUYER 1 -->
+        <div class="buyer-card">
+          <div class="bc-top">
+            <div class="bc-avatar">CP</div>
+            <div class="bc-info">
+              <div class="bc-name-row">
+                <span class="bc-name">Cooper Properties LLC</span>
+                <span class="bc-verified">◆ Verified</span>
+              </div>
+              <div class="bc-sub">Private Investor · Brooklyn, NY · Est. 2014</div>
+              <div class="bc-tags">
+                <span class="bc-tag">Williamsburg Focus</span>
+                <span class="bc-tag">Value-Add</span>
+                <span class="bc-tag">$2M – $5M Range</span>
+                <span class="bc-tag">All-Cash Buyer</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 338deg"><span class="bc-score-num">94</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+          <div class="bc-metrics">
+            <div><div class="bc-metric-label">Acquisitions (24m)</div><div class="bc-metric-val">14</div></div>
+            <div><div class="bc-metric-label">Avg. Deal Size</div><div class="bc-metric-val">$3.1M</div></div>
+            <div><div class="bc-metric-label">Units Owned</div><div class="bc-metric-val">86</div></div>
+            <div><div class="bc-metric-label">Last Purchase</div><div class="bc-metric-val">6 wk ago</div></div>
+          </div>
+          <div class="bc-footer">
+            <div class="bc-match-reason">
+              <b>Strong match:</b> Acquired 4 properties within 0.8mi of Bedford Ave in the past 18 months. Current portfolio matches your unit count and building class.
+            </div>
+            <div class="bc-actions">
+              <button class="bc-btn">View Profile</button>
+              <button class="bc-btn bc-btn-gold">Request Intro</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUYER 2 -->
+        <div class="buyer-card">
+          <div class="bc-top">
+            <div class="bc-avatar gold">RE</div>
+            <div class="bc-info">
+              <div class="bc-name-row">
+                <span class="bc-name">Regent Equity Partners</span>
+                <span class="bc-verified">◆ Verified</span>
+              </div>
+              <div class="bc-sub">Institutional · Manhattan, NY · Est. 2008</div>
+              <div class="bc-tags">
+                <span class="bc-tag">Multi-Submarket</span>
+                <span class="bc-tag">Stabilized Assets</span>
+                <span class="bc-tag">$2M – $8M Range</span>
+                <span class="bc-tag">Conventional Financing</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 320deg"><span class="bc-score-num">89</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+          <div class="bc-metrics">
+            <div><div class="bc-metric-label">Acquisitions (24m)</div><div class="bc-metric-val">22</div></div>
+            <div><div class="bc-metric-label">Avg. Deal Size</div><div class="bc-metric-val">$4.2M</div></div>
+            <div><div class="bc-metric-label">Units Owned</div><div class="bc-metric-val">184</div></div>
+            <div><div class="bc-metric-label">Last Purchase</div><div class="bc-metric-val">3 wk ago</div></div>
+          </div>
+          <div class="bc-footer">
+            <div class="bc-match-reason">
+              <b>Actively acquiring:</b> Closed 3 Brooklyn multifamily deals this quarter, including one in Williamsburg. Known for quick decisions and clean financing.
+            </div>
+            <div class="bc-actions">
+              <button class="bc-btn">View Profile</button>
+              <button class="bc-btn bc-btn-gold">Request Intro</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUYER 3 -->
+        <div class="buyer-card">
+          <div class="bc-top">
+            <div class="bc-avatar success">ST</div>
+            <div class="bc-info">
+              <div class="bc-name-row">
+                <span class="bc-name">Stonebridge Capital</span>
+                <span class="bc-verified">◆ Verified</span>
+              </div>
+              <div class="bc-sub">Family Office · New York, NY · Est. 2011</div>
+              <div class="bc-tags">
+                <span class="bc-tag">Williamsburg / Bushwick</span>
+                <span class="bc-tag">Value-Add</span>
+                <span class="bc-tag">$1.5M – $4M Range</span>
+                <span class="bc-tag">Repositioning Focus</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 313deg"><span class="bc-score-num">87</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+          <div class="bc-metrics">
+            <div><div class="bc-metric-label">Acquisitions (24m)</div><div class="bc-metric-val">9</div></div>
+            <div><div class="bc-metric-label">Avg. Deal Size</div><div class="bc-metric-val">$2.8M</div></div>
+            <div><div class="bc-metric-label">Units Owned</div><div class="bc-metric-val">52</div></div>
+            <div><div class="bc-metric-label">Last Purchase</div><div class="bc-metric-val">2 mo ago</div></div>
+          </div>
+          <div class="bc-footer">
+            <div class="bc-match-reason">
+              <b>Pattern match:</b> 7 of their last 9 purchases were pre-war multifamily in your submarket. Historically targets below-market rent with upside potential.
+            </div>
+            <div class="bc-actions">
+              <button class="bc-btn">View Profile</button>
+              <button class="bc-btn bc-btn-gold">Request Intro</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUYER 4 -->
+        <div class="buyer-card">
+          <div class="bc-top">
+            <div class="bc-avatar">MD</div>
+            <div class="bc-info">
+              <div class="bc-name-row">
+                <span class="bc-name">Meridian Holdings Group</span>
+              </div>
+              <div class="bc-sub">Owner-Operator · Brooklyn, NY · Est. 2016</div>
+              <div class="bc-tags">
+                <span class="bc-tag">North Brooklyn</span>
+                <span class="bc-tag">Long-Term Hold</span>
+                <span class="bc-tag">$2M – $6M Range</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 306deg"><span class="bc-score-num">85</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+          <div class="bc-metrics">
+            <div><div class="bc-metric-label">Acquisitions (24m)</div><div class="bc-metric-val">6</div></div>
+            <div><div class="bc-metric-label">Avg. Deal Size</div><div class="bc-metric-val">$3.5M</div></div>
+            <div><div class="bc-metric-label">Units Owned</div><div class="bc-metric-val">38</div></div>
+            <div><div class="bc-metric-label">Last Purchase</div><div class="bc-metric-val">4 mo ago</div></div>
+          </div>
+          <div class="bc-footer">
+            <div class="bc-match-reason">
+              <b>Geographic fit:</b> All acquisitions within 2 miles of Bedford Ave. Portfolio concentration and long-term hold strategy align with stabilized assets.
+            </div>
+            <div class="bc-actions">
+              <button class="bc-btn">View Profile</button>
+              <button class="bc-btn bc-btn-gold">Request Intro</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUYER 5 -->
+        <div class="buyer-card">
+          <div class="bc-top">
+            <div class="bc-avatar gold">AS</div>
+            <div class="bc-info">
+              <div class="bc-name-row">
+                <span class="bc-name">Ascent Realty Partners</span>
+                <span class="bc-verified">◆ Verified</span>
+              </div>
+              <div class="bc-sub">Institutional · New York, NY · Est. 2005</div>
+              <div class="bc-tags">
+                <span class="bc-tag">Citywide</span>
+                <span class="bc-tag">Class B / Value-Add</span>
+                <span class="bc-tag">$3M – $12M Range</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 295deg"><span class="bc-score-num">82</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+          <div class="bc-metrics">
+            <div><div class="bc-metric-label">Acquisitions (24m)</div><div class="bc-metric-val">31</div></div>
+            <div><div class="bc-metric-label">Avg. Deal Size</div><div class="bc-metric-val">$5.7M</div></div>
+            <div><div class="bc-metric-label">Units Owned</div><div class="bc-metric-val">340+</div></div>
+            <div><div class="bc-metric-label">Last Purchase</div><div class="bc-metric-val">1 wk ago</div></div>
+          </div>
+          <div class="bc-footer">
+            <div class="bc-match-reason">
+              <b>High volume:</b> Most active institutional buyer in your zip code over the past 24 months. Strong balance sheet for quick execution.
+            </div>
+            <div class="bc-actions">
+              <button class="bc-btn">View Profile</button>
+              <button class="bc-btn bc-btn-gold">Request Intro</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUYER 6 (partial - locked behind upgrade) -->
+        <div class="buyer-card" style="opacity:0.55;position:relative;cursor:not-allowed">
+          <div style="position:absolute;inset:0;background:rgba(13,15,14,0.5);display:flex;align-items:center;justify-content:center;border-radius:4px;backdrop-filter:blur(2px);z-index:2;pointer-events:none">
+            <div style="text-align:center">
+              <div style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:0.5rem;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);padding:0.35rem 0.75rem;border-radius:2px;display:inline-block">◆ 7 More Matches</div>
+              <div style="font-size:0.78rem;color:var(--paper);">Unlock with Buyer Intelligence subscription</div>
+            </div>
+          </div>
+          <div class="bc-top">
+            <div class="bc-avatar">▓▓</div>
+            <div class="bc-info">
+              <div class="bc-name-row"><span class="bc-name">████████ Partners</span></div>
+              <div class="bc-sub">Family Office · ████████, NY</div>
+              <div class="bc-tags">
+                <span class="bc-tag">████████</span>
+                <span class="bc-tag">████████</span>
+              </div>
+            </div>
+            <div class="bc-score">
+              <div class="bc-score-ring" style="--p: 284deg"><span class="bc-score-num">79</span></div>
+              <div class="bc-score-label">Match</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SIDE COLUMN -->
+    <div class="side-col">
+
+      <!-- AI INSIGHT -->
+      <div class="insight-box fade-up">
+        <div class="ib-label">◈ Intent Signal Alert</div>
+        <div class="ib-title">Cooper Properties is likely to buy in the next 45 days.</div>
+        <div class="ib-text">
+          Based on their acquisition cadence and <b>recent LTV capacity</b>, Cooper Properties is pattern-positioned to close a Williamsburg deal before end of quarter. Your property fits their exact criteria.
+        </div>
+        <div class="ib-stat">
+          <div class="ib-stat-val">94%</div>
+          <div class="ib-stat-label">Probability of active search period based on behavioral signals</div>
+        </div>
+      </div>
+
+      <!-- BUYER POOL BREAKDOWN -->
+      <div class="panel fade-up">
+        <div class="panel-hd">
+          <div>
+            <div class="panel-title">Buyer Pool Breakdown</div>
+            <div class="panel-sub">247 active buyers · Williamsburg submarket</div>
+          </div>
+        </div>
+        <div class="pc-section">
+          <div class="stacked-bar">
+            <div style="width:32%;background:var(--indigo)"></div>
+            <div style="width:28%;background:var(--gold)"></div>
+            <div style="width:22%;background:var(--success)"></div>
+            <div style="width:18%;background:rgba(255,255,255,0.3)"></div>
+          </div>
+          <div class="pc-row"><div class="pc-label"><span class="pc-dot" style="background:var(--indigo)"></span>Private Investors</div><div class="pc-val">79 · 32%</div></div>
+          <div class="pc-row"><div class="pc-label"><span class="pc-dot" style="background:var(--gold)"></span>Institutional</div><div class="pc-val">69 · 28%</div></div>
+          <div class="pc-row"><div class="pc-label"><span class="pc-dot" style="background:var(--success)"></span>Family Offices</div><div class="pc-val">54 · 22%</div></div>
+          <div class="pc-row"><div class="pc-label"><span class="pc-dot" style="background:rgba(255,255,255,0.3)"></span>Owner-Operators</div><div class="pc-val">45 · 18%</div></div>
+        </div>
+      </div>
+
+      <!-- RECENT TRANSACTIONS -->
+      <div class="panel fade-up">
+        <div class="panel-hd">
+          <div>
+            <div class="panel-title">Recent Comparable Sales</div>
+            <div class="panel-sub">Williamsburg · Last 90 days</div>
+          </div>
+          <a class="panel-link">View All</a>
+        </div>
+        <div class="tx-list">
+          <div class="tx-item">
+            <div class="tx-thumb">◫</div>
+            <div class="tx-info">
+              <div class="tx-addr">208 N 8th Street</div>
+              <div class="tx-sub">6 units · 5,400 SF · 5.2% cap</div>
+            </div>
+            <div>
+              <div class="tx-price">$3.4M</div>
+              <div class="tx-price-sub">Closed 12d ago</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-thumb">◫</div>
+            <div class="tx-info">
+              <div class="tx-addr">65 Havemeyer St</div>
+              <div class="tx-sub">8 units · 6,100 SF · 4.9% cap</div>
+            </div>
+            <div>
+              <div class="tx-price">$4.2M</div>
+              <div class="tx-price-sub">Closed 28d ago</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-thumb">◫</div>
+            <div class="tx-info">
+              <div class="tx-addr">310 Berry Street</div>
+              <div class="tx-sub">6 units · 5,100 SF · 5.0% cap</div>
+            </div>
+            <div>
+              <div class="tx-price">$3.1M</div>
+              <div class="tx-price-sub">Closed 45d ago</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-thumb">◫</div>
+            <div class="tx-info">
+              <div class="tx-addr">189 Wythe Ave</div>
+              <div class="tx-sub">7 units · 5,800 SF · 5.1% cap</div>
+            </div>
+            <div>
+              <div class="tx-price">$3.75M</div>
+              <div class="tx-price-sub">Closed 67d ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div class="panel fade-up">
+        <div class="panel-hd">
+          <div>
+            <div class="panel-title">Buyer Activity</div>
+            <div class="panel-sub">Real-time signals</div>
+          </div>
+        </div>
+        <div class="act-list">
+          <div class="act-item">
+            <div class="act-dot buyer"></div>
+            <div class="act-content">
+              <div class="act-title"><b>Cooper Properties</b> <span class="tag">viewed your property listing</span></div>
+              <div class="act-time">23 minutes ago</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot success"></div>
+            <div class="act-content">
+              <div class="act-title"><b>Ascent Realty</b> <span class="tag">closed a $5.2M deal nearby</span></div>
+              <div class="act-time">1 hour ago</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot buyer"></div>
+            <div class="act-content">
+              <div class="act-title"><b>3 new buyers</b> entered your match threshold</div>
+              <div class="act-time">4 hours ago</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot warn"></div>
+            <div class="act-content">
+              <div class="act-title"><b>Regent Equity</b> increased activity 2.4× in Brooklyn</div>
+              <div class="act-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-dot"></div>
+            <div class="act-content">
+              <div class="act-title">New comp: <b>$4.2M Havemeyer sale</b> updates your pricing</div>
+              <div class="act-time">2 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRIVACY BANNER -->
+  <div class="privacy-banner">
+    <span class="privacy-icon">⬡</span>
+    <div>
+      <span style="color:var(--gold);font-weight:600">PRIVACY & DATA:</span>
+      Buyer profiles are aggregated from publicly available transaction records, ownership data, and verified business filings. BRIC Studios does not share your identity, property details, or contact information with buyers without your explicit consent. All introductions are owner-initiated and owner-controlled.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Buyer card click - visual feedback
+document.querySelectorAll('.buyer-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    document.querySelectorAll('.buyer-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  });
+});
+
+// Filter chip clicks
+document.querySelectorAll('.fb-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    // only within same group
+    const siblings = chip.parentElement.querySelectorAll('.fb-chip');
+    // all chips in filter bar toggle on a simple group basis via data attr would be better; here: by position
+  });
+});
+
+// Intro button alert demo
+document.querySelectorAll('.bc-btn-gold').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const card = btn.closest('.buyer-card');
+    const name = card.querySelector('.bc-name').textContent;
+    btn.textContent = '✓ Request Sent';
+    btn.style.background = 'rgba(109,186,143,0.15)';
+    btn.style.color = 'var(--success)';
+    btn.style.borderColor = 'rgba(109,186,143,0.3)';
+    btn.disabled = true;
+  });
+});
+
+document.querySelectorAll('.bc-btn:not(.bc-btn-gold)').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+});
+</script>
+</body>
+</html>
