@@ -395,9 +395,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <nav class="sb-section">
       <div class="sb-label">Workspace</div>
       <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
-      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="propertyCountBadge">3</span></a>
-      <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
-      <a class="sb-item"><span class="sb-icon">◈</span> Saved Reports</a>
+      <a class="sb-item" href="#propertiesSection"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="propertyCountBadge">0</span></a>
+      <a class="sb-item" href="#activitySection"><span class="sb-icon">⬥</span> Activity <span class="sb-badge" id="activityCountBadge">0</span></a>
+      <a class="sb-item" href="#reportsSection"><span class="sb-icon">◈</span> Saved Reports <span class="sb-badge" id="reportCountBadge">0</span></a>
 
       <div class="sb-label" style="margin-top:0.75rem">Studios</div>
       <a class="sb-item" href="valuation.html"><span class="sb-icon">▲</span> Valuation Studio</a>
@@ -506,7 +506,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="grid-2">
 
         <!-- Properties Table -->
-        <div class="panel">
+        <div class="panel" id="propertiesSection">
           <div class="panel-hd">
             <div class="panel-title">Your Properties</div>
             <a class="panel-link">View All →</a>
@@ -592,7 +592,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="panel-title">Quick Actions</div>
           </div>
           <div class="qa-list">
-            <a href="valuation.html" class="qa-item">
+            <a href="valuation-updated-v11.html" class="qa-item">
               <div class="qa-icon">▲</div>
               <div class="qa-text">
                 <div class="qa-name">Run a Valuation</div>
@@ -600,7 +600,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               </div>
               <span class="qa-arrow">→</span>
             </a>
-            <a href="om-studio.html" class="qa-item">
+            <a href="om-studio-updated-v2.html" class="qa-item">
               <div class="qa-icon">▤</div>
               <div class="qa-text">
                 <div class="qa-name">Generate OM</div>
@@ -684,12 +684,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         </div>
 
         <!-- Activity Feed -->
-        <div class="panel">
+        <div class="panel" id="activitySection">
           <div class="panel-hd">
             <div class="panel-title">Recent Activity</div>
             <a class="panel-link">View All</a>
           </div>
-          <div class="feed-list">
+          <div class="feed-list" id="activityFeed">
             <div class="feed-item">
               <div class="feed-dot buyer"></div>
               <div class="feed-content">
@@ -826,12 +826,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <script>
-
 function getWorkspace(){
   try{return JSON.parse(localStorage.getItem('bricWorkspaceV1'))||{properties:[],valuations:[],oms:[],activity:[]}}catch(e){return {properties:[],valuations:[],oms:[],activity:[]}}
 }
 function fmtCompact(n){n=Number(n)||0;if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=1000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()}
-function esc(v){return String(v||'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function esc(v){return String(v||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function calcPerf(property){
   const base=property.lastValuationValue||0, noi=property.lastNoi||0;
   if(!base||!noi) return 72;
@@ -844,32 +843,97 @@ function statusClass(status){
   if(status.includes('listed')) return 'status-listed';
   return 'status-analyzing';
 }
-function renderWorkspaceProperties(){
-  const ws=getWorkspace();
+function timeAgo(iso){
+  const t=new Date(iso||Date.now()).getTime();
+  const diff=Math.max(0, Date.now()-t);
+  const mins=Math.floor(diff/60000);
+  if(mins<1) return 'Just now';
+  if(mins<60) return mins+' minute'+(mins===1?'':'s')+' ago';
+  const hrs=Math.floor(mins/60);
+  if(hrs<24) return hrs+' hour'+(hrs===1?'':'s')+' ago';
+  const days=Math.floor(hrs/24);
+  if(days<30) return days+' day'+(days===1?'':'s')+' ago';
+  return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function reportMetaLabel(item){
+  if(item.kind==='valuation') return 'Valuation';
+  if(item.kind==='om') return 'OM Draft';
+  return 'Report';
+}
+function buildPropertyRow(p){
+  const perf=calcPerf(p);
+  const sub=[p.submarket||'Submarket', p.units?`${p.units} units`:null].filter(Boolean).join(' · ');
+  const valuationHref=`valuation-updated-v11.html?propertyId=${encodeURIComponent(p.id)}`;
+  return `<tr onclick="window.location.href='${valuationHref}'"><td><div class="p-name"><div class="p-thumb">◫</div><div class="p-name-text"><div class="p-addr">${esc(p.address)}</div><div class="p-sub">${esc(sub)}</div></div></div></td><td class="num">${fmtCompact(p.lastValuationValue||0)}</td><td class="num">${fmtCompact(p.lastNoi||0)}</td><td><div class="perf-mini"><div class="perf-bar"><div class="perf-fill" style="width:${perf}%"></div></div><span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perf}</span></div></td><td><span class="status-pill ${statusClass(p.status)}">● ${esc(p.status||'Analyzing')}</span></td></tr>`;
+}
+function renderWorkspaceProperties(ws){
   const body=document.getElementById('propertiesTableBody');
   if(!body) return;
   const props=(ws.properties||[]).slice().sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
   const badge=document.getElementById('propertyCountBadge');
   if(badge) badge.textContent=String(props.length||0);
-  if(!props.length) return;
-  body.innerHTML=props.map(p=>{
-    const perf=calcPerf(p);
-    const sub=[p.submarket||'Submarket', p.units?`${p.units} units`:null].filter(Boolean).join(' · ');
-    return `<tr onclick="window.location.href='valuation-updated.html?propertyId=${encodeURIComponent(p.id)}'">
-      <td><div class="p-name"><div class="p-thumb">◫</div><div class="p-name-text"><div class="p-addr">${esc(p.address)}</div><div class="p-sub">${esc(sub)}</div></div></div></td>
-      <td class="num">${fmtCompact(p.lastValuationValue||0)}</td>
-      <td class="num">${fmtCompact(p.lastNoi||0)}</td>
-      <td><div class="perf-mini"><div class="perf-bar"><div class="perf-fill" style="width:${perf}%"></div></div><span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perf}</span></div></td>
-      <td><span class="status-pill ${statusClass(p.status)}">● ${esc(p.status||'Analyzing')}</span></td>
-    </tr>`;
-  }).join('');
+  if(!props.length){
+    body.innerHTML=`<tr><td colspan="5"><div class="empty-note">No saved properties yet. Run a valuation and click <b>Save to Dashboard</b> to create your first property workspace.</div></td></tr>`;
+    return;
+  }
+  body.innerHTML=props.map(buildPropertyRow).join('');
 }
-
-// Set today's date
+function activityDotClass(type){
+  if(type==='om_saved') return 'warn';
+  if(type==='valuation_saved') return 'success';
+  return 'buyer';
+}
+function activityText(item){
+  const address=esc(item.address||'this property');
+  if(item.type==='valuation_saved') return `Valuation saved for <b>${address}</b>`;
+  if(item.type==='om_saved') return `OM draft saved for <b>${address}</b>`;
+  return esc(item.detail||'Workspace updated');
+}
+function renderActivity(ws){
+  const list=document.getElementById('activityFeed');
+  const badge=document.getElementById('activityCountBadge');
+  const items=(ws.activity||[]).slice().sort((a,b)=>new Date(b.time||0)-new Date(a.time||0)).slice(0,8);
+  if(badge) badge.textContent=String((ws.activity||[]).length||0);
+  if(!list) return;
+  if(!items.length){
+    list.innerHTML=`<div class="feed-item"><div class="feed-dot"></div><div class="feed-content"><div class="feed-title">No activity yet. Saved valuations and OM drafts will show up here.</div><div class="feed-time">Waiting for first save</div></div></div>`;
+    return;
+  }
+  list.innerHTML=items.map(item=>`<div class="feed-item"><div class="feed-dot ${activityDotClass(item.type)}"></div><div class="feed-content"><div class="feed-title">${activityText(item)}</div><div class="feed-time">${timeAgo(item.time)}</div></div></div>`).join('');
+}
+function buildReportItems(ws){
+  const vals=(ws.valuations||[]).map(v=>({kind:'valuation',id:v.id,propertyId:v.propertyId,address:v.address||'Untitled Property',updatedAt:v.updatedAt||v.time||new Date().toISOString(),value:v.baseVal||0,sub:(v.submarket||'Valuation')+(v.noi!=null?` · NOI ${fmtCompact(v.noi)}`:'')}));
+  const oms=(ws.oms||[]).map(o=>({kind:'om',id:o.id,propertyId:o.propertyId,address:o.address||'Untitled Property',updatedAt:o.updatedAt||new Date().toISOString(),value:o.askingPrice||0,sub:(o.neighborhood||o.submarket||'OM Draft')+(o.marketCap!=null?` · Cap ${Number(o.marketCap).toFixed(2)}%`:'')}));
+  return vals.concat(oms).sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
+}
+function reportHref(item){
+  if(item.kind==='valuation') return `valuation-updated-v11.html?propertyId=${encodeURIComponent(item.propertyId||'')}&valuationId=${encodeURIComponent(item.id)}`;
+  return `om-studio-updated-v2.html?propertyId=${encodeURIComponent(item.propertyId||'')}&omId=${encodeURIComponent(item.id)}`;
+}
+function renderSavedReports(ws){
+  const list=document.getElementById('savedReportsList');
+  const badge=document.getElementById('reportCountBadge');
+  const summary=document.getElementById('reportSummaryLabel');
+  const items=buildReportItems(ws);
+  if(badge) badge.textContent=String(items.length||0);
+  if(summary) summary.textContent=`${items.length} report${items.length===1?'':'s'}`;
+  if(!list) return;
+  if(!items.length){
+    list.innerHTML=`<div class="report-item empty"><div class="report-main"><div class="report-title">No saved reports yet</div><div class="report-sub">Save a valuation or OM draft and it will appear here.</div></div></div>`;
+    return;
+  }
+  list.innerHTML=items.slice(0,8).map(item=>`<div class="report-item"><div class="report-main"><div class="report-title">${esc(item.address)}</div><div class="report-sub">${esc(item.sub)}</div><div class="report-meta">${reportMetaLabel(item)} · ${timeAgo(item.updatedAt)}${item.value?` · ${fmtCompact(item.value)}`:''}</div></div><div class="report-actions"><a class="report-btn" href="${reportHref(item)}">Open</a></div></div>`).join('');
+}
+function refreshDashboard(){
+  const ws=getWorkspace();
+  renderWorkspaceProperties(ws);
+  renderActivity(ws);
+  renderSavedReports(ws);
+}
 const now = new Date();
-document.getElementById('todayDate').textContent =
-  now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-renderWorkspaceProperties();
+document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+refreshDashboard();
+window.addEventListener('storage', e=>{ if(e.key==='bricWorkspaceV1') refreshDashboard(); });
 </script>
 </body>
 </html>
