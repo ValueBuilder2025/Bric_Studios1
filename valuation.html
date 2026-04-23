@@ -56,6 +56,7 @@ select option{background:#111514;color:#f5f2ec}
 .rr-summary{display:flex;justify-content:space-between;padding:.65rem .85rem;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:8px;margin-top:.5rem;font-size:.78rem}.rr-summary-label{color:rgba(255,255,255,.5);font-family:var(--mono);font-size:.65rem;letter-spacing:.06em}.rr-summary-val{font-family:var(--serif);font-weight:700;color:var(--gold-light)}
 .expense-block{margin-bottom:.65rem;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:.75rem .85rem}.exp-top{display:grid;grid-template-columns:1fr 110px 28px;gap:.45rem;align-items:center}.exp-top input[type="text"]{font-size:.8rem;padding:.45rem .65rem}.exp-top .input-wrap input[type="number"]{padding:.45rem .55rem .45rem 1.5rem;font-size:.8rem;text-align:right}.exp-top .input-wrap .input-prefix{left:.55rem;font-size:.72rem}
 .add-btn{width:100%;padding:.55rem;border-radius:8px;border:1px dashed rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.35);cursor:pointer;font-size:.76rem;transition:all .2s;margin-top:.3rem}.add-btn:hover{border-color:var(--border-gold);color:var(--gold);background:var(--gold-dim)}
+.expense-total-box{display:flex;justify-content:space-between;align-items:center;padding:.8rem .95rem;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:10px;margin-top:.7rem}.expense-total-label{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45)}.expense-total-value{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--gold-light)}
 .benchmark-row{display:flex;align-items:center;gap:.6rem;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed rgba(255,255,255,.06);font-size:.7rem}.benchmark-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}.benchmark-text{font-family:var(--mono);color:rgba(255,255,255,.45)}
 .slider-wrap{margin-top:.5rem}.slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem}.slider-val{font-family:var(--mono);font-size:.8rem;color:var(--gold);background:var(--gold-dim);border:1px solid var(--border-gold);padding:.2rem .6rem;border-radius:6px}
 input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,255,255,.1);border-radius:2px;outline:none;cursor:pointer;border:none;padding:0}input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.15)}
@@ -112,8 +113,8 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
     <div class="form-section">
       <div class="form-section-title">Annual Income</div>
       <div class="field-row">
-        <div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" value="180000" min="0"/></div></div>
-        <div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" value="6000" min="0"/></div></div>
+        <div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" value="" placeholder="Auto-fills from rent roll if enabled" min="0"/></div></div>
+        <div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" value="" placeholder="0" min="0"/></div></div>
       </div>
 
       <div class="toggle-row" onclick="toggleRentRoll()">
@@ -159,6 +160,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
     <div class="form-section">
       <div class="form-section-title">Annual Expenses</div>
       <div id="expenseRows"></div>
+      <div class="expense-total-box"><span class="expense-total-label">Total Annual Expenses</span><span class="expense-total-value" id="expenseTotalDisplay">$0</span></div>
       <button class="add-btn" onclick="addExpenseRow()">+ Add Expense Line</button>
     </div>
 
@@ -172,7 +174,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
     </div>
 
     <div class="form-section" style="border-bottom:none">
-      <button class="calc-btn" onclick="calculate()">Generate Valuation</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem"><button class="calc-btn" onclick="calculate()" style="margin-top:0">Generate Valuation</button><button class="calc-btn" onclick="saveCurrentValuation()" style="margin-top:0;background:transparent;color:var(--gold);border:1px solid var(--border-gold)">Save to Dashboard</button></div><div id="saveStatus" style="margin-top:.55rem;font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.04em"></div>
     </div>
   </div>
 
@@ -182,7 +184,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
 </div>
 <script>
 
-const DEFAULT_EXPENSES=[['Property Taxes',15000],['Insurance',3300],['Water & Sewer',4200],['Heat',4800],['Common Area Electric',900],['Repairs & Maintenance',1000],['Management Fee',2400]];
+const DEFAULT_EXPENSES=[['Property Taxes',15000],['Insurance',5000],['Water & Sewer',7200],['Heat',4800],['Common Area Electric',900],['Repairs & Maintenance',1000],['Management Fee','']];
 
 const SUBMARKETS={
   brooklyn:['Bath Beach','Bay Ridge','Bed-Stuy','Bensonhurst','Bergen Beach','Boerum Hill','Borough Park','Brooklyn Heights','Brownsville','Bushwick','Canarsie','Carroll Gardens','Clinton Hill','Cobble Hill','Columbia Street Waterfront District','Coney Island','Crown Heights','Cypress Hills','Ditmas Park','Dumbo','Downtown Brooklyn','Dyker Heights','East Flatbush','East New York','Flatbush','Flatlands','Fort Greene','Gerritsen Beach','Gowanus','Gravesend','Greenpoint','Greenwood Heights','Kensington','Manhattan Beach','Marine Park','Midwood','Mill Basin','Navy Yard','Ocean Hill','Park Slope','Prospect Heights','Prospect Lefferts Gardens','Red Hook','Sheepshead Bay','South Slope','Starrett City','Sunset Park','Vinegar Hill','Williamsburg','Windsor Terrace'],
@@ -200,12 +202,12 @@ const CAP_BENCHMARKS={
 };
 const BENCHMARKS={
   'Property Taxes':{calc:()=>({low:10000,mid:15000,high:20000}), type:'flat'},
-  'Insurance':{calc:(ctx)=>({low:ctx.totalUnits*900,mid:ctx.totalUnits*1100,high:ctx.totalUnits*1300}), type:'flat'},
-  'Water & Sewer':{calc:(ctx)=>{const low=(ctx.resUnits*700)+(ctx.beds*140)+(ctx.baths*180); return {low,mid:Math.round(low*1.15),high:Math.round(low*1.3)};}, type:'flat'},
+  'Insurance':{calc:(ctx)=>({low:3500,mid:5250,high:7000}), type:'flat'},
+  'Water & Sewer':{calc:(ctx)=>{const mid=ctx.resUnits*1200; return {low:Math.round(mid*0.9),mid:Math.round(mid),high:Math.round(mid*1.15)};}, type:'flat'},
   'Heat':{calc:(ctx)=>({low:Math.round(ctx.sqft*1.1),mid:Math.round(ctx.sqft*1.2),high:Math.round(ctx.sqft*1.3)}), type:'flat'},
   'Common Area Electric':{calc:(ctx)=>({low:Math.round(ctx.sqft*.15),mid:Math.round(ctx.sqft*.2),high:Math.round(ctx.sqft*.3)}), type:'flat'},
   'Repairs & Maintenance':{calc:(ctx)=>({low:ctx.resUnits*400,mid:ctx.resUnits*500,high:ctx.resUnits*650}), type:'flat'},
-  'Management Fee':{calc:(ctx)=>({low:ctx.totalUnits*700,mid:ctx.totalUnits*900,high:ctx.totalUnits*1200}), type:'flat'}
+  'Management Fee':{calc:(ctx)=>{const base=(ctx.grossIncome||0)*0.05; return {low:Math.round(base*0.8),mid:Math.round(base),high:Math.round(base*1.2)};}, type:'flat'}
 };
 let expenseIdCounter=0,rentRollActive=false;
 function getContext(){
@@ -215,7 +217,8 @@ function getContext(){
   let beds=0,baths=0;
   document.querySelectorAll('#rrRows .rr-bed').forEach(el=>beds+=parseFloat(el.value)||0);
   document.querySelectorAll('#rrRows .rr-bath').forEach(el=>baths+=parseFloat(el.value)||0);
-  return {sqft,resUnits,retailUnits,totalUnits:Math.max(1,resUnits+retailUnits),beds,baths};
+  const grossIncome=getGrossIncomeValue();
+  return {sqft,resUnits,retailUnits,totalUnits:Math.max(1,resUnits+retailUnits),beds,baths,grossIncome};
 }
 function updateCapDisplay(v){document.getElementById('capDisplay').textContent=parseFloat(v).toFixed(1)+'%'}
 
@@ -274,6 +277,7 @@ function addExpenseRow(name='',amount=''){
   div.innerHTML=`<div class="exp-top"><input type="text" class="exp-name" placeholder="Expense name" value="${name}" oninput="updateExpenseBenchmark(${id})"><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="exp-amount" min="0" value="${amount}" oninput="updateExpenseBenchmark(${id})"></div><button class="remove-btn" onclick="removeExpense('exp-${id}')">×</button></div><div class="benchmark-row" id="bench-${id}"></div><div id="save-${id}"></div>`;
   wrap.appendChild(div);
   updateExpenseBenchmark(id);
+  updateExpenseTotalDisplay();
 }
 function removeExpense(id){const el=document.getElementById(id);if(el)el.remove()}
 function updateExpenseBenchmark(id){
@@ -306,7 +310,7 @@ function updateExpenseBenchmark(id){
     saveWrap.innerHTML=`<div class="savings-chip">Potential savings: ~${formatMoney(savings)}/yr</div>`;
   }
 }
-function updateAllExpenseBenchmarks(){document.querySelectorAll('.expense-block').forEach(el=>updateExpenseBenchmark(parseInt(el.id.replace('exp-',''),10)))}
+function updateAllExpenseBenchmarks(){document.querySelectorAll('.expense-block').forEach(el=>updateExpenseBenchmark(parseInt(el.id.replace('exp-',''),10))); updateExpenseTotalDisplay();}
 function toggleRentRoll(){
   rentRollActive=!rentRollActive;
   document.getElementById('rentRollToggle').classList.toggle('on',rentRollActive);
@@ -348,17 +352,20 @@ function updateRentRollTotals(){
   let mo=0; document.querySelectorAll('.rr-rent,.ret-rent').forEach(el=>mo+=parseFloat(el.value)||0);
   document.getElementById('rrTotalMo').textContent='$'+mo.toLocaleString()+'/mo';
   document.getElementById('rrTotalYr').textContent='$'+(mo*12).toLocaleString()+'/yr';
-  if(rentRollActive) document.getElementById('grossIncome').value=mo*12;
+  calculate();
 }
 function fmt(n){if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=1000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()}
 function fmtFull(n){return '$'+Math.round(n).toLocaleString()}
 function fmtPct(n){return n.toFixed(1)+'%'}
+function getRentRollAnnualTotal(){let mo=0; document.querySelectorAll('.rr-rent,.ret-rent').forEach(el=>mo+=parseFloat(el.value)||0); return mo*12;}
+function getGrossIncomeValue(){const typed=parseFloat(document.getElementById('grossIncome').value); if(!Number.isNaN(typed) && typed>0) return typed; return rentRollActive ? getRentRollAnnualTotal() : 0;}
+function updateExpenseTotalDisplay(){let total=0; document.querySelectorAll('.expense-block .exp-amount').forEach(el=>total+=parseFloat(el.value)||0); const tgt=document.getElementById('expenseTotalDisplay'); if(tgt) tgt.textContent=fmtFull(total);}
 function calculate(){
   const address=document.getElementById('address').value.trim()||'(No Address Entered)';
   const propType=document.getElementById('propertyType').value;
   const units=parseFloat(document.getElementById('units').value)||1;
   const sqft=parseFloat(document.getElementById('sqft').value)||0;
-  const grossIncome=parseFloat(document.getElementById('grossIncome').value)||0;
+  const grossIncome=getGrossIncomeValue();
   const vacancyRate=parseFloat(document.getElementById('vacancyRate').value)||5;
   const otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
   const capRate=parseFloat(document.getElementById('capRate').value)/100;
@@ -401,6 +408,151 @@ function renderResults(d){
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>${expRows}</div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
 }
+
+function getWorkspace(){
+  try{return JSON.parse(localStorage.getItem('bricWorkspaceV1'))||{properties:[],valuations:[],oms:[],activity:[]}}catch(e){return {properties:[],valuations:[],oms:[],activity:[]}}
+}
+function setWorkspace(ws){localStorage.setItem('bricWorkspaceV1',JSON.stringify(ws))}
+function uid(prefix){return (prefix||'id')+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+function getQueryParam(name){return new URLSearchParams(window.location.search).get(name)}
+function upsertPropertyFromValuation(payload, valuationId){
+  const ws=getWorkspace();
+  let property=null;
+  if(payload.propertyId) property=ws.properties.find(p=>p.id===payload.propertyId);
+  if(!property && payload.address) property=ws.properties.find(p=>String(p.address||'').trim().toLowerCase()===String(payload.address).trim().toLowerCase());
+  if(!property){
+    property={id:uid('prop'),address:payload.address||'Untitled Property',borough:payload.borough||'',submarket:payload.submarket||'',propertyType:payload.propertyType||'',units:payload.units||0,sqft:payload.sqft||0,status:'Analyzing',createdAt:new Date().toISOString()};
+    ws.properties.unshift(property);
+  }
+  property.address=payload.address||property.address;
+  property.borough=payload.borough||property.borough;
+  property.submarket=payload.submarket||property.submarket;
+  property.propertyType=payload.propertyType||property.propertyType;
+  property.units=payload.units||property.units||0;
+  property.sqft=payload.sqft||property.sqft||0;
+  property.status='Analyzing';
+  property.lastValuationId=valuationId;
+  property.lastValuationValue=payload.baseVal||0;
+  property.lastNoi=payload.noi||0;
+  property.updatedAt=new Date().toISOString();
+  property.fileNames=payload.fileNames||property.fileNames||[];
+  return {ws, property};
+}
+function collectRentRollData(){
+  const residential=[...document.querySelectorAll('.rr-row')].map(row=>({
+    unit: row.querySelector('.rr-unit')?.value||'',
+    bed: parseFloat(row.querySelector('.rr-bed')?.value)||0,
+    bath: parseFloat(row.querySelector('.rr-bath')?.value)||0,
+    rent: parseFloat(row.querySelector('.rr-rent')?.value)||0
+  })).filter(r=>r.unit||r.rent);
+  const retail=[...document.querySelectorAll('.rr-retail-row')].map(row=>({
+    tenant: row.querySelector('.ret-tenant')?.value||'',
+    rent: parseFloat(row.querySelector('.ret-rent')?.value)||0,
+    inc: parseFloat(row.querySelector('.ret-inc')?.value)||0
+  })).filter(r=>r.tenant||r.rent);
+  return {residential, retail};
+}
+function buildValuationPayload(){
+  const address=document.getElementById('address').value.trim()||'(No Address Entered)';
+  const propType=document.getElementById('propertyType').value;
+  const borough=document.getElementById('boroughSelect').value;
+  const submarket=document.getElementById('submarketSelect').value;
+  const units=parseFloat(document.getElementById('units').value)||1;
+  const sqft=parseFloat(document.getElementById('sqft').value)||0;
+  const grossIncome=getGrossIncomeValue();
+  const vacancyRate=parseFloat(document.getElementById('vacancyRate').value)||5;
+  const otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
+  const capRateInput=parseFloat(document.getElementById('capRate').value)||0;
+  const capRate=capRateInput/100;
+  let totalExpenses=0,totalSavings=0;
+  const expenseList=[];
+  document.querySelectorAll('.expense-block').forEach(row=>{
+    const n=row.querySelector('.exp-name').value.trim()||'Unnamed';
+    const a=parseFloat(row.querySelector('.exp-amount').value)||0;
+    const canonical=normalizeExpenseName(n);
+    let bench=null,status=null,savings=0;
+    if(canonical&&BENCHMARKS[canonical]){bench=BENCHMARKS[canonical].calc(getContext());status=benchmarkStatus(a,bench);if(status==='bad') savings=Math.max(0,a-bench.mid)}
+    if(a>0||n!=='Unnamed'){expenseList.push({name:n,amount:a,bench,status,savings});totalExpenses+=a;totalSavings+=savings}
+  });
+  const vacancyLoss=grossIncome*(vacancyRate/100);
+  const effectiveGross=grossIncome-vacancyLoss+otherIncome;
+  const noi=effectiveGross-totalExpenses;
+  const baseVal=capRate>0?noi/capRate:0;
+  const lowVal=capRate>0?noi/(capRate+.0075):0;
+  const highVal=capRate>.01?noi/Math.max(.01,capRate-.0075):baseVal;
+  const pricePerUnit=units>0?baseVal/units:0;
+  const pricePerSqft=sqft>0?baseVal/sqft:0;
+  const fileNames=[...((document.getElementById('rentRollUpload')||{}).files||[])].map(f=>f.name);
+  const rr=collectRentRollData();
+  return {propertyId:getQueryParam('propertyId')||'',address,propertyType:propType,borough,submarket,units,sqft,grossIncome,vacancyRate,otherIncome,capRate:capRateInput,vacancyLoss,effectiveGross,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,expenseList,totalSavings,fileNames,residentialRentRoll:rr.residential,retailRentRoll:rr.retail,updatedAt:new Date().toISOString()};
+}
+function saveCurrentValuation(){
+  const payload=buildValuationPayload();
+  if(!payload.address || payload.address==='(No Address Entered)'){alert('Add a property address before saving.');return;}
+  const valuationId=getQueryParam('valuationId')||uid('val');
+  const linked=upsertPropertyFromValuation(payload, valuationId);
+  const ws=linked.ws; const property=linked.property;
+  payload.propertyId=property.id; payload.id=valuationId;
+  const existingIdx=ws.valuations.findIndex(v=>v.id===valuationId);
+  if(existingIdx>=0) ws.valuations[existingIdx]=payload; else ws.valuations.unshift(payload);
+  ws.activity=ws.activity||[];
+  ws.activity.unshift({type:'valuation_saved',propertyId:property.id,address:property.address,time:new Date().toISOString(),detail:'Valuation saved'});
+  ws.activity=ws.activity.slice(0,25);
+  setWorkspace(ws);
+  localStorage.setItem('bricValuationDraft', JSON.stringify(payload));
+  localStorage.setItem('bricValuationTransfer', JSON.stringify(payload));
+  const url=new URL(window.location.href); url.searchParams.set('propertyId', property.id); url.searchParams.set('valuationId', valuationId); history.replaceState({},'',url.toString());
+  const status=document.getElementById('saveStatus');
+  if(status) status.textContent='Saved to My Properties · '+new Date().toLocaleString();
+}
+function loadSavedValuationIntoForm(payload){
+  if(!payload) return;
+  if(payload.address) document.getElementById('address').value=payload.address;
+  if(payload.propertyType) document.getElementById('propertyType').value=payload.propertyType;
+  if(payload.borough) document.getElementById('boroughSelect').value=payload.borough;
+  populateSubmarkets();
+  if(payload.submarket) document.getElementById('submarketSelect').value=payload.submarket;
+  if(payload.units!=null) document.getElementById('units').value=payload.units;
+  if(payload.sqft!=null) document.getElementById('sqft').value=payload.sqft;
+  if(payload.grossIncome!=null && !(Array.isArray(payload.residentialRentRoll)&&payload.residentialRentRoll.length) && !(Array.isArray(payload.retailRentRoll)&&payload.retailRentRoll.length)) document.getElementById('grossIncome').value=payload.grossIncome;
+  if(payload.otherIncome!=null) document.getElementById('otherIncome').value=payload.otherIncome;
+  if(payload.vacancyRate!=null) document.getElementById('vacancyRate').value=payload.vacancyRate;
+  if(payload.capRate!=null) document.getElementById('capRate').value=payload.capRate;
+  updateCapDisplay(parseFloat(payload.capRate)||0);
+  if(Array.isArray(payload.expenseList)){
+    document.getElementById('expenseRows').innerHTML='';
+    payload.expenseList.forEach(e=>addExpenseRow(e.name||'', e.amount||0));
+  }
+  const res=payload.residentialRentRoll||[]; const ret=payload.retailRentRoll||[];
+  if(res.length||ret.length){
+    rentRollActive=true;
+    document.getElementById('rentRollToggle').classList.add('on');
+    document.getElementById('rentRollSection').classList.add('visible');
+    document.getElementById('resUnitCount').value=res.length;
+    document.getElementById('retailUnitCount').value=ret.length;
+    const rr=document.getElementById('rrRows'), retail=document.getElementById('retailRows');
+    rr.innerHTML=''; retail.innerHTML='';
+    res.forEach((item,i)=>rr.insertAdjacentHTML('beforeend', resRowHTML(i+1,{unit:item.unit,bed:item.bed,bath:item.bath,rent:item.rent})));
+    ret.forEach((item,i)=>retail.insertAdjacentHTML('beforeend', retailRowHTML(i+1,{tenant:item.tenant,inc:item.inc,rent:item.rent})));
+    updateRentRollTotals();
+  }
+  updateAllExpenseBenchmarks();
+  calculate();
+  const status=document.getElementById('saveStatus');
+  if(status) status.textContent='Loaded saved valuation for '+(payload.address||'property');
+}
+function tryLoadSavedValuation(){
+  const ws=getWorkspace();
+  const valuationId=getQueryParam('valuationId');
+  const propertyId=getQueryParam('propertyId');
+  let payload=null;
+  if(valuationId) payload=ws.valuations.find(v=>v.id===valuationId);
+  if(!payload && propertyId){
+    payload=ws.valuations.find(v=>v.propertyId===propertyId);
+  }
+  if(payload) loadSavedValuationIntoForm(payload);
+}
+
 DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e[0],e[1]));
 populateSubmarkets();
 updateMarketBenchmarks();
@@ -408,6 +560,7 @@ document.getElementById('resUnitCount').value='2';
 document.getElementById('retailUnitCount').value='1';
 toggleRentRoll();
 syncRentRollRows();
+tryLoadSavedValuation();
 </script>
 </body>
 </html>
