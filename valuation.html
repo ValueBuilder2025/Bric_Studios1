@@ -205,7 +205,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
 </div>
 <script>
 
-const DEFAULT_EXPENSES=[['Property Taxes',15000],['Insurance',5000],['Water & Sewer',7200],['Heat',4800],['Common Area Electric',900],['Repairs & Maintenance',1000],['Management Fee','']];
+const DEFAULT_EXPENSES=[['Property Taxes',15000],['Insurance',5000],['Water & Sewer',''],['Heat',''],['Common Area Electric',''],['Repairs & Maintenance',''],['Super / Payroll',''],['Management Fee','']];
 
 const SUBMARKETS={
   brooklyn:['Bath Beach','Bay Ridge','Bed-Stuy','Bensonhurst','Bergen Beach','Boerum Hill','Borough Park','Brooklyn Heights','Brownsville','Bushwick','Canarsie','Carroll Gardens','Clinton Hill','Cobble Hill','Columbia Street Waterfront District','Coney Island','Crown Heights','Cypress Hills','Ditmas Park','Dumbo','Downtown Brooklyn','Dyker Heights','East Flatbush','East New York','Flatbush','Flatlands','Fort Greene','Gerritsen Beach','Gowanus','Gravesend','Greenpoint','Greenwood Heights','Kensington','Manhattan Beach','Marine Park','Midwood','Mill Basin','Navy Yard','Ocean Hill','Park Slope','Prospect Heights','Prospect Lefferts Gardens','Red Hook','Sheepshead Bay','South Slope','Starrett City','Sunset Park','Vinegar Hill','Williamsburg','Windsor Terrace'],
@@ -224,25 +224,25 @@ const CAP_BENCHMARKS={
 const BENCHMARKS={
   'Property Taxes':{calc:()=>({low:10000,mid:15000,high:20000}), type:'flat'},
   'Insurance':{calc:(ctx)=>({low:3500,mid:5250,high:7000}), type:'flat'},
-  'Water & Sewer':{calc:(ctx)=>{const mid=ctx.resUnits*1200; return {low:Math.round(mid*0.9),mid:Math.round(mid),high:Math.round(mid*1.15)};}, type:'flat'},
+  'Water & Sewer':{calc:(ctx)=>({low:ctx.totalUnits*900,mid:ctx.totalUnits*1050,high:ctx.totalUnits*1200}), type:'flat'},
   'Heat':{calc:(ctx)=>({low:Math.round(ctx.sqft*1.1),mid:Math.round(ctx.sqft*1.2),high:Math.round(ctx.sqft*1.3)}), type:'flat'},
   'Common Area Electric':{calc:(ctx)=>({low:Math.round(ctx.sqft*.15),mid:Math.round(ctx.sqft*.2),high:Math.round(ctx.sqft*.3)}), type:'flat'},
   'Repairs & Maintenance':{calc:(ctx)=>({low:ctx.resUnits*400,mid:ctx.resUnits*500,high:ctx.resUnits*650}), type:'flat'},
+  'Super / Payroll':{calc:(ctx)=>({low:ctx.totalUnits*500,mid:ctx.totalUnits*600,high:ctx.totalUnits*700}), type:'flat'},
   'Management Fee':{calc:(ctx)=>{const base=(ctx.grossIncome||0)*0.05; return {low:Math.round(base*0.8),mid:Math.round(base),high:Math.round(base*1.2)};}, type:'flat'}
 };
 let expenseIdCounter=0,rentRollActive=false;
 function getContext(){
   const sqft=parseFloat(document.getElementById('sqft').value)||0;
   const manualUnits=parseInt(document.getElementById('units').value||0,10);
-  const rrResUnits=parseInt(document.getElementById('resUnitCount').value||0,10);
   const retailUnits=parseInt(document.getElementById('retailUnitCount').value||0,10);
-  const useRentRollCounts=rentRollActive && (rrResUnits+retailUnits)>0;
-  const resUnits=useRentRollCounts ? rrResUnits : Math.max(0, manualUnits-retailUnits);
+  const totalUnits=Math.max(0, manualUnits||0);
+  const resUnits=Math.max(0,totalUnits);
   let beds=0,baths=0;
   document.querySelectorAll('#rrRows .rr-bed').forEach(el=>beds+=parseFloat(el.value)||0);
   document.querySelectorAll('#rrRows .rr-bath').forEach(el=>baths+=parseFloat(el.value)||0);
   const grossIncome=getGrossIncomeValue();
-  return {sqft,resUnits,retailUnits,totalUnits:Math.max(1,(useRentRollCounts ? rrResUnits+retailUnits : manualUnits)||0),beds,baths,grossIncome};
+  return {sqft,resUnits,retailUnits,totalUnits,beds,baths,grossIncome};
 }
 function updateCapDisplay(v){document.getElementById('capDisplay').textContent=parseFloat(v).toFixed(1)+'%'}
 
@@ -286,6 +286,7 @@ function normalizeExpenseName(name){
   if(n.includes('heat')||n.includes('boiler')||n.includes('fuel')||n.includes('gas')) return 'Heat';
   if(n.includes('electric')||n.includes('common electric')) return 'Common Area Electric';
   if(n.includes('repair')||n.includes('maintenance')||n.includes('r&m')) return 'Repairs & Maintenance';
+  if(n.includes('super')||n.includes('payroll')) return 'Super / Payroll';
   if(n.includes('management')) return 'Management Fee';
   return null;
 }
@@ -306,7 +307,7 @@ function addExpenseRow(name='',amount=''){
   const div=document.createElement('div');
   div.className='expense-block';
   div.id='exp-'+id;
-  div.innerHTML=`<div class="exp-top"><input type="text" class="exp-name" placeholder="Expense name" value="${name}" oninput="updateExpenseBenchmark(${id})"><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="exp-amount" min="0" value="${amount}" oninput="updateExpenseBenchmark(${id})"></div><button class="remove-btn" onclick="removeExpense('exp-${id}')">×</button></div><div class="benchmark-row" id="bench-${id}"></div><div id="save-${id}"></div>`;
+  div.innerHTML=`<div class="exp-top"><input type="text" class="exp-name" placeholder="Expense name" value="${name}" oninput="updateExpenseBenchmark(${id})"><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="exp-amount" min="0" value="${amount}" placeholder="0" oninput="updateExpenseBenchmark(${id})"></div><button class="remove-btn" onclick="removeExpense('exp-${id}')">×</button></div><div class="benchmark-row" id="bench-${id}"></div><div id="save-${id}"></div>`;
   wrap.appendChild(div);
   updateExpenseBenchmark(id);
   updateExpenseTotalDisplay();
@@ -321,11 +322,14 @@ function updateExpenseBenchmark(id){
   const canonical=normalizeExpenseName(name);
   block.classList.remove('over','good');
   saveWrap.innerHTML='';
+  const amountInput=block.querySelector('.exp-amount');
   if(!canonical || !BENCHMARKS[canonical]){
+    if(amountInput) amountInput.placeholder='0';
     benchWrap.innerHTML=`<span class="benchmark-label">Market</span><span class="benchmark-text">Custom line — no benchmark mapped yet</span>`;
     return;
   }
   const bench=BENCHMARKS[canonical].calc(getContext());
+  if(amountInput) amountInput.placeholder=String(Math.round(bench.mid).toLocaleString());
   const status=benchmarkStatus(amount,bench);
   if(status==='bad') block.classList.add('over'); else if(status==='good') block.classList.add('good');
   const min=bench.low*0.65, max=bench.high*1.35;
@@ -376,7 +380,6 @@ function syncRentRollRows(){
   rr.innerHTML=''; ret.innerHTML='';
   for(let i=1;i<=resCount;i++){rr.insertAdjacentHTML('beforeend',resRowHTML(i,existingRes[i-1]||{bed:i===2?2:1,bath:1,rent:''}))}
   for(let i=1;i<=retCount;i++){ret.insertAdjacentHTML('beforeend',retailRowHTML(i,existingRet[i-1]||{tenant:i===1?'Sample Tenant':'',inc:'3',rent:''}))}
-  document.getElementById('units').value=resCount+retCount;
   updateRentRollTotals();
   updateAllExpenseBenchmarks();
 }
@@ -384,8 +387,8 @@ function updateRentRollTotals(){
   let mo=0; document.querySelectorAll('.rr-rent,.ret-rent').forEach(el=>mo+=parseFloat(el.value)||0);
   document.getElementById('rrTotalMo').textContent='$'+mo.toLocaleString()+'/mo';
   document.getElementById('rrTotalYr').textContent='$'+(mo*12).toLocaleString()+'/yr';
-  calculate();
 }
+
 function fmt(n){if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=1000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()}
 function fmtFull(n){return '$'+Math.round(n).toLocaleString()}
 function fmtPct(n){return n.toFixed(1)+'%'}
@@ -569,7 +572,6 @@ function loadSavedValuationIntoForm(payload){
     updateRentRollTotals();
   }
   updateAllExpenseBenchmarks();
-  calculate();
   const status=document.getElementById('saveStatus');
   if(status) status.textContent='Loaded saved valuation for '+(payload.address||'property');
 }
@@ -588,8 +590,6 @@ function tryLoadSavedValuation(){
 DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e[0],e[1]));
 populateSubmarkets();
 updateMarketBenchmarks();
-document.getElementById('resUnitCount').value='2';
-document.getElementById('retailUnitCount').value='1';
 tryLoadSavedValuation();
 
 (function(){
