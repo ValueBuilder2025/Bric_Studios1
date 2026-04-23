@@ -301,35 +301,50 @@ function benchmarkLabel(status){
   if(status==='warn') return 'Near Top';
   return 'Below Avg';
 }
-function addExpenseRow(name='',amount=''){
+function addExpenseRow(name='',amount='',autoFill=false){
   const id=++expenseIdCounter;
   const wrap=document.getElementById('expenseRows');
   const div=document.createElement('div');
   div.className='expense-block';
   div.id='exp-'+id;
-  div.innerHTML=`<div class="exp-top"><input type="text" class="exp-name" placeholder="Expense name" value="${name}" oninput="updateExpenseBenchmark(${id})"><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="exp-amount" min="0" value="${amount}" placeholder="0" oninput="updateExpenseBenchmark(${id})"></div><button class="remove-btn" onclick="removeExpense('exp-${id}')">×</button></div><div class="benchmark-row" id="bench-${id}"></div><div id="save-${id}"></div>`;
+  div.innerHTML=`<div class="exp-top"><input type="text" class="exp-name" placeholder="Expense name" value="${name}" oninput="markExpenseManual(${id}, 'name'); updateExpenseBenchmark(${id})"><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="exp-amount" min="0" value="${amount}" placeholder="0" oninput="markExpenseManual(${id}, 'amount'); updateExpenseBenchmark(${id})"></div><button class="remove-btn" onclick="removeExpense('exp-${id}')">×</button></div><div class="benchmark-row" id="bench-${id}"></div><div id="save-${id}"></div>`;
+  if(autoFill) div.dataset.autoFill='1';
   wrap.appendChild(div);
   updateExpenseBenchmark(id);
   updateExpenseTotalDisplay();
 }
-function removeExpense(id){const el=document.getElementById(id);if(el)el.remove()}
+function markExpenseManual(id, field){
+  const block=document.getElementById('exp-'+id);
+  if(!block) return;
+  if(field==='amount') block.dataset.autoFill='0';
+  if(field==='name'){
+    block.dataset.autoFill='1';
+  }
+}
+function removeExpense(id){const el=document.getElementById(id);if(el)el.remove(); updateExpenseTotalDisplay();}
 function updateExpenseBenchmark(id){
   const block=document.getElementById('exp-'+id); if(!block) return;
   const name=block.querySelector('.exp-name').value;
-  const amount=parseFloat(block.querySelector('.exp-amount').value)||0;
+  const amountInput=block.querySelector('.exp-amount');
+  let amount=parseFloat(amountInput.value)||0;
   const benchWrap=document.getElementById('bench-'+id);
   const saveWrap=document.getElementById('save-'+id);
   const canonical=normalizeExpenseName(name);
   block.classList.remove('over','good');
   saveWrap.innerHTML='';
-  const amountInput=block.querySelector('.exp-amount');
   if(!canonical || !BENCHMARKS[canonical]){
     if(amountInput) amountInput.placeholder='0';
     benchWrap.innerHTML=`<span class="benchmark-label">Market</span><span class="benchmark-text">Custom line — no benchmark mapped yet</span>`;
+    updateExpenseTotalDisplay();
     return;
   }
   const bench=BENCHMARKS[canonical].calc(getContext());
   if(amountInput) amountInput.placeholder=String(Math.round(bench.mid).toLocaleString());
+  if(block.dataset.autoFill==='1' || amountInput.value===''){
+    amount=Math.round(bench.mid);
+    amountInput.value=amount;
+    block.dataset.autoFill='1';
+  }
   const status=benchmarkStatus(amount,bench);
   if(status==='bad') block.classList.add('over'); else if(status==='good') block.classList.add('good');
   const min=bench.low*0.65, max=bench.high*1.35;
@@ -345,6 +360,7 @@ function updateExpenseBenchmark(id){
     const savings=Math.max(0,amount-bench.mid);
     saveWrap.innerHTML=`<div class="savings-chip">Potential savings: ~${formatMoney(savings)}/yr</div>`;
   }
+  updateExpenseTotalDisplay();
 }
 function updateAllExpenseBenchmarks(){document.querySelectorAll('.expense-block').forEach(el=>updateExpenseBenchmark(parseInt(el.id.replace('exp-',''),10))); updateExpenseTotalDisplay();}
 function toggleRentRoll(){
@@ -556,7 +572,7 @@ function loadSavedValuationIntoForm(payload){
   updateCapDisplay(parseFloat(payload.capRate)||0);
   if(Array.isArray(payload.expenseList)){
     document.getElementById('expenseRows').innerHTML='';
-    payload.expenseList.forEach(e=>addExpenseRow(e.name||'', e.amount||0));
+    payload.expenseList.forEach(e=>addExpenseRow(e.name||'', e.amount||0,false));
   }
   const res=payload.residentialRentRoll||[]; const ret=payload.retailRentRoll||[];
   if(res.length||ret.length){
@@ -587,7 +603,7 @@ function tryLoadSavedValuation(){
   if(payload) loadSavedValuationIntoForm(payload);
 }
 
-DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e[0],e[1]));
+DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e[0],e[1],true));
 populateSubmarkets();
 updateMarketBenchmarks();
 tryLoadSavedValuation();
