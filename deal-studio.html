@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Deal Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f0e;
+  --ink-2:#141715;
+  --ink-3:#1a1e1d;
+  --paper:#f5f2ec;
+  --cream:#faf8f3;
+  --gold:#c9a84c;
+  --gold-light:#e8d08a;
+  --gold-dim:rgba(201,168,76,0.13);
+  --slate:#3a4a52;
+  --muted:#7a8a82;
+  --border:rgba(255,255,255,0.07);
+  --success:#6dba8f;
+  --warn:#e8a050;
+  --indigo:#8b9ee8;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.3}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.93);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
+.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.8rem;border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.32);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--gold)}
+.nav-ai-badge{display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase}
+.nav-ai-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulseDot 2s infinite}
+@keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+
+/* LAYOUT */
+.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 56px)}
+
+/* LEFT PANEL */
+.panel-left{border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+.panel-left::-webkit-scrollbar{width:3px}
+.panel-left::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+
+.panel-header{padding:1.75rem 1.75rem 1.25rem;border-bottom:1px solid var(--border)}
+.panel-eyebrow{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.panel-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--paper);line-height:1.15}
+.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.38);margin-top:0.4rem;line-height:1.55}
+
+.form-section{padding:1.25rem 1.75rem;border-bottom:1px solid var(--border)}
+.fsec-title{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.fsec-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05)}
+
+.field{margin-bottom:0.85rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.85rem}
+label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.42);margin-bottom:0.35rem;letter-spacing:0.02em;font-weight:500}
+.input-wrap{position:relative}
+.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.78rem;color:rgba(255,255,255,0.28);pointer-events:none}
+.input-prefix{left:0.8rem}
+.input-suffix{right:0.8rem}
+input[type="text"],input[type="number"],select,textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.8rem;border-radius:3px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none}
+.has-prefix input{padding-left:1.9rem}
+.has-suffix input{padding-right:2rem}
+input:focus,select:focus,textarea:focus{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.04)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.17)}
+textarea{resize:vertical;min-height:70px;line-height:1.5;font-family:var(--sans)}
+select{cursor:pointer}
+select option{background:var(--ink)}
+
+/* Angle selector chips */
+.angle-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
+.angle-chip{
+  padding:0.7rem 0.85rem;border:1px solid rgba(255,255,255,0.1);border-radius:3px;
+  background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.55);
+  font-size:0.78rem;cursor:pointer;transition:all 0.15s;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.angle-chip:hover{border-color:rgba(201,168,76,0.3);color:var(--paper)}
+.angle-chip.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.angle-chip .icon{font-size:0.9rem;opacity:0.8}
+.angle-chip.active .icon{opacity:1}
+
+/* Tone slider */
+.tone-wrap{padding:0.5rem 0}
+.tone-labels{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em}
+input[type="range"]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.1);border-radius:2px;outline:none;cursor:pointer;border:none;padding:0}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer}
+
+/* Generate button */
+.gen-btn{
+  width:100%;padding:0.9rem;
+  background:var(--gold);color:var(--ink);
+  border:none;border-radius:3px;cursor:pointer;
+  font-family:var(--sans);font-size:0.85rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  transition:all 0.2s;margin-top:0.5rem;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+}
+.gen-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.gen-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.gen-btn.generating{background:rgba(201,168,76,0.2);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
+
+/* RIGHT PANEL */
+.panel-right{padding:2rem 2.25rem;overflow-y:auto;max-height:calc(100vh - 56px)}
+.panel-right::-webkit-scrollbar{width:3px}
+.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:4rem 2rem;max-width:500px;margin:0 auto}
+.empty-icon{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 1.5rem;
+  background:var(--gold-dim);border:1.5px solid rgba(201,168,76,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:2rem;color:var(--gold);
+  position:relative;
+}
+.empty-icon::before,.empty-icon::after{
+  content:'';position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,0.2);
+}
+.empty-icon::before{inset:-10px;animation:ripple 3s infinite}
+.empty-icon::after{inset:-18px;animation:ripple 3s infinite 0.5s}
+@keyframes ripple{0%{opacity:0.8;transform:scale(0.9)}100%{opacity:0;transform:scale(1.2)}}
+.empty-title{font-family:var(--serif);font-size:1.5rem;color:var(--paper);margin-bottom:0.5rem;font-weight:700}
+.empty-sub{font-size:0.92rem;color:rgba(255,255,255,0.4);line-height:1.65}
+
+.empty-examples{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:2rem;text-align:left}
+.ex-card{padding:0.9rem 1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;font-size:0.78rem;color:rgba(255,255,255,0.55);line-height:1.5;transition:all 0.2s;cursor:pointer}
+.ex-card:hover{background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.25);color:var(--paper)}
+.ex-card .ex-tag{font-family:var(--mono);font-size:0.58rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.35rem;display:block}
+
+/* RESULTS */
+.results{display:none}
+.results.visible{display:block;animation:fadeIn 0.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.res-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;gap:1rem;flex-wrap:wrap}
+.res-meta{}
+.res-title{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--paper);line-height:1.15;margin-bottom:0.5rem}
+.res-sub{font-family:var(--mono);font-size:0.72rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;text-transform:uppercase}
+.res-actions{display:flex;gap:0.5rem;flex-shrink:0}
+.res-btn{padding:0.55rem 1rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all 0.15s;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem}
+.res-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.res-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.res-btn-gold:hover{background:var(--gold-light);color:var(--ink)}
+
+/* VARIANT TABS */
+.variants{display:flex;gap:0.5rem;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.v-tab{padding:0.5rem 1rem;border:1px solid rgba(255,255,255,0.1);border-radius:3px;background:transparent;color:rgba(255,255,255,0.55);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:0.5rem}
+.v-tab:hover{border-color:rgba(201,168,76,0.3);color:var(--paper)}
+.v-tab.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.v-tab .v-label{font-family:var(--sans);text-transform:none;letter-spacing:0}
+
+/* NARRATIVE CARD */
+.narrative{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
+  padding:2rem 2.25rem;margin-bottom:1.5rem;
+  position:relative;overflow:hidden;
+}
+.narrative::before{
+  content:'';position:absolute;top:0;right:0;width:300px;height:200px;
+  background:radial-gradient(ellipse at top right,rgba(201,168,76,0.08),transparent 70%);
+  pointer-events:none;
+}
+
+.nar-tag{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--gold);padding:0.3rem 0.65rem;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.25);border-radius:2px;margin-bottom:1.25rem}
+
+.nar-headline{
+  font-family:var(--serif);font-size:1.65rem;font-weight:700;
+  color:var(--paper);line-height:1.2;letter-spacing:-0.015em;
+  margin-bottom:1.25rem;
+}
+.nar-headline em{font-style:italic;color:var(--gold-light)}
+
+.nar-lede{
+  font-family:var(--serif);font-size:1.05rem;font-style:italic;
+  color:rgba(245,242,236,0.75);line-height:1.65;
+  padding:1rem 1.25rem;border-left:3px solid var(--gold);
+  margin-bottom:1.5rem;background:rgba(201,168,76,0.04);
+  border-radius:0 3px 3px 0;
+}
+
+.nar-body{font-size:0.92rem;line-height:1.8;color:rgba(245,242,236,0.8)}
+.nar-body p{margin-bottom:1rem}
+.nar-body p:last-child{margin-bottom:0}
+.nar-body strong{color:var(--paper);font-weight:600}
+.nar-body em{color:var(--gold-light);font-style:italic}
+
+/* HIGHLIGHTS STRIP */
+.hl-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;margin-bottom:1.5rem;
+}
+.hl-cell{background:var(--ink-2);padding:1rem 1.25rem}
+.hl-num{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--gold-light);line-height:1;margin-bottom:0.25rem}
+.hl-lab{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+
+/* BULLET SECTIONS */
+.bullets-section{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
+  padding:1.75rem 2rem;margin-bottom:1.25rem;
+}
+.bs-title{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--paper);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem}
+.bs-title-icon{color:var(--gold);font-size:0.85rem}
+.bullet-list{list-style:none}
+.bullet-item{display:flex;gap:0.9rem;padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.88rem;line-height:1.6;color:rgba(255,255,255,0.7)}
+.bullet-item:last-child{border-bottom:none}
+.bullet-item b{color:var(--paper);font-weight:600}
+.bullet-marker{
+  min-width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.7rem;color:var(--gold);font-weight:600;
+}
+
+/* BUYER TARGETING */
+.target-section{
+  background:linear-gradient(135deg,rgba(139,158,232,0.06),rgba(139,158,232,0.01));
+  border:1px solid rgba(139,158,232,0.2);border-radius:6px;
+  padding:1.5rem 1.75rem;margin-bottom:1.25rem;
+}
+.ts-hd{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.ts-icon{width:36px;height:36px;border-radius:50%;background:rgba(139,158,232,0.15);border:1.5px solid rgba(139,158,232,0.3);display:flex;align-items:center;justify-content:center;color:var(--indigo);font-size:1rem;flex-shrink:0}
+.ts-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper)}
+.ts-sub{font-size:0.75rem;color:rgba(255,255,255,0.4);font-family:var(--mono);letter-spacing:0.02em;margin-top:0.1rem}
+.ts-text{font-size:0.88rem;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:1.25rem}
+.ts-text b{color:var(--indigo);font-weight:600}
+.target-list{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem}
+.target-chip{padding:0.85rem 1rem;background:rgba(13,15,14,0.5);border:1px solid rgba(255,255,255,0.06);border-radius:3px}
+.tc-type{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo);margin-bottom:0.3rem}
+.tc-name{font-size:0.85rem;font-weight:600;color:var(--paper);margin-bottom:0.2rem}
+.tc-score{font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.02em}
+
+/* SNIPPETS */
+.snippets{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.snip-card{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:4px;
+  padding:1.25rem 1.4rem;transition:all 0.2s;
+}
+.snip-card:hover{border-color:rgba(201,168,76,0.2)}
+.snip-tag{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;justify-content:space-between}
+.snip-copy-btn{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;
+  padding:0.2rem 0.5rem;border-radius:2px;cursor:pointer;
+  background:transparent;color:rgba(255,255,255,0.4);
+  border:1px solid rgba(255,255,255,0.1);transition:all 0.15s;
+}
+.snip-copy-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.snip-copy-btn.copied{background:rgba(109,186,143,0.15);color:var(--success);border-color:rgba(109,186,143,0.3)}
+.snip-text{font-size:0.85rem;line-height:1.65;color:rgba(245,242,236,0.75);font-style:italic}
+
+/* LOADING STATE */
+.loading-state{display:none;padding:3rem;text-align:center}
+.loading-state.visible{display:block}
+.loading-icon{
+  width:60px;height:60px;border-radius:50%;margin:0 auto 1.25rem;
+  background:var(--gold-dim);border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-family:var(--serif);font-size:1.4rem;
+  animation:spin 1.5s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-family:var(--serif);font-size:1.25rem;color:var(--paper);margin-bottom:0.5rem;font-weight:700}
+.loading-sub{font-size:0.82rem;color:rgba(255,255,255,0.45);margin-bottom:2rem}
+.loading-steps{display:flex;flex-direction:column;gap:0.75rem;max-width:360px;margin:0 auto;text-align:left}
+.loading-step{display:flex;align-items:center;gap:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.4);opacity:0.4;transition:all 0.3s}
+.loading-step.active{opacity:1;color:var(--paper)}
+.loading-step.done{opacity:1;color:var(--success)}
+.loading-step-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0}
+.loading-step.active .loading-step-dot{border-color:var(--gold);background:var(--gold-dim)}
+.loading-step.done .loading-step-dot{background:var(--success);border-color:var(--success)}
+.loading-step.done .loading-step-dot::after{content:'✓';display:block;text-align:center;color:var(--ink);font-size:0.68rem;line-height:11px;font-weight:bold}
+
+/* Responsive */
+@media(max-width:1024px){
+  .app{grid-template-columns:1fr}
+  .panel-left{position:static;max-height:none}
+  .hl-strip{grid-template-columns:1fr 1fr}
+  .target-list{grid-template-columns:1fr}
+  .snippets{grid-template-columns:1fr}
+  .empty-examples{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .panel-right{padding:1.5rem 1.25rem}
+  .narrative{padding:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
+  <span class="nav-badge">Deal Studio</span>
+  <div class="nav-right">
+    <span class="nav-ai-badge"><span class="nav-ai-dot"></span>AI Powered</span>
+    <a href="dashboard.html" class="nav-back">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- LEFT: BUILDER -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Pitch Generator</div>
+      <div class="panel-title">Deal Studio</div>
+      <div class="panel-sub">Turn your asset into a compelling, investor-ready narrative. Our AI structures the story brokers get paid to tell.</div>
+    </div>
+
+    <!-- Property Basics -->
+    <div class="form-section">
+      <div class="fsec-title">Property Context</div>
+      <div class="field">
+        <label>Property Address</label>
+        <input type="text" id="f-addr" placeholder="142 Bedford Avenue" value="142 Bedford Avenue"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Submarket</label>
+          <input type="text" id="f-sub" placeholder="Williamsburg" value="Williamsburg"/>
+        </div>
+        <div class="field">
+          <label>Units</label>
+          <input type="number" id="f-units" value="6"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Ask Price</label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="f-price" value="3200000"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Current NOI</label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="f-noi" value="163000"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deal Angle -->
+    <div class="form-section">
+      <div class="fsec-title">Deal Angle</div>
+      <label style="margin-bottom:0.75rem">Choose the story you want to tell</label>
+      <div class="angle-grid">
+        <div class="angle-chip active" data-angle="value-add"><span class="icon">◆</span>Value-Add</div>
+        <div class="angle-chip" data-angle="stabilized"><span class="icon">◉</span>Stabilized Hold</div>
+        <div class="angle-chip" data-angle="repositioning"><span class="icon">◈</span>Repositioning</div>
+        <div class="angle-chip" data-angle="redevelopment"><span class="icon">▲</span>Redevelopment</div>
+        <div class="angle-chip" data-angle="under-market"><span class="icon">▼</span>Under-Market Rent</div>
+        <div class="angle-chip" data-angle="turnkey"><span class="icon">●</span>Turnkey Investment</div>
+      </div>
+    </div>
+
+    <!-- Key Strengths -->
+    <div class="form-section">
+      <div class="fsec-title">What makes this deal special?</div>
+      <div class="field">
+        <label>Key Strengths (one per line)</label>
+        <textarea id="f-strengths" placeholder="Enter the differentiators...">Below-market rents with 25% upside potential
+Prime Williamsburg location near L train
+Recently upgraded roof and mechanicals
+100% occupancy with strong tenant base
+Favorable R6B zoning with air rights</textarea>
+      </div>
+      <div class="field">
+        <label>Known Challenges (optional — AI will reframe)</label>
+        <textarea id="f-challenges" placeholder="e.g. older boiler, needs cosmetic work">Older boiler — may need replacement within 3 years
+Two units require cosmetic updates</textarea>
+      </div>
+    </div>
+
+    <!-- Target Audience -->
+    <div class="form-section">
+      <div class="fsec-title">Target Buyer Profile</div>
+      <div class="field">
+        <label>Who's this pitch for?</label>
+        <select id="f-audience">
+          <option value="institutional">Institutional Investors</option>
+          <option value="family-office" selected>Family Offices & HNW</option>
+          <option value="private">Private Investors</option>
+          <option value="owner-operator">Owner-Operators</option>
+          <option value="mixed">Broad Market</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Pitch Tone</label>
+        <div class="tone-wrap">
+          <div class="tone-labels">
+            <span>Conservative</span><span>Confident</span><span>Bold</span>
+          </div>
+          <input type="range" id="f-tone" min="1" max="3" value="2" step="1"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="form-section" style="border-bottom:none">
+      <button class="gen-btn" id="genBtn" onclick="generateDeal()">
+        <span>✦</span> Generate Deal Narrative
+      </button>
+      <div style="text-align:center;margin-top:0.75rem;font-size:0.7rem;color:rgba(255,255,255,0.25);font-family:var(--mono);letter-spacing:0.03em">
+        AI-generated · Review before external use
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="panel-right">
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">✦</div>
+      <div class="empty-title">Your Deal Narrative Will Appear Here</div>
+      <div class="empty-sub">Deal Studio analyzes your property details, market data, and buyer profile to craft a compelling investment story — the same way top brokers do it, minus the commission.</div>
+      <div class="empty-examples">
+        <div class="ex-card">
+          <span class="ex-tag">Value-Add Pitch</span>
+          Repositioned to highlight below-market rent upside and Class B to B+ path.
+        </div>
+        <div class="ex-card">
+          <span class="ex-tag">Stabilized Hold</span>
+          Emphasizes durable cash flow, tenant quality, and low-management burden.
+        </div>
+        <div class="ex-card">
+          <span class="ex-tag">Repositioning</span>
+          Frames renovation potential and submarket momentum as compounding upside.
+        </div>
+        <div class="ex-card">
+          <span class="ex-tag">Redevelopment</span>
+          Focuses on zoning, air rights, and long-term land value creation.
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-icon">✦</div>
+      <div class="loading-title">Crafting Your Deal Narrative</div>
+      <div class="loading-sub">Analyzing property, market, and buyer signals...</div>
+      <div class="loading-steps">
+        <div class="loading-step" id="step1"><div class="loading-step-dot"></div>Analyzing property fundamentals</div>
+        <div class="loading-step" id="step2"><div class="loading-step-dot"></div>Benchmarking against submarket comps</div>
+        <div class="loading-step" id="step3"><div class="loading-step-dot"></div>Matching narrative to buyer profile</div>
+        <div class="loading-step" id="step4"><div class="loading-step-dot"></div>Generating pitch variations</div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+
+      <!-- Header -->
+      <div class="res-header">
+        <div class="res-meta">
+          <div class="res-title" id="resTitle">142 Bedford Avenue · Williamsburg</div>
+          <div class="res-sub" id="resSub">Value-Add Pitch · Family Office Audience</div>
+        </div>
+        <div class="res-actions">
+          <button class="res-btn" onclick="regenerate()">↻ Regenerate</button>
+          <a href="om-studio.html" class="res-btn res-btn-gold">→ Build Full OM</a>
+        </div>
+      </div>
+
+      <!-- Variant tabs -->
+      <div class="variants">
+        <button class="v-tab active" data-variant="0" onclick="showVariant(0)">
+          <span>A</span><span class="v-label">Narrative</span>
+        </button>
+        <button class="v-tab" data-variant="1" onclick="showVariant(1)">
+          <span>B</span><span class="v-label">Investor Story</span>
+        </button>
+        <button class="v-tab" data-variant="2" onclick="showVariant(2)">
+          <span>C</span><span class="v-label">Punchy / Brief</span>
+        </button>
+      </div>
+
+      <!-- Narrative variant content -->
+      <div class="narrative" id="narrative">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Highlights strip -->
+      <div class="hl-strip">
+        <div class="hl-cell">
+          <div class="hl-num">25%</div>
+          <div class="hl-lab">Rent Upside</div>
+        </div>
+        <div class="hl-cell">
+          <div class="hl-num">5.1%</div>
+          <div class="hl-lab">Current Cap</div>
+        </div>
+        <div class="hl-cell">
+          <div class="hl-num">6.3%</div>
+          <div class="hl-lab">Pro-Forma Cap</div>
+        </div>
+        <div class="hl-cell">
+          <div class="hl-num">+8.4%</div>
+          <div class="hl-lab">Submarket YoY</div>
+        </div>
+      </div>
+
+      <!-- Investment Highlights -->
+      <div class="bullets-section">
+        <div class="bs-title"><span class="bs-title-icon">◆</span>Investment Highlights</div>
+        <ul class="bullet-list" id="bulletList">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
+
+      <!-- Buyer Targeting -->
+      <div class="target-section">
+        <div class="ts-hd">
+          <div class="ts-icon">◉</div>
+          <div>
+            <div class="ts-title">This Pitch Targets</div>
+            <div class="ts-sub">Based on your submarket's active buyer pool</div>
+          </div>
+        </div>
+        <div class="ts-text">
+          This narrative is calibrated for <b>family offices and HNW private investors</b> focused on Brooklyn value-add plays. It emphasizes below-market rent delta, stabilized current cash flow, and clear paths to NOI growth — the combination this buyer class historically rewards most.
+        </div>
+        <div class="target-list">
+          <div class="target-chip">
+            <div class="tc-type">Best Match</div>
+            <div class="tc-name">Stonebridge Capital</div>
+            <div class="tc-score">87% match · Family Office · Williamsburg focus</div>
+          </div>
+          <div class="target-chip">
+            <div class="tc-type">Strong Match</div>
+            <div class="tc-name">Cooper Properties</div>
+            <div class="tc-score">94% match · Private Investor · Value-Add</div>
+          </div>
+          <div class="target-chip">
+            <div class="tc-type">Possible Match</div>
+            <div class="tc-name">Meridian Holdings</div>
+            <div class="tc-score">85% match · Owner-Operator · Long-term hold</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Snippets -->
+      <div class="snippets">
+        <div class="snip-card">
+          <div class="snip-tag">
+            <span>Email Subject Line</span>
+            <button class="snip-copy-btn" onclick="copySnip(this,'Off-Market Opportunity — 142 Bedford Ave, Williamsburg')">Copy</button>
+          </div>
+          <div class="snip-text">"Off-Market Opportunity — 142 Bedford Ave, Williamsburg"</div>
+        </div>
+        <div class="snip-card">
+          <div class="snip-tag">
+            <span>LinkedIn Post Teaser</span>
+            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
+          </div>
+          <div class="snip-text">"Rare Williamsburg 6-unit with 25% rent upside, full occupancy, and favorable zoning. Available to qualified buyers — DM for details."</div>
+        </div>
+        <div class="snip-card">
+          <div class="snip-tag">
+            <span>30-Second Phone Pitch</span>
+            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
+          </div>
+          <div class="snip-text">"Six-unit pre-war on Bedford Ave — stabilized at a 5.1 with a clear 25% rent delta vs. market. Recently upgraded roof and mechanicals, R6B zoning. Williamsburg rents up 8.4% YoY. Pro-forma to a 6.3 cap."</div>
+        </div>
+        <div class="snip-card">
+          <div class="snip-tag">
+            <span>Pitch Deck Opening Line</span>
+            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
+          </div>
+          <div class="snip-text">"In one of Brooklyn's most supply-constrained submarkets, a rare opportunity to acquire a stabilized, fully-occupied asset with embedded rent upside."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const VARIANTS = {
+  0: {
+    label: 'Narrative',
+    headline: 'A stabilized Williamsburg asset with <em>embedded upside</em>.',
+    lede: 'In one of Brooklyn\'s most supply-constrained submarkets, a rare opportunity to acquire a 100%-occupied, fully-operating multifamily property with clear, quantifiable value-add potential.',
+    body: [
+      '<strong>142 Bedford Avenue</strong> sits in the heart of Williamsburg — a submarket posting <strong>+8.4% year-over-year rent growth</strong> and a 2.8% vacancy rate. The six-unit building produces reliable cash flow today, but its real story is the gap between current rents and market: a delta approaching <em>25% upside</em> for a new owner willing to bring units to their natural ceiling.',
+      'The asset has been meaningfully de-risked by the current ownership. <strong>Roof and mechanicals were upgraded in 2021</strong>, and the building is stabilized with a strong, long-term tenant base. The building\'s R6B zoning and modest footprint also leave open optionality for long-term value creation — air rights and redevelopment scenarios remain on the table for a patient capital partner.',
+      'For a family office or HNW investor, this is a rare combination in today\'s market: <em>stabilized cash flow at acquisition, visible NOI growth post-turnover, and a Brooklyn submarket where rent fundamentals continue to compound</em>.'
+    ],
+    bullets: [
+      '<b>Below-market rents with ~25% upside.</b> Current rents trail market by approximately $650/unit/mo — a clear and quantifiable path to NOI growth as units turn.',
+      '<b>Prime Williamsburg location.</b> Walking distance to the L train, Domino Park, and one of NYC\'s most active retail corridors.',
+      '<b>Recently upgraded mechanicals (2021).</b> Roof, common-area HVAC, and electrical updates meaningfully reduce near-term capex risk.',
+      '<b>100% occupied with strong tenant base.</b> Durable in-place cash flow; no lease-up risk for an incoming owner.',
+      '<b>R6B zoning with air rights potential.</b> Optionality on redevelopment or vertical expansion for patient capital.'
+    ]
+  },
+  1: {
+    label: 'Investor Story',
+    headline: '<em>5.1% going in. 6.3% pro-forma.</em> Brooklyn\'s most durable asset class.',
+    lede: 'This deal prices at a discount to replacement cost, with a clear, achievable path from a 5.1% current cap to a 6.3% pro-forma — driven entirely by contractual rent burn-off, not speculation.',
+    body: [
+      'Williamsburg multifamily trades on <strong>durability and rent momentum</strong>. Both are present here. Transaction velocity in the submarket is up <strong>24% year-over-year</strong>, with 47 days to close the trailing average for 6–8 unit multifamily in the $3M range.',
+      'The mathematics are simple: in-place NOI of <strong>$163K</strong> at a <strong>$3.2M ask</strong> delivers a 5.1% going-in yield. Bringing the five underwater units to market over a 24–36 month hold takes NOI to approximately <strong>$202K</strong>, implying a 6.3% cap at basis and a meaningful markup to appraisal on refinance.',
+      'Downside is protected by <strong>Williamsburg\'s 2.8% vacancy rate</strong> and the property\'s fully-occupied status. Upside comes entirely from rent repricing — a lever the current ownership has chosen not to pull. For an investor with execution capacity, <em>this is the cleanest form of value-add</em>: no renovation, no re-tenanting, no lease-up.'
+    ],
+    bullets: [
+      '<b>Going-in yield: 5.1%.</b> Fully stabilized and operating at acquisition — no stabilization premium required.',
+      '<b>Pro-forma yield: 6.3%.</b> Achievable through organic rent repricing over a 24–36 month turnover cycle.',
+      '<b>Rent delta: ~$650/unit/mo.</b> Quantified gap to market rents based on comparable 2024 leases within 0.5 miles.',
+      '<b>Submarket velocity: +24% YoY.</b> Williamsburg transaction volume accelerating; 47-day average close for this asset profile.',
+      '<b>Discount to replacement cost.</b> $533K per unit vs. $680K+ replacement at current construction economics.'
+    ]
+  },
+  2: {
+    label: 'Punchy / Brief',
+    headline: 'Six units. <em>Williamsburg.</em> 25% rent upside. Closed in 47 days.',
+    lede: 'A fully-occupied Williamsburg 6-unit with quantifiable rent upside, recent mechanicals, and zoning optionality. Priced to move.',
+    body: [
+      '<strong>The asset:</strong> 6 units, ~5,200 SF, R6B zoning, pre-war. Roof and HVAC updated 2021. 100% occupied today.',
+      '<strong>The play:</strong> In-place rents trail market by ~25%. A 24–36 month rent reset takes you from a 5.1 going-in to a 6.3 pro-forma. No renovation required. No re-tenanting required.',
+      '<strong>The market:</strong> Williamsburg rents up 8.4% YoY. Submarket vacancy 2.8%. 47-day average close for this profile.',
+      '<strong>The ask:</strong> $3.2M. Clean title. Quick-close preferred.'
+    ],
+    bullets: [
+      '<b>6 units, 100% occupied.</b> Zero lease-up risk.',
+      '<b>Below market by ~25%.</b> Straightforward rent reset play.',
+      '<b>Recent capex (2021).</b> Roof, mechanicals, electrical done.',
+      '<b>R6B zoning.</b> Air rights optionality for patient capital.',
+      '<b>$3.2M ask / $533K per unit.</b> Discount to replacement.'
+    ]
+  }
+};
+
+let currentVariant = 0;
+
+function generateDeal() {
+  const btn = document.getElementById('genBtn');
+  btn.classList.add('generating');
+  btn.disabled = true;
+  btn.innerHTML = '<span>✦</span> Generating...';
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('loadingState').classList.add('visible');
+
+  // Animate loading steps
+  const steps = ['step1', 'step2', 'step3', 'step4'];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add('active');
+      if (i > 0) {
+        document.getElementById(steps[i-1]).classList.remove('active');
+        document.getElementById(steps[i-1]).classList.add('done');
+      }
+    }, i * 550);
+  });
+
+  // Finish
+  setTimeout(() => {
+    document.getElementById(steps[3]).classList.remove('active');
+    document.getElementById(steps[3]).classList.add('done');
+  }, 4 * 550);
+
+  setTimeout(() => {
+    document.getElementById('loadingState').classList.remove('visible');
+    document.getElementById('results').classList.add('visible');
+    renderVariant(0);
+    // Reset loading steps for next time
+    steps.forEach(id => {
+      document.getElementById(id).classList.remove('active', 'done');
+    });
+    btn.classList.remove('generating');
+    btn.disabled = false;
+    btn.innerHTML = '<span>✦</span> Regenerate Narrative';
+  }, 2800);
+}
+
+function renderVariant(idx) {
+  const v = VARIANTS[idx];
+  const nar = document.getElementById('narrative');
+  const bodyHTML = v.body.map(p => `<p>${p}</p>`).join('');
+
+  nar.innerHTML = `
+    <div class="nar-tag">◆ ${v.label.toUpperCase()} · VARIANT ${String.fromCharCode(65+idx)}</div>
+    <div class="nar-headline">${v.headline}</div>
+    <div class="nar-lede">${v.lede}</div>
+    <div class="nar-body">${bodyHTML}</div>
+  `;
+
+  const bl = document.getElementById('bulletList');
+  bl.innerHTML = v.bullets.map((b, i) => `
+    <li class="bullet-item">
+      <div class="bullet-marker">${String(i+1).padStart(2,'0')}</div>
+      <div>${b}</div>
+    </li>`).join('');
+}
+
+function showVariant(idx) {
+  currentVariant = idx;
+  document.querySelectorAll('.v-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.v-tab')[idx].classList.add('active');
+  renderVariant(idx);
+}
+
+function regenerate() {
+  generateDeal();
+}
+
+function copySnip(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 1800);
+  }).catch(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 1800);
+  });
+}
+
+// Angle chip selection
+document.querySelectorAll('.angle-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.angle-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+// Example card click - trigger generation
+document.querySelectorAll('.ex-card').forEach(card => {
+  card.addEventListener('click', () => generateDeal());
+});
+</script>
+</body>
+</html>

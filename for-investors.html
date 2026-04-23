@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Data Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0c0b;
+  --ink-2:#141715;
+  --ink-3:#1a1e1d;
+  --paper:#f5f2ec;
+  --gold:#c9a84c;
+  --gold-light:#e8d08a;
+  --gold-dim:rgba(201,168,76,0.13);
+  --muted:#7a8a82;
+  --border:rgba(255,255,255,0.07);
+  --success:#6dba8f;
+  --warn:#e8a050;
+  --indigo:#8b9ee8;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.3}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,12,11,0.93);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
+.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.8rem;border-radius:2px}
+.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.32);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--gold)}
+
+/* HERO */
+.hero{padding:5rem 2.25rem 4rem;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(201,168,76,0.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto}
+.hero-eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.hero-title{font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);font-weight:900;line-height:1.05;letter-spacing:-0.025em;color:var(--paper);margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;line-height:1.7;font-weight:300}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3.5rem;max-width:700px;margin-left:auto;margin-right:auto}
+.hs-card{}
+.hs-val{font-family:var(--serif);font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:0.4rem}
+.hs-lab{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+
+/* LIVE MAP SECTION */
+.section{padding:4rem 2.25rem;border-top:1px solid var(--border);position:relative;overflow:hidden}
+.section-inner{max-width:1300px;margin:0 auto}
+.sec-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.sec-eyebrow{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.6rem}
+.sec-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold)}
+.sec-title{font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;color:var(--paper);line-height:1.15;letter-spacing:-0.015em;max-width:620px}
+.sec-sub{font-size:0.95rem;color:rgba(255,255,255,0.45);max-width:500px;margin-top:0.75rem;line-height:1.7;font-weight:300}
+
+/* LIVE DATA MAP */
+.live-map{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;position:relative;
+}
+.lm-toolbar{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.4rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3);flex-wrap:wrap;gap:0.75rem}
+.lm-tb-left{display:flex;align-items:center;gap:1rem}
+.lm-live-pill{display:flex;align-items:center;gap:0.45rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--success);padding:0.3rem 0.7rem;border-radius:2px;background:rgba(109,186,143,0.1);border:1px solid rgba(109,186,143,0.25)}
+.lm-live-dot{width:7px;height:7px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(109,186,143,0.5)}50%{opacity:0.6;box-shadow:0 0 0 6px rgba(109,186,143,0)}}
+.lm-tb-status{font-family:var(--mono);font-size:0.68rem;color:rgba(255,255,255,0.4);letter-spacing:0.05em}
+.lm-tb-status b{color:var(--gold-light)}
+.lm-tb-right{display:flex;gap:0.5rem}
+.lm-chip{padding:0.35rem 0.75rem;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.55);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;border-radius:2px;cursor:pointer;transition:all 0.15s;text-transform:uppercase}
+.lm-chip:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.lm-chip.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+
+.lm-body{display:grid;grid-template-columns:1fr 280px;min-height:520px}
+.lm-viz{position:relative;background:#060807;overflow:hidden}
+.lm-viz svg{width:100%;height:100%;display:block;min-height:520px}
+
+/* Pulsing points */
+.data-point{animation:pulseDP 2s ease-in-out infinite}
+@keyframes pulseDP{0%,100%{opacity:0.9}50%{opacity:0.3}}
+
+.lm-feed{border-left:1px solid var(--border);background:rgba(0,0,0,0.2);max-height:520px;overflow-y:auto}
+.lm-feed::-webkit-scrollbar{width:3px}
+.lm-feed::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.feed-title{padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:0.4rem}
+.feed-item{padding:0.85rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:0.7rem;animation:slideIn 0.4s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.feed-dot{width:6px;height:6px;border-radius:50%;margin-top:0.5rem;flex-shrink:0}
+.feed-dot.val{background:var(--gold)}
+.feed-dot.view{background:var(--indigo)}
+.feed-dot.int{background:var(--success)}
+.feed-dot.om{background:var(--warn)}
+.feed-content{flex:1;min-width:0}
+.feed-meta{font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.04em;margin-bottom:0.2rem}
+.feed-txt{font-size:0.78rem;color:rgba(255,255,255,0.7);line-height:1.5}
+.feed-txt b{color:var(--paper);font-weight:500}
+
+/* DATA PRODUCTS */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+.product-card{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
+  padding:1.75rem 1.85rem;transition:all 0.25s;position:relative;overflow:hidden;
+}
+.product-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,0.25);box-shadow:0 16px 48px rgba(0,0,0,0.3)}
+.product-card::before{content:'';position:absolute;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold),transparent);transition:width 0.3s ease}
+.product-card:hover::before{width:100%}
+.pc-icon{width:38px;height:38px;border-radius:3px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.05rem;margin-bottom:1.1rem}
+.pc-tag{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.pc-title{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--paper);margin-bottom:0.5rem;line-height:1.25}
+.pc-desc{font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:1.4rem;min-height:66px}
+.pc-pricing{padding-top:1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.pc-price{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--gold-light)}
+.pc-price-sub{font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.3);letter-spacing:0.04em;margin-left:0.4rem}
+.pc-cta{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:opacity 0.2s}
+.pc-cta:hover{opacity:0.75}
+.pc-clients{display:flex;gap:0.3rem;margin-top:0.85rem;flex-wrap:wrap}
+.pc-client{font-family:var(--mono);font-size:0.55rem;padding:0.15rem 0.45rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:2px;color:rgba(255,255,255,0.4);letter-spacing:0.04em;text-transform:uppercase}
+
+/* DATA MOAT METRICS */
+.moat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.5rem}
+.moat-card{background:var(--ink-2);border:1px solid var(--border);border-radius:4px;padding:1.4rem 1.5rem;position:relative}
+.moat-lab{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.55rem}
+.moat-val{font-family:var(--serif);font-size:2.1rem;font-weight:900;color:var(--paper);line-height:1;margin-bottom:0.4rem}
+.moat-val.gold{color:var(--gold-light)}
+.moat-val.success{color:var(--success)}
+.moat-sub{font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.5}
+.moat-growth{display:inline-flex;align-items:center;gap:0.25rem;font-family:var(--mono);font-size:0.62rem;margin-top:0.4rem;padding:0.1rem 0.4rem;border-radius:2px;background:rgba(109,186,143,0.12);color:var(--success);border:1px solid rgba(109,186,143,0.2)}
+
+/* WATERFALL CHART */
+.waterfall{padding:2rem 0 0}
+.wf-bars{display:flex;align-items:flex-end;gap:0.5rem;height:180px;margin-bottom:0.85rem;padding:0 0.5rem}
+.wf-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.5rem;min-width:0}
+.wf-val{font-family:var(--mono);font-size:0.7rem;color:var(--gold-light);font-weight:500}
+.wf-bar{width:100%;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,0.3));border-radius:3px 3px 0 0;min-height:20px;transition:height 0.6s ease}
+.wf-bar.future{background:linear-gradient(180deg,rgba(201,168,76,0.5),rgba(201,168,76,0.1));border:1px dashed rgba(201,168,76,0.3)}
+.wf-label{font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;text-align:center;white-space:nowrap}
+
+/* REVENUE STREAMS */
+.rev-stack{display:flex;height:32px;border-radius:3px;overflow:hidden;margin-bottom:1rem;box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)}
+.rev-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.05em;color:var(--ink);font-weight:700;transition:flex 0.5s ease}
+.rev-seg.sub{background:var(--gold)}
+.rev-seg.alc{background:#d4a254}
+.rev-seg.data{background:#e8d08a;color:#5c4a1f}
+.rev-seg.ads{background:#b8953e;color:rgba(255,255,255,0.9)}
+
+.rev-legend{display:grid;grid-template-columns:repeat(2,1fr);gap:0.65rem;margin-top:1rem}
+.rl-item{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.85rem;border:1px solid rgba(255,255,255,0.05);border-radius:3px;background:rgba(255,255,255,0.02)}
+.rl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.rl-info{flex:1;min-width:0}
+.rl-name{font-size:0.78rem;color:rgba(255,255,255,0.7);font-weight:500}
+.rl-pct{font-family:var(--mono);font-size:0.62rem;color:var(--gold-light);letter-spacing:0.03em;margin-top:0.1rem}
+
+/* CTA Footer */
+.cta-footer{padding:5rem 2.25rem;background:linear-gradient(180deg,transparent,rgba(201,168,76,0.04));border-top:1px solid var(--border);text-align:center}
+.ctaf-title{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--paper);line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem;max-width:700px;margin-left:auto;margin-right:auto}
+.ctaf-title em{color:var(--gold);font-style:italic}
+.ctaf-sub{font-size:1rem;color:rgba(255,255,255,0.5);max-width:520px;margin:0 auto 2.5rem;line-height:1.7}
+.ctaf-actions{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold);color:var(--ink);padding:1rem 2.2rem;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--paper);padding:1rem 2.2rem;font-size:0.82rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;border:1.5px solid rgba(255,255,255,0.25);border-radius:2px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+.fade-up{opacity:0;transform:translateY(12px);animation:fadeUp 0.5s ease forwards}
+.fade-up:nth-child(2){animation-delay:0.1s}.fade-up:nth-child(3){animation-delay:0.2s}.fade-up:nth-child(4){animation-delay:0.3s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:1024px){
+  .lm-body{grid-template-columns:1fr}
+  .lm-feed{border-left:none;border-top:1px solid var(--border);max-height:300px}
+  .products-grid{grid-template-columns:1fr}
+  .moat-grid{grid-template-columns:1fr 1fr}
+  .hero-stats{grid-template-columns:1fr 1fr;gap:1.5rem}
+}
+@media(max-width:640px){
+  .section{padding:3rem 1.25rem}
+  .hero{padding:3rem 1.25rem 2.5rem}
+  .cta-footer{padding:3rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
+  <span class="nav-badge">For Investors · Data Platform</span>
+  <a href="index.html" class="nav-back">← Home</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Owner Intent Data Layer</div>
+    <h1 class="hero-title">The <em>Bloomberg Terminal</em><br/>for property ownership.</h1>
+    <p class="hero-sub">As owners evaluate, improve, and transact on BRIC, we generate the first proprietary, real-time map of owner intent in commercial real estate — a dataset the industry has never had.</p>
+    <div class="hero-stats">
+      <div class="hs-card fade-up">
+        <div class="hs-val">2.4M</div>
+        <div class="hs-lab">Properties Tracked</div>
+      </div>
+      <div class="hs-card fade-up">
+        <div class="hs-val">847K</div>
+        <div class="hs-lab">Active Owners</div>
+      </div>
+      <div class="hs-card fade-up">
+        <div class="hs-val">38K</div>
+        <div class="hs-lab">Daily Signals</div>
+      </div>
+      <div class="hs-card fade-up">
+        <div class="hs-val">$12B</div>
+        <div class="hs-lab">Properties Analyzed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DATA VIEW -->
+<section class="section">
+  <div class="section-inner">
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Live Intelligence</div>
+        <h2 class="sec-title">Every owner action becomes a market signal.</h2>
+        <p class="sec-sub">Valuations run. Properties viewed. OMs generated. Each activity produces an anonymized, aggregated signal — building the industry's first owner intent dataset in real time.</p>
+      </div>
+    </div>
+
+    <div class="live-map">
+      <div class="lm-toolbar">
+        <div class="lm-tb-left">
+          <span class="lm-live-pill"><span class="lm-live-dot"></span>Live</span>
+          <span class="lm-tb-status">Streaming · <b id="signalCount">38,247</b> signals today · <b>847K</b> active owners</span>
+        </div>
+        <div class="lm-tb-right">
+          <button class="lm-chip active">All Signals</button>
+          <button class="lm-chip">Valuations</button>
+          <button class="lm-chip">Intent</button>
+          <button class="lm-chip">Transactions</button>
+        </div>
+      </div>
+      <div class="lm-body">
+        <div class="lm-viz">
+          <svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice" id="livemap">
+            <defs>
+              <radialGradient id="mapGlow">
+                <stop offset="0%" stop-color="rgba(201,168,76,0.15)"/>
+                <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+              </radialGradient>
+              <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#mapGrid)"/>
+            <!-- City outline sketch -->
+            <path d="M 80 150 Q 150 100 250 120 Q 350 140 420 110 Q 500 80 580 130 Q 640 170 680 220 Q 700 290 660 350 Q 600 420 500 440 Q 400 450 320 430 Q 220 410 160 360 Q 100 290 80 230 Z"
+                  fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <path d="M 150 280 Q 200 260 280 290 Q 360 320 420 290 Q 480 260 540 300"
+                  fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <!-- Points generated by JS -->
+          </svg>
+        </div>
+        <div class="lm-feed" id="livefeed">
+          <div class="feed-title">⬡ LIVE FEED</div>
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MOAT METRICS -->
+    <div class="moat-grid">
+      <div class="moat-card">
+        <div class="moat-lab">Data Growth Rate</div>
+        <div class="moat-val gold">4.2×</div>
+        <div class="moat-sub">Data points generated per new user · compounds daily</div>
+        <span class="moat-growth">↑ Compounding</span>
+      </div>
+      <div class="moat-card">
+        <div class="moat-lab">Submarkets Covered</div>
+        <div class="moat-val">427</div>
+        <div class="moat-sub">Across 12 major U.S. metros with real owner signal density</div>
+        <span class="moat-growth">↑ 38 this quarter</span>
+      </div>
+      <div class="moat-card">
+        <div class="moat-lab">Prediction Accuracy</div>
+        <div class="moat-val success">89%</div>
+        <div class="moat-sub">Owner transaction intent within 90-day window</div>
+        <span class="moat-growth">↑ 6.1% YoY</span>
+      </div>
+      <div class="moat-card">
+        <div class="moat-lab">Data Latency</div>
+        <div class="moat-val">&lt; 2m</div>
+        <div class="moat-sub">From owner action to indexed market signal</div>
+        <span class="moat-growth">↑ Real-time</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DATA PRODUCTS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Data Products</div>
+        <h2 class="sec-title">Monetized three ways.</h2>
+        <p class="sec-sub">High-margin B2B products layered on top of owner activity. Each buyer class pays for a different view of the same proprietary dataset.</p>
+      </div>
+    </div>
+
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="pc-icon">◈</div>
+        <div class="pc-tag">Tier 1 Product</div>
+        <div class="pc-title">Owner Intent Feed</div>
+        <div class="pc-desc">Real-time API of anonymized owner behavior signals — valuation runs, OM downloads, buyer searches — mapped by submarket.</div>
+        <div class="pc-clients">
+          <span class="pc-client">Brokerages</span>
+          <span class="pc-client">Lenders</span>
+          <span class="pc-client">PE Groups</span>
+        </div>
+        <div class="pc-pricing">
+          <div><span class="pc-price">$18K</span><span class="pc-price-sub">/yr per metro</span></div>
+          <a class="pc-cta">Enterprise →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="pc-icon">◆</div>
+        <div class="pc-tag">Tier 2 Product</div>
+        <div class="pc-title">Submarket Intelligence</div>
+        <div class="pc-desc">Aggregated rent trends, transaction velocity, and owner sentiment indicators — delivered as curated quarterly reports with custom overlays.</div>
+        <div class="pc-clients">
+          <span class="pc-client">Family Offices</span>
+          <span class="pc-client">Developers</span>
+          <span class="pc-client">Appraisers</span>
+        </div>
+        <div class="pc-pricing">
+          <div><span class="pc-price">$6K</span><span class="pc-price-sub">/yr per market</span></div>
+          <a class="pc-cta">Subscribe →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="pc-icon">▲</div>
+        <div class="pc-tag">Tier 3 Product</div>
+        <div class="pc-title">Targeted Placement</div>
+        <div class="pc-desc">Professional marketing products — brokers, attorneys, lenders, contractors pay for visibility within relevant owner workflows and reports.</div>
+        <div class="pc-clients">
+          <span class="pc-client">Brokers</span>
+          <span class="pc-client">Attorneys</span>
+          <span class="pc-client">Contractors</span>
+        </div>
+        <div class="pc-pricing">
+          <div><span class="pc-price">$250</span><span class="pc-price-sub">/mo+ per placement</span></div>
+          <a class="pc-cta">Advertise →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REVENUE WATERFALL -->
+<section class="section">
+  <div class="section-inner">
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Financial Outlook</div>
+        <h2 class="sec-title">Revenue compounds as the data moat deepens.</h2>
+        <p class="sec-sub">Subscription MRR funds user growth. User growth generates data. Data products scale margins. Each layer reinforces the next.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:2.5rem;align-items:start;margin-top:2rem" id="revGrid">
+
+      <!-- Revenue Waterfall -->
+      <div class="live-map" style="padding:2rem 2rem 1.75rem">
+        <div style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between">
+          <span>5-Year Revenue Projection</span>
+          <span style="color:var(--gold)">$ Millions</span>
+        </div>
+
+        <div class="waterfall">
+          <div class="wf-bars">
+            <div class="wf-col"><span class="wf-val">$0.25M</span><div class="wf-bar" style="height:6%"></div><span class="wf-label">Year 1</span></div>
+            <div class="wf-col"><span class="wf-val">$1.2M</span><div class="wf-bar" style="height:28%"></div><span class="wf-label">Year 2</span></div>
+            <div class="wf-col"><span class="wf-val">$5.0M</span><div class="wf-bar" style="height:60%"></div><span class="wf-label">Year 3</span></div>
+            <div class="wf-col"><span class="wf-val">$12M</span><div class="wf-bar future" style="height:80%"></div><span class="wf-label">Year 4</span></div>
+            <div class="wf-col"><span class="wf-val">$24M</span><div class="wf-bar future" style="height:100%"></div><span class="wf-label">Year 5</span></div>
+          </div>
+          <div style="padding-top:1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.03em">
+            <span>■ Historical / Projected Base Case</span>
+            <span style="color:var(--gold)">■ Scaling Scenario</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue mix -->
+      <div>
+        <div style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1.25rem">
+          Revenue Mix · Year 3 Target
+        </div>
+
+        <div class="rev-stack">
+          <div class="rev-seg sub" style="flex:48">48%</div>
+          <div class="rev-seg alc" style="flex:22">22%</div>
+          <div class="rev-seg data" style="flex:20">20%</div>
+          <div class="rev-seg ads" style="flex:10">10%</div>
+        </div>
+
+        <div class="rev-legend">
+          <div class="rl-item">
+            <div class="rl-dot" style="background:var(--gold)"></div>
+            <div class="rl-info">
+              <div class="rl-name">Subscriptions</div>
+              <div class="rl-pct">48% · $2.4M ARR</div>
+            </div>
+          </div>
+          <div class="rl-item">
+            <div class="rl-dot" style="background:#d4a254"></div>
+            <div class="rl-info">
+              <div class="rl-name">À La Carte</div>
+              <div class="rl-pct">22% · $1.1M</div>
+            </div>
+          </div>
+          <div class="rl-item">
+            <div class="rl-dot" style="background:#e8d08a"></div>
+            <div class="rl-info">
+              <div class="rl-name">Data Products</div>
+              <div class="rl-pct">20% · $1.0M</div>
+            </div>
+          </div>
+          <div class="rl-item">
+            <div class="rl-dot" style="background:#b8953e"></div>
+            <div class="rl-info">
+              <div class="rl-name">Pro. Marketing</div>
+              <div class="rl-pct">10% · $500K</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.25);border-radius:3px;font-size:0.8rem;color:rgba(255,255,255,0.65);line-height:1.6">
+          <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem">Key insight</div>
+          Data and pro-marketing revenue grow <b style="color:var(--gold-light)">3–5× the margin</b> of pure subscriptions. Owner growth fuels both.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-footer">
+  <h2 class="ctaf-title">Investing in BRIC is investing in <em>the missing data layer</em> of CRE.</h2>
+  <p class="ctaf-sub">We're raising $500K–$1M to accelerate product, deepen coverage, and convert our owner base into a compounding data asset. Join us.</p>
+  <div class="ctaf-actions">
+    <a href="mailto:matthew@bricstudios.com" class="btn-gold">Request Investor Deck</a>
+    <a href="index.html" class="btn-outline">Back to Platform</a>
+  </div>
+  <p style="margin-top:2rem;font-family:var(--mono);font-size:0.7rem;color:rgba(255,255,255,0.2);letter-spacing:0.1em">MATTHEW R. PETERS · FOUNDER & CEO · BRIC STUDIOS</p>
+</section>
+
+<script>
+// Populate map points
+const svg = document.getElementById('livemap');
+const points = [
+  // Heavy concentration
+  {x:280, y:240, type:'val', size:5, delay:0},
+  {x:310, y:260, type:'view', size:4, delay:0.2},
+  {x:340, y:240, type:'int', size:6, delay:0.4},
+  {x:380, y:260, type:'val', size:4, delay:0.6},
+  {x:250, y:280, type:'om', size:5, delay:0.8},
+  {x:410, y:220, type:'int', size:3, delay:1.0},
+  {x:440, y:290, type:'val', size:5, delay:1.2},
+  {x:300, y:310, type:'view', size:4, delay:1.4},
+  {x:370, y:330, type:'val', size:6, delay:1.6},
+  {x:220, y:220, type:'om', size:4, delay:1.8},
+  {x:480, y:240, type:'int', size:5, delay:2.0},
+  {x:510, y:280, type:'val', size:3, delay:0.1},
+  {x:200, y:260, type:'view', size:4, delay:0.3},
+  {x:420, y:360, type:'val', size:5, delay:0.5},
+  {x:340, y:380, type:'int', size:4, delay:0.7},
+  {x:250, y:350, type:'om', size:3, delay:0.9},
+  {x:540, y:350, type:'val', size:5, delay:1.1},
+  {x:580, y:220, type:'view', size:4, delay:1.3},
+  {x:390, y:190, type:'val', size:6, delay:1.5},
+  {x:150, y:300, type:'int', size:5, delay:1.7},
+  {x:620, y:300, type:'val', size:4, delay:1.9},
+  {x:290, y:400, type:'view', size:3, delay:0.25},
+  {x:460, y:410, type:'om', size:4, delay:0.45},
+  {x:170, y:350, type:'int', size:3, delay:0.65},
+  // Scattered
+  {x:600, y:180, type:'val', size:3, delay:0.15},
+  {x:90, y:240, type:'val', size:4, delay:0.35},
+  {x:640, y:360, type:'view', size:3, delay:0.55},
+  {x:560, y:400, type:'val', size:4, delay:0.75},
+];
+const colorMap = {val:'#c9a84c', view:'#8b9ee8', int:'#6dba8f', om:'#e8a050'};
+points.forEach(p => {
+  const glow = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  glow.setAttribute('cx',p.x); glow.setAttribute('cy',p.y);
+  glow.setAttribute('r',p.size*3);
+  glow.setAttribute('fill',colorMap[p.type]); glow.setAttribute('opacity','0.15');
+  svg.appendChild(glow);
+
+  const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  dot.setAttribute('cx',p.x); dot.setAttribute('cy',p.y);
+  dot.setAttribute('r',p.size);
+  dot.setAttribute('fill',colorMap[p.type]);
+  dot.setAttribute('class','data-point');
+  dot.style.animationDelay = p.delay+'s';
+  svg.appendChild(dot);
+});
+
+// Connection lines between some clusters
+const lines = [
+  [280,240,340,240],[340,240,380,260],[280,240,310,260],
+  [410,220,440,290],[370,330,420,360],
+  [480,240,510,280],[390,190,440,290],
+];
+lines.forEach(([x1,y1,x2,y2]) => {
+  const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',x1); l.setAttribute('y1',y1);
+  l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+  l.setAttribute('stroke','rgba(201,168,76,0.12)');
+  l.setAttribute('stroke-width','0.5');
+  svg.appendChild(l);
+});
+
+// Live Feed
+const feedEvents = [
+  {type:'val', meta:'WILLIAMSBURG · 14:32:07 UTC', txt:'Valuation run · <b>6-unit MF</b> · $3.1M est.'},
+  {type:'int', meta:'BUSHWICK · 14:32:04 UTC', txt:'Intent signal · <b>Owner exploring sale</b>'},
+  {type:'view', meta:'CROWN HEIGHTS · 14:31:58 UTC', txt:'Heatmap viewed · <b>Buyer research</b>'},
+  {type:'om', meta:'WILLIAMSBURG · 14:31:49 UTC', txt:'OM generated · <b>$3.4M asking · 7.2% rent growth tagged</b>'},
+  {type:'val', meta:'RIDGEWOOD · 14:31:42 UTC', txt:'Valuation run · <b>8-unit MF</b> · $4.2M est.'},
+  {type:'int', meta:'FLATBUSH · 14:31:38 UTC', txt:'Intent signal · <b>Refinance modeling</b>'},
+  {type:'view', meta:'BROOKLYN · 14:31:33 UTC', txt:'Buyer intelligence · <b>Institutional query</b>'},
+  {type:'om', meta:'SUNSET PARK · 14:31:27 UTC', txt:'OM downloaded · <b>Professional user</b>'},
+  {type:'val', meta:'HARLEM · 14:31:21 UTC', txt:'Valuation run · <b>12-unit MF</b> · $7.8M est.'},
+  {type:'int', meta:'PROSPECT HTS · 14:31:16 UTC', txt:'Intent signal · <b>Improvement research</b>'},
+];
+const feed = document.getElementById('livefeed');
+feedEvents.forEach(e => {
+  const el = document.createElement('div');
+  el.className = 'feed-item';
+  el.innerHTML = `<div class="feed-dot ${e.type}"></div><div class="feed-content"><div class="feed-meta">${e.meta}</div><div class="feed-txt">${e.txt}</div></div>`;
+  feed.appendChild(el);
+});
+
+// Simulate live new events
+const liveTypes = [
+  {type:'val', meta:'WILLIAMSBURG', txt:'Valuation run · <b>6-unit MF</b>'},
+  {type:'int', meta:'BUSHWICK', txt:'Intent signal · <b>Owner exploring sale</b>'},
+  {type:'view', meta:'RIDGEWOOD', txt:'Heatmap viewed · <b>Buyer research</b>'},
+  {type:'om', meta:'CROWN HEIGHTS', txt:'OM generated · <b>$2.9M asking</b>'},
+  {type:'val', meta:'FLATBUSH', txt:'Valuation run · <b>4-unit MF</b>'},
+  {type:'int', meta:'HARLEM', txt:'Intent signal · <b>Refinance modeling</b>'},
+  {type:'view', meta:'ASTORIA', txt:'Comp sales viewed · <b>Pre-transaction</b>'},
+  {type:'om', meta:'SUNSET PARK', txt:'OM downloaded · <b>Broker preparing pitch</b>'},
+];
+let signalCount = 38247;
+setInterval(() => {
+  const e = liveTypes[Math.floor(Math.random()*liveTypes.length)];
+  const now = new Date();
+  const ts = String(now.getUTCHours()).padStart(2,'0')+':'+String(now.getUTCMinutes()).padStart(2,'0')+':'+String(now.getUTCSeconds()).padStart(2,'0');
+  const el = document.createElement('div');
+  el.className = 'feed-item';
+  el.innerHTML = `<div class="feed-dot ${e.type}"></div><div class="feed-content"><div class="feed-meta">${e.meta} · ${ts} UTC</div><div class="feed-txt">${e.txt}</div></div>`;
+  const title = feed.querySelector('.feed-title');
+  title.after(el);
+  while (feed.querySelectorAll('.feed-item').length > 12) {
+    feed.querySelectorAll('.feed-item')[feed.querySelectorAll('.feed-item').length - 1].remove();
+  }
+  signalCount += Math.floor(Math.random()*3)+1;
+  document.getElementById('signalCount').textContent = signalCount.toLocaleString();
+}, 2200);
+
+// Animate waterfall
+setTimeout(() => {
+  document.querySelectorAll('.wf-bar').forEach((b,i) => {
+    const h = b.style.height;
+    b.style.height = '0';
+    setTimeout(() => { b.style.height = h; }, i*120);
+  });
+}, 300);
+</script>
+</body>
+</html>
