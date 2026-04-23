@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Valuation Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f0e;
+  --paper:#f5f2ec;
+  --cream:#faf8f3;
+  --gold:#c9a84c;
+  --gold-light:#e8d08a;
+  --gold-dim:rgba(201,168,76,0.15);
+  --rust:#b85c38;
+  --slate:#3a4a52;
+  --muted:#7a8a82;
+  --border:rgba(13,15,14,0.12);
+  --border-gold:rgba(201,168,76,0.3);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --success:#2e7d52;
+  --warn:#b85c38;
+  --danger:#d46a55;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--ink);
+  color:var(--paper);
+  min-height:100vh;
+  overflow-x:hidden;
+  font-size:15px;
+  line-height:1.55;
+}
+
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2.5rem;border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.92);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;letter-spacing:0.02em;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
+.nav-logo-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border-gold);padding:0.3rem 0.85rem;border-radius:20px}
+.nav-back{font-size:0.8rem;color:rgba(255,255,255,0.35);text-decoration:none;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+.nav-back:hover{color:var(--gold)}
+
+/* TIER TOGGLE */
+.tier-bar{display:flex;align-items:center;justify-content:center;padding:0.85rem 2.5rem;background:rgba(201,168,76,0.05);border-bottom:1px solid rgba(255,255,255,0.07);gap:0.75rem;flex-wrap:wrap}
+.tier-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.tier-wrap{display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px}
+.tier-btn{padding:0.4rem 1rem;border:none;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--sans);font-size:0.76rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;border-radius:16px;transition:all 0.2s;display:flex;align-items:center;gap:0.4rem}
+.tier-btn.active{background:var(--gold);color:var(--ink)}
+.tier-btn .lock{font-size:0.7rem;opacity:0.8}
+
+.app{display:grid;grid-template-columns:440px 1fr;min-height:calc(100vh - 110px)}
+
+.panel-left{border-right:1px solid rgba(255,255,255,0.07);overflow-y:auto;max-height:calc(100vh - 110px);position:sticky;top:110px}
+.panel-left::-webkit-scrollbar{width:3px}
+.panel-left::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+
+.panel-header{padding:1.75rem 2rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.panel-eyebrow{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.panel-title{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--paper);line-height:1.15}
+.panel-sub{font-size:0.82rem;color:rgba(255,255,255,0.4);margin-top:0.4rem;line-height:1.6}
+
+.form-section{padding:1.4rem 2rem;border-bottom:1px solid rgba(255,255,255,0.05)}
+.form-section-title{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.form-section-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
+
+.field{margin-bottom:0.9rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem}
+label{display:block;font-size:0.74rem;color:rgba(255,255,255,0.45);margin-bottom:0.35rem;letter-spacing:0.02em;font-weight:500}
+.input-wrap{position:relative}
+.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.78rem;color:rgba(255,255,255,0.28);pointer-events:none}
+.input-prefix{left:0.8rem}
+.input-suffix{right:0.8rem}
+input[type="text"],input[type="number"],select{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.87rem;padding:0.6rem 0.85rem;border-radius:8px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none}
+input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+.has-prefix input{padding-left:1.9rem}
+.has-suffix input{padding-right:2rem}
+input:focus,select:focus{border-color:var(--border-gold);background:rgba(201,168,76,0.04)}
+input::placeholder{color:rgba(255,255,255,0.18)}
+select{cursor:pointer}
+select option{background:var(--ink)}
+
+/* ───── EXPENSE ROW WITH BENCHMARK ───── */
+.expense-block{margin-bottom:0.65rem;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem 0.85rem;transition:border-color 0.2s}
+.expense-block:hover{border-color:rgba(255,255,255,0.08)}
+.expense-block.alert{border-color:rgba(212,106,85,0.3);background:rgba(212,106,85,0.05)}
+.expense-block.good{border-color:rgba(109,186,143,0.2);background:rgba(109,186,143,0.03)}
+
+.exp-top{display:grid;grid-template-columns:1fr 110px 28px;gap:0.45rem;align-items:center}
+.exp-top input[type="text"]{font-size:0.8rem;padding:0.45rem 0.65rem}
+.exp-top .input-wrap input[type="number"]{padding:0.45rem 0.55rem 0.45rem 1.5rem;font-size:0.8rem;text-align:right}
+.exp-top .input-wrap .input-prefix{left:0.55rem;font-size:0.72rem}
+
+.remove-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.remove-btn:hover{border-color:var(--rust);color:var(--rust);background:rgba(184,92,56,0.1)}
+
+/* Benchmark row */
+.benchmark-row{display:flex;align-items:center;gap:0.6rem;margin-top:0.5rem;padding-top:0.5rem;border-top:1px dashed rgba(255,255,255,0.06);font-size:0.7rem}
+.benchmark-label{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap}
+.benchmark-visual{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;position:relative;overflow:hidden;min-width:60px}
+.benchmark-range{position:absolute;top:0;height:100%;background:linear-gradient(90deg,rgba(109,186,143,0.3),rgba(201,168,76,0.3),rgba(212,106,85,0.3));border-radius:2px}
+.benchmark-marker{position:absolute;top:-3px;width:2px;height:10px;background:var(--gold-light);border-radius:1px;box-shadow:0 0 0 2px rgba(13,15,14,0.8),0 0 6px rgba(201,168,76,0.6);transition:left 0.3s ease}
+.benchmark-user{position:absolute;top:-4px;width:3px;height:12px;background:#fff;border-radius:1px;box-shadow:0 0 0 2px rgba(13,15,14,0.9),0 0 8px rgba(255,255,255,0.5);transition:left 0.3s ease,opacity 0.2s;z-index:2}
+
+.benchmark-text{font-family:var(--mono);color:rgba(255,255,255,0.4);white-space:nowrap}
+.benchmark-text b{font-weight:500}
+.benchmark-text.good b{color:#6dba8f}
+.benchmark-text.warn b{color:var(--gold-light)}
+.benchmark-text.bad b{color:#e8a050}
+
+.savings-tag{display:inline-block;margin-top:0.35rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.05em;padding:0.2rem 0.5rem;border-radius:4px;background:rgba(212,106,85,0.15);color:#e8a050;border:1px solid rgba(212,106,85,0.25)}
+.savings-tag.good{background:rgba(109,186,143,0.15);color:#6dba8f;border-color:rgba(109,186,143,0.25)}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;cursor:pointer}
+.toggle-label-wrap{flex:1}
+.toggle-main{font-size:0.85rem;color:rgba(255,255,255,0.75);font-weight:500;display:flex;align-items:center;gap:0.5rem}
+.toggle-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.15rem}
+.pill-badge{display:inline-block;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;padding:0.15rem 0.5rem;border-radius:4px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);text-transform:uppercase}
+.toggle{width:38px;height:22px;border-radius:12px;background:rgba(255,255,255,0.1);position:relative;transition:background 0.2s;cursor:pointer;flex-shrink:0}
+.toggle.on{background:var(--gold)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.2s}
+.toggle.on::after{transform:translateX(16px)}
+
+/* Rent roll expandable */
+.rr-section{margin-top:0.75rem;display:none}
+.rr-section.visible{display:block;animation:slideDown 0.3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.rr-header{display:grid;grid-template-columns:60px 1fr 85px 30px;gap:0.4rem;margin-bottom:0.4rem;padding:0 0.35rem}
+.rr-header span{font-family:var(--mono);font-size:0.55rem;color:rgba(255,255,255,0.3);letter-spacing:0.08em;text-transform:uppercase}
+.rr-header .num{text-align:right}
+.rr-row{display:grid;grid-template-columns:60px 1fr 85px 30px;gap:0.4rem;align-items:center;margin-bottom:0.35rem}
+.rr-row input{font-size:0.78rem;padding:0.4rem 0.55rem}
+.rr-row .num-input{text-align:right}
+.rr-summary{display:flex;justify-content:space-between;padding:0.65rem 0.85rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;margin-top:0.5rem;font-size:0.78rem}
+.rr-summary-label{color:rgba(255,255,255,0.5);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em}
+.rr-summary-val{font-family:var(--serif);font-weight:700;color:var(--gold-light)}
+
+.add-btn{width:100%;padding:0.55rem;border-radius:8px;border:1px dashed rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.35);cursor:pointer;font-size:0.76rem;font-family:var(--sans);letter-spacing:0.03em;transition:all 0.2s;margin-top:0.3rem;display:flex;align-items:center;justify-content:center;gap:0.35rem}
+.add-btn:hover{border-color:var(--border-gold);color:var(--gold);background:var(--gold-dim)}
+
+/* Benchmark info banner */
+.info-banner{display:flex;gap:0.65rem;padding:0.75rem 0.9rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;margin-bottom:1rem;font-size:0.75rem;color:rgba(255,255,255,0.55);line-height:1.5}
+.info-icon{color:var(--gold);font-size:0.9rem;flex-shrink:0;padding-top:0.05rem}
+.info-banner b{color:var(--gold-light);font-weight:500}
+
+/* Cap rate slider */
+.slider-wrap{margin-top:0.5rem}
+.slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.55rem}
+.slider-val{font-family:var(--mono);font-size:0.8rem;color:var(--gold);background:var(--gold-dim);border:1px solid var(--border-gold);padding:0.2rem 0.6rem;border-radius:6px}
+input[type="range"]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.1);border-radius:2px;outline:none;cursor:pointer;border:none;padding:0}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;transition:transform 0.15s;box-shadow:0 0 0 3px rgba(201,168,76,0.15)}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+
+.calc-btn{width:100%;padding:0.95rem;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);font-size:0.85rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.calc-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+/* Expense summary insight */
+.expense-insight{margin:0.85rem 0 0.25rem;padding:0.75rem 0.95rem;border-radius:10px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);font-size:0.78rem;display:flex;align-items:center;gap:0.75rem}
+.expense-insight.savings{background:rgba(212,106,85,0.07);border-color:rgba(212,106,85,0.25)}
+.expense-insight.good{background:rgba(109,186,143,0.06);border-color:rgba(109,186,143,0.22)}
+.ei-icon{width:28px;height:28px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.85rem;flex-shrink:0}
+.expense-insight.savings .ei-icon{background:rgba(212,106,85,0.15);border-color:rgba(212,106,85,0.3);color:#e8a050}
+.expense-insight.good .ei-icon{background:rgba(109,186,143,0.15);border-color:rgba(109,186,143,0.3);color:#6dba8f}
+.ei-text{flex:1;color:rgba(255,255,255,0.7);line-height:1.5}
+.ei-text b{color:var(--paper);font-weight:600}
+.ei-text .amt{color:#e8a050;font-weight:600}
+.expense-insight.good .ei-text .amt{color:#6dba8f}
+
+/* ───── RIGHT PANEL (Results) ───── */
+.panel-right{padding:2.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:2rem}
+.panel-right::-webkit-scrollbar{width:3px}
+.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;opacity:0.5}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:0.5}
+.empty-title{font-family:var(--serif);font-size:1.5rem;color:var(--paper);margin-bottom:0.5rem}
+.empty-sub{font-size:0.85rem;color:rgba(255,255,255,0.4);max-width:300px;line-height:1.65}
+
+.results{display:flex;flex-direction:column;gap:1.75rem}
+.result-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.result-address{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--paper);line-height:1.2}
+.result-meta{font-family:var(--mono);font-size:0.68rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.3rem}
+.result-timestamp{font-family:var(--mono);font-size:0.65rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--border-gold);padding:0.3rem 0.75rem;border-radius:20px;white-space:nowrap}
+
+.value-range-card{background:linear-gradient(135deg,rgba(201,168,76,0.12) 0%,rgba(201,168,76,0.04) 100%);border:1px solid var(--border-gold);border-radius:12px;padding:2rem 2.25rem;position:relative;overflow:hidden}
+.value-range-card::before{content:'$';position:absolute;right:-0.5rem;top:-1rem;font-family:var(--serif);font-size:14rem;font-weight:900;color:rgba(201,168,76,0.04);line-height:1;pointer-events:none;user-select:none}
+.vr-label{font-family:var(--mono);font-size:0.65rem;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:1.25rem}
+.vr-range{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.vr-val{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:900;color:var(--paper);line-height:1}
+.vr-val.mid{color:var(--gold-light)}
+.vr-sep{font-size:1.5rem;color:rgba(255,255,255,0.2);font-weight:300}
+.vr-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.3rem}
+.vr-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+.vr-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,rgba(201,168,76,0.4),var(--gold),var(--gold-light));width:100%;animation:fillBar 1s ease-out forwards;transform-origin:left}
+@keyframes fillBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.vr-caps{display:flex;gap:1.5rem;flex-wrap:wrap}
+.vr-cap{font-family:var(--mono);font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em}
+.vr-cap strong{color:var(--gold-light);display:block;font-size:0.95rem;margin-bottom:0.1rem}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
+.kpi-card{background:rgba(255,255,255,0.02);padding:1.25rem 1.5rem;transition:background 0.2s}
+.kpi-card:hover{background:rgba(255,255,255,0.04)}
+.kpi-label{font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem}
+.kpi-val{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--paper);line-height:1}
+.kpi-val.positive{color:#6dba8f}
+.kpi-val.warning{color:#e8a87c}
+.kpi-change{font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem}
+
+/* Expense comparison panel */
+.expense-comparison{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem 1.75rem}
+.ec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem}
+.ec-title{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.ec-summary{font-family:var(--mono);font-size:0.7rem;color:var(--gold-light);letter-spacing:0.05em}
+.ec-row{display:grid;grid-template-columns:1fr 90px 140px 90px;gap:1rem;align-items:center;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem}
+.ec-row:last-child{border-bottom:none}
+.ec-row-name{color:rgba(255,255,255,0.65);font-weight:500}
+.ec-row-val{font-family:var(--mono);text-align:right;color:rgba(255,255,255,0.6)}
+.ec-row-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;position:relative;overflow:hidden}
+.ec-row-bar .bench-range{position:absolute;top:0;height:100%;background:linear-gradient(90deg,rgba(109,186,143,0.3),rgba(201,168,76,0.3),rgba(212,106,85,0.3));border-radius:2px}
+.ec-row-bar .bench-pos{position:absolute;top:-3px;width:2px;height:10px;background:var(--gold-light);border-radius:1px;box-shadow:0 0 0 1.5px rgba(13,15,14,0.9)}
+.ec-row-bar .user-pos{position:absolute;top:-4px;width:3px;height:12px;background:#fff;border-radius:1px;box-shadow:0 0 0 1.5px rgba(13,15,14,0.9);z-index:2}
+.ec-row-tag{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.03em;padding:0.2rem 0.5rem;border-radius:4px;text-align:center;white-space:nowrap;font-weight:500}
+.ec-row-tag.good{background:rgba(109,186,143,0.12);color:#6dba8f;border:1px solid rgba(109,186,143,0.25)}
+.ec-row-tag.fair{background:rgba(201,168,76,0.12);color:var(--gold-light);border:1px solid rgba(201,168,76,0.25)}
+.ec-row-tag.high{background:rgba(212,106,85,0.12);color:#e8a050;border:1px solid rgba(212,106,85,0.25)}
+.ec-footer{margin-top:1.25rem;padding-top:1rem;border-top:2px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.ec-footer-text{font-size:0.82rem;color:rgba(255,255,255,0.6)}
+.ec-footer-text b{color:var(--paper);font-weight:600}
+.ec-footer-savings{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:#e8a050}
+.ec-footer-savings.good{color:#6dba8f}
+
+.scenarios-title,.breakdown-title,.sensitivity-title{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem}
+.scenarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.scenario-card{border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1.25rem;transition:border-color 0.2s,background 0.2s;cursor:default}
+.scenario-card:hover{border-color:var(--border-gold);background:rgba(201,168,76,0.04)}
+.scenario-card.base{border-color:var(--border-gold);background:rgba(201,168,76,0.06)}
+.sc-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.4rem}
+.sc-cap{font-size:0.75rem;color:var(--gold);margin-bottom:0.5rem}
+.sc-val{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--paper);margin-bottom:0.3rem}
+.sc-ppu{font-size:0.75rem;color:rgba(255,255,255,0.3)}
+
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.breakdown-col-title{font-size:0.75rem;color:rgba(255,255,255,0.35);font-weight:600;margin-bottom:0.75rem;letter-spacing:0.04em}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.82rem}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-row-name{color:rgba(255,255,255,0.5)}
+.breakdown-row-val{font-family:var(--mono);font-size:0.8rem;color:var(--paper);font-weight:500}
+.breakdown-row-val.income{color:#6dba8f}
+.breakdown-row-val.expense{color:#e8a87c}
+.breakdown-total{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0 0;margin-top:0.25rem;font-weight:600;font-size:0.9rem;border-top:2px solid rgba(255,255,255,0.1)}
+.breakdown-total-val{font-family:var(--serif);font-size:1.1rem;color:var(--gold-light)}
+
+.disclaimer{font-size:0.72rem;color:rgba(255,255,255,0.2);line-height:1.6;border-top:1px solid rgba(255,255,255,0.06);padding-top:1.25rem;font-family:var(--mono);letter-spacing:0.02em}
+
+.sensitivity-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.sensitivity-table th{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0.5rem 0.85rem;text-align:right;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sensitivity-table th:first-child{text-align:left}
+.sensitivity-table td{padding:0.55rem 0.85rem;text-align:right;border-bottom:1px solid rgba(255,255,255,0.04);font-family:var(--mono);color:rgba(255,255,255,0.5);transition:background 0.15s}
+.sensitivity-table td:first-child{text-align:left;color:rgba(255,255,255,0.3)}
+.sensitivity-table tr:hover td{background:rgba(255,255,255,0.02)}
+.sensitivity-table td.highlight{color:var(--gold-light);font-weight:500}
+
+.fade-in{animation:fadeIn 0.5s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .panel-left{position:static;max-height:none}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .scenarios-grid{grid-template-columns:1fr}
+  .breakdown-grid{grid-template-columns:1fr}
+  .ec-row{grid-template-columns:1fr 80px 80px;gap:0.5rem}
+  .ec-row-bar{display:none}
+}
+@media(max-width:600px){
+  .panel-right{padding:1.5rem}
+  .panel-left .form-section,.panel-left .panel-header{padding-left:1.25rem;padding-right:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-dot"></span>BRIC Studios
+  </a>
+  <span class="nav-badge">Valuation Studio</span>
+  <a href="index.html" class="nav-back">← Home</a>
+</nav>
+
+<!-- TIER TOGGLE -->
+<div class="tier-bar">
+  <span class="tier-label">Plan</span>
+  <div class="tier-wrap">
+    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">Free</button>
+    <button class="tier-btn" id="tierPaid" onclick="setTier('paid')">Growth</button>
+  </div>
+  <span id="tierDesc" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">Now with market benchmarks on every expense</span>
+  <button onclick="loadSample()" style="margin-left:auto;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.42rem 0.95rem;border-radius:20px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.08);color:var(--gold);cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(201,168,76,0.18)'" onmouseout="this.style.background='rgba(201,168,76,0.08)'">⬡ Load Sample: 1782 Nostrand</button>
+</div>
+
+<div class="app">
+
+  <!-- LEFT PANEL — INPUTS -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Property Intelligence</div>
+      <div class="panel-title">Valuation Studio</div>
+      <div class="panel-sub" id="panelSub">Enter your property details. We'll benchmark every expense against your local submarket so you know exactly where you might be overpaying.</div>
+    </div>
+
+    <!-- PROPERTY -->
+    <div class="form-section">
+      <div class="form-section-title">Property Details</div>
+      <div class="field">
+        <label>Property Address</label>
+        <input type="text" id="address" placeholder="e.g. 142 Bedford Ave, Brooklyn NY" value="1782 Nostrand Avenue, Brooklyn NY 11226"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Property Type</label>
+          <select id="propertyType">
+            <option value="mixed">Mixed-Use</option>
+            <option value="multifamily">Multifamily</option>
+            <option value="commercial">Commercial</option>
+            <option value="single">Single Family</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Market</label>
+          <select id="marketSelect" onchange="updateBenchmarks()">
+            <option value="flatbush">Flatbush, BK</option>
+            <option value="williamsburg">Williamsburg, BK</option>
+            <option value="bushwick">Bushwick, BK</option>
+            <option value="crownhts">Crown Heights, BK</option>
+            <option value="harlem">Harlem, NYC</option>
+            <option value="bronx">South Bronx</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Number of Units</label>
+          <input type="number" id="units" placeholder="6" min="1" value="6" oninput="updateBenchmarks()"/>
+        </div>
+        <div class="field">
+          <label>Total Sq. Footage</label>
+          <div class="input-wrap"><input type="number" id="sqft" placeholder="5200" min="0" value="3984"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOME -->
+    <div class="form-section">
+      <div class="form-section-title">Annual Income</div>
+
+      <!-- Itemized rent roll toggle -->
+      <div class="toggle-row" onclick="toggleRentRoll()">
+        <div class="toggle-label-wrap">
+          <div class="toggle-main">
+            Itemized Rent Roll
+            <span class="pill-badge">Free Feature</span>
+          </div>
+          <div class="toggle-sub">Enter unit-by-unit rents for more accurate analysis</div>
+        </div>
+        <div class="toggle" id="rentRollToggle"></div>
+      </div>
+
+      <div id="rentRollSection" class="rr-section">
+        <div class="rr-header">
+          <span>Unit</span><span>Type</span><span class="num">Mo. Rent</span><span></span>
+        </div>
+        <div id="rrRows"></div>
+        <button class="add-btn" onclick="addRRRow()">+ Add Unit</button>
+        <div class="rr-summary">
+          <span class="rr-summary-label">Total Monthly Rent</span>
+          <span class="rr-summary-val" id="rrTotalMo">$0/mo</span>
+        </div>
+        <div class="rr-summary" style="background:rgba(109,186,143,0.06);border-color:rgba(109,186,143,0.15)">
+          <span class="rr-summary-label">Annual Gross Rental Income</span>
+          <span class="rr-summary-val" id="rrTotalYr" style="color:#6dba8f">$0/yr</span>
+        </div>
+      </div>
+
+      <div id="manualIncomeSection">
+        <div class="field" style="margin-top:0.5rem">
+          <label>Gross Rental Income (Annual)</label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="grossIncome" placeholder="192000" value="192960" min="0"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Vacancy Rate</label>
+          <div class="input-wrap has-suffix">
+            <input type="number" id="vacancyRate" placeholder="5" value="4" min="0" max="100"/>
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Other Income (Annual)</label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="otherIncome" placeholder="0" value="0" min="0"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPENSES WITH BENCHMARKS -->
+    <div class="form-section">
+      <div class="form-section-title">Annual Expenses</div>
+      <div class="info-banner">
+        <span class="info-icon">◆</span>
+        <div>Each expense is compared against your submarket's <b>typical range</b>. Add any custom expense — our AI will auto-match it to the closest market benchmark.</div>
+      </div>
+      <div id="expenseRows"></div>
+      <button class="add-btn" onclick="addExpenseRow()">+ Add Expense Line</button>
+
+      <div id="expenseInsight" class="expense-insight" style="display:none">
+        <div class="ei-icon">◆</div>
+        <div class="ei-text" id="expenseInsightText"></div>
+      </div>
+    </div>
+
+    <!-- CAP RATE -->
+    <div class="form-section">
+      <div class="form-section-title">Market Cap Rate</div>
+      <div class="slider-wrap">
+        <div class="slider-row">
+          <label style="margin:0">Cap Rate for Your Submarket</label>
+          <span class="slider-val" id="capDisplay">9.1%</span>
+        </div>
+        <input type="range" id="capRate" min="3" max="12" step="0.1" value="9.1" oninput="updateCapDisplay(this.value)"/>
+        <div style="display:flex;justify-content:space-between;margin-top:0.4rem">
+          <span style="font-size:0.62rem;color:rgba(255,255,255,0.2);font-family:var(--mono)">3% — Hot</span>
+          <span style="font-size:0.62rem;color:rgba(255,255,255,0.2);font-family:var(--mono)">12% — Cold</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section" style="border-bottom:none">
+      <button class="calc-btn" onclick="calculate()">
+        <span>⬡</span> Generate Valuation
+      </button>
+      <div style="text-align:center;margin-top:0.75rem;font-size:0.7rem;color:rgba(255,255,255,0.2);font-family:var(--mono)">
+        Estimates are directional — not appraisals
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — RESULTS -->
+  <div class="panel-right" id="panelRight">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">◎</div>
+      <div class="empty-title">No Valuation Yet</div>
+      <div class="empty-sub">Enter your property details on the left, then click Generate Valuation to see your results with market benchmarks.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ MARKET BENCHMARKS ═══
+// Expense benchmarks expressed as $/unit/year for multifamily, by market
+// Each value: {low, mid, high} representing typical submarket range
+// ═══ MARKET BENCHMARKS ═══
+// Per-unit per-year unless marked "flat" (building-level costs that don't scale per unit)
+// unit: 'per_unit' (default) or 'flat' (building total, doesn't multiply by units)
+const MARKET_BENCHMARKS = {
+  williamsburg: {
+    'Property Taxes':       {low:1600, mid:2100, high:2800, unit:'per_unit', tooltip:'NYC Class 2 multifamily, per unit/yr'},
+    'Insurance':            {low:650,  mid:850,  high:1100, unit:'per_unit', tooltip:'Building insurance per unit/yr'},
+    'Maintenance & Repairs':{low:800,  mid:1100, high:1500, unit:'per_unit', tooltip:'Ongoing maintenance per unit/yr'},
+    'Management Fee':       {low:0,    mid:1800, high:2400, unit:'per_unit', tooltip:'5–8% of EGI typical when managed'},
+    'Heat':                 {low:500,  mid:750,  high:1100, unit:'per_unit', tooltip:'Heating fuel (gas/oil) per unit/yr'},
+    'Water & Sewer':        {low:320,  mid:480,  high:680,  unit:'per_unit', tooltip:'NYC DEP avg per unit/yr'},
+    'Common Area Electric': {low:900,  mid:1400, high:2100, unit:'flat',     tooltip:'Hallway + common area only (building total)'},
+    'Trash / Extermination':{low:150,  mid:240,  high:360,  unit:'per_unit'},
+    'Landscaping':          {low:100,  mid:200,  high:350,  unit:'per_unit'},
+    'Legal & Admin':        {low:120,  mid:220,  high:400,  unit:'per_unit'},
+    'Reserves':             {low:300,  mid:500,  high:800,  unit:'per_unit'},
+  },
+  bushwick: {
+    'Property Taxes':       {low:1400, mid:1850, high:2400, unit:'per_unit'},
+    'Insurance':            {low:600,  mid:780,  high:1000, unit:'per_unit'},
+    'Maintenance & Repairs':{low:750,  mid:1050, high:1400, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1600, high:2100, unit:'per_unit'},
+    'Heat':                 {low:480,  mid:720,  high:1050, unit:'per_unit'},
+    'Water & Sewer':        {low:300,  mid:460,  high:650,  unit:'per_unit'},
+    'Common Area Electric': {low:850,  mid:1300, high:2000, unit:'flat'},
+    'Trash / Extermination':{low:140,  mid:220,  high:340,  unit:'per_unit'},
+    'Landscaping':          {low:80,   mid:180,  high:320,  unit:'per_unit'},
+    'Legal & Admin':        {low:100,  mid:200,  high:380,  unit:'per_unit'},
+    'Reserves':             {low:280,  mid:460,  high:750,  unit:'per_unit'},
+  },
+  crownhts: {
+    'Property Taxes':       {low:1500, mid:1950, high:2500, unit:'per_unit'},
+    'Insurance':            {low:620,  mid:800,  high:1050, unit:'per_unit'},
+    'Maintenance & Repairs':{low:800,  mid:1080, high:1450, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1700, high:2250, unit:'per_unit'},
+    'Heat':                 {low:490,  mid:735,  high:1080, unit:'per_unit'},
+    'Water & Sewer':        {low:310,  mid:470,  high:665,  unit:'per_unit'},
+    'Common Area Electric': {low:880,  mid:1350, high:2050, unit:'flat'},
+    'Trash / Extermination':{low:145,  mid:230,  high:350,  unit:'per_unit'},
+    'Landscaping':          {low:90,   mid:190,  high:340,  unit:'per_unit'},
+    'Legal & Admin':        {low:110,  mid:210,  high:390,  unit:'per_unit'},
+    'Reserves':             {low:290,  mid:480,  high:770,  unit:'per_unit'},
+  },
+  harlem: {
+    'Property Taxes':       {low:1200, mid:1650, high:2200, unit:'per_unit'},
+    'Insurance':            {low:580,  mid:750,  high:970,  unit:'per_unit'},
+    'Maintenance & Repairs':{low:720,  mid:1000, high:1350, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1500, high:2000, unit:'per_unit'},
+    'Heat':                 {low:460,  mid:690,  high:1000, unit:'per_unit'},
+    'Water & Sewer':        {low:290,  mid:440,  high:620,  unit:'per_unit'},
+    'Common Area Electric': {low:820,  mid:1250, high:1900, unit:'flat'},
+    'Trash / Extermination':{low:130,  mid:210,  high:320,  unit:'per_unit'},
+    'Landscaping':          {low:75,   mid:170,  high:310,  unit:'per_unit'},
+    'Legal & Admin':        {low:100,  mid:200,  high:370,  unit:'per_unit'},
+    'Reserves':             {low:270,  mid:440,  high:720,  unit:'per_unit'},
+  },
+  bronx: {
+    'Property Taxes':       {low:1100, mid:1500, high:2000, unit:'per_unit'},
+    'Insurance':            {low:550,  mid:720,  high:940,  unit:'per_unit'},
+    'Maintenance & Repairs':{low:700,  mid:960,  high:1300, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1400, high:1900, unit:'per_unit'},
+    'Heat':                 {low:440,  mid:660,  high:960,  unit:'per_unit'},
+    'Water & Sewer':        {low:280,  mid:425,  high:600,  unit:'per_unit'},
+    'Common Area Electric': {low:780,  mid:1200, high:1820, unit:'flat'},
+    'Trash / Extermination':{low:125,  mid:200,  high:310,  unit:'per_unit'},
+    'Landscaping':          {low:70,   mid:160,  high:300,  unit:'per_unit'},
+    'Legal & Admin':        {low:95,   mid:190,  high:360,  unit:'per_unit'},
+    'Reserves':             {low:260,  mid:430,  high:700,  unit:'per_unit'},
+  },
+  flatbush: {
+    'Property Taxes':       {low:1600, mid:2100, high:2700, unit:'per_unit', tooltip:'NYC Class 2A protected — Flatbush mixed-use'},
+    'Insurance':            {low:700,  mid:950,  high:1250, unit:'per_unit'},
+    'Maintenance & Repairs':{low:600,  mid:850,  high:1200, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1400, high:1900, unit:'per_unit'},
+    'Payroll / Super':      {low:300,  mid:500,  high:800,  unit:'per_unit', tooltip:'Part-time super typical for 5–8 unit buildings'},
+    'Heat':                 {low:520,  mid:780,  high:1150, unit:'per_unit'},
+    'Water & Sewer':        {low:700,  mid:900,  high:1200, unit:'per_unit', tooltip:'NYC DEP avg for Flatbush mixed-use'},
+    'Common Area Electric': {low:650,  mid:900,  high:1300, unit:'flat',     tooltip:'Hallways + common area only (building total)'},
+    'Trash / Extermination':{low:140,  mid:220,  high:340,  unit:'per_unit'},
+    'Landscaping':          {low:80,   mid:180,  high:320,  unit:'per_unit'},
+    'Legal & Admin':        {low:110,  mid:210,  high:380,  unit:'per_unit'},
+    'Reserves':             {low:280,  mid:460,  high:750,  unit:'per_unit'},
+  },
+  other: {
+    'Property Taxes':       {low:1300, mid:1800, high:2400, unit:'per_unit'},
+    'Insurance':            {low:600,  mid:800,  high:1050, unit:'per_unit'},
+    'Maintenance & Repairs':{low:750,  mid:1050, high:1400, unit:'per_unit'},
+    'Management Fee':       {low:0,    mid:1600, high:2100, unit:'per_unit'},
+    'Heat':                 {low:470,  mid:705,  high:1025, unit:'per_unit'},
+    'Water & Sewer':        {low:295,  mid:450,  high:635,  unit:'per_unit'},
+    'Common Area Electric': {low:830,  mid:1275, high:1950, unit:'flat'},
+    'Trash / Extermination':{low:135,  mid:215,  high:330,  unit:'per_unit'},
+    'Landscaping':          {low:85,   mid:180,  high:325,  unit:'per_unit'},
+    'Legal & Admin':        {low:105,  mid:205,  high:380,  unit:'per_unit'},
+    'Reserves':             {low:280,  mid:460,  high:740,  unit:'per_unit'},
+  }
+};
+
+// ═══ AI EXPENSE MATCHER ═══
+// Maps fuzzy/alternate expense names to canonical benchmark keys
+// Used when owner enters custom expense names
+const AI_EXPENSE_ALIASES = {
+  'Property Taxes':       ['tax','taxes','property tax','re tax','real estate tax','ad valorem'],
+  'Insurance':            ['insurance','ins','liability','hazard','building insurance'],
+  'Maintenance & Repairs':['maintenance','repair','repairs','r&m','fix','upkeep','service call','handyman'],
+  'Management Fee':       ['management','mgmt','property manager','pm fee','management fee'],
+  'Heat':                 ['heat','heating','boiler','fuel','oil','gas','natural gas','heating oil','propane','furnace'],
+  'Water & Sewer':        ['water','sewer','water/sewer','water & sewer','dep','sewage','water bill','plumbing bill'],
+  'Common Area Electric': ['electric','electricity','common electric','hallway electric','common area','con ed','coned','common electric bill','building electric','hallway lighting'],
+  'Trash / Extermination':['trash','garbage','waste','refuse','exterminat','pest','bug','rodent','sanitation','exterminator'],
+  'Landscaping':          ['landscape','landscaping','lawn','snow','snow removal','grounds','garden','gardening','yard'],
+  'Legal & Admin':        ['legal','attorney','lawyer','admin','administrative','filing','permit','compliance','office','registration'],
+  'Reserves':             ['reserve','reserves','capital reserve','capex','replacement reserve','cap ex'],
+  'Payroll / Super':      ['payroll','super','superintendent','janitor','janitorial','building staff','porter','cleaning','staff'],
+};
+
+const DEFAULT_EXPENSES = [
+  { name: 'Property Taxes',        amount: 14205 },
+  { name: 'Insurance',             amount: 6150  },
+  { name: 'Heat',                  amount: 4582  },
+  { name: 'Water & Sewer',         amount: 5250  },
+  { name: 'Common Area Electric',  amount: 797   },
+  { name: 'Repairs & Maintenance', amount: 2400  },
+  { name: 'Payroll / Super',       amount: 2600  },
+  { name: 'Management / Legal',    amount: 7410  },
+];
+
+let expenseIdCounter = 0;
+let rrIdCounter = 0;
+let rentRollActive = false;
+let currentTier = 'free';
+
+// ── AI Smart Match: maps any user-entered expense name to the closest benchmark ──
+function findBenchmark(name) {
+  const market = document.getElementById('marketSelect').value;
+  const benchmarks = MARKET_BENCHMARKS[market] || MARKET_BENCHMARKS.other;
+  const input = name.trim().toLowerCase();
+  if (!input) return null;
+
+  // 1. Exact case-insensitive match
+  for (const key in benchmarks) {
+    if (key.toLowerCase() === input) {
+      return { key, matchType: 'exact', ...benchmarks[key] };
+    }
+  }
+
+  // 2. Alias match (ai-powered fuzzy mapping)
+  for (const canonical in AI_EXPENSE_ALIASES) {
+    const aliases = AI_EXPENSE_ALIASES[canonical];
+    for (const alias of aliases) {
+      // Alias appears in the input, or input is contained in alias
+      if (input.includes(alias) || alias.includes(input)) {
+        if (benchmarks[canonical]) {
+          return { key: canonical, matchType: 'ai', ...benchmarks[canonical] };
+        }
+      }
+    }
+  }
+
+  // 3. Word-level fuzzy match on canonical keys
+  const inputWords = input.split(/[\s/&-]+/).filter(w => w.length > 2);
+  for (const key in benchmarks) {
+    const keyWords = key.toLowerCase().split(/[\s/&-]+/);
+    for (const w of inputWords) {
+      if (keyWords.some(kw => kw === w || (kw.length > 3 && w.length > 3 && (kw.includes(w) || w.includes(kw))))) {
+        return { key, matchType: 'ai', ...benchmarks[key] };
+      }
+    }
+  }
+
+  return null;
+}
+
+// ── Expense row builder ──
+function addExpenseRow(name = '', amount = '') {
+  const id = ++expenseIdCounter;
+  const container = document.getElementById('expenseRows');
+  const block = document.createElement('div');
+  block.className = 'expense-block';
+  block.id = `exp-${id}`;
+  block.innerHTML = `
+    <div class="exp-top">
+      <input type="text" placeholder="Expense name" value="${name}" class="exp-name" oninput="updateBenchmarkForRow('${id}')"/>
+      <div class="input-wrap has-prefix">
+        <span class="input-prefix">$</span>
+        <input type="number" placeholder="0" value="${amount}" min="0" class="exp-amount" oninput="updateBenchmarkForRow('${id}')"/>
+      </div>
+      <button class="remove-btn" onclick="removeExpense('exp-${id}');updateExpenseSummary()" title="Remove">×</button>
+    </div>
+    <div class="benchmark-row" id="bench-${id}"></div>
+  `;
+  container.appendChild(block);
+  updateBenchmarkForRow(id);
+}
+
+function removeExpense(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function updateBenchmarkForRow(id) {
+  const block = document.getElementById(`exp-${id}`);
+  if (!block) return;
+  const nameInput = block.querySelector('.exp-name');
+  const amtInput = block.querySelector('.exp-amount');
+  const benchRow = document.getElementById(`bench-${id}`);
+  const name = nameInput.value;
+  const amt = parseFloat(amtInput.value) || 0;
+  const units = parseFloat(document.getElementById('units').value) || 1;
+
+  const bench = findBenchmark(name);
+  if (!bench || !name.trim()) {
+    benchRow.innerHTML = `<span class="benchmark-label">No benchmark</span><span style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.25)">Enter a common expense name (e.g. "heat", "taxes") for market comparison</span>`;
+    block.classList.remove('alert', 'good');
+    return;
+  }
+
+  // Determine if benchmark is per-unit or flat (building-level)
+  const isFlat = bench.unit === 'flat';
+
+  // Compute totals and comparison values based on unit type
+  const lowTotal  = isFlat ? bench.low  : bench.low  * units;
+  const midTotal  = isFlat ? bench.mid  : bench.mid  * units;
+  const highTotal = isFlat ? bench.high : bench.high * units;
+
+  // For comparison positioning: if flat → compare raw amt; if per_unit → compare per-unit
+  const userValue    = isFlat ? amt : amt / units;
+  const benchLowRaw  = bench.low;
+  const benchMidRaw  = bench.mid;
+  const benchHighRaw = bench.high;
+
+  const rangeMin = benchLowRaw * 0.6;
+  const rangeMax = benchHighRaw * 1.4;
+  const userPos  = Math.max(0, Math.min(100, ((userValue - rangeMin) / (rangeMax - rangeMin)) * 100));
+  const lowPos   = ((benchLowRaw  - rangeMin) / (rangeMax - rangeMin)) * 100;
+  const highPos  = ((benchHighRaw - rangeMin) / (rangeMax - rangeMin)) * 100;
+  const midPos   = ((benchMidRaw  - rangeMin) / (rangeMax - rangeMin)) * 100;
+
+  // Status
+  let statusClass = 'good';
+  let statusText = 'Below avg';
+  let blockClass = 'good';
+  if (amt === 0 && bench.mid > 0) {
+    statusClass = 'warn';
+    statusText = 'Not entered';
+    blockClass = '';
+  } else if (userValue > benchHighRaw) {
+    statusClass = 'bad';
+    statusText = 'Above avg';
+    blockClass = 'alert';
+  } else if (userValue > benchMidRaw) {
+    statusClass = 'warn';
+    statusText = 'Near top';
+    blockClass = '';
+  } else if (userValue >= benchLowRaw) {
+    statusClass = 'good';
+    statusText = 'In range';
+    blockClass = 'good';
+  }
+
+  block.classList.remove('alert', 'good');
+  if (blockClass) block.classList.add(blockClass);
+
+  // AI match indicator (shows when user typed something ≠ canonical key)
+  const aiMatchTag = (bench.matchType === 'ai' && name.trim().toLowerCase() !== bench.key.toLowerCase())
+    ? `<span style="font-family:var(--mono);font-size:0.52rem;letter-spacing:0.08em;color:var(--gold);background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);padding:0.08rem 0.35rem;border-radius:3px;margin-left:0.3rem">◆ AI: ${bench.key}</span>`
+    : '';
+
+  // Unit label (per-unit vs flat)
+  const unitLabel = isFlat ? 'building' : `${units}-unit`;
+
+  // Savings tag
+  let savingsHTML = '';
+  if (userValue > benchHighRaw && amt > 0) {
+    const overBy = amt - highTotal;
+    savingsHTML = `<div class="savings-tag">⚠ Potentially overpaying by $${Math.round(overBy).toLocaleString()}/yr</div>`;
+  } else if (userValue >= benchLowRaw && userValue <= benchMidRaw && amt > 0) {
+    savingsHTML = `<div class="savings-tag good">✓ Below submarket average</div>`;
+  }
+
+  benchRow.innerHTML = `
+    <span class="benchmark-label">Market${aiMatchTag}</span>
+    <div class="benchmark-visual">
+      <div class="benchmark-range" style="left:${lowPos}%;right:${100-highPos}%"></div>
+      <div class="benchmark-marker" style="left:${midPos}%" title="Market avg"></div>
+      ${amt > 0 ? `<div class="benchmark-user" style="left:${userPos}%" title="Your value"></div>` : ''}
+    </div>
+    <span class="benchmark-text ${statusClass}">$${Math.round(lowTotal).toLocaleString()}–$${Math.round(highTotal).toLocaleString()} · <b>${statusText}</b></span>
+  `;
+
+  // Remove any existing savings tag, then add
+  const existing = block.querySelector('.savings-tag');
+  if (existing) existing.parentElement.remove();
+  if (savingsHTML) {
+    benchRow.insertAdjacentHTML('afterend', `<div id="save-${id}">${savingsHTML}</div>`);
+  }
+
+  updateExpenseSummary();
+}
+
+function updateAllBenchmarks() {
+  document.querySelectorAll('.expense-block').forEach(block => {
+    const id = block.id.replace('exp-', '');
+    updateBenchmarkForRow(id);
+  });
+}
+
+function updateBenchmarks() {
+  updateAllBenchmarks();
+}
+
+// ── Summary insight under expenses ──
+function updateExpenseSummary() {
+  const units = parseFloat(document.getElementById('units').value) || 1;
+  let totalUserExp = 0;
+  let totalBenchmarkMid = 0;
+  let overpayingCount = 0;
+  let overpayingAmt = 0;
+
+  document.querySelectorAll('.expense-block').forEach(block => {
+    const name = block.querySelector('.exp-name').value;
+    const amt = parseFloat(block.querySelector('.exp-amount').value) || 0;
+    totalUserExp += amt;
+    const bench = findBenchmark(name);
+    if (bench && amt > 0) {
+      const isFlat = bench.unit === 'flat';
+      const benchMidTotal  = isFlat ? bench.mid  : bench.mid  * units;
+      const benchHighTotal = isFlat ? bench.high : bench.high * units;
+      totalBenchmarkMid += benchMidTotal;
+      const userValue = isFlat ? amt : amt / units;
+      if (userValue > bench.high) {
+        overpayingCount++;
+        overpayingAmt += amt - benchHighTotal;
+      }
+    }
+  });
+
+  const insight = document.getElementById('expenseInsight');
+  const text = document.getElementById('expenseInsightText');
+
+  if (overpayingCount > 0) {
+    insight.className = 'expense-insight savings';
+    insight.style.display = 'flex';
+    text.innerHTML = `<b>${overpayingCount} expense${overpayingCount>1?'s':''} above submarket range.</b> You could be saving up to <span class="amt">$${Math.round(overpayingAmt).toLocaleString()}/yr</span> by benchmarking these against the market.`;
+  } else if (totalUserExp > 0 && totalBenchmarkMid > 0 && totalUserExp < totalBenchmarkMid * 1.1) {
+    insight.className = 'expense-insight good';
+    insight.style.display = 'flex';
+    const savings = Math.max(0, Math.round(totalBenchmarkMid - totalUserExp));
+    text.innerHTML = savings > 0
+      ? `<b>Expenses tracking below submarket average.</b> Your operating costs are <span class="amt">$${savings.toLocaleString()}/yr below</span> the typical property for your submarket.`
+      : `<b>Expenses in line with submarket averages.</b> Your operating costs are consistent with similar properties nearby.`;
+  } else {
+    insight.style.display = 'none';
+  }
+}
+
+// ── Rent Roll ──
+function toggleRentRoll() {
+  rentRollActive = !rentRollActive;
+  const toggle = document.getElementById('rentRollToggle');
+  const section = document.getElementById('rentRollSection');
+  const manual = document.getElementById('manualIncomeSection');
+  toggle.classList.toggle('on', rentRollActive);
+  section.classList.toggle('visible', rentRollActive);
+  manual.style.display = rentRollActive ? 'none' : 'block';
+
+  if (rentRollActive && document.getElementById('rrRows').children.length === 0) {
+    const defaultUnits = [
+      {u:'1A', t:'1BR/1BA', r:2800},
+      {u:'2A', t:'2BR/1BA', r:3400},
+      {u:'3A', t:'1BR/1BA', r:2900},
+      {u:'1B', t:'Studio', r:2200},
+      {u:'2B', t:'2BR/1BA', r:3600},
+      {u:'3B', t:'1BR/1BA', r:3000},
+    ];
+    defaultUnits.forEach(u => addRRRow(u.u, u.t, u.r));
+  }
+  updateRentRollTotals();
+}
+
+function addRRRow(unit = '', type = '', rent = '') {
+  const id = ++rrIdCounter;
+  const el = document.createElement('div');
+  el.className = 'rr-row';
+  el.id = 'rr-' + id;
+  el.innerHTML = `
+    <input type="text" placeholder="1A" value="${unit}" class="rr-unit" oninput="updateRentRollTotals()"/>
+    <input type="text" placeholder="1BR/1BA" value="${type}" class="rr-type"/>
+    <div class="input-wrap has-prefix">
+      <span class="input-prefix">$</span>
+      <input type="number" placeholder="0" value="${rent}" min="0" class="rr-rent num-input" oninput="updateRentRollTotals()"/>
+    </div>
+    <button class="remove-btn" onclick="document.getElementById('rr-${id}').remove();updateRentRollTotals()">×</button>
+  `;
+  document.getElementById('rrRows').appendChild(el);
+  updateRentRollTotals();
+}
+
+function updateRentRollTotals() {
+  let totalMo = 0;
+  document.querySelectorAll('#rrRows .rr-rent').forEach(input => {
+    totalMo += parseFloat(input.value) || 0;
+  });
+  const totalYr = totalMo * 12;
+  document.getElementById('rrTotalMo').textContent = '$' + totalMo.toLocaleString() + '/mo';
+  document.getElementById('rrTotalYr').textContent = '$' + totalYr.toLocaleString() + '/yr';
+
+  // Sync to grossIncome hidden value
+  if (rentRollActive) {
+    document.getElementById('grossIncome').value = totalYr;
+  }
+}
+
+function updateCapDisplay(v) {
+  document.getElementById('capDisplay').textContent = parseFloat(v).toFixed(1) + '%';
+}
+
+function setTier(t) {
+  currentTier = t;
+  document.getElementById('tierFree').classList.toggle('active', t === 'free');
+  document.getElementById('tierPaid').classList.toggle('active', t === 'paid');
+  const desc = document.getElementById('tierDesc');
+  const sub = document.getElementById('panelSub');
+  if (t === 'free') {
+    desc.textContent = 'Now with market benchmarks on every expense';
+    sub.textContent = "Enter your property details. We'll benchmark every expense against your local submarket so you know exactly where you might be overpaying.";
+  } else {
+    desc.textContent = 'Full valuation + sensitivity matrix + downloadable report';
+    sub.textContent = 'Everything in Free, plus: deep sensitivity analysis, multiple scenario modeling, and full downloadable PDF report.';
+  }
+}
+
+// Formatters
+function fmt(n) {
+  if (Math.abs(n) >= 1000000) return '$' + (n / 1000000).toFixed(2) + 'M';
+  if (Math.abs(n) >= 1000) return '$' + (n / 1000).toFixed(0) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+function calculate() {
+  const address    = document.getElementById('address').value.trim() || '(No Address Entered)';
+  const propType   = document.getElementById('propertyType').value;
+  const units      = parseFloat(document.getElementById('units').value) || 1;
+  const sqft       = parseFloat(document.getElementById('sqft').value) || 0;
+  const grossIncome= parseFloat(document.getElementById('grossIncome').value) || 0;
+  const vacancyRate= parseFloat(document.getElementById('vacancyRate').value) || 5;
+  const otherIncome= parseFloat(document.getElementById('otherIncome').value) || 0;
+  const capRate    = parseFloat(document.getElementById('capRate').value) / 100;
+  const market     = document.getElementById('marketSelect').value;
+
+  const expRows = document.querySelectorAll('.expense-block');
+  let totalExpenses = 0;
+  const expenseList = [];
+  expRows.forEach(row => {
+    const n = row.querySelector('.exp-name').value.trim() || 'Unnamed';
+    const a = parseFloat(row.querySelector('.exp-amount').value) || 0;
+    const bench = findBenchmark(n);
+    let status = null;
+    if (bench && a > 0) {
+      const isFlat = bench.unit === 'flat';
+      const userValue = isFlat ? a : a / units;
+      if (userValue > bench.high) status = 'high';
+      else if (userValue > bench.mid) status = 'fair';
+      else status = 'good';
+    }
+    if (a > 0 || n !== 'Unnamed') {
+      expenseList.push({ name: n, amount: a, bench, status, units });
+      totalExpenses += a;
+    }
+  });
+
+  const vacancyLoss    = grossIncome * (vacancyRate / 100);
+  const effectiveGross = grossIncome - vacancyLoss + otherIncome;
+  const noi            = effectiveGross - totalExpenses;
+  const expenseRatio   = effectiveGross > 0 ? (totalExpenses / effectiveGross) * 100 : 0;
+
+  const baseVal  = noi / capRate;
+  const lowVal   = noi / (capRate + 0.0075);
+  const highVal  = capRate > 0.01 ? noi / Math.max(0.01, capRate - 0.0075) : baseVal;
+  const pricePerUnit = baseVal / units;
+  const pricePerSqft = sqft > 0 ? baseVal / sqft : 0;
+
+  const capRates = [capRate - 0.015, capRate, capRate + 0.015];
+  const noiScenarios = [noi * 0.9, noi, noi * 1.1];
+
+  // Potential savings total
+  let totalOverpay = 0;
+  let totalUserExp = 0;
+  let totalBenchMid = 0;
+  expenseList.forEach(e => {
+    totalUserExp += e.amount;
+    if (e.bench && e.amount > 0) {
+      const isFlat = e.bench.unit === 'flat';
+      const benchMidTotal  = isFlat ? e.bench.mid  : e.bench.mid  * units;
+      const benchHighTotal = isFlat ? e.bench.high : e.bench.high * units;
+      totalBenchMid += benchMidTotal;
+      const userValue = isFlat ? e.amount : e.amount / units;
+      if (userValue > e.bench.high) totalOverpay += e.amount - benchHighTotal;
+    }
+  });
+
+  renderResults({
+    address, propType, units, sqft,
+    grossIncome, vacancyLoss, effectiveGross,
+    otherIncome, totalExpenses, noi,
+    expenseRatio, baseVal, lowVal, highVal,
+    pricePerUnit, pricePerSqft,
+    capRate, vacancyRate,
+    expenseList, capRates, noiScenarios,
+    totalOverpay, totalBenchMid
+  });
+}
+
+function renderResults(d) {
+  const panel = document.getElementById('panelRight');
+  const now = new Date();
+  const ts = now.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) +
+             ' · ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+
+  const typeLabels = { multifamily:'Multifamily', mixed:'Mixed-Use', commercial:'Commercial', single:'Single Family' };
+  const typeLabel = typeLabels[d.propType] || d.propType;
+
+  // Expense comparison rows
+  let expRowsHTML = d.expenseList.filter(e => e.amount > 0).map(e => {
+    if (!e.bench) return '';
+    const isFlat = e.bench.unit === 'flat';
+    const userValue = isFlat ? e.amount : e.amount / e.units;
+    const rangeMin = e.bench.low * 0.6;
+    const rangeMax = e.bench.high * 1.4;
+    const userPos = Math.max(0, Math.min(100, ((userValue - rangeMin) / (rangeMax - rangeMin)) * 100));
+    const lowPos = ((e.bench.low - rangeMin) / (rangeMax - rangeMin)) * 100;
+    const highPos = ((e.bench.high - rangeMin) / (rangeMax - rangeMin)) * 100;
+    const midPos = ((e.bench.mid - rangeMin) / (rangeMax - rangeMin)) * 100;
+    const tagLabel = e.status === 'high' ? 'Above Market' : e.status === 'fair' ? 'Near Top' : 'In Range';
+    const unitNote = isFlat ? '<span style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);margin-left:0.3rem">building</span>' : '';
+    return `
+      <div class="ec-row">
+        <span class="ec-row-name">${e.name}${unitNote}</span>
+        <span class="ec-row-val">${fmtFull(e.amount)}</span>
+        <div class="ec-row-bar">
+          <div class="bench-range" style="left:${lowPos}%;right:${100-highPos}%"></div>
+          <div class="bench-pos" style="left:${midPos}%"></div>
+          <div class="user-pos" style="left:${userPos}%"></div>
+        </div>
+        <span class="ec-row-tag ${e.status}">${tagLabel}</span>
+      </div>`;
+  }).join('');
+  if (!expRowsHTML) {
+    expRowsHTML = `<div style="padding:1rem;font-size:0.82rem;color:rgba(255,255,255,0.35);text-align:center">No benchmark-matched expenses entered.</div>`;
+  }
+
+  // Sensitivity
+  const sensCaps = d.capRates.map(c => (c * 100).toFixed(2) + '%');
+  const sensRows = d.noiScenarios.map((noi, ni) => {
+    const noiLabel = ['−10% NOI', 'Base NOI', '+10% NOI'][ni];
+    const cells = d.capRates.map((cap, ci) => {
+      const v = noi / Math.max(cap, 0.01);
+      const isBase = ni === 1 && ci === 1;
+      return `<td class="${isBase ? 'highlight' : ''}">${fmt(v)}</td>`;
+    }).join('');
+    return `<tr><td>${noiLabel}</td>${cells}</tr>`;
+  }).join('');
+
+  const noiColor = d.noi >= 0 ? 'positive' : 'warning';
+
+  // Expense rows for breakdown
+  let expBreakdownHTML = d.expenseList.map(e => `
+    <div class="breakdown-row">
+      <span class="breakdown-row-name">${e.name}</span>
+      <span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span>
+    </div>`).join('');
+  if (!expBreakdownHTML) expBreakdownHTML = `<div class="breakdown-row"><span class="breakdown-row-name" style="opacity:0.4">No expenses entered</span></div>`;
+
+  panel.innerHTML = `
+    <div class="results fade-in">
+
+      <div class="result-header">
+        <div>
+          <div class="result-address">${d.address}</div>
+          <div class="result-meta">${typeLabel} · ${d.units} Unit${d.units !== 1 ? 's' : ''} ${d.sqft > 0 ? '· ' + d.sqft.toLocaleString() + ' SF' : ''}</div>
+        </div>
+        <div class="result-timestamp">${ts}</div>
+      </div>
+
+      <div class="value-range-card">
+        <div class="vr-label">Estimated Valuation Range</div>
+        <div class="vr-range">
+          <div>
+            <div class="vr-val">${fmt(Math.max(0, d.lowVal))}</div>
+            <div class="vr-sub">Conservative</div>
+          </div>
+          <div class="vr-sep">—</div>
+          <div>
+            <div class="vr-val mid">${fmt(Math.max(0, d.baseVal))}</div>
+            <div class="vr-sub">At Market (${fmtPct(d.capRate * 100)} Cap)</div>
+          </div>
+          <div class="vr-sep">—</div>
+          <div>
+            <div class="vr-val">${d.noi > 0 ? fmt(d.highVal) : 'N/A'}</div>
+            <div class="vr-sub">Aggressive</div>
+          </div>
+        </div>
+        <div class="vr-bar"><div class="vr-bar-fill"></div></div>
+        <div class="vr-caps">
+          <div class="vr-cap"><strong>${fmtFull(Math.max(0, d.pricePerUnit))}</strong>per unit</div>
+          ${d.sqft > 0 ? `<div class="vr-cap"><strong>${fmtFull(Math.max(0, d.pricePerSqft))}</strong>per sq.ft.</div>` : ''}
+          <div class="vr-cap"><strong>${fmtFull(Math.max(0, d.baseVal))}</strong>base estimate</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Gross Income</div>
+          <div class="kpi-val">${fmt(d.grossIncome)}</div>
+          <div class="kpi-change">Before vacancy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Eff. Gross Income</div>
+          <div class="kpi-val">${fmt(d.effectiveGross)}</div>
+          <div class="kpi-change">After ${fmtPct(d.vacancyRate)} vacancy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Expenses</div>
+          <div class="kpi-val warning">${fmt(d.totalExpenses)}</div>
+          <div class="kpi-change">${fmtPct(d.expenseRatio)} expense ratio</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">NOI</div>
+          <div class="kpi-val ${noiColor}">${d.noi < 0 ? '−' : ''}${fmt(Math.abs(d.noi))}</div>
+          <div class="kpi-change">${d.effectiveGross > 0 ? fmtPct((d.noi/d.effectiveGross)*100) : '0%'} NOI margin</div>
+        </div>
+      </div>
+
+      <!-- ═══ EXPENSE vs MARKET BENCHMARK ═══ -->
+      <div class="expense-comparison">
+        <div class="ec-header">
+          <div class="ec-title">Expense vs. Market Benchmark</div>
+          <div class="ec-summary">${d.expenseList.filter(e=>e.amount>0 && e.bench).length} expenses benchmarked</div>
+        </div>
+        ${expRowsHTML}
+        <div class="ec-footer">
+          <div class="ec-footer-text">
+            ${d.totalOverpay > 0
+              ? `<b>Potential annual savings</b> by bringing expenses to submarket average`
+              : `<b>Operating expenses tracking well</b> against submarket averages`}
+          </div>
+          <div class="ec-footer-savings ${d.totalOverpay > 0 ? '' : 'good'}">
+            ${d.totalOverpay > 0 ? fmtFull(d.totalOverpay) + '/yr' : '✓ Well-positioned'}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="scenarios-title">Cap Rate Scenarios</div>
+        <div class="scenarios-grid">
+          <div class="scenario-card">
+            <div class="sc-label">Conservative</div>
+            <div class="sc-cap">${fmtPct((d.capRate + 0.0075) * 100)} cap rate</div>
+            <div class="sc-val">${fmt(Math.max(0, d.noi / (d.capRate + 0.0075)))}</div>
+            <div class="sc-ppu">${fmt(Math.max(0, d.noi / (d.capRate + 0.0075) / d.units))} / unit</div>
+          </div>
+          <div class="scenario-card base">
+            <div class="sc-label">Base (Market)</div>
+            <div class="sc-cap">${fmtPct(d.capRate * 100)} cap rate</div>
+            <div class="sc-val">${fmt(Math.max(0, d.baseVal))}</div>
+            <div class="sc-ppu">${fmt(Math.max(0, d.pricePerUnit))} / unit</div>
+          </div>
+          <div class="scenario-card">
+            <div class="sc-label">Aggressive</div>
+            <div class="sc-cap">${fmtPct(Math.max(0.01, d.capRate - 0.0075) * 100)} cap rate</div>
+            <div class="sc-val">${d.noi > 0 ? fmt(d.highVal) : 'N/A'}</div>
+            <div class="sc-ppu">${d.noi > 0 ? fmt(d.highVal / d.units) + ' / unit' : '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="breakdown-title">Income & Expense Breakdown</div>
+        <div class="breakdown-grid">
+          <div>
+            <div class="breakdown-col-title">Income</div>
+            <div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div>
+            <div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div>
+            ${d.otherIncome > 0 ? `<div class="breakdown-row"><span class="breakdown-row-name">Other Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div>` : ''}
+            <div class="breakdown-total"><span>Eff. Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div>
+          </div>
+          <div>
+            <div class="breakdown-col-title">Expenses</div>
+            ${expBreakdownHTML}
+            <div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <span style="font-size:0.85rem;color:rgba(255,255,255,0.4);font-weight:600">Net Operating Income (NOI)</span>
+          <span style="font-family:var(--serif);font-size:1.6rem;font-weight:700;color:${d.noi >= 0 ? '#6dba8f' : '#e8a87c'}">${d.noi < 0 ? '−' : ''}${fmtFull(Math.abs(d.noi))}</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="sensitivity-title">Valuation Sensitivity Matrix</div>
+        <div style="overflow-x:auto">
+          <table class="sensitivity-table">
+            <thead>
+              <tr>
+                <th>NOI Scenario</th>
+                ${sensCaps.map(c => `<th>${c} Cap</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>${sensRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠ DIRECTIONAL ESTIMATE ONLY — BRIC Studios valuations are generated from owner-entered data, market cap rate assumptions, and benchmarked expense ranges sourced from public data. They are not appraisals, broker opinions of value, or investment advice. Benchmarks represent typical ranges for similar buildings in your submarket and are not guarantees. Engage a licensed appraiser or qualified broker for formal valuation.
+      </div>
+    </div>`;
+}
+
+// ── Load Sample: 1782 Nostrand Avenue ──
+function loadSample() {
+  // Property
+  document.getElementById('address').value = '1782 Nostrand Avenue, Brooklyn NY 11226';
+  document.getElementById('propertyType').value = 'mixed';
+  document.getElementById('marketSelect').value = 'flatbush';
+  document.getElementById('units').value = 6;
+  document.getElementById('sqft').value = 3984;
+
+  // Income
+  document.getElementById('grossIncome').value = 192960;
+  document.getElementById('vacancyRate').value = 4;
+  document.getElementById('otherIncome').value = 0;
+
+  // Cap rate
+  document.getElementById('capRate').value = 9.1;
+  updateCapDisplay(9.1);
+
+  // Rent roll
+  if (!rentRollActive) {
+    rentRollActive = true;
+    document.getElementById('rentRollToggle').classList.add('on');
+    document.getElementById('rentRollSection').classList.add('visible');
+    document.getElementById('manualIncomeSection').style.display = 'none';
+  }
+  document.getElementById('rrRows').innerHTML = '';
+  [
+    {u:'1B', t:'Retail (Cricket)',    r:3350},
+    {u:'1R', t:'2BR/1BA · Renovated', r:3400},
+    {u:'2F', t:'2BR/1BA · Section 8', r:2475},
+    {u:'2R', t:'2BR/1BA · Vacant',    r:2500},
+    {u:'3F', t:'2BR/1BA · Pub. Asst.',r:2100},
+    {u:'3R', t:'2BR/1BA · Section 8', r:2255},
+  ].forEach(u => addRRRow(u.u, u.t, u.r));
+
+  // Clear + reload expenses with 1782 Nostrand actuals
+  document.getElementById('expenseRows').innerHTML = '';
+  [
+    { name: 'Property Taxes',        amount: 14205 },
+    { name: 'Insurance',             amount: 6150  },
+    { name: 'Heat',                  amount: 4582  },
+    { name: 'Water & Sewer',         amount: 5250  },
+    { name: 'Common Area Electric',  amount: 797   },
+    { name: 'Repairs & Maintenance', amount: 2400  },
+    { name: 'Payroll / Super',       amount: 2600  },
+    { name: 'Management / Legal',    amount: 7410  },
+  ].forEach(e => addExpenseRow(e.name, e.amount));
+
+  setTimeout(() => {
+    updateAllBenchmarks();
+    updateExpenseSummary();
+    calculate();
+    // Scroll to results on mobile
+    if (window.innerWidth < 900) {
+      document.getElementById('panelRight').scrollIntoView({behavior:'smooth'});
+    }
+  }, 150);
+}
+
+// ── Initialize ──
+DEFAULT_EXPENSES.forEach(e => addExpenseRow(e.name, e.amount));
+updateCapDisplay(9.1);
+setTimeout(updateExpenseSummary, 100);
+</script>
+
+</body>
+</html>
