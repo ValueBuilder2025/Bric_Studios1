@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIC Studios — Property Intelligence Platform</title>
+<meta name="description" content="Owner-first property intelligence. Run your property like a professional.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f0e;
+  --ink-2:#141715;
+  --paper:#f5f2ec;
+  --cream:#faf8f3;
+  --gold:#c9a84c;
+  --gold-light:#e8d08a;
+  --gold-dim:rgba(201,168,76,0.13);
+  --slate:#3a4a52;
+  --muted:#7a8a82;
+  --border:rgba(255,255,255,0.08);
+  --success:#6dba8f;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:16px;line-height:1.6;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4}
+
+img{max-width:100%;display:block}
+
+/* ═══════ NAV ═══════ */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 2.5rem;
+  background:rgba(13,15,14,0.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:var(--serif);font-weight:700;font-size:1.25rem;letter-spacing:0.01em;
+  color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.55rem;
+}
+.nav-logo-dot{width:8px;height:8px;background:var(--gold);border-radius:50%}
+.nav-links{display:flex;list-style:none;gap:2rem;align-items:center}
+.nav-links a{
+  color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.88rem;font-weight:500;
+  letter-spacing:0.01em;transition:color 0.2s;position:relative;padding:0.4rem 0;
+}
+.nav-links a:hover{color:var(--paper)}
+.nav-links a.dashboard{color:var(--gold);font-weight:600}
+.nav-links a.dashboard:hover{color:var(--gold-light)}
+.nav-cta{
+  background:var(--gold);color:var(--ink);padding:0.6rem 1.35rem;border-radius:2px;
+  font-size:0.76rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.2s;
+}
+.nav-cta:hover{background:var(--gold-light);color:var(--ink) !important;transform:translateY(-1px)}
+
+.mobile-menu-btn{display:none;background:transparent;border:none;color:var(--paper);cursor:pointer;padding:0.5rem}
+.mobile-menu-btn svg{width:26px;height:26px}
+
+/* ═══════ HERO ═══════ */
+.hero{
+  padding:6rem 2.5rem 5rem;
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;align-items:center;
+  max-width:1400px;margin:0 auto;
+}
+.hero::before{
+  content:'';position:absolute;top:-20%;right:-10%;width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.09),transparent 70%);pointer-events:none;z-index:0;
+}
+.hero-left{position:relative;z-index:1}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem;
+}
+.hero-eyebrow::before{content:'';display:inline-block;width:36px;height:1px;background:var(--gold)}
+.hero-title{
+  font-family:var(--serif);font-size:clamp(2.6rem,5vw,4.2rem);font-weight:900;line-height:1.05;
+  letter-spacing:-0.025em;color:var(--paper);margin-bottom:1.5rem;
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:1.1rem;color:rgba(255,255,255,0.55);max-width:520px;line-height:1.75;margin-bottom:2.25rem;font-weight:300;
+}
+.hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap}
+.btn-primary{
+  background:var(--gold);color:var(--ink);padding:1rem 2rem;font-size:0.82rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;
+  transition:all 0.2s;text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-ghost{
+  background:transparent;color:var(--paper);padding:1rem 2rem;font-size:0.82rem;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;border:1.5px solid rgba(255,255,255,0.25);border-radius:2px;
+  cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;flex-wrap:wrap}
+.hs-item{}
+.hs-val{font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--paper);line-height:1}
+.hs-val em{color:var(--gold);font-style:normal}
+.hs-label{font-family:var(--mono);font-size:0.66rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+
+.hero-right{position:relative;z-index:1}
+.preview-card{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:4px;
+  padding:1.5rem 1.75rem;box-shadow:0 24px 60px rgba(0,0,0,0.35);position:relative;
+}
+.preview-card-tag{
+  position:absolute;top:-10px;left:1.75rem;
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);background:var(--ink-2);padding:0.2rem 0.65rem;border:1px solid var(--border-gold);
+}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.pc-title{font-family:var(--serif);font-size:1rem;font-weight:700}
+.pc-sub{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;color:rgba(255,255,255,0.35)}
+.pc-live{display:flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.58rem;color:var(--success);letter-spacing:0.1em;text-transform:uppercase}
+.pc-live-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(109,186,143,0.4)}50%{opacity:0.6;box-shadow:0 0 0 6px rgba(109,186,143,0)}}
+
+.pc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.1rem}
+.pc-kpi{background:rgba(255,255,255,0.03);padding:0.85rem 0.9rem;border-radius:4px}
+.pc-kpi-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.35rem;text-transform:uppercase}
+.pc-kpi-val{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--gold-light);line-height:1}
+.pc-kpi-sub{font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:0.2rem}
+.pc-cta{
+  display:block;text-align:center;
+  background:var(--gold);color:var(--ink);padding:0.7rem;border-radius:2px;
+  font-family:var(--mono);font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  text-decoration:none;transition:all 0.2s;
+}
+.pc-cta:hover{background:var(--gold-light)}
+
+/* ═══════ SECTIONS ═══════ */
+section{padding:6rem 2.5rem;position:relative;z-index:1}
+.section-inner{max-width:1300px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:3.5rem;max-width:720px;margin-left:auto;margin-right:auto}
+.section-eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;justify-content:center}
+.section-eyebrow::before,.section-eyebrow::after{content:'';display:inline-block;width:30px;height:1px;background:var(--gold);opacity:0.5}
+.section-title{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:700;line-height:1.15;color:var(--paper);margin-bottom:1.1rem;letter-spacing:-0.015em}
+.section-title em{color:var(--gold);font-style:italic}
+.section-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);line-height:1.75;font-weight:300;max-width:620px;margin:0 auto}
+
+/* FOR OWNERS / FOR INVESTORS toggle */
+.audience-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;max-width:1150px;margin:0 auto}
+.aud-card{
+  position:relative;padding:2.75rem 2.5rem 2.25rem;border-radius:6px;
+  background:var(--ink-2);border:1px solid var(--border);
+  transition:all 0.3s;overflow:hidden;
+}
+.aud-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,0.35);box-shadow:0 20px 50px rgba(0,0,0,0.25)}
+.aud-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s}
+.aud-card:hover::before{opacity:1}
+.aud-eyebrow{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem}
+.aud-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--paper);margin-bottom:1rem;line-height:1.2}
+.aud-title em{color:var(--gold-light);font-style:italic}
+.aud-desc{color:rgba(255,255,255,0.55);font-size:0.95rem;line-height:1.7;margin-bottom:1.75rem;font-weight:300}
+.aud-list{list-style:none;margin-bottom:2rem}
+.aud-list li{display:flex;gap:0.7rem;padding:0.5rem 0;font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.55}
+.aud-list li::before{content:'◆';color:var(--gold);flex-shrink:0;font-size:0.75rem;padding-top:0.25rem}
+.aud-link{
+  display:inline-flex;align-items:center;gap:0.5rem;color:var(--gold);
+  font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;
+  font-weight:600;text-decoration:none;transition:gap 0.2s;
+}
+.aud-link:hover{gap:0.85rem}
+
+/* PRODUCT MODULES */
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.module-card{
+  padding:2rem 1.85rem;background:var(--ink-2);border:1px solid var(--border);border-radius:4px;
+  transition:all 0.25s;text-decoration:none;color:inherit;display:block;
+}
+.module-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,0.35);background:#171a19}
+.module-icon{
+  width:44px;height:44px;border-radius:4px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);
+  display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.15rem;margin-bottom:1.25rem;
+}
+.module-title{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--paper);margin-bottom:0.55rem}
+.module-desc{font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:1rem}
+.module-cta{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+
+/* DASHBOARD PREVIEW SECTION */
+.dashboard-preview{background:linear-gradient(180deg,transparent,rgba(201,168,76,0.03))}
+.dash-showcase{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;max-width:1200px;margin:0 auto}
+.dash-visual{
+  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;overflow:hidden;
+  box-shadow:0 30px 60px rgba(0,0,0,0.35);
+}
+.dash-visual-hd{padding:0.8rem 1rem;border-bottom:1px solid var(--border);display:flex;gap:0.4rem;align-items:center}
+.dash-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1)}
+.dash-visual-body{padding:1.5rem;min-height:300px}
+.dash-kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:1.2rem}
+.dash-kpi{padding:0.85rem;background:rgba(255,255,255,0.03);border-radius:3px}
+.dash-kpi-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:0.3rem}
+.dash-kpi-val{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--gold-light)}
+.dash-row{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0;font-size:0.75rem;color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04)}
+.dash-row:last-child{border-bottom:none}
+.dash-row .d-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--gold)}
+.dash-row .d-time{font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.3);margin-left:auto}
+
+/* PRICING PREVIEW */
+.pricing-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1200px;margin:0 auto}
+.plan{
+  padding:1.85rem 1.65rem;background:var(--ink-2);border:1px solid var(--border);border-radius:4px;
+  transition:all 0.2s;position:relative;
+}
+.plan:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px)}
+.plan.featured{border-color:var(--gold);background:linear-gradient(145deg,rgba(201,168,76,0.06),var(--ink-2))}
+.plan-badge{
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:var(--ink);font-family:var(--mono);font-size:0.58rem;
+  letter-spacing:0.12em;text-transform:uppercase;padding:0.25rem 0.75rem;border-radius:0 0 3px 3px;font-weight:700;
+}
+.plan-tier{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.55rem}
+.plan-name{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--paper);margin-bottom:0.9rem}
+.plan-price{font-family:var(--serif);font-size:2.2rem;font-weight:900;color:var(--gold-light);line-height:1}
+.plan-price-small{font-family:var(--sans);font-size:0.8rem;color:rgba(255,255,255,0.4);margin-left:0.3rem;font-weight:400}
+.plan-desc{font-size:0.8rem;color:rgba(255,255,255,0.45);margin-top:0.75rem;margin-bottom:1.25rem;line-height:1.55;min-height:40px}
+.plan-btn{
+  display:block;text-align:center;padding:0.7rem;background:transparent;
+  border:1px solid rgba(255,255,255,0.2);border-radius:3px;
+  font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--paper);text-decoration:none;transition:all 0.2s;font-weight:600;
+}
+.plan-btn:hover{border-color:var(--gold);color:var(--gold)}
+.plan.featured .plan-btn{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.plan.featured .plan-btn:hover{background:var(--gold-light)}
+
+/* WORKFLOW */
+.workflow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;max-width:1100px;margin:0 auto}
+.workflow-grid::before{content:'';position:absolute;top:28px;left:16.66%;right:16.66%;height:1px;background:rgba(201,168,76,0.2)}
+.wf-step{padding:0 1.25rem;text-align:center;position:relative;z-index:1}
+.wf-num{
+  width:56px;height:56px;border-radius:50%;
+  border:1.5px solid rgba(201,168,76,0.4);background:rgba(13,15,14,0.98);color:var(--gold);
+  font-family:var(--mono);font-size:0.82rem;font-weight:600;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;
+}
+.wf-eyebrow{font-family:var(--mono);font-size:0.6rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem}
+.wf-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--paper);margin-bottom:0.8rem}
+.wf-desc{font-size:0.88rem;color:rgba(255,255,255,0.55);line-height:1.65;font-weight:300}
+
+/* CTA SECTION */
+.cta-final{
+  background:linear-gradient(180deg,transparent,rgba(201,168,76,0.06));
+  text-align:center;padding:5rem 2.5rem;
+}
+.cta-title{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:900;color:var(--paper);margin-bottom:1.25rem;line-height:1.15}
+.cta-title em{color:var(--gold);font-style:italic}
+.cta-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto 2.5rem;line-height:1.7}
+.cta-actions{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap}
+
+/* FOOTER */
+footer{padding:3.5rem 2.5rem 2rem;border-top:1px solid var(--border);background:#0a0c0b}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;max-width:1300px;margin:0 auto 3rem}
+.foot-brand{display:flex;align-items:center;gap:0.55rem;font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--paper);margin-bottom:0.85rem}
+.foot-brand-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.foot-tag{font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.7;max-width:320px}
+.foot-col-title{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:0.6rem}
+.foot-links a{color:rgba(255,255,255,0.45);text-decoration:none;font-size:0.86rem;transition:color 0.2s}
+.foot-links a:hover{color:var(--gold)}
+.foot-bottom{max-width:1300px;margin:0 auto;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:var(--mono);font-size:0.68rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em}
+
+/* ANIMATIONS */
+.fade-in{opacity:0;transform:translateY(14px);animation:fadeIn 0.6s ease forwards}
+.fade-in.d1{animation-delay:0.1s}
+.fade-in.d2{animation-delay:0.2s}
+.fade-in.d3{animation-delay:0.3s}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+
+/* ═══════ RESPONSIVE ═══════ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem 3rem}
+  .hero-right{max-width:480px;margin:0 auto;width:100%}
+  .audience-cards{grid-template-columns:1fr}
+  .modules-grid{grid-template-columns:1fr 1fr}
+  .pricing-preview{grid-template-columns:1fr 1fr}
+  .workflow-grid{grid-template-columns:1fr;gap:2rem}
+  .workflow-grid::before{display:none}
+  .dash-showcase{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:2rem}
+  section{padding:4rem 1.5rem}
+}
+@media(max-width:700px){
+  .nav-links{display:none}
+  .nav-links.open{
+    display:flex;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;background:rgba(13,15,14,0.98);backdrop-filter:blur(18px);
+    padding:1.25rem 2rem;gap:1.25rem;border-bottom:1px solid var(--border);
+  }
+  .mobile-menu-btn{display:block}
+  .modules-grid{grid-template-columns:1fr}
+  .pricing-preview{grid-template-columns:1fr}
+  .hero-title{font-size:2.5rem}
+  .foot-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-dot"></span>BRIC Studios</a>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <ul class="nav-links">
+    <li><a href="#product">Product</a></li>
+    <li><a href="#for-owners">For Owners</a></li>
+    <li><a href="for-investors.html">For Investors</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="dashboard.html" class="dashboard">Dashboard →</a></li>
+    <li><a href="#early-access" class="nav-cta">Get Early Access</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Owner-First Property Intelligence</div>
+    <h1 class="hero-title">Run your property like <em>a professional.</em></h1>
+    <p class="hero-sub">BRIC Studios gives property owners direct access to valuation intelligence, market analysis, buyer insights, and decision tools — without depending on fragmented information or pressure-driven brokerage workflows.</p>
+    <div class="hero-actions">
+      <a href="valuation.html" class="btn-primary">Open Valuation Studio</a>
+      <a href="#product" class="btn-ghost">Explore Platform</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-item">
+        <div class="hs-val"><em>8</em>+</div>
+        <div class="hs-label">Intelligence Modules</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val"><em>1</em>×</div>
+        <div class="hs-label">Centralized Workspace</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val"><em>0</em>%</div>
+        <div class="hs-label">Commission Dependency</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="preview-card fade-in">
+      <div class="preview-card-tag">Live Preview</div>
+      <div class="pc-header">
+        <div>
+          <div class="pc-title">Valuation Studio</div>
+          <div class="pc-sub">1782 Nostrand Ave · Brooklyn NY</div>
+        </div>
+        <div class="pc-live"><span class="pc-live-dot"></span>Live</div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-kpi">
+          <div class="pc-kpi-label">Value</div>
+          <div class="pc-kpi-val">$2.0M</div>
+          <div class="pc-kpi-sub">At market cap</div>
+        </div>
+        <div class="pc-kpi">
+          <div class="pc-kpi-label">NOI</div>
+          <div class="pc-kpi-val">$182K</div>
+          <div class="pc-kpi-sub">Annual</div>
+        </div>
+        <div class="pc-kpi">
+          <div class="pc-kpi-label">Per Unit</div>
+          <div class="pc-kpi-val">$337K</div>
+          <div class="pc-kpi-sub">6 units</div>
+        </div>
+      </div>
+      <a href="valuation.html" class="pc-cta">Launch Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOR OWNERS / FOR INVESTORS -->
+<section id="for-owners">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">Built for Both Sides</div>
+      <h2 class="section-title">One platform. <em>Two audiences.</em></h2>
+      <p class="section-sub">Property owners get the intelligence to run their asset with professional clarity. Investors and brokers get access to the industry's first owner-intent data layer.</p>
+    </div>
+
+    <div class="audience-cards">
+      <div class="aud-card">
+        <div class="aud-eyebrow">For Owners</div>
+        <h3 class="aud-title">Clarity before <em>commitment.</em></h3>
+        <p class="aud-desc">Analyze your property the way a professional would. Compare against your submarket. Make decisions on your own timeline — not under brokerage pressure.</p>
+        <ul class="aud-list">
+          <li>Valuation ranges with cap-rate scenario modeling</li>
+          <li>Market benchmarking for every expense line</li>
+          <li>Unit-by-unit rent roll with auto-generated pro forma</li>
+          <li>Investor-grade OM generation in minutes</li>
+          <li>Free tier — no credit card required</li>
+        </ul>
+        <a href="valuation.html" class="aud-link">Start with Valuation Studio <span>→</span></a>
+      </div>
+
+      <div class="aud-card">
+        <div class="aud-eyebrow">For Investors & Brokers</div>
+        <h3 class="aud-title">The missing <em>data layer</em> in CRE.</h3>
+        <p class="aud-desc">Every owner action on BRIC produces an anonymized, aggregated market signal. Subscribe to owner intent feeds, submarket intelligence, and targeted placement.</p>
+        <ul class="aud-list">
+          <li>Real-time owner activity by submarket</li>
+          <li>Transaction intent signals before listings hit market</li>
+          <li>Proprietary aggregated data across 2.4M+ properties</li>
+          <li>Three monetized revenue streams</li>
+          <li>Enterprise API access available</li>
+        </ul>
+        <a href="for-investors.html" class="aud-link">See the Data Platform <span>→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT MODULES -->
+<section id="product" style="background:linear-gradient(180deg,transparent,rgba(20,23,21,0.5))">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">The Platform</div>
+      <h2 class="section-title">One workspace for <em>every decision.</em></h2>
+      <p class="section-sub">BRIC centralizes the workflows owners usually piece together across brokers, spreadsheets, records, and reports.</p>
+    </div>
+
+    <div class="modules-grid">
+      <a href="valuation.html" class="module-card">
+        <div class="module-icon">◈</div>
+        <div class="module-title">Valuation Studio</div>
+        <div class="module-desc">NOI, cap-rate pricing, per-unit metrics, and scenario modeling with market expense benchmarks.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+      <a href="om-studio.html" class="module-card">
+        <div class="module-icon">▤</div>
+        <div class="module-title">OM Studio</div>
+        <div class="module-desc">Generate investor-grade marketing materials with unit-by-unit rent roll and pro forma projections.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+      <a href="buyer-intelligence.html" class="module-card">
+        <div class="module-icon">◉</div>
+        <div class="module-title">Buyer Intelligence</div>
+        <div class="module-desc">See which buyers are actually active in your market based on recent transaction patterns.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+      <a href="heatmap.html" class="module-card">
+        <div class="module-icon">◆</div>
+        <div class="module-title">Market Heatmaps</div>
+        <div class="module-desc">Track where rents, values, and owner activity are moving across submarkets in real time.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+      <a href="deal-studio.html" class="module-card">
+        <div class="module-icon">✦</div>
+        <div class="module-title">Deal Studio</div>
+        <div class="module-desc">AI-assisted deal narrative generation. Three variants per deal, ready-to-send pitches.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+      <a href="contractor-intelligence.html" class="module-card">
+        <div class="module-icon">◐</div>
+        <div class="module-title">Contractor Intelligence</div>
+        <div class="module-desc">AI-filtered contractor reviews, pricing benchmarks, and renovation ROI impact analysis.</div>
+        <div class="module-cta">Launch Tool →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="dashboard-preview">
+  <div class="section-inner">
+    <div class="dash-showcase">
+      <div>
+        <div class="section-eyebrow" style="justify-content:flex-start;text-align:left">Your Portfolio</div>
+        <h2 class="section-title" style="text-align:left">A dashboard as <em>serious as you are.</em></h2>
+        <p class="section-sub" style="text-align:left;margin:0 0 2rem 0">Track every property's NOI, cap rate, occupancy, and value in one place. Watch submarket signals that affect your assets. Get AI-powered insights on when to act.</p>
+        <a href="dashboard.html" class="btn-primary">Open Dashboard</a>
+      </div>
+      <div class="dash-visual">
+        <div class="dash-visual-hd">
+          <span class="dash-dot" style="background:#ff5f57"></span>
+          <span class="dash-dot" style="background:#febc2e"></span>
+          <span class="dash-dot" style="background:#28c840"></span>
+          <span style="margin-left:auto;font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em">PORTFOLIO · 3 PROPERTIES</span>
+        </div>
+        <div class="dash-visual-body">
+          <div class="dash-kpi-row">
+            <div class="dash-kpi">
+              <div class="dash-kpi-label">Portfolio Value</div>
+              <div class="dash-kpi-val">$7.84M</div>
+            </div>
+            <div class="dash-kpi">
+              <div class="dash-kpi-label">Annual NOI</div>
+              <div class="dash-kpi-val">$412K</div>
+            </div>
+            <div class="dash-kpi">
+              <div class="dash-kpi-label">Blended Cap</div>
+              <div class="dash-kpi-val">5.26%</div>
+            </div>
+            <div class="dash-kpi">
+              <div class="dash-kpi-label">Occupancy</div>
+              <div class="dash-kpi-val">100%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:0.5rem">Recent Activity</div>
+          <div class="dash-row"><span class="d-dot"></span>142 Bedford Ave · Buyer intel updated<span class="d-time">2h</span></div>
+          <div class="dash-row"><span class="d-dot" style="background:var(--success)"></span>88 Grand St · NOI improved +4.2%<span class="d-time">5h</span></div>
+          <div class="dash-row"><span class="d-dot" style="background:#8b9ee8"></span>320 Prospect Ave · Submarket alert<span class="d-time">1d</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section style="background:rgba(20,23,21,0.5)">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">Workflow</div>
+      <h2 class="section-title">Analyze. Improve. <em>Sell on your terms.</em></h2>
+      <p class="section-sub">BRIC is designed around a structured decision framework — not urgency. Owners evaluate, compare, and engage professionals only when they decide it's necessary.</p>
+    </div>
+
+    <div class="workflow-grid">
+      <div class="wf-step">
+        <div class="wf-num">01</div>
+        <div class="wf-eyebrow">Analyze</div>
+        <div class="wf-title">Understand the asset</div>
+        <div class="wf-desc">Input property details. Get valuation ranges, NOI, expense benchmarking, and scenario modeling — all in one view.</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">02</div>
+        <div class="wf-eyebrow">Improve</div>
+        <div class="wf-title">See where value is created</div>
+        <div class="wf-desc">Compare contractor costs, service quality, and operational ROI. Identify the moves with highest NOI impact.</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">03</div>
+        <div class="wf-eyebrow">Execute</div>
+        <div class="wf-title">Move on your terms</div>
+        <div class="wf-desc">Generate OMs, identify qualified buyers, and decide whether to hold, refinance, improve, or sell.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING PREVIEW -->
+<section>
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-title">Start free. <em>Scale when ready.</em></h2>
+      <p class="section-sub">Built for owners at every stage — from a single building to a full portfolio.</p>
+    </div>
+
+    <div class="pricing-preview">
+      <div class="plan">
+        <div class="plan-tier">Starter</div>
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0<span class="plan-price-small">/forever</span></div>
+        <div class="plan-desc">Valuation Studio + market benchmarks. For curious owners.</div>
+        <a href="pricing.html" class="plan-btn">Get Started</a>
+      </div>
+      <div class="plan">
+        <div class="plan-tier">Starter+</div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$250<span class="plan-price-small">/mo</span></div>
+        <div class="plan-desc">Single property · OM Studio · Full buyer intel.</div>
+        <a href="pricing.html" class="plan-btn">Choose Plan</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-badge">★ Most Popular</div>
+        <div class="plan-tier">Growth</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">$400<span class="plan-price-small">/mo</span></div>
+        <div class="plan-desc">Up to 3 properties · All studios · Full intelligence.</div>
+        <a href="pricing.html" class="plan-btn">Choose Plan</a>
+      </div>
+      <div class="plan">
+        <div class="plan-tier">Professional</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$1,000<span class="plan-price-small">/mo</span></div>
+        <div class="plan-desc">Unlimited · API access · White-label OM · Priority support.</div>
+        <a href="pricing.html" class="plan-btn">Choose Plan</a>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="pricing.html" style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);text-decoration:none;font-weight:600">See Full Pricing →</a>
+    </div>
+  </div>
+</section>
+
+<!-- EARLY ACCESS CTA -->
+<section class="cta-final" id="early-access">
+  <div class="section-inner">
+    <h2 class="cta-title">Own the intelligence. <em>Own the decision.</em></h2>
+    <p class="cta-sub">Start with the valuation experience. No credit card required. Upgrade when you're ready to generate OMs, access buyer intelligence, or scale across properties.</p>
+    <div class="cta-actions">
+      <a href="valuation.html" class="btn-primary">Try Valuation Studio</a>
+      <a href="mailto:matthew@bricstudios.com?subject=BRIC Studios Early Access" class="btn-ghost">Contact Founder</a>
+    </div>
+    <p style="margin-top:2.5rem;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.15em;color:rgba(255,255,255,0.25);text-transform:uppercase">Matthew R. Peters · Founder · matthew@bricstudios.com</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-brand"><span class="foot-brand-dot"></span>BRIC Studios</div>
+      <p class="foot-tag">Building Research & Investment Company. Owner-first property intelligence, built to give owners the clarity they deserve.</p>
+    </div>
+    <div>
+      <div class="foot-col-title">Platform</div>
+      <ul class="foot-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="valuation.html">Valuation Studio</a></li>
+        <li><a href="om-studio.html">OM Studio</a></li>
+        <li><a href="buyer-intelligence.html">Buyer Intelligence</a></li>
+        <li><a href="heatmap.html">Market Heatmaps</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-col-title">Company</div>
+      <ul class="foot-links">
+        <li><a href="#for-owners">For Owners</a></li>
+        <li><a href="for-investors.html">For Investors</a></li>
+        <li><a href="for-brokers.html">For Brokers</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="#early-access">Early Access</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-col-title">Contact</div>
+      <ul class="foot-links">
+        <li><a href="mailto:matthew@bricstudios.com">matthew@bricstudios.com</a></li>
+        <li><a href="tel:+17166045763">(716) 604-5763</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 BRIC STUDIOS · ALL RIGHTS RESERVED</span>
+    <span>PROPERTY INTELLIGENCE PLATFORM</span>
+  </div>
+</footer>
+
+<script>
+// Close mobile menu when a link is clicked
+document.querySelectorAll('.nav-links a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    document.querySelector('.nav-links').classList.remove('open');
+  });
+});
+</script>
+
+</body>
+</html>
