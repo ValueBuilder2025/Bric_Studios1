@@ -116,15 +116,15 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
       <div class="form-section-title">Property Details</div>
       <div class="field"><label>Property Address</label><input type="text" id="address" value="123 Main Street, Brooklyn, NY"/></div>
       <div class="field-row">
-        <div class="field"><label>Property Type</label><select id="propertyType"><option value="mixed">Mixed-Use</option><option value="multifamily">Multifamily</option><option value="commercial">Commercial</option></select></div>
-        <div class="field"><label>Borough</label><select id="boroughSelect" onchange="populateSubmarkets();updateMarketBenchmarks()"><option value="brooklyn" selected>Brooklyn</option><option value="manhattan">Manhattan</option><option value="queens">Queens</option><option value="bronx">Bronx</option><option value="statenisland">Staten Island</option></select></div>
+        <div class="field"><label>Property Type</label><select id="propertyType"><option value="" selected disabled>Select property type</option><option value="mixed">Mixed-Use</option><option value="multifamily">Multifamily</option><option value="commercial">Commercial</option></select></div>
+        <div class="field"><label>Borough</label><select id="boroughSelect" onchange="populateSubmarkets();updateMarketBenchmarks()"><option value="" selected disabled>Select borough</option><option value="brooklyn">Brooklyn</option><option value="manhattan">Manhattan</option><option value="queens">Queens</option><option value="bronx">Bronx</option><option value="statenisland">Staten Island</option></select></div>
       </div>
       <div class="field">
         <label>Submarket</label>
         <select id="submarketSelect" onchange="updateMarketBenchmarks()"></select>
       </div>
       <div class="field-row">
-        <div class="field"><label>Number of Units</label><input type="number" id="units" value="3" min="1" oninput="updateDerivedBenchmarks()"/></div>
+        <div class="field"><label>Number of Units</label><input type="number" id="units" value="" placeholder="Enter total units" min="1" oninput="updateDerivedBenchmarks()"/></div>
         <div class="field"><label>Total Sq. Footage</label><input type="number" id="sqft" value="" placeholder="Enter total SF" min="0" oninput="updateDerivedBenchmarks()"/></div>
       </div>
     </div>
@@ -264,6 +264,11 @@ function getCapBenchmark(){
   return boroughData[submarket]||boroughData.default;
 }
 function updateMarketBenchmarks(){
+  const borough=document.getElementById('boroughSelect').value;
+  if(!borough){
+    document.getElementById('capNote').innerHTML='<span style="color:rgba(255,255,255,.5)">Select a borough and submarket to load the suggested market cap rate range.</span>';
+    return;
+  }
   const bench=getCapBenchmark();
   if(bench){
     document.getElementById('capRate').value=bench.mid.toFixed(1);
@@ -369,8 +374,8 @@ function syncRentRollRows(){
   const existingRes=[...rr.querySelectorAll('.rr-row')].map(r=>({unit:r.querySelector('.rr-unit')?.value,bed:r.querySelector('.rr-bed')?.value,bath:r.querySelector('.rr-bath')?.value,rent:r.querySelector('.rr-rent')?.value}));
   const existingRet=[...ret.querySelectorAll('.rr-retail-row')].map(r=>({space:r.querySelector('.ret-space')?.value,tenant:r.querySelector('.ret-tenant')?.value,exp:r.querySelector('.ret-exp')?.value,inc:r.querySelector('.ret-inc')?.value,rent:r.querySelector('.ret-rent')?.value}));
   rr.innerHTML=''; ret.innerHTML='';
-  for(let i=1;i<=resCount;i++){rr.insertAdjacentHTML('beforeend',resRowHTML(i,existingRes[i-1]||{bed:i===2?2:1,bath:1,rent:i===1?2800:i===2?3400:''}))}
-  for(let i=1;i<=retCount;i++){ret.insertAdjacentHTML('beforeend',retailRowHTML(i,existingRet[i-1]||{tenant:i===1?'Sample Tenant':'',inc:'3',rent:i===1?5000:''}))}
+  for(let i=1;i<=resCount;i++){rr.insertAdjacentHTML('beforeend',resRowHTML(i,existingRes[i-1]||{bed:i===2?2:1,bath:1,rent:''}))}
+  for(let i=1;i<=retCount;i++){ret.insertAdjacentHTML('beforeend',retailRowHTML(i,existingRet[i-1]||{tenant:i===1?'Sample Tenant':'',inc:'3',rent:''}))}
   document.getElementById('units').value=resCount+retCount;
   updateRentRollTotals();
   updateAllExpenseBenchmarks();
@@ -433,7 +438,7 @@ function renderResults(d){
   const expBreakdownHTML=d.expenseList.map(e=>`<div class="breakdown-row"><span class="breakdown-row-name">${e.name}</span><span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span></div>`).join('')||'<div class="breakdown-row"><span class="breakdown-row-name">No expenses entered</span></div>';
   panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel} · ${d.units} Units ${d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''}</div></div><div class="result-timestamp">Generated</div></div><div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>${expRows}</div>
-  <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
+  <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="breakdown-total" style="margin-top:1rem;background:rgba(201,168,76,.08);padding:.85rem 1rem;border:1px solid rgba(201,168,76,.18);border-radius:10px"><span>Net Operating Income</span><span class="breakdown-total-val">${fmtFull(d.noi)}</span></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
 }
 
 function getWorkspace(){
@@ -585,8 +590,6 @@ populateSubmarkets();
 updateMarketBenchmarks();
 document.getElementById('resUnitCount').value='2';
 document.getElementById('retailUnitCount').value='1';
-toggleRentRoll();
-syncRentRollRows();
 tryLoadSavedValuation();
 
 (function(){
