@@ -124,15 +124,15 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
         <select id="submarketSelect" onchange="updateMarketBenchmarks()"></select>
       </div>
       <div class="field-row">
-        <div class="field"><label>Number of Units</label><input type="number" id="units" value="3" min="1"/></div>
-        <div class="field"><label>Total Sq. Footage</label><input type="number" id="sqft" value="3984" min="0"/></div>
+        <div class="field"><label>Number of Units</label><input type="number" id="units" value="3" min="1" oninput="updateDerivedBenchmarks()"/></div>
+        <div class="field"><label>Total Sq. Footage</label><input type="number" id="sqft" value="" placeholder="Enter total SF" min="0" oninput="updateDerivedBenchmarks()"/></div>
       </div>
     </div>
 
     <div class="form-section">
       <div class="form-section-title">Annual Income</div>
       <div class="field-row">
-        <div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" value="" placeholder="Auto-fills from rent roll if enabled" min="0"/></div></div>
+        <div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" value="" placeholder="Auto-fills from rent roll if enabled" min="0" oninput="updateDerivedBenchmarks()"/></div></div>
         <div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" value="" placeholder="0" min="0"/></div></div>
       </div>
 
@@ -233,13 +233,16 @@ const BENCHMARKS={
 let expenseIdCounter=0,rentRollActive=false;
 function getContext(){
   const sqft=parseFloat(document.getElementById('sqft').value)||0;
-  const resUnits=parseInt(document.getElementById('resUnitCount').value||0,10);
+  const manualUnits=parseInt(document.getElementById('units').value||0,10);
+  const rrResUnits=parseInt(document.getElementById('resUnitCount').value||0,10);
   const retailUnits=parseInt(document.getElementById('retailUnitCount').value||0,10);
+  const useRentRollCounts=rentRollActive && (rrResUnits+retailUnits)>0;
+  const resUnits=useRentRollCounts ? rrResUnits : Math.max(0, manualUnits-retailUnits);
   let beds=0,baths=0;
   document.querySelectorAll('#rrRows .rr-bed').forEach(el=>beds+=parseFloat(el.value)||0);
   document.querySelectorAll('#rrRows .rr-bath').forEach(el=>baths+=parseFloat(el.value)||0);
   const grossIncome=getGrossIncomeValue();
-  return {sqft,resUnits,retailUnits,totalUnits:Math.max(1,resUnits+retailUnits),beds,baths,grossIncome};
+  return {sqft,resUnits,retailUnits,totalUnits:Math.max(1,(useRentRollCounts ? rrResUnits+retailUnits : manualUnits)||0),beds,baths,grossIncome};
 }
 function updateCapDisplay(v){document.getElementById('capDisplay').textContent=parseFloat(v).toFixed(1)+'%'}
 
@@ -248,8 +251,11 @@ function populateSubmarkets(){
   const sel=document.getElementById('submarketSelect');
   const list=SUBMARKETS[borough]||[];
   const current=sel.value;
-  sel.innerHTML=list.map((n,i)=>`<option value="${n}" ${i===0?'selected':''}>${n}</option>`).join('');
+  sel.innerHTML='<option value="" selected disabled>Select submarket</option>'+list.map(n=>`<option value="${n}">${n}</option>`).join('');
   if(list.includes(current)) sel.value=current;
+}
+function updateDerivedBenchmarks(){
+  updateAllExpenseBenchmarks();
 }
 function getCapBenchmark(){
   const borough=document.getElementById('boroughSelect').value;
