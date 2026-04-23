@@ -7,777 +7,105 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#0d0f0e;--paper:#f5f2ec;--cream:#faf8f3;--gold:#c9a84c;--gold-light:#e8d08a;--gold-dim:rgba(201,168,76,0.13);--slate:#3a4a52;--muted:#7a8a82;--border-gold:rgba(201,168,76,0.3)}
+:root{--ink:#0d0f0e;--paper:#f5f2ec;--cream:#faf8f3;--gold:#c9a84c;--gold-light:#e8d08a;--gold-dim:rgba(201,168,76,0.13);--slate:#3a4a52;--muted:#7a8a82;--border-gold:rgba(201,168,76,0.3);--line:rgba(255,255,255,0.07);--panel:#181b1a;--serif:'Playfair Display',serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55}
-
-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.95);backdrop-filter:blur(16px)}
-.nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.15rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
-.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
-.nav-badge{font-family:'DM Mono',monospace;font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border-gold);padding:0.32rem 0.85rem;border-radius:20px}
-.nav-right{display:flex;align-items:center;gap:0.7rem}
-.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s}
-.nav-back:hover{color:var(--gold)}
-.action-btn{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.42rem 0.9rem;border-radius:20px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.08);color:var(--gold);cursor:pointer;transition:all 0.2s}
-.action-btn:hover{background:rgba(201,168,76,0.18)}
-.action-btn.primary{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
-
-.app{display:grid;grid-template-columns:440px 1fr;min-height:calc(100vh - 61px)}
-
-.panel-left{border-right:1px solid rgba(255,255,255,0.07);overflow-y:auto;max-height:calc(100vh - 61px);position:sticky;top:61px}
-.panel-left::-webkit-scrollbar{width:3px}
-.panel-left::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
-
-.panel-header{padding:1.6rem 2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.06)}
-.panel-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
-.panel-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--paper)}
-.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.4rem;line-height:1.6}
-
-.form-section{padding:1.3rem 2rem;border-bottom:1px solid rgba(255,255,255,0.05)}
-.form-section-title{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
-.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}
-.section-action{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;cursor:pointer;padding:0.2rem 0.5rem;border-radius:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2)}
-.section-action:hover{background:rgba(201,168,76,0.2)}
-
-.field{margin-bottom:0.8rem}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem}
-label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;letter-spacing:0.02em;font-weight:500}
-.input-wrap{position:relative}
-.input-prefix{position:absolute;top:50%;transform:translateY(-50%);left:0.75rem;font-family:'DM Mono',monospace;font-size:0.75rem;color:rgba(255,255,255,0.28);pointer-events:none}
-.input-suffix{position:absolute;top:50%;transform:translateY(-50%);right:0.75rem;font-family:'DM Mono',monospace;font-size:0.75rem;color:rgba(255,255,255,0.28);pointer-events:none}
-input[type="text"],input[type="number"],select,textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.52rem 0.8rem;border-radius:8px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none}
-.has-prefix input{padding-left:1.85rem}
-.has-suffix input{padding-right:1.95rem}
-input:focus,select:focus,textarea:focus{border-color:var(--border-gold);background:rgba(201,168,76,0.04)}
-input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.18)}
-select{cursor:pointer}
-select option{background:var(--ink)}
-textarea{resize:vertical;min-height:70px;line-height:1.5}
-
-.rr-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.85rem 0.95rem;margin-bottom:0.55rem;transition:border-color 0.2s}
-.rr-item:hover{border-color:rgba(255,255,255,0.14)}
-.rr-item.retail{background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.2)}
-.rr-item-hd{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
-.rr-unit-badge{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.55rem;border-radius:5px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.65);font-weight:600}
-.rr-item.retail .rr-unit-badge{background:var(--gold-dim);color:var(--gold);border:1px solid var(--border-gold)}
-.rr-type-toggle{display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:6px;padding:2px}
-.rr-type-btn{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.5rem;border:none;background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;border-radius:4px;font-weight:600}
-.rr-type-btn.active{background:var(--gold);color:var(--ink)}
-.rr-remove{margin-left:auto;width:24px;height:24px;border-radius:5px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.85rem}
-.rr-remove:hover{border-color:#d46a55;color:#d46a55}
-
-.rr-fields-grid{display:grid;grid-template-columns:80px 1fr;gap:0.5rem;margin-bottom:0.55rem}
-.rr-field-sm label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.2rem}
-.rr-field-sm input{font-size:0.8rem;padding:0.4rem 0.55rem}
-
-.rr-desc{margin-bottom:0.55rem}
-.rr-desc label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.2rem}
-.rr-desc input{font-size:0.8rem;padding:0.4rem 0.55rem}
-.rr-desc-chips{display:flex;gap:0.25rem;flex-wrap:wrap;margin-top:0.3rem}
-.rr-chip{font-family:'DM Mono',monospace;font-size:0.54rem;padding:0.14rem 0.42rem;border-radius:4px;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.08);cursor:pointer;letter-spacing:0.03em}
-.rr-chip:hover{background:rgba(201,168,76,0.15);color:var(--gold-light);border-color:rgba(201,168,76,0.3)}
-
-.rr-rents{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
-.rr-rent-group label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.22rem;display:flex;align-items:center;justify-content:space-between}
-.rr-rent-group .input-wrap input{font-size:0.8rem;padding:0.45rem 0.55rem 0.45rem 1.25rem;text-align:right}
-.rr-rent-group .input-wrap .input-prefix{left:0.48rem;font-size:0.7rem}
-.autogen-btn{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.12rem 0.38rem;border-radius:3px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold);cursor:pointer;font-weight:600}
-.autogen-btn:hover{background:rgba(201,168,76,0.2)}
-.autogen-btn.active{background:var(--gold);color:var(--ink)}
-
-.rr-summary{padding:0.85rem 1rem;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.2);border-radius:10px;margin-top:0.6rem}
-.rr-summary-row{display:flex;justify-content:space-between;align-items:center;padding:0.25rem 0;font-size:0.78rem}
-.rr-summary-row.total{padding-top:0.5rem;margin-top:0.35rem;border-top:1px solid rgba(255,255,255,0.1);font-weight:600}
-.rr-summary-label{color:rgba(255,255,255,0.55);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.04em}
-.rr-summary-val{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--paper);font-weight:500}
-.rr-summary-val.proforma{color:var(--gold-light)}
-.rr-summary-val.big{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700}
-
-.add-btn{width:100%;padding:0.65rem;border-radius:10px;border:1px dashed rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-size:0.76rem;transition:all 0.2s;margin-top:0.3rem}
-.add-btn:hover{border-color:var(--border-gold);color:var(--gold);background:var(--gold-dim)}
-.add-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.3rem}
-
-.section-toggles{display:flex;flex-direction:column;gap:0.3rem}
-.section-toggle{display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer}
-.section-toggle:hover{border-color:rgba(255,255,255,0.12)}
-.section-toggle.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.3)}
-.section-toggle-info{flex:1}
-.section-toggle-name{font-size:0.8rem;color:var(--paper);font-weight:500}
-.section-toggle.active .section-toggle-name{color:var(--gold-light)}
-.section-toggle-sub{font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:0.1rem}
-.toggle{width:32px;height:18px;border-radius:10px;background:rgba(255,255,255,0.1);position:relative;transition:background 0.2s;flex-shrink:0}
-.toggle.on{background:var(--gold)}
-.toggle::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 0.2s}
-.toggle.on::after{transform:translateX(14px)}
-
-.generate-btn{width:100%;padding:0.85rem;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}
-.generate-btn:hover{background:var(--gold-light)}
-
-.panel-right{padding:1.75rem;overflow-y:auto;max-height:calc(100vh - 61px);background:#181b1a}
-.panel-right::-webkit-scrollbar{width:3px}
-.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
-.preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:0.6rem}
-.preview-title{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
-.preview-actions{display:flex;gap:0.4rem}
-
-.om-doc{background:var(--cream);color:var(--ink);max-width:880px;margin:0 auto;box-shadow:0 20px 80px rgba(0,0,0,0.5);border-radius:6px;overflow:hidden;font-size:12.5px;line-height:1.55}
-.om-page{padding:2.75rem 3.25rem;min-height:900px;position:relative}
-.om-page+.om-page{border-top:1px dashed rgba(13,15,14,0.1)}
-
-.om-cover{background:linear-gradient(135deg,var(--ink) 0%,#1a1e1c 100%);color:var(--paper);padding:3.75rem 3.25rem 3rem;min-height:900px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-.om-cover::before{content:"";position:absolute;top:0;right:0;width:380px;height:380px;background:radial-gradient(circle at top right,rgba(201,168,76,0.15),transparent 70%);pointer-events:none}
-.om-cover-brand{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;position:relative;z-index:2}
-.om-cover-brand-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
-.om-cover-tagline{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);position:relative;z-index:2}
-.om-cover-mid{position:relative;z-index:2;margin-top:auto;margin-bottom:auto;padding-top:2.5rem}
-.om-cover-eyebrow{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.7rem}
-.om-cover-eyebrow::before{content:"";width:36px;height:1px;background:var(--gold)}
-.om-cover-title{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:0.9rem;color:var(--paper)}
-.om-cover-title em{font-style:italic;color:var(--gold-light);display:block;font-size:2.4rem}
-.om-cover-subtitle{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.6);max-width:500px;line-height:1.5}
-.om-cover-bottom{position:relative;z-index:2;padding-top:1.5rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem}
-.om-cover-stat-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.25rem}
-.om-cover-stat-val{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold-light);line-height:1}
-.om-cover-presenter{text-align:right;font-size:0.75rem;color:rgba(255,255,255,0.45);line-height:1.55}
-.om-cover-presenter b{color:var(--paper);font-weight:600}
-
-.om-page-hd{display:flex;justify-content:space-between;align-items:center;padding-bottom:0.85rem;margin-bottom:1.75rem;border-bottom:2px solid var(--ink)}
-.om-page-hd-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--ink)}
-.om-page-hd-brand{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
-
-.om-section{margin-bottom:1.75rem}
-.om-section-eyebrow{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.45rem}
-.om-section-heading{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:0.7rem;padding-bottom:0.35rem;border-bottom:1px solid rgba(13,15,14,0.1)}
-
-.highlights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem}
-.highlight-card{padding:0.9rem 1rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:4px}
-.highlight-label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
-.highlight-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1}
-.highlight-sub{font-size:0.66rem;color:var(--slate);margin-top:0.22rem}
-
-.om-description{font-size:0.85rem;line-height:1.7;color:var(--ink);text-align:justify}
-.om-description p{margin-bottom:0.75rem}
-
-.rr-display-table{width:100%;border-collapse:collapse;font-size:0.76rem;margin-top:0.3rem}
-.rr-display-table th{text-align:left;padding:0.5rem 0.55rem;background:var(--ink);color:var(--paper);font-family:'DM Mono',monospace;font-size:0.53rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
-.rr-display-table th:nth-child(n+4){text-align:right}
-.rr-display-table td{padding:0.5rem 0.55rem;border-bottom:1px solid rgba(13,15,14,0.06);color:var(--ink);vertical-align:middle}
-.rr-display-table td:nth-child(n+4){text-align:right;font-family:'DM Mono',monospace;font-size:0.75rem}
-.rr-display-table .unit-label{font-weight:700;font-family:'DM Mono',monospace}
-.rr-display-table .retail-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.53rem;padding:0.08rem 0.32rem;border-radius:3px;background:rgba(201,168,76,0.2);color:#8a6d20;margin-left:0.3rem;letter-spacing:0.05em;font-weight:600}
-.rr-display-table tr.retail-row{background:rgba(201,168,76,0.04)}
-.rr-display-table tr.totals{font-weight:700;background:rgba(13,15,14,0.05)}
-.rr-display-table tr.totals td{padding-top:0.65rem;padding-bottom:0.65rem}
-.rr-display-table .pf-val{color:#8a6d20;font-weight:600}
-
-.financial-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem}
-.fin-col-title{font-family:'Playfair Display',serif;font-size:0.92rem;font-weight:700;margin-bottom:0.45rem;color:var(--ink);padding-bottom:0.3rem;border-bottom:1.5px solid var(--ink)}
-.fin-row{display:flex;justify-content:space-between;padding:0.38rem 0;border-bottom:1px solid rgba(13,15,14,0.06);font-size:0.8rem}
-.fin-row-name{color:var(--slate)}
-.fin-row-val{font-family:'DM Mono',monospace;color:var(--ink);font-weight:500}
-.fin-total{display:flex;justify-content:space-between;padding:0.65rem 0.5rem;margin-top:0.4rem;background:var(--ink);color:var(--paper);border-radius:4px;font-weight:700;font-size:0.85rem}
-.fin-total.gold{background:var(--gold);color:var(--ink)}
-
-.val-card{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);padding:1.5rem 1.75rem;border-radius:6px;color:var(--ink)}
-.val-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(13,15,14,0.7);margin-bottom:0.45rem}
-.val-range{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:var(--ink);margin-bottom:0.25rem}
-.val-detail{display:flex;gap:1.5rem;margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid rgba(13,15,14,0.15);flex-wrap:wrap}
-.val-detail-label{font-family:'DM Mono',monospace;font-size:0.53rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(13,15,14,0.6);margin-bottom:0.12rem}
-.val-detail-val{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--ink)}
-
-.om-table{width:100%;border-collapse:collapse;font-size:0.8rem}
-.om-table th{text-align:left;padding:0.55rem 0.65rem;background:var(--ink);color:var(--paper);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.13em;text-transform:uppercase;font-weight:600}
-.om-table th.num{text-align:right}
-.om-table td{padding:0.5rem 0.65rem;border-bottom:1px solid rgba(13,15,14,0.08);color:var(--ink)}
-.om-table td.num{text-align:right;font-family:'DM Mono',monospace}
-.om-table .proforma{background:rgba(201,168,76,0.08)}
-
-.disclaimer{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);line-height:1.7;letter-spacing:0.02em;border-top:1px solid rgba(13,15,14,0.1);padding-top:0.9rem;margin-top:1.75rem}
-
-.empty-preview{display:flex;align-items:center;justify-content:center;min-height:520px;flex-direction:column;gap:0.8rem;text-align:center;padding:2rem;opacity:0.5}
-.empty-icon{font-size:2.6rem;color:rgba(255,255,255,0.25)}
-.empty-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:rgba(255,255,255,0.6)}
-.empty-sub{font-size:0.8rem;color:rgba(255,255,255,0.3);max-width:320px;line-height:1.6}
-
-@media print{nav,.panel-left,.preview-header{display:none}body{overflow:auto;background:white}.app{display:block}.panel-right{padding:0;max-height:none;background:white;overflow:visible}.om-doc{box-shadow:none;border-radius:0;max-width:none}.om-page,.om-cover{page-break-after:always;min-height:auto}}
-
-@media(max-width:900px){.app{grid-template-columns:1fr}.panel-left{position:static;max-height:none}.highlights-grid{grid-template-columns:1fr 1fr}.financial-grid{grid-template-columns:1fr}.om-page,.om-cover{padding:1.75rem 1.25rem}.om-cover-title{font-size:2rem}.om-cover-title em{font-size:1.6rem}}
-</style>
-</head>
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.95);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border-gold);padding:0.32rem 0.85rem;border-radius:20px}
+.nav-right{display:flex;align-items:center;gap:0.7rem;flex-wrap:wrap}.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s}.nav-back:hover{color:var(--gold)}
+.action-btn{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.42rem 0.9rem;border-radius:20px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.08);color:var(--gold);cursor:pointer;transition:all 0.2s}.action-btn:hover{background:rgba(201,168,76,0.18)}.action-btn.primary{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.tier-bar{display:flex;align-items:center;justify-content:center;padding:0.75rem 1.75rem;background:rgba(201,168,76,0.05);border-bottom:1px solid var(--line);gap:0.75rem;flex-wrap:wrap}
+.tier-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.tier-wrap{display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px}
+.tier-btn{padding:0.38rem 0.95rem;border:none;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--sans);font-size:0.76rem;font-weight:600;cursor:pointer;border-radius:16px;transition:all 0.2s}.tier-btn.active{background:var(--gold);color:var(--ink)}
+.app{display:grid;grid-template-columns:460px 1fr;min-height:calc(100vh - 107px)}
+.panel-left{border-right:1px solid var(--line);overflow-y:auto;max-height:calc(100vh - 107px);position:sticky;top:107px}.panel-right{padding:1.75rem;overflow-y:auto;max-height:calc(100vh - 61px);background:var(--panel)}
+.panel-left::-webkit-scrollbar,.panel-right::-webkit-scrollbar{width:3px}.panel-left::-webkit-scrollbar-thumb,.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.panel-header{padding:1.6rem 2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.06)}.panel-eyebrow{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}.panel-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--paper)}.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.4rem;line-height:1.6}
+.form-section{padding:1.3rem 2rem;border-bottom:1px solid rgba(255,255,255,0.05)}.form-section-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}
+.section-action{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;cursor:pointer;padding:0.2rem 0.5rem;border-radius:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2)}.section-action:hover{background:rgba(201,168,76,0.2)}
+.field{margin-bottom:0.8rem}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem}label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;letter-spacing:0.02em;font-weight:500}
+.input-wrap{position:relative}.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.75rem;color:rgba(255,255,255,0.28);pointer-events:none}.input-prefix{left:0.75rem}.input-suffix{right:0.75rem}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.85rem;padding:0.52rem 0.8rem;border-radius:8px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none;appearance:none}
+.has-prefix input{padding-left:1.85rem}.has-suffix input{padding-right:1.95rem}input:focus,select:focus,textarea:focus{border-color:var(--border-gold);background:rgba(201,168,76,0.04)}input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.18)}select{cursor:pointer}select option{background:var(--ink);color:var(--paper)}textarea{resize:vertical;min-height:70px;line-height:1.5}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0;cursor:pointer}.toggle-label-wrap{flex:1}.toggle-main{font-size:0.84rem;color:rgba(255,255,255,0.75);font-weight:500;display:flex;align-items:center;gap:0.45rem}.toggle-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.12rem}
+.pill-badge{display:inline-block;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.1em;padding:0.14rem 0.45rem;border-radius:4px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);text-transform:uppercase}
+.toggle{width:32px;height:18px;border-radius:10px;background:rgba(255,255,255,0.1);position:relative;transition:background 0.2s;flex-shrink:0}.toggle.on{background:var(--gold)}.toggle::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 0.2s}.toggle.on::after{transform:translateX(14px)}
+.count-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.45rem}
+.upload-box{margin-top:0.55rem;padding:0.65rem 0.8rem;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.14);border-radius:8px}.upload-label{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.35rem}.upload-box input[type="file"]{padding:0;border:none;background:none;font-size:0.75rem;color:rgba(255,255,255,0.55)}
+.rr-wrap{display:none;margin-top:0.65rem}.rr-wrap.visible{display:block}.rr-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.8rem 0.9rem;margin-bottom:0.55rem}.rr-item.retail{background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.2)}
+.rr-item-hd{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.55rem}.rr-unit-badge{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.5rem;border-radius:5px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.65);font-weight:600}.rr-item.retail .rr-unit-badge{background:var(--gold-dim);color:var(--gold);border:1px solid var(--border-gold)}
+.rr-remove{margin-left:auto;width:24px;height:24px;border-radius:5px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.85rem}.rr-remove:hover{border-color:#d46a55;color:#d46a55}
+.rr-grid-res{display:grid;grid-template-columns:70px 1fr 1fr 1fr 1fr;gap:0.45rem;align-items:end}.rr-grid-ret{display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr;gap:0.45rem;align-items:end}.rr-grid-ret-second{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.45rem;align-items:end;margin-top:0.45rem}
+.rr-field label{font-family:var(--mono);font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.18rem}.rr-field input,.rr-field select{font-size:0.8rem;padding:0.42rem 0.55rem}
+.rr-summary{padding:0.85rem 1rem;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.2);border-radius:10px;margin-top:0.6rem}.rr-summary-row{display:flex;justify-content:space-between;align-items:center;padding:0.22rem 0;font-size:0.78rem}.rr-summary-row.total{padding-top:0.45rem;margin-top:0.35rem;border-top:1px solid rgba(255,255,255,0.1);font-weight:600}.rr-summary-label{color:rgba(255,255,255,0.55);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.04em}.rr-summary-val{font-family:var(--mono);font-size:0.8rem;color:var(--paper);font-weight:500}.rr-summary-val.proforma{color:var(--gold-light)}.rr-summary-val.big{font-family:var(--serif);font-size:0.95rem;font-weight:700}.info-note{font-size:0.74rem;color:rgba(255,255,255,0.42);line-height:1.5;margin-top:0.45rem}
+.expense-block{margin-bottom:0.55rem}.add-btn{width:100%;padding:0.65rem;border-radius:10px;border:1px dashed rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-size:0.76rem;transition:all 0.2s;margin-top:0.25rem}.add-btn:hover{border-color:var(--border-gold);color:var(--gold);background:var(--gold-dim)}
+.import-note{padding:0.7rem 0.85rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);border-radius:8px;color:rgba(255,255,255,0.6);font-size:0.74rem;line-height:1.55}.import-note b{color:var(--gold-light);font-weight:600}
+.section-toggles{display:flex;flex-direction:column;gap:0.3rem}.section-toggle{display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer}.section-toggle:hover{border-color:rgba(255,255,255,0.12)}.section-toggle.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.3)}.section-toggle-info{flex:1}.section-toggle-name{font-size:0.8rem;color:var(--paper);font-weight:500}.section-toggle.active .section-toggle-name{color:var(--gold-light)}.section-toggle-sub{font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:0.1rem}
+.generate-btn{width:100%;padding:0.85rem;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}.generate-btn:hover{background:var(--gold-light)}
+.preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:0.6rem}.preview-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4)}.preview-actions{display:flex;gap:0.4rem}
+.om-doc{background:var(--cream);color:var(--ink);max-width:880px;margin:0 auto;box-shadow:0 20px 80px rgba(0,0,0,0.5);border-radius:6px;overflow:hidden;font-size:12.5px;line-height:1.55}.om-page{padding:2.75rem 3.25rem;min-height:900px;position:relative}.om-page+.om-page{border-top:1px dashed rgba(13,15,14,0.1)}
+.om-cover{background:linear-gradient(135deg,var(--ink) 0%,#1a1e1c 100%);color:var(--paper);padding:3.75rem 3.25rem 3rem;min-height:900px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}.om-cover::before{content:"";position:absolute;top:0;right:0;width:380px;height:380px;background:radial-gradient(circle at top right,rgba(201,168,76,0.15),transparent 70%);pointer-events:none}
+.om-cover-brand{font-family:var(--serif);font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;position:relative;z-index:2}.om-cover-brand-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}.om-cover-tagline{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);position:relative;z-index:2}
+.om-cover-mid{position:relative;z-index:2;margin-top:auto;margin-bottom:auto;padding-top:2.5rem}.om-cover-eyebrow{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.7rem}.om-cover-eyebrow::before{content:"";width:36px;height:1px;background:var(--gold)}
+.om-cover-title{font-family:var(--serif);font-size:3rem;font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:0.9rem;color:var(--paper)}.om-cover-title em{font-style:italic;color:var(--gold-light);display:block;font-size:2.4rem}.om-cover-subtitle{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.6);max-width:500px;line-height:1.5}
+.om-cover-bottom{position:relative;z-index:2;padding-top:1.5rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem}.om-cover-stat-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.25rem}.om-cover-stat-val{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--gold-light);line-height:1}.om-cover-presenter{text-align:right;font-size:0.75rem;color:rgba(255,255,255,0.45);line-height:1.55}.om-cover-presenter b{color:var(--paper);font-weight:600}
+.om-page-hd{display:flex;justify-content:space-between;align-items:center;padding-bottom:0.85rem;margin-bottom:1.75rem;border-bottom:2px solid var(--ink)}.om-page-hd-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--ink)}.om-page-hd-brand{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.om-section{margin-bottom:1.75rem}.om-section-eyebrow{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.45rem}.om-section-heading{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:0.7rem;padding-bottom:0.35rem;border-bottom:1px solid rgba(13,15,14,0.1)}
+.highlights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem}.highlight-card{padding:0.9rem 1rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:4px}.highlight-label{font-family:var(--mono);font-size:0.54rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}.highlight-val{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1}.highlight-sub{font-size:0.66rem;color:var(--slate);margin-top:0.22rem}
+.om-description{font-size:0.85rem;line-height:1.7;color:var(--ink);text-align:justify}.om-description p{margin-bottom:0.75rem}
+.rr-display-table,.om-table{width:100%;border-collapse:collapse;font-size:0.76rem}.rr-display-table th,.om-table th{text-align:left;padding:0.5rem 0.55rem;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:0.53rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600}.rr-display-table th:nth-child(n+4),.om-table th.num{text-align:right}
+.rr-display-table td,.om-table td{padding:0.5rem 0.55rem;border-bottom:1px solid rgba(13,15,14,0.06);color:var(--ink);vertical-align:middle}.rr-display-table td:nth-child(n+4),.om-table td.num{text-align:right;font-family:var(--mono);font-size:0.75rem}
+.rr-display-table .unit-label{font-weight:700;font-family:var(--mono)}.rr-display-table .retail-tag{display:inline-block;font-family:var(--mono);font-size:0.53rem;padding:0.08rem 0.32rem;border-radius:3px;background:rgba(201,168,76,0.2);color:#8a6d20;margin-left:0.3rem;letter-spacing:0.05em;font-weight:600}.rr-display-table tr.retail-row{background:rgba(201,168,76,0.04)}.rr-display-table tr.totals{font-weight:700;background:rgba(13,15,14,0.05)}.rr-display-table .pf-val{color:#8a6d20;font-weight:600}
+.financial-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem}.fin-col-title{font-family:var(--serif);font-size:0.92rem;font-weight:700;margin-bottom:0.45rem;color:var(--ink);padding-bottom:0.3rem;border-bottom:1.5px solid var(--ink)}.fin-row{display:flex;justify-content:space-between;padding:0.38rem 0;border-bottom:1px solid rgba(13,15,14,0.06);font-size:0.8rem}.fin-row-name{color:var(--slate)}.fin-row-val{font-family:var(--mono);color:var(--ink);font-weight:500}.fin-total{display:flex;justify-content:space-between;padding:0.65rem 0.5rem;margin-top:0.4rem;background:var(--ink);color:var(--paper);border-radius:4px;font-weight:700;font-size:0.85rem}.fin-total.gold{background:var(--gold);color:var(--ink)}
+.val-card{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);padding:1.5rem 1.75rem;border-radius:6px;color:var(--ink)}.val-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(13,15,14,0.7);margin-bottom:0.45rem}.val-range{font-family:var(--serif);font-size:1.9rem;font-weight:900;color:var(--ink);margin-bottom:0.25rem}.val-detail{display:flex;gap:1.5rem;margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid rgba(13,15,14,0.15);flex-wrap:wrap}.val-detail-label{font-family:var(--mono);font-size:0.53rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(13,15,14,0.6);margin-bottom:0.12rem}.val-detail-val{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--ink)}
+.disclaimer{font-family:var(--mono);font-size:0.6rem;color:var(--muted);line-height:1.7;letter-spacing:0.02em;border-top:1px solid rgba(13,15,14,0.1);padding-top:0.9rem;margin-top:1.75rem}
+.empty-preview{display:flex;align-items:center;justify-content:center;min-height:520px;flex-direction:column;gap:0.8rem;text-align:center;padding:2rem;opacity:0.5}.empty-icon{font-size:2.6rem;color:rgba(255,255,255,0.25)}.empty-title{font-family:var(--serif);font-size:1.2rem;color:rgba(255,255,255,0.6)}.empty-sub{font-size:0.8rem;color:rgba(255,255,255,0.3);max-width:320px;line-height:1.6}
+@media print{nav,.tier-bar,.panel-left,.preview-header{display:none}body{overflow:auto;background:white}.app{display:block}.panel-right{padding:0;max-height:none;background:white;overflow:visible}.om-doc{box-shadow:none;border-radius:0;max-width:none}.om-page,.om-cover{page-break-after:always;min-height:auto}}
+@media(max-width:980px){.app{grid-template-columns:1fr}.panel-left{position:static;max-height:none}.highlights-grid{grid-template-columns:1fr 1fr}.financial-grid{grid-template-columns:1fr}.om-page,.om-cover{padding:1.75rem 1.25rem}.om-cover-title{font-size:2rem}.om-cover-title em{font-size:1.6rem}}
+@media(max-width:720px){.field-row,.count-grid,.rr-grid-res,.rr-grid-ret,.rr-grid-ret-second,.highlights-grid{grid-template-columns:1fr}.panel-left .form-section,.panel-left .panel-header,.panel-right{padding-left:1.1rem;padding-right:1.1rem}}
+</style></head>
 <body>
-
-<nav>
-<a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
-<span class="nav-badge">OM Studio</span>
-<div class="nav-right">
-<button class="action-btn" onclick="loadSample()">Load 1782 Nostrand</button>
-<a href="dashboard.html" class="nav-back">← Dashboard</a>
-</div>
-</nav>
-
-<div class="app">
-
-<div class="panel-left">
-<div class="panel-header">
-<div class="panel-eyebrow">Investor Document Generator</div>
-<div class="panel-title">Offering Memorandum</div>
-<div class="panel-sub">Add unit-by-unit rent roll with auto-generated pro forma rents. OM preview updates as you type.</div>
-</div>
-
-<div class="form-section">
-<div class="form-section-title">Property Details</div>
-<div class="field">
-<label>Property Address</label>
-<input type="text" id="address" value="1782 Nostrand Avenue">
-</div>
-<div class="field-row">
-<div class="field"><label>City</label><input type="text" id="city" value="Brooklyn"></div>
-<div class="field"><label>Neighborhood</label><input type="text" id="neighborhood" value="Flatbush"></div>
-</div>
-<div class="field-row">
-<div class="field"><label>Type</label><select id="propertyType"><option value="Mixed-Use">Mixed-Use</option><option value="Multifamily">Multifamily</option><option value="Commercial">Commercial</option><option value="Retail">Retail</option></select></div>
-<div class="field"><label>Year Built</label><input type="number" id="yearBuilt" value="1936"></div>
-</div>
-<div class="field-row">
-<div class="field"><label># Units</label><input type="number" id="totalUnits" value="6" readonly style="background:rgba(201,168,76,0.06);color:var(--gold-light)"></div>
-<div class="field"><label>Gross SF</label><input type="number" id="sqft" value="3984"></div>
-</div>
-<div class="field">
-<label>Asking Price</label>
-<div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="askingPrice" value="1550000"></div>
-</div>
-</div>
-
-<div class="form-section">
-<div class="form-section-title">Rent Roll <span class="section-action" onclick="autoGenAll()">Auto-Gen All Pro Forma</span></div>
-<div id="rentRollWrap"></div>
-<div class="add-btn-row">
-<button class="add-btn" onclick="addItem('apartment')">+ Add Apartment</button>
-<button class="add-btn" onclick="addItem('retail')">+ Add Retail</button>
-</div>
-<div class="rr-summary" id="rrSummary" style="display:none"></div>
-</div>
-
-<div class="form-section">
-<div class="form-section-title">Description</div>
-<div class="field"><textarea id="description" rows="5">Mixed-use, cash-flowing asset on Nostrand Avenue in the heart of Flatbush, Brooklyn. Features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.</textarea></div>
-</div>
-
-<div class="form-section">
-<div class="form-section-title">Market Context</div>
-<div class="field-row">
-<div class="field"><label>Market Cap Rate</label><div class="input-wrap has-suffix"><input type="number" id="marketCap" value="6.5" step="0.1"><span class="input-suffix">%</span></div></div>
-<div class="field"><label>Trend</label><select id="submarketTrend"><option>Strong Growth</option><option>Stable Growth</option><option selected>Value-Add Market</option><option>Emerging</option></select></div>
-</div>
-</div>
-
-<div class="form-section">
-<div class="form-section-title">Sections to Include</div>
-<div class="section-toggles">
-<div class="section-toggle active" data-toggle="toggleCover"><div class="section-toggle-info"><div class="section-toggle-name">Cover Page</div><div class="section-toggle-sub">Hero with address</div></div><div class="toggle on"></div></div>
-<div class="section-toggle active" data-toggle="toggleHighlights"><div class="section-toggle-info"><div class="section-toggle-name">Highlights</div><div class="section-toggle-sub">Key stats grid</div></div><div class="toggle on"></div></div>
-<div class="section-toggle active" data-toggle="toggleRentRoll"><div class="section-toggle-info"><div class="section-toggle-name">Rent Roll</div><div class="section-toggle-sub">Unit-by-unit detail</div></div><div class="toggle on"></div></div>
-<div class="section-toggle active" data-toggle="toggleFinancial"><div class="section-toggle-info"><div class="section-toggle-name">Financial Summary</div><div class="section-toggle-sub">Income & expenses</div></div><div class="toggle on"></div></div>
-<div class="section-toggle active" data-toggle="toggleValuation"><div class="section-toggle-info"><div class="section-toggle-name">Valuation</div><div class="section-toggle-sub">Cap rate analysis</div></div><div class="toggle on"></div></div>
-<div class="section-toggle active" data-toggle="toggleMarket"><div class="section-toggle-info"><div class="section-toggle-name">Market Overview</div><div class="section-toggle-sub">Submarket context</div></div><div class="toggle on"></div></div>
-</div>
-</div>
-
-<div class="form-section" style="border-bottom:none">
-<button class="generate-btn" onclick="generate()">Generate OM</button>
-</div>
-</div>
-
-<div class="panel-right">
-<div class="preview-header">
-<div class="preview-title">Live OM Preview</div>
-<div class="preview-actions">
-<button class="action-btn" onclick="window.print()">Print / Save PDF</button>
-<button class="action-btn primary" onclick="generate()">Refresh</button>
-</div>
-</div>
-<div id="omPreview"></div>
-</div>
-
-</div>
-
+<nav><a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a><span class="nav-badge">OM Studio</span><div class="nav-right"><button class="action-btn" onclick="loadSample()">Load 1782 Nostrand</button><a href="dashboard.html" class="nav-back">← Dashboard</a></div></nav>
+<div class="tier-bar"><span class="tier-label">Plan</span><div class="tier-wrap"><button class="tier-btn active" id="tierFree" onclick="setTier('free')">Free</button><button class="tier-btn" id="tierGrowth" onclick="setTier('growth')">Growth</button></div><span id="tierDesc" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">Build your OM with live preview and market pro forma</span></div>
+<div class="app"><div class="panel-left"><div class="panel-header"><div class="panel-eyebrow">Investor Document Generator</div><div class="panel-title">Offering Memorandum</div><div class="panel-sub">Matches the valuation builder workflow: clean property inputs, compact itemized rent roll, market pro forma, and a live OM preview.</div></div>
+<div class="form-section"><div class="form-section-title">Property Details</div><div class="field"><label>Property Address</label><input type="text" id="address" value="1782 Nostrand Avenue"></div><div class="field-row"><div class="field"><label>City</label><input type="text" id="city" value="Brooklyn"></div><div class="field"><label>Neighborhood</label><select id="neighborhood"><option value="flatbush" selected>Flatbush</option><option value="williamsburg">Williamsburg</option><option value="bushwick">Bushwick</option><option value="crown heights">Crown Heights</option><option value="harlem">Harlem</option><option value="default">Other</option></select></div></div><div class="field-row"><div class="field"><label>Property Type</label><select id="propertyType"><option value="Mixed-Use">Mixed-Use</option><option value="Multifamily">Multifamily</option><option value="Retail">Retail</option><option value="Commercial">Commercial</option></select></div><div class="field"><label>Year Built</label><input type="number" id="yearBuilt" value="1936"></div></div><div class="field-row"><div class="field"><label>Gross SF</label><input type="number" id="sqft" value="3984"></div><div class="field"><label>Asking Price</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="askingPrice" value="1550000"></div></div></div></div>
+<div class="form-section"><div class="form-section-title">Income Snapshot</div><div class="field-row"><div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" value="192960"></div></div><div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" value="0"></div></div></div><div class="toggle-row" onclick="toggleRentRoll()"><div class="toggle-label-wrap"><div class="toggle-main">Use Itemized Rent Roll <span class="pill-badge">Live</span></div><div class="toggle-sub">Generate residential and retail rows with current and market pro forma rents</div></div><div class="toggle" id="rentRollToggle"></div></div><div class="count-grid"><div class="field"><label>Residential Units</label><select id="resCount"></select></div><div class="field"><label>Retail Spaces</label><select id="retailCount"></select></div></div><div class="upload-box"><div class="upload-label">Upload Rent Roll / PDFs / Excel</div><input type="file" id="rentRollUpload" multiple accept=".pdf,.xls,.xlsx,.csv,.png,.jpg,.jpeg"></div><div class="rr-wrap" id="rentRollWrap"></div><div class="rr-summary" id="rrSummary" style="display:none"></div><div class="info-note">Market pro forma rents auto-fill from local neighborhood averages and can be overridden row by row.</div></div>
+<div class="form-section"><div class="form-section-title">Expenses</div><div id="expenseRows"></div><button class="add-btn" type="button" onclick="addExpenseRow()">+ Add Additional Expense</button></div>
+<div class="form-section"><div class="form-section-title">Description</div><div class="field"><textarea id="description" rows="5">Mixed-use, cash-flowing asset on Nostrand Avenue in the heart of Flatbush, Brooklyn. Features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.</textarea></div></div>
+<div class="form-section"><div class="form-section-title">Market Context</div><div class="field-row"><div class="field"><label>Market Cap Rate</label><div class="input-wrap has-suffix"><input type="number" id="marketCap" value="6.5" step="0.1"><span class="input-suffix">%</span></div></div><div class="field"><label>Trend</label><select id="submarketTrend"><option>Strong Growth</option><option>Stable Growth</option><option selected>Value-Add Market</option><option>Emerging</option></select></div></div></div>
+<div class="form-section"><div class="form-section-title">Growth Transfer</div><div class="import-note" id="importNote"><b>Growth only:</b> Import saved details from Valuation Studio so you don't have to enter the same information twice.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn" type="button" id="importBtn" onclick="importFromValuation()" style="width:100%">Import From Valuation</button><button class="action-btn" type="button" id="saveBtn" onclick="saveOmDraft()" style="width:100%">Save OM Draft</button></div></div>
+<div class="form-section"><div class="form-section-title">Sections to Include</div><div class="section-toggles"><div class="section-toggle active" data-toggle="toggleCover"><div class="section-toggle-info"><div class="section-toggle-name">Cover Page</div><div class="section-toggle-sub">Hero with address</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleHighlights"><div class="section-toggle-info"><div class="section-toggle-name">Highlights</div><div class="section-toggle-sub">Key stats grid</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleRentRoll"><div class="section-toggle-info"><div class="section-toggle-name">Rent Roll</div><div class="section-toggle-sub">Unit-by-unit detail</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleFinancial"><div class="section-toggle-info"><div class="section-toggle-name">Financial Summary</div><div class="section-toggle-sub">Income & expenses</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleValuation"><div class="section-toggle-info"><div class="section-toggle-name">Valuation</div><div class="section-toggle-sub">Cap rate analysis</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleMarket"><div class="section-toggle-info"><div class="section-toggle-name">Market Overview</div><div class="section-toggle-sub">Submarket context</div></div><div class="toggle on"></div></div></div></div>
+<div class="form-section" style="border-bottom:none"><button class="generate-btn" onclick="generate()">Generate OM</button></div></div>
+<div class="panel-right"><div class="preview-header"><div class="preview-title">Live OM Preview</div><div class="preview-actions"><button class="action-btn" onclick="window.print()">Print / Save PDF</button><button class="action-btn primary" onclick="generate()">Refresh</button></div></div><div id="omPreview"></div></div></div>
 <script>
-var rrItems = [];
-var rrIdCounter = 0;
-var sectionsActive = {toggleCover:true,toggleHighlights:true,toggleRentRoll:true,toggleFinancial:true,toggleValuation:true,toggleMarket:true};
-
-var MARKET_RENT = {
-  flatbush: {apt:{0:2200,1:2400,2:2900,3:3400,4:3800},retail:3450},
-  williamsburg: {apt:{0:2800,1:3200,2:3800,3:4600,4:5400},retail:5500},
-  bushwick: {apt:{0:2400,1:2700,2:3200,3:3800,4:4400},retail:4200},
-  'crown heights': {apt:{0:2200,1:2600,2:3050,3:3550,4:4100},retail:3800},
-  harlem: {apt:{0:2100,1:2400,2:2900,3:3400,4:3900},retail:3600},
-  'default': {apt:{0:2200,1:2500,2:3000,3:3500,4:4000},retail:3500}
-};
-
-function getNbhdKey() {
-  var n = (document.getElementById('neighborhood').value || '').trim().toLowerCase();
-  return MARKET_RENT[n] ? n : 'default';
-}
-
-function parseBedCount(desc) {
-  if (!desc) return 2;
-  var m = String(desc).match(/(\d+)\s*(br|bed|bedroom)/i);
-  if (m) return parseInt(m[1]);
-  if (/studio/i.test(desc)) return 0;
-  return 2;
-}
-
-function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-  });
-}
-
-function fmt(n) {
-  if (Math.abs(n) >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
-  if (Math.abs(n) >= 10000) return '$' + Math.round(n/1000) + 'K';
-  return '$' + Math.round(n).toLocaleString();
-}
-function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
-function fmtPct(n) { return n.toFixed(2) + '%'; }
-
-function addItem(type, seed) {
-  rrIdCounter++;
-  var isRetail = type === 'retail';
-  var item = {
-    id: rrIdCounter,
-    type: type || 'apartment',
-    unit: (seed && seed.unit) || (isRetail ? 'Retail ' + rrIdCounter : 'Unit ' + rrIdCounter),
-    description: (seed && seed.description) || (isRetail ? 'Ground-floor retail' : '2BR/1BA'),
-    sqft: (seed && seed.sqft) || (isRetail ? 400 : 650),
-    currentRent: (seed && seed.currentRent) || 0,
-    proformaRent: (seed && seed.proformaRent) || 0,
-    proformaAuto: seed && seed.proformaAuto !== undefined ? seed.proformaAuto : true
-  };
-  rrItems.push(item);
-  if (item.proformaAuto) autoGen(item.id, false);
-  renderRR();
-  updateSummary();
-  generate();
-}
-
-function removeItem(id) {
-  rrItems = rrItems.filter(function(x){return x.id !== id});
-  renderRR();
-  updateSummary();
-  generate();
-}
-
-function setField(id, field, value) {
-  var item = null;
-  for (var i = 0; i < rrItems.length; i++) if (rrItems[i].id === id) { item = rrItems[i]; break; }
-  if (!item) return;
-  if (field === 'sqft' || field === 'currentRent' || field === 'proformaRent') {
-    item[field] = parseFloat(value) || 0;
-    if (field === 'proformaRent') item.proformaAuto = false;
-  } else {
-    item[field] = value;
-  }
-  if ((field === 'description' || field === 'type') && item.proformaAuto) {
-    autoGen(id, false);
-  }
-  updateSummary();
-  generate();
-}
-
-function setType(id, type) {
-  var item = null;
-  for (var i = 0; i < rrItems.length; i++) if (rrItems[i].id === id) { item = rrItems[i]; break; }
-  if (!item) return;
-  item.type = type;
-  if (type === 'retail' && !/retail|store|commercial/i.test(item.description)) {
-    item.description = 'Ground-floor retail';
-  }
-  if (item.proformaAuto) autoGen(id, false);
-  renderRR();
-  updateSummary();
-  generate();
-}
-
-function autoGen(id, doRender) {
-  var item = null;
-  for (var i = 0; i < rrItems.length; i++) if (rrItems[i].id === id) { item = rrItems[i]; break; }
-  if (!item) return;
-  var key = getNbhdKey();
-  var matrix = MARKET_RENT[key];
-  if (item.type === 'retail') {
-    var base = matrix.retail;
-    var factor = item.sqft ? Math.max(0.7, Math.min(1.5, item.sqft / 400)) : 1;
-    item.proformaRent = Math.round(base * factor);
-  } else {
-    var beds = parseBedCount(item.description);
-    if (beds < 0) beds = 0;
-    if (beds > 4) beds = 4;
-    item.proformaRent = matrix.apt[beds] || matrix.apt[2];
-  }
-  item.proformaAuto = true;
-  if (doRender !== false) renderRR();
-  updateSummary();
-  generate();
-}
-
-function toggleAuto(id) {
-  var item = null;
-  for (var i = 0; i < rrItems.length; i++) if (rrItems[i].id === id) { item = rrItems[i]; break; }
-  if (!item) return;
-  item.proformaAuto = !item.proformaAuto;
-  if (item.proformaAuto) autoGen(id);
-  else renderRR();
-}
-
-function autoGenAll() {
-  for (var i = 0; i < rrItems.length; i++) {
-    rrItems[i].proformaAuto = true;
-    autoGen(rrItems[i].id, false);
-  }
-  renderRR();
-  updateSummary();
-  generate();
-}
-
-function applyChip(id, value) {
-  setField(id, 'description', value);
-  renderRR();
-}
-
-function renderRR() {
-  var wrap = document.getElementById('rentRollWrap');
-  document.getElementById('totalUnits').value = rrItems.length;
-  if (rrItems.length === 0) {
-    wrap.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:0.76rem;color:rgba(255,255,255,0.3);font-family:monospace">No units yet</div>';
-    return;
-  }
-
-  var html = '';
-  for (var i = 0; i < rrItems.length; i++) {
-    var item = rrItems[i];
-    var isRetail = item.type === 'retail';
-    var chipOptions = isRetail
-      ? ['Retail','Ground-floor retail','Restaurant','Office','Medical']
-      : ['Studio','1BR/1BA','2BR/1BA','3BR/1BA','3BR/2BA','4BR/2BA'];
-
-    html += '<div class="rr-item' + (isRetail ? ' retail' : '') + '">';
-    html += '<div class="rr-item-hd">';
-    html += '<span class="rr-unit-badge">' + (isRetail ? 'RETAIL' : 'APT') + '</span>';
-    html += '<div class="rr-type-toggle">';
-    html += '<button class="rr-type-btn' + (item.type==='apartment'?' active':'') + '" onclick="setType(' + item.id + ',\'apartment\')">APT</button>';
-    html += '<button class="rr-type-btn' + (item.type==='retail'?' active':'') + '" onclick="setType(' + item.id + ',\'retail\')">RETAIL</button>';
-    html += '</div>';
-    html += '<button class="rr-remove" onclick="removeItem(' + item.id + ')">×</button>';
-    html += '</div>';
-
-    html += '<div class="rr-fields-grid">';
-    html += '<div class="rr-field-sm"><label>Unit</label><input type="text" value="' + esc(item.unit) + '" oninput="setField(' + item.id + ',\'unit\',this.value)"></div>';
-    html += '<div class="rr-field-sm"><label>Sq. Ft.</label><input type="number" value="' + item.sqft + '" oninput="setField(' + item.id + ',\'sqft\',this.value)"></div>';
-    html += '</div>';
-
-    html += '<div class="rr-desc">';
-    html += '<label>' + (isRetail ? 'Tenant / Use' : 'Bed / Bath / Description') + '</label>';
-    html += '<input type="text" value="' + esc(item.description) + '" oninput="setField(' + item.id + ',\'description\',this.value)">';
-    html += '<div class="rr-desc-chips">';
-    for (var c = 0; c < chipOptions.length; c++) {
-      html += '<span class="rr-chip" onclick="applyChip(' + item.id + ',\'' + chipOptions[c] + '\')">' + chipOptions[c] + '</span>';
-    }
-    html += '</div></div>';
-
-    html += '<div class="rr-rents">';
-    html += '<div class="rr-rent-group"><label>Current /mo</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" value="' + (item.currentRent || '') + '" placeholder="0" oninput="setField(' + item.id + ',\'currentRent\',this.value)"></div></div>';
-    html += '<div class="rr-rent-group"><label><span>Pro Forma /mo</span><button class="autogen-btn' + (item.proformaAuto?' active':'') + '" onclick="toggleAuto(' + item.id + ')">' + (item.proformaAuto?'AUTO':'MANUAL') + '</button></label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" value="' + (item.proformaRent || '') + '" placeholder="0" oninput="setField(' + item.id + ',\'proformaRent\',this.value)"></div></div>';
-    html += '</div>';
-
-    html += '</div>';
-  }
-  wrap.innerHTML = html;
-}
-
-function updateSummary() {
-  var summary = document.getElementById('rrSummary');
-  if (rrItems.length === 0) { summary.style.display = 'none'; return; }
-  var apts = 0, retail = 0, curMo = 0, pfMo = 0, totalSF = 0;
-  for (var i = 0; i < rrItems.length; i++) {
-    if (rrItems[i].type === 'apartment') apts++; else retail++;
-    curMo += rrItems[i].currentRent || 0;
-    pfMo += rrItems[i].proformaRent || 0;
-    totalSF += rrItems[i].sqft || 0;
-  }
-  var upside = pfMo - curMo;
-  summary.style.display = 'block';
-  var html = '';
-  html += '<div class="rr-summary-row"><span class="rr-summary-label">' + apts + ' Apt · ' + retail + ' Retail · ' + rrItems.length + ' Total</span><span class="rr-summary-val">' + totalSF.toLocaleString() + ' SF</span></div>';
-  html += '<div class="rr-summary-row"><span class="rr-summary-label">Current Monthly</span><span class="rr-summary-val">$' + curMo.toLocaleString() + '/mo</span></div>';
-  html += '<div class="rr-summary-row"><span class="rr-summary-label">Pro Forma Monthly</span><span class="rr-summary-val proforma">$' + pfMo.toLocaleString() + '/mo</span></div>';
-  html += '<div class="rr-summary-row total"><span class="rr-summary-label">Annual Upside</span><span class="rr-summary-val big" style="color:' + (upside>=0?'var(--gold-light)':'#d46a55') + '">' + (upside>=0?'+':'') + '$' + (upside*12).toLocaleString() + '/yr</span></div>';
-  summary.innerHTML = html;
-}
-
-function generate() {
-  var p = {
-    address: document.getElementById('address').value || 'Property',
-    city: document.getElementById('city').value || 'City',
-    neighborhood: document.getElementById('neighborhood').value || 'Neighborhood',
-    type: document.getElementById('propertyType').value,
-    year: document.getElementById('yearBuilt').value,
-    units: rrItems.length,
-    sqft: parseFloat(document.getElementById('sqft').value) || 0,
-    askingPrice: parseFloat(document.getElementById('askingPrice').value) || 0,
-    marketCap: parseFloat(document.getElementById('marketCap').value) || 6.5,
-    trend: document.getElementById('submarketTrend').value,
-    description: document.getElementById('description').value
-  };
-
-  var grossCur = 0, grossPF = 0;
-  for (var i = 0; i < rrItems.length; i++) {
-    grossCur += (rrItems[i].currentRent || 0);
-    grossPF += (rrItems[i].proformaRent || 0);
-  }
-  grossCur *= 12;
-  grossPF *= 12;
-  var vacancy = 0.04;
-  var egiCur = grossCur * (1 - vacancy);
-  var egiPF = grossPF * (1 - vacancy);
-  var expensesCur = egiCur * 0.22;
-  var expensesPF = egiPF * 0.22;
-  var noiCur = egiCur - expensesCur;
-  var noiPF = egiPF - expensesPF;
-  var currentCap = p.askingPrice > 0 ? (noiCur / p.askingPrice) * 100 : 0;
-  var proformaCap = p.askingPrice > 0 ? (noiPF / p.askingPrice) * 100 : 0;
-  var valLow = noiPF / ((p.marketCap + 0.75) / 100);
-  var valBase = noiPF / (p.marketCap / 100);
-  var valHigh = p.marketCap > 1 ? noiPF / ((p.marketCap - 0.75) / 100) : valBase;
-  var pricePerUnit = p.units > 0 ? p.askingPrice / p.units : 0;
-  var pricePerSF = p.sqft > 0 ? p.askingPrice / p.sqft : 0;
-
-  var preview = document.getElementById('omPreview');
-  if (rrItems.length === 0 && !p.askingPrice) {
-    preview.innerHTML = '<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add rent roll units and property details to begin.</div></div>';
-    return;
-  }
-
-  var html = '<div class="om-doc">';
-
-  if (sectionsActive.toggleCover) {
-    html += '<div class="om-cover">';
-    html += '<div style="position:relative;z-index:2">';
-    html += '<div class="om-cover-brand"><span class="om-cover-brand-dot"></span>BRIC Studios</div>';
-    html += '<div class="om-cover-tagline">Book of Value · Investor Brief</div>';
-    html += '</div>';
-    html += '<div class="om-cover-mid">';
-    html += '<div class="om-cover-eyebrow">Exclusive Offering</div>';
-    html += '<div class="om-cover-title">' + esc(p.address) + '<em>' + esc(p.neighborhood) + ' · ' + esc(p.city) + '</em></div>';
-    html += '<div class="om-cover-subtitle">' + esc(p.type) + ' · ' + p.units + ' Unit' + (p.units!==1?'s':'') + ' · ' + p.sqft.toLocaleString() + ' SF · Built ' + p.year + '</div>';
-    html += '</div>';
-    html += '<div class="om-cover-bottom">';
-    html += '<div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">' + fmt(p.askingPrice) + '</div></div>';
-    html += '<div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">' + fmtPct(proformaCap) + '</div></div>';
-    html += '<div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">' + fmt(noiPF) + '</div></div>';
-    html += '<div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ' + new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'}) + '</span></div>';
-    html += '</div>';
-    html += '</div>';
-  }
-
-  if (sectionsActive.toggleHighlights) {
-    html += '<div class="om-page">';
-    html += '<div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">' + esc(p.address) + '</div></div>';
-    html += '<div class="om-section"><div class="highlights-grid">';
-    html += '<div class="highlight-card"><div class="highlight-label">Asking Price</div><div class="highlight-val">' + fmt(p.askingPrice) + '</div><div class="highlight-sub">' + fmtFull(pricePerUnit) + ' / unit</div></div>';
-    var aptCount = 0, retCount = 0;
-    for (var j = 0; j < rrItems.length; j++) { if (rrItems[j].type === 'apartment') aptCount++; else retCount++; }
-    html += '<div class="highlight-card"><div class="highlight-label">Total Units</div><div class="highlight-val">' + p.units + '</div><div class="highlight-sub">' + aptCount + ' Apt · ' + retCount + ' Retail</div></div>';
-    html += '<div class="highlight-card"><div class="highlight-label">Gross SF</div><div class="highlight-val">' + p.sqft.toLocaleString() + '</div><div class="highlight-sub">' + fmtFull(pricePerSF) + ' / SF</div></div>';
-    html += '<div class="highlight-card"><div class="highlight-label">Current NOI</div><div class="highlight-val">' + fmt(noiCur) + '</div><div class="highlight-sub">' + fmtPct(currentCap) + ' cap rate</div></div>';
-    html += '<div class="highlight-card"><div class="highlight-label">Pro Forma NOI</div><div class="highlight-val">' + fmt(noiPF) + '</div><div class="highlight-sub">' + fmtPct(proformaCap) + ' cap rate</div></div>';
-    html += '<div class="highlight-card"><div class="highlight-label">Annual Upside</div><div class="highlight-val">' + fmt(noiPF - noiCur) + '</div><div class="highlight-sub">NOI growth potential</div></div>';
-    html += '</div></div>';
-    html += '<div class="om-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">';
-    var paras = p.description.split('\n');
-    for (var pp = 0; pp < paras.length; pp++) {
-      if (paras[pp].trim()) html += '<p>' + esc(paras[pp]) + '</p>';
-    }
-    html += '</div></div>';
-    html += '</div>';
-  }
-
-  if (sectionsActive.toggleRentRoll && rrItems.length > 0) {
-    var curTotalMo = 0, pfTotalMo = 0, totalSF = 0;
-    for (var k = 0; k < rrItems.length; k++) {
-      curTotalMo += rrItems[k].currentRent || 0;
-      pfTotalMo += rrItems[k].proformaRent || 0;
-      totalSF += rrItems[k].sqft || 0;
-    }
-    html += '<div class="om-page">';
-    html += '<div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">' + esc(p.address) + '</div></div>';
-    html += '<div class="om-section"><table class="rr-display-table">';
-    html += '<thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>';
-    for (var l = 0; l < rrItems.length; l++) {
-      var it = rrItems[l];
-      var isR = it.type === 'retail';
-      var curSF = it.sqft > 0 && it.currentRent > 0 ? ((it.currentRent * 12) / it.sqft).toFixed(0) : '—';
-      var pfSF = it.sqft > 0 && it.proformaRent > 0 ? ((it.proformaRent * 12) / it.sqft).toFixed(0) : '—';
-      html += '<tr class="' + (isR ? 'retail-row' : '') + '">';
-      html += '<td><span class="unit-label">' + esc(it.unit) + '</span>' + (isR ? '<span class="retail-tag">RETAIL</span>' : '') + '</td>';
-      html += '<td>' + esc(it.description) + '</td>';
-      html += '<td>' + (it.sqft ? it.sqft.toLocaleString() : '—') + '</td>';
-      html += '<td>' + (it.currentRent ? '$' + it.currentRent.toLocaleString() : '—') + '</td>';
-      html += '<td>' + (curSF !== '—' ? '$' + curSF : '—') + '</td>';
-      html += '<td class="pf-val">' + (it.proformaRent ? '$' + it.proformaRent.toLocaleString() : '—') + '</td>';
-      html += '<td class="pf-val">' + (pfSF !== '—' ? '$' + pfSF : '—') + '</td>';
-      html += '</tr>';
-    }
-    html += '<tr class="totals"><td colspan="2">Monthly Total</td><td>' + totalSF.toLocaleString() + '</td><td>' + fmtFull(curTotalMo) + '</td><td>—</td><td class="pf-val">' + fmtFull(pfTotalMo) + '</td><td>—</td></tr>';
-    html += '<tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">' + fmtFull(curTotalMo*12) + '</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">' + fmtFull(pfTotalMo*12) + '</td><td style="color:var(--paper)">—</td></tr>';
-    html += '</tbody></table>';
-    if (pfTotalMo > curTotalMo) {
-      html += '<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">';
-      html += '<span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span>';
-      html += '<span style="font-family:\'Playfair Display\',serif;font-size:1.15rem;font-weight:700;color:#8a6d20">+' + fmtFull((pfTotalMo - curTotalMo) * 12) + '/yr</span>';
-      html += '</div>';
-    }
-    html += '</div></div>';
-  }
-
-  if (sectionsActive.toggleFinancial) {
-    html += '<div class="om-page">';
-    html += '<div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">' + esc(p.address) + '</div></div>';
-    html += '<div class="om-section"><div class="financial-grid">';
-    html += '<div><div class="fin-col-title">Current</div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">' + fmtFull(grossCur) + '</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(' + fmtFull(grossCur * vacancy) + ')</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">' + fmtFull(egiCur) + '</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(' + fmtFull(expensesCur) + ')</span></div>';
-    html += '<div class="fin-total"><span>Net Operating Income</span><span>' + fmtFull(noiCur) + '</span></div>';
-    html += '<div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">' + fmtPct(currentCap) + '</span></div>';
-    html += '</div>';
-    html += '<div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">' + fmtFull(grossPF) + '</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(' + fmtFull(grossPF * vacancy) + ')</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">' + fmtFull(egiPF) + '</span></div>';
-    html += '<div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(' + fmtFull(expensesPF) + ')</span></div>';
-    html += '<div class="fin-total gold"><span>Net Operating Income</span><span>' + fmtFull(noiPF) + '</span></div>';
-    html += '<div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">' + fmtPct(proformaCap) + '</span></div>';
-    html += '</div>';
-    html += '</div></div>';
-    html += '</div>';
-  }
-
-  if (sectionsActive.toggleValuation) {
-    html += '<div class="om-page">';
-    html += '<div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">' + esc(p.address) + '</div></div>';
-    html += '<div class="om-section"><div class="val-card">';
-    html += '<div class="val-label">Pro Forma Valuation Range · ' + fmtPct(p.marketCap) + ' Market Cap</div>';
-    html += '<div class="val-range">' + fmt(valLow) + ' — ' + fmt(valHigh) + '</div>';
-    html += '<div class="val-detail">';
-    html += '<div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">' + fmt(valBase) + '</div></div>';
-    html += '<div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">' + fmtFull(pricePerUnit) + '</div></div>';
-    html += '<div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">' + fmtFull(pricePerSF) + '</div></div>';
-    html += '<div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">' + (p.askingPrice >= valBase ? '+' : '') + fmtPct(((p.askingPrice - valBase) / valBase) * 100) + '</div></div>';
-    html += '</div></div></div>';
-    html += '<div class="om-section"><div class="om-section-heading">Valuation Sensitivity</div>';
-    html += '<table class="om-table"><thead><tr><th>Cap Rate</th><th class="num">' + fmtPct(p.marketCap - 0.75) + '</th><th class="num">' + fmtPct(p.marketCap) + '</th><th class="num">' + fmtPct(p.marketCap + 0.75) + '</th></tr></thead><tbody>';
-    html += '<tr><td>Current NOI (' + fmt(noiCur) + ')</td>';
-    html += '<td class="num">' + fmt(p.marketCap > 1 ? noiCur / ((p.marketCap - 0.75)/100) : 0) + '</td>';
-    html += '<td class="num">' + fmt(noiCur / (p.marketCap/100)) + '</td>';
-    html += '<td class="num">' + fmt(noiCur / ((p.marketCap + 0.75)/100)) + '</td></tr>';
-    html += '<tr class="proforma"><td><b>Pro Forma NOI (' + fmt(noiPF) + ')</b></td>';
-    html += '<td class="num"><b>' + fmt(p.marketCap > 1 ? noiPF / ((p.marketCap - 0.75)/100) : 0) + '</b></td>';
-    html += '<td class="num"><b>' + fmt(noiPF / (p.marketCap/100)) + '</b></td>';
-    html += '<td class="num"><b>' + fmt(noiPF / ((p.marketCap + 0.75)/100)) + '</b></td></tr>';
-    html += '</tbody></table></div>';
-    html += '</div>';
-  }
-
-  if (sectionsActive.toggleMarket) {
-    html += '<div class="om-page">';
-    html += '<div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">' + esc(p.neighborhood) + ' · ' + esc(p.city) + '</div></div>';
-    html += '<div class="om-section">';
-    html += '<div class="om-section-eyebrow">Submarket: ' + esc(p.neighborhood) + '</div>';
-    html += '<div class="om-section-heading">' + esc(p.trend) + '</div>';
-    html += '<div class="om-description">';
-    html += '<p>' + esc(p.neighborhood) + ' continues to demonstrate ' + p.trend.toLowerCase() + ' characteristics, supported by strong transit connectivity, density of commercial corridors, and sustained rental demand. Current market cap rates for mixed-use assets in this submarket range ' + fmtPct(p.marketCap - 0.5) + '–' + fmtPct(p.marketCap + 0.5) + ', with recent comparable transactions trading at ' + fmtFull(pricePerUnit * 0.95) + '–' + fmtFull(pricePerUnit * 1.08) + ' per unit.</p>';
-    html += '<p>The subject property benefits from direct frontage on a primary commercial corridor, offering strong retail visibility and proximity to established residential density.</p>';
-    html += '</div>';
-    html += '<div class="om-section-heading" style="margin-top:1.5rem">Comparable Transactions</div>';
-    html += '<table class="om-table"><thead><tr><th>Comp</th><th>Units</th><th class="num">Sale Price</th><th class="num">$/Unit</th><th class="num">Cap Rate</th></tr></thead><tbody>';
-    html += '<tr><td>Nearby · ' + esc(p.neighborhood) + '</td><td>' + Math.max(4, p.units - 1) + '</td><td class="num">' + fmt(p.askingPrice * 0.94) + '</td><td class="num">' + fmtFull(pricePerUnit * 0.95) + '</td><td class="num">' + fmtPct(p.marketCap + 0.3) + '</td></tr>';
-    html += '<tr><td>Recent Trade · ' + esc(p.neighborhood) + '</td><td>' + p.units + '</td><td class="num">' + fmt(p.askingPrice * 1.04) + '</td><td class="num">' + fmtFull(pricePerUnit * 1.05) + '</td><td class="num">' + fmtPct(p.marketCap - 0.2) + '</td></tr>';
-    html += '<tr><td>Adjacent Corridor</td><td>' + Math.max(4, p.units + 1) + '</td><td class="num">' + fmt(p.askingPrice * 1.12) + '</td><td class="num">' + fmtFull(pricePerUnit * 1.08) + '</td><td class="num">' + fmtPct(p.marketCap) + '</td></tr>';
-    html += '</tbody></table>';
-    html += '</div>';
-    html += '<div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ' + new Date().getFullYear() + ' BRIC Studios.</div>';
-    html += '</div>';
-  }
-
-  html += '</div>';
-  preview.innerHTML = html;
-}
-
-function loadSample() {
-  document.getElementById('address').value = '1782 Nostrand Avenue';
-  document.getElementById('city').value = 'Brooklyn';
-  document.getElementById('neighborhood').value = 'Flatbush';
-  document.getElementById('propertyType').value = 'Mixed-Use';
-  document.getElementById('yearBuilt').value = 1936;
-  document.getElementById('sqft').value = 3984;
-  document.getElementById('askingPrice').value = 1550000;
-  document.getElementById('marketCap').value = 6.5;
-  document.getElementById('submarketTrend').value = 'Value-Add Market';
-  document.getElementById('description').value = 'Mixed-use, cash-flowing asset on Nostrand Avenue in the heart of Flatbush, Brooklyn. The property features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.\n\nSituated within NYC Tax Class 2A (protected from significant tax hikes), the property offers strong day-one cash flow with meaningful upside through rent repositioning and 2,016 buildable square feet of unused air rights. Walking distance to the 2, 5, B, and Q train lines.';
-
-  rrItems = [];
-  rrIdCounter = 0;
-
-  addItem('retail', {unit:'Ground FL',description:'Cricket Wireless · 10yr Lease · 3% annual increases',sqft:400,currentRent:3350,proformaRent:3450,proformaAuto:false});
-  addItem('apartment', {unit:'1R',description:'2BR/1BA · Renovated · Private Backyard',sqft:750,currentRent:3400,proformaAuto:true});
-  addItem('apartment', {unit:'2F',description:'2BR/1BA · Section 8',sqft:650,currentRent:2475,proformaAuto:true});
-  addItem('apartment', {unit:'2R',description:'2BR/1BA · Delivered Vacant',sqft:650,currentRent:2500,proformaAuto:true});
-  addItem('apartment', {unit:'3F',description:'2BR/1BA · Public Assistance',sqft:650,currentRent:2100,proformaAuto:true});
-  addItem('apartment', {unit:'3R',description:'2BR/1BA · Section 8',sqft:650,currentRent:2255,proformaAuto:true});
-}
-
-// Event wiring
-var inputIds = ['address','city','neighborhood','propertyType','yearBuilt','sqft','askingPrice','marketCap','submarketTrend','description'];
-for (var i = 0; i < inputIds.length; i++) {
-  var el = document.getElementById(inputIds[i]);
-  if (el) {
-    el.addEventListener('input', generate);
-    el.addEventListener('change', generate);
-  }
-}
-
-// When neighborhood changes, regenerate auto pro forma
-document.getElementById('neighborhood').addEventListener('input', function() {
-  for (var i = 0; i < rrItems.length; i++) {
-    if (rrItems[i].proformaAuto) autoGen(rrItems[i].id, false);
-  }
-  renderRR();
-  updateSummary();
-  generate();
-});
-
-// Section toggles
-var sectionToggles = document.querySelectorAll('.section-toggle');
-for (var t = 0; t < sectionToggles.length; t++) {
-  (function(el) {
-    el.addEventListener('click', function() {
-      var toggleId = el.getAttribute('data-toggle');
-      var toggle = el.querySelector('.toggle');
-      var on = !toggle.classList.contains('on');
-      toggle.classList.toggle('on', on);
-      el.classList.toggle('active', on);
-      sectionsActive[toggleId] = on;
-      generate();
-    });
-  })(sectionToggles[t]);
-}
-
-// Initialize
-loadSample();
-</script>
-
-</body>
-</html>
+let currentTier='free',rentRollActive=false,sectionsActive={toggleCover:true,toggleHighlights:true,toggleRentRoll:true,toggleFinancial:true,toggleValuation:true,toggleMarket:true},rrItems=[],expenseId=0;
+const MARKET_RENT={flatbush:{apt:{0:2200,1:2400,2:2900,3:3400,4:3800},retail:3450},williamsburg:{apt:{0:2800,1:3200,2:3800,3:4600,4:5400},retail:5500},bushwick:{apt:{0:2400,1:2700,2:3200,3:3800,4:4400},retail:4200},"crown heights":{apt:{0:2200,1:2600,2:3050,3:3550,4:4100},retail:3800},harlem:{apt:{0:2100,1:2400,2:2900,3:3400,4:3900},retail:3600},default:{apt:{0:2200,1:2500,2:3000,3:3500,4:4000},retail:3500}};
+const DEFAULT_EXPENSES=[{name:'Property Taxes',amount:14205},{name:'Insurance',amount:6150},{name:'Heat',amount:4582},{name:'Water & Sewer',amount:5250},{name:'Common Area Electric',amount:797},{name:'Repairs & Maintenance',amount:2400},{name:'Payroll / Super',amount:2600},{name:'Management / Legal',amount:7410}];
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))} function fmt(n){if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=10000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()} function fmtFull(n){return '$'+Math.round(n||0).toLocaleString()} function fmtPct(n){return Number(n).toFixed(2)+'%'} function parseNum(v){const n=parseFloat(v);return Number.isFinite(n)?n:0}
+function setTier(t){currentTier=t;document.getElementById('tierFree').classList.toggle('active',t==='free');document.getElementById('tierGrowth').classList.toggle('active',t==='growth');document.getElementById('tierDesc').textContent=t==='growth'?'Growth includes valuation-to-OM transfer and saved drafts':'Build your OM with live preview and market pro forma';document.getElementById('importBtn').style.opacity=t==='growth'?'1':'.45';document.getElementById('importNote').innerHTML=t==='growth'?'<b>Growth enabled:</b> Import saved details from Valuation Studio using browser storage.':'<b>Growth only:</b> Import saved details from Valuation Studio so you don\'t have to enter the same information twice.'}
+function fillCountOptions(){const res=document.getElementById('resCount'),ret=document.getElementById('retailCount');for(let i=0;i<=20;i++){const a=document.createElement('option');a.value=i;a.textContent=i;if(i===5)a.selected=true;res.appendChild(a);const b=document.createElement('option');b.value=i;b.textContent=i;if(i===1)b.selected=true;ret.appendChild(b)}} 
+function getNbhdKey(){const n=(document.getElementById('neighborhood').value||'default').trim().toLowerCase();return MARKET_RENT[n]?n:'default'}
+function autoProformaResidential(bed){const m=MARKET_RENT[getNbhdKey()]||MARKET_RENT.default;bed=Math.max(0,Math.min(4,parseInt(bed||0)));return m.apt[bed]||m.apt[2]}
+function autoProformaRetail(sf){const m=MARKET_RENT[getNbhdKey()]||MARKET_RENT.default;const f=sf?Math.max(0.7,Math.min(1.5,sf/400)):1;return Math.round(m.retail*f)}
+function toggleRentRoll(force){if(typeof force==='boolean')rentRollActive=force;else rentRollActive=!rentRollActive;document.getElementById('rentRollToggle').classList.toggle('on',rentRollActive);document.getElementById('rentRollWrap').classList.toggle('visible',rentRollActive);if(rentRollActive&&rrItems.length===0)rebuildRowsFromCounts()}
+function rebuildRowsFromCounts(){const resCount=parseInt(document.getElementById('resCount').value)||0,retailCount=parseInt(document.getElementById('retailCount').value)||0;rrItems=[];let id=0;for(let i=0;i<resCount;i++){id++;rrItems.push({id,order:i,type:'apartment',unit:`Apt ${i+1}`,sqft:650,bed:2,bath:1,currentRent:0,proformaRent:autoProformaResidential(2),proformaAuto:true})}for(let i=0;i<retailCount;i++){id++;rrItems.push({id,order:i,type:'retail',unit:`Retail ${i+1}`,sqft:400,tenant:'',currentRent:0,frequency:'monthly',expiration:'',increase:'3.0',proformaRent:autoProformaRetail(400),proformaAuto:true})}renderRR();updateSummary();generate()}
+function setRRField(id,field,value){const item=rrItems.find(x=>x.id===id);if(!item)return;if(['sqft','currentRent','proformaRent','bed','bath'].includes(field))item[field]=parseFloat(value)||0;else item[field]=value;if(field==='proformaRent')item.proformaAuto=false;if((field==='bed'||field==='sqft')&&item.proformaAuto){item.proformaRent=item.type==='apartment'?autoProformaResidential(item.bed):autoProformaRetail(item.sqft)}updateSummary();generate()}
+function toggleAuto(id){const item=rrItems.find(x=>x.id===id);if(!item)return;item.proformaAuto=!item.proformaAuto;if(item.proformaAuto)item.proformaRent=item.type==='apartment'?autoProformaResidential(item.bed):autoProformaRetail(item.sqft);renderRR();updateSummary();generate()}
+function autoGenAll(){rrItems.forEach(item=>{item.proformaAuto=true;item.proformaRent=item.type==='apartment'?autoProformaResidential(item.bed):autoProformaRetail(item.sqft)});renderRR();updateSummary();generate()}
+function renderRR(){const wrap=document.getElementById('rentRollWrap');if(!rrItems.length){wrap.innerHTML='';return}let html='';rrItems.forEach(item=>{const isRetail=item.type==='retail';html+=`<div class="rr-item ${isRetail?'retail':''}"><div class="rr-item-hd"><span class="rr-unit-badge">${isRetail?'RETAIL':'APT'}</span><button class="rr-remove" onclick="clearRRRow(${item.id})">×</button></div>`;if(isRetail){html+=`<div class="rr-grid-ret"><div class="rr-field"><label>Space</label><input type="text" value="${esc(item.unit)}" oninput="setRRField(${item.id},'unit',this.value)"></div><div class="rr-field"><label>Tenant</label><input type="text" value="${esc(item.tenant||'')}" oninput="setRRField(${item.id},'tenant',this.value)"></div><div class="rr-field"><label>SF</label><input type="number" value="${item.sqft||''}" oninput="setRRField(${item.id},'sqft',this.value)"></div><div class="rr-field"><label>Current Rent</label><input type="number" value="${item.currentRent||''}" oninput="setRRField(${item.id},'currentRent',this.value)"></div><div class="rr-field"><label>Pro Forma</label><input type="number" value="${item.proformaRent||''}" oninput="setRRField(${item.id},'proformaRent',this.value)"></div></div><div class="rr-grid-ret-second"><div class="rr-field"><label>Frequency</label><select onchange="setRRField(${item.id},'frequency',this.value)"><option value="monthly" ${item.frequency==='monthly'?'selected':''}>Monthly</option><option value="annual" ${item.frequency==='annual'?'selected':''}>Annual</option></select></div><div class="rr-field"><label>Lease Exp.</label><input type="date" value="${item.expiration||''}" oninput="setRRField(${item.id},'expiration',this.value)"></div><div class="rr-field"><label>Annual Inc. % <button type="button" class="section-action" style="padding:0.05rem 0.35rem;font-size:0.48rem;float:right" onclick="toggleAuto(${item.id})">${item.proformaAuto?'AUTO':'MANUAL'}</button></label><input type="number" step="0.1" value="${item.increase||''}" oninput="setRRField(${item.id},'increase',this.value)"></div></div>`} else {html+=`<div class="rr-grid-res"><div class="rr-field"><label>Unit</label><input type="text" value="${esc(item.unit)}" oninput="setRRField(${item.id},'unit',this.value)"></div><div class="rr-field"><label>Bedrooms</label><select onchange="setRRField(${item.id},'bed',this.value)">${[0,1,2,3,4].map(v=>`<option value="${v}" ${Number(item.bed)===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="rr-field"><label>Bathrooms</label><select onchange="setRRField(${item.id},'bath',this.value)">${[1,1.5,2,2.5,3,3.5,4].map(v=>`<option value="${v}" ${Number(item.bath)===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="rr-field"><label>Current Rent</label><input type="number" value="${item.currentRent||''}" oninput="setRRField(${item.id},'currentRent',this.value)"></div><div class="rr-field"><label>Pro Forma <button type="button" class="section-action" style="padding:0.05rem 0.35rem;font-size:0.48rem;float:right" onclick="toggleAuto(${item.id})">${item.proformaAuto?'AUTO':'MANUAL'}</button></label><input type="number" value="${item.proformaRent||''}" oninput="setRRField(${item.id},'proformaRent',this.value)"></div></div>`}html+='</div>'});wrap.innerHTML=html}
+function clearRRRow(id){const item=rrItems.find(x=>x.id===id);if(!item)return;if(item.type==='retail')document.getElementById('retailCount').value=Math.max(0,(parseInt(document.getElementById('retailCount').value)||0)-1);else document.getElementById('resCount').value=Math.max(0,(parseInt(document.getElementById('resCount').value)||0)-1);rebuildRowsFromCounts()}
+function updateSummary(){const summary=document.getElementById('rrSummary');if(!rrItems.length){summary.style.display='none';return}let apts=0,retail=0,curMo=0,pfMo=0,totalSF=0;rrItems.forEach(it=>{if(it.type==='apartment'){apts++;curMo+=parseNum(it.currentRent);pfMo+=parseNum(it.proformaRent)}else{retail++;curMo+=it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfMo+=it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent)}totalSF+=parseNum(it.sqft)});const upside=pfMo-curMo;summary.style.display='block';summary.innerHTML=`<div class="rr-summary-row"><span class="rr-summary-label">${apts} Apt · ${retail} Retail · ${rrItems.length} Total</span><span class="rr-summary-val">${totalSF.toLocaleString()} SF</span></div><div class="rr-summary-row"><span class="rr-summary-label">Current Monthly</span><span class="rr-summary-val">$${Math.round(curMo).toLocaleString()}/mo</span></div><div class="rr-summary-row"><span class="rr-summary-label">Pro Forma Monthly</span><span class="rr-summary-val proforma">$${Math.round(pfMo).toLocaleString()}/mo</span></div><div class="rr-summary-row total"><span class="rr-summary-label">Annual Upside</span><span class="rr-summary-val big" style="color:${upside>=0?'var(--gold-light)':'#d46a55'}">${upside>=0?'+':''}$${Math.round(upside*12).toLocaleString()}/yr</span></div>`;document.getElementById('grossIncome').value=Math.round(curMo*12)}
+function addExpenseRow(name='',amount=''){const id=++expenseId;const wrap=document.getElementById('expenseRows');const div=document.createElement('div');div.className='expense-block';div.id='exp-'+id;div.innerHTML=`<div class="field-row" style="margin-bottom:0.45rem"><div class="field"><label>Expense Name</label><input type="text" value="${name}"></div><div class="field"><label>Annual Amount</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" value="${amount}"></div></div></div>`;wrap.appendChild(div)}
+function collectExpenses(){return [...document.querySelectorAll('#expenseRows .expense-block')].map(row=>{const inputs=row.querySelectorAll('input');return {name:inputs[0].value||'Expense',amount:parseNum(inputs[1].value)}}).filter(x=>x.name||x.amount)}
+function saveOmDraft(){localStorage.setItem('bricOmDraft',JSON.stringify(collectOmData()));alert('OM draft saved in your browser.')}
+function importFromValuation(){if(currentTier!=='growth'){alert('Import from Valuation is a Growth feature.');return}let raw=localStorage.getItem('bricValuationTransfer')||localStorage.getItem('bricValuationDraft');if(!raw){alert('No saved valuation data found in browser storage yet.');return}try{const d=JSON.parse(raw);if(d.address)document.getElementById('address').value=d.address;if(d.borough)document.getElementById('city').value=d.borough;if(d.submarket){const key=String(d.submarket).toLowerCase();const sel=document.getElementById('neighborhood');const match=[...sel.options].find(o=>o.value===key||o.text.toLowerCase()===key);if(match)sel.value=match.value}if(d.propertyType)document.getElementById('propertyType').value=d.propertyType;if(d.buildingSf||d.sqft)document.getElementById('sqft').value=d.buildingSf||d.sqft;if(d.marketCap||d.capRate)document.getElementById('marketCap').value=d.marketCap||d.capRate;if(d.grossIncome)document.getElementById('grossIncome').value=d.grossIncome;if(d.otherIncome)document.getElementById('otherIncome').value=d.otherIncome;if(Array.isArray(d.expenses)){document.getElementById('expenseRows').innerHTML='';d.expenses.forEach(e=>addExpenseRow(e.name||'',e.amount||0))}alert('Imported what was available from Valuation Studio.');generate()}catch(e){alert('Could not read valuation data.')}}
+function collectOmData(){return {address:document.getElementById('address').value,city:document.getElementById('city').value,neighborhood:document.getElementById('neighborhood').value,propertyType:document.getElementById('propertyType').value,yearBuilt:document.getElementById('yearBuilt').value,sqft:parseNum(document.getElementById('sqft').value),askingPrice:parseNum(document.getElementById('askingPrice').value),grossIncome:parseNum(document.getElementById('grossIncome').value),otherIncome:parseNum(document.getElementById('otherIncome').value),marketCap:parseNum(document.getElementById('marketCap').value),trend:document.getElementById('submarketTrend').value,description:document.getElementById('description').value,rentRoll:rrItems,expenses:collectExpenses()}}
+function generate(){const p=collectOmData();p.units=rrItems.length;let grossCur=0,grossPF=0;rrItems.forEach(it=>{const cur=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent):parseNum(it.currentRent)*12;const pf=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent):parseNum(it.proformaRent)*12;grossCur+=cur;grossPF+=pf});if(!rrItems.length){grossCur=p.grossIncome;grossPF=p.grossIncome}grossCur+=p.otherIncome;grossPF+=p.otherIncome;const vacancy=.04,expenseTotal=p.expenses.reduce((s,e)=>s+parseNum(e.amount),0),egiCur=grossCur*(1-vacancy),egiPF=grossPF*(1-vacancy),noiCur=egiCur-expenseTotal,noiPF=egiPF-expenseTotal,currentCap=p.askingPrice>0?(noiCur/p.askingPrice)*100:0,proformaCap=p.askingPrice>0?(noiPF/p.askingPrice)*100:0,valLow=noiPF/((p.marketCap+.75)/100),valBase=noiPF/(p.marketCap/100),valHigh=p.marketCap>1?noiPF/((p.marketCap-.75)/100):valBase,pricePerUnit=p.units>0?p.askingPrice/p.units:0,pricePerSF=p.sqft>0?p.askingPrice/p.sqft:0;const preview=document.getElementById('omPreview');if(!p.askingPrice&&!p.address){preview.innerHTML='<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add property details and rent roll to begin.</div></div>';return}let html='<div class="om-doc">';if(sectionsActive.toggleCover){html+=`<div class="om-cover"><div style="position:relative;z-index:2"><div class="om-cover-brand"><span class="om-cover-brand-dot"></span>BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">${esc(p.address||'Property Address')}<em>${esc(document.getElementById('neighborhood').selectedOptions[0].textContent)} · ${esc(p.city)}</em></div><div class="om-cover-subtitle">${esc(p.propertyType)} · ${p.units} Unit${p.units!==1?'s':''} · ${p.sqft.toLocaleString()} SF · Built ${p.yearBuilt}</div></div><div class="om-cover-bottom"><div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">${fmt(p.askingPrice)}</div></div><div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">${fmtPct(proformaCap)}</div></div><div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">${fmt(noiPF)}</div></div><div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'})}</span></div></div></div>`}const aptCount=rrItems.filter(x=>x.type==='apartment').length,retCount=rrItems.filter(x=>x.type==='retail').length;if(sectionsActive.toggleHighlights){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="highlights-grid"><div class="highlight-card"><div class="highlight-label">Asking Price</div><div class="highlight-val">${fmt(p.askingPrice)}</div><div class="highlight-sub">${fmtFull(pricePerUnit)} / unit</div></div><div class="highlight-card"><div class="highlight-label">Total Units</div><div class="highlight-val">${p.units}</div><div class="highlight-sub">${aptCount} Apt · ${retCount} Retail</div></div><div class="highlight-card"><div class="highlight-label">Gross SF</div><div class="highlight-val">${p.sqft.toLocaleString()}</div><div class="highlight-sub">${fmtFull(pricePerSF)} / SF</div></div><div class="highlight-card"><div class="highlight-label">Current NOI</div><div class="highlight-val">${fmt(noiCur)}</div><div class="highlight-sub">${fmtPct(currentCap)} cap rate</div></div><div class="highlight-card"><div class="highlight-label">Pro Forma NOI</div><div class="highlight-val">${fmt(noiPF)}</div><div class="highlight-sub">${fmtPct(proformaCap)} cap rate</div></div><div class="highlight-card"><div class="highlight-label">Annual Upside</div><div class="highlight-val">${fmt(noiPF-noiCur)}</div><div class="highlight-sub">NOI growth potential</div></div></div></div><div class="om-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">${p.description.split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div></div>`}if(sectionsActive.toggleRentRoll&&rrItems.length>0){let curTotalMo=0,pfTotalMo=0,totalSF=0;rrItems.forEach(it=>{curTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent);totalSF+=parseNum(it.sqft)});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><table class="rr-display-table"><thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>`;rrItems.forEach(it=>{const isR=it.type==='retail',curMonthly=isR&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent),pfMonthly=isR&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent),curSF=it.sqft>0&&curMonthly>0?((curMonthly*12)/it.sqft).toFixed(0):'—',pfSF=it.sqft>0&&pfMonthly>0?((pfMonthly*12)/it.sqft).toFixed(0):'—',desc=isR?[it.tenant||'Retail',it.expiration?`Exp. ${it.expiration}`:'',it.increase?`${it.increase}% bumps`:'' ].filter(Boolean).join(' · '):`${parseNum(it.bed)}BR / ${parseNum(it.bath)}BA`;html+=`<tr class="${isR?'retail-row':''}"><td><span class="unit-label">${esc(it.unit)}</span>${isR?'<span class="retail-tag">RETAIL</span>':''}</td><td>${esc(desc)}</td><td>${it.sqft?parseNum(it.sqft).toLocaleString():'—'}</td><td>${curMonthly?fmtFull(curMonthly):'—'}</td><td>${curSF!=='—'?'$'+curSF:'—'}</td><td class="pf-val">${pfMonthly?fmtFull(pfMonthly):'—'}</td><td class="pf-val">${pfSF!=='—'?'$'+pfSF:'—'}</td></tr>`});html+=`<tr class="totals"><td colspan="2">Monthly Total</td><td>${totalSF.toLocaleString()}</td><td>${fmtFull(curTotalMo)}</td><td>—</td><td class="pf-val">${fmtFull(pfTotalMo)}</td><td>—</td></tr><tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">${fmtFull(curTotalMo*12)}</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">${fmtFull(pfTotalMo*12)}</td><td style="color:var(--paper)">—</td></tr></tbody></table>${pfTotalMo>curTotalMo?`<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem"><span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span><span style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:#8a6d20">+${fmtFull((pfTotalMo-curTotalMo)*12)}/yr</span></div>`:''}</div></div>`}if(sectionsActive.toggleFinancial){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossCur)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossCur*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiCur)}</span></div>${p.expenses.map(e=>`<div class="fin-row"><span class="fin-row-name">${esc(e.name)}</span><span class="fin-row-val">(${fmtFull(e.amount)})</span></div>`).join('')}<div class="fin-total"><span>Net Operating Income</span><span>${fmtFull(noiCur)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">${fmtPct(currentCap)}</span></div></div><div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossPF)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossPF*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiPF)}</span></div><div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(${fmtFull(expenseTotal)})</span></div><div class="fin-total gold"><span>Net Operating Income</span><span>${fmtFull(noiPF)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">${fmtPct(proformaCap)}</span></div></div></div></div></div>`}if(sectionsActive.toggleValuation){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="val-card"><div class="val-label">Pro Forma Valuation Range · ${fmtPct(p.marketCap)} Market Cap</div><div class="val-range">${fmt(valLow)} — ${fmt(valHigh)}</div><div class="val-detail"><div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">${fmt(valBase)}</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">${fmtFull(pricePerUnit)}</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">${fmtFull(pricePerSF)}</div></div><div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">${valBase?((p.askingPrice>=valBase?'+':'')+fmtPct(((p.askingPrice-valBase)/valBase)*100)):'—'}</div></div></div></div></div></div>`}if(sectionsActive.toggleMarket){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">${document.getElementById('neighborhood').selectedOptions[0].textContent} · ${esc(p.city)}</div></div><div class="om-section"><div class="om-section-eyebrow">Submarket: ${document.getElementById('neighborhood').selectedOptions[0].textContent}</div><div class="om-section-heading">${esc(p.trend)}</div><div class="om-description"><p>${document.getElementById('neighborhood').selectedOptions[0].textContent} continues to demonstrate ${p.trend.toLowerCase()} characteristics, supported by strong transit connectivity, density of commercial corridors, and sustained rental demand. Current market cap rates for mixed-use assets in this submarket range ${fmtPct(p.marketCap-0.5)}–${fmtPct(p.marketCap+0.5)}, with recent comparable transactions trading at ${fmtFull(pricePerUnit*0.95)}–${fmtFull(pricePerUnit*1.08)} per unit.</p><p>The subject property benefits from direct frontage on a primary commercial corridor, offering strong retail visibility and proximity to established residential density.</p></div></div><div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ${new Date().getFullYear()} BRIC Studios.</div></div>`}html+='</div>';preview.innerHTML=html}
+function loadSample(){document.getElementById('address').value='1782 Nostrand Avenue';document.getElementById('city').value='Brooklyn';document.getElementById('neighborhood').value='flatbush';document.getElementById('propertyType').value='Mixed-Use';document.getElementById('yearBuilt').value='1936';document.getElementById('sqft').value='3984';document.getElementById('askingPrice').value='1550000';document.getElementById('marketCap').value='6.5';document.getElementById('submarketTrend').value='Value-Add Market';document.getElementById('description').value='Mixed-use, cash-flowing asset on Nostrand Avenue in the heart of Flatbush, Brooklyn. The property features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.\n\nSituated within NYC Tax Class 2A, the property offers strong day-one cash flow with meaningful upside through rent repositioning.';document.getElementById('grossIncome').value='192960';document.getElementById('otherIncome').value='0';document.getElementById('resCount').value='5';document.getElementById('retailCount').value='1';toggleRentRoll(true);rebuildRowsFromCounts();rrItems.forEach((item,idx)=>{if(item.type==='retail'){item.unit='Ground FL';item.tenant='Cricket Wireless';item.currentRent=3350;item.proformaRent=3450;item.frequency='monthly';item.increase='3.0';item.proformaAuto=false}else{const seed=[{u:'1R',b:2,ba:1,r:3400},{u:'2F',b:2,ba:1,r:2475},{u:'2R',b:2,ba:1,r:2500},{u:'3F',b:2,ba:1,r:2100},{u:'3R',b:2,ba:1,r:2255}][idx];if(seed){item.unit=seed.u;item.bed=seed.b;item.bath=seed.ba;item.currentRent=seed.r;item.proformaRent=autoProformaResidential(seed.b)}}});renderRR();updateSummary();document.getElementById('expenseRows').innerHTML='';DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));generate()}
+document.addEventListener('input',e=>{if(['address','city','yearBuilt','sqft','askingPrice','grossIncome','otherIncome','marketCap','description'].includes(e.target.id))generate()})
+document.getElementById('neighborhood').addEventListener('change',()=>{autoGenAll();generate()});document.getElementById('propertyType').addEventListener('change',generate);document.getElementById('submarketTrend').addEventListener('change',generate);document.getElementById('resCount').addEventListener('change',()=>{toggleRentRoll(true);rebuildRowsFromCounts()});document.getElementById('retailCount').addEventListener('change',()=>{toggleRentRoll(true);rebuildRowsFromCounts()})
+document.querySelectorAll('.section-toggle').forEach(el=>{el.addEventListener('click',function(){const toggleId=el.getAttribute('data-toggle'),toggle=el.querySelector('.toggle'),on=!toggle.classList.contains('on');toggle.classList.toggle('on',on);el.classList.toggle('active',on);sectionsActive[toggleId]=on;generate()})})
+fillCountOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));setTier('free');loadSample();
+</script></body></html>
