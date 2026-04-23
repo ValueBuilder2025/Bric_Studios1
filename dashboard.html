@@ -395,7 +395,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <nav class="sb-section">
       <div class="sb-label">Workspace</div>
       <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
-      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge">3</span></a>
+      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="propertyCountBadge">3</span></a>
       <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
       <a class="sb-item"><span class="sb-icon">◈</span> Saved Reports</a>
 
@@ -432,7 +432,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <input type="text" placeholder="Search properties, addresses, markets, buyers..."/>
       </div>
       <div class="tb-right">
-        <button class="tb-btn">⬆ Upload Rent Roll</button>
+        <button class="tb-btn" onclick="window.location.href='valuation-updated.html'">⬆ Upload Rent Roll</button>
         <button class="tb-btn tb-btn-primary">+ Add Property</button>
         <button class="tb-icon-btn">◈<span class="tb-notif-dot"></span></button>
       </div>
@@ -521,7 +521,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="propertiesTableBody">
               <tr>
                 <td>
                   <div class="p-name">
@@ -826,10 +826,50 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <script>
+
+function getWorkspace(){
+  try{return JSON.parse(localStorage.getItem('bricWorkspaceV1'))||{properties:[],valuations:[],oms:[],activity:[]}}catch(e){return {properties:[],valuations:[],oms:[],activity:[]}}
+}
+function fmtCompact(n){n=Number(n)||0;if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=1000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()}
+function esc(v){return String(v||'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function calcPerf(property){
+  const base=property.lastValuationValue||0, noi=property.lastNoi||0;
+  if(!base||!noi) return 72;
+  const ratio=(noi/base)*100;
+  return Math.max(55, Math.min(96, Math.round((ratio*900)+40)));
+}
+function statusClass(status){
+  status=(status||'').toLowerCase();
+  if(status.includes('active')) return 'status-active';
+  if(status.includes('listed')) return 'status-listed';
+  return 'status-analyzing';
+}
+function renderWorkspaceProperties(){
+  const ws=getWorkspace();
+  const body=document.getElementById('propertiesTableBody');
+  if(!body) return;
+  const props=(ws.properties||[]).slice().sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
+  const badge=document.getElementById('propertyCountBadge');
+  if(badge) badge.textContent=String(props.length||0);
+  if(!props.length) return;
+  body.innerHTML=props.map(p=>{
+    const perf=calcPerf(p);
+    const sub=[p.submarket||'Submarket', p.units?`${p.units} units`:null].filter(Boolean).join(' · ');
+    return `<tr onclick="window.location.href='valuation-updated.html?propertyId=${encodeURIComponent(p.id)}'">
+      <td><div class="p-name"><div class="p-thumb">◫</div><div class="p-name-text"><div class="p-addr">${esc(p.address)}</div><div class="p-sub">${esc(sub)}</div></div></div></td>
+      <td class="num">${fmtCompact(p.lastValuationValue||0)}</td>
+      <td class="num">${fmtCompact(p.lastNoi||0)}</td>
+      <td><div class="perf-mini"><div class="perf-bar"><div class="perf-fill" style="width:${perf}%"></div></div><span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perf}</span></div></td>
+      <td><span class="status-pill ${statusClass(p.status)}">● ${esc(p.status||'Analyzing')}</span></td>
+    </tr>`;
+  }).join('');
+}
+
 // Set today's date
 const now = new Date();
 document.getElementById('todayDate').textContent =
   now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+renderWorkspaceProperties();
 </script>
 </body>
 </html>
