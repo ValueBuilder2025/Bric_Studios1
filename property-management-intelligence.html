@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BRIC Studios — Property Manager Intelligence</title>
+<title>BRIC Studios — Property Management Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -106,14 +106,14 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
 <body>
 <nav>
   <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
-  <span class="nav-badge">Property Manager Intelligence</span>
+  <span class="nav-badge">Property Management Intelligence</span>
   <a href="dashboard.html" class="nav-back">← Dashboard</a>
 </nav>
 
 <div class="page-header">
   <div>
     <div class="ph-eyebrow">Network Layer</div>
-    <h1 class="ph-title">Property Manager Intelligence</h1>
+    <h1 class="ph-title">Property Management Intelligence</h1>
     <p class="ph-sub">AI-filtered insights on local property managers. Compare operating style, responsiveness, fee profile, reporting quality, and owner fit without guessing off a logo alone.</p>
   </div>
 </div>
@@ -174,7 +174,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
 
   <div class="privacy">
     <span class="privacy-icon">⬡</span>
-    <div><span style='color:var(--gold);font-weight:600'>NETWORK INTELLIGENCE:</span> Property manager summaries are demo-generated to show how BRIC could surface owner-relevant operating signals, fee patterns, complaint risk, and submarket fit. No paid placements are implied.</div>
+    <div><span style='color:var(--gold);font-weight:600'>NETWORK INTELLIGENCE:</span> Property management summaries are demo-generated to show how BRIC could surface owner-relevant operating signals, fee patterns, complaint risk, and submarket fit. No paid placements are implied.</div>
   </div>
 </div>
 <script>
@@ -303,7 +303,7 @@ function render(){
     ['Top Matched for You', String(matched), 'Based on location, use case, and operating style', 'success'],
     ['Avg. Fee Profile', feeBase.toFixed(1) + '%', 'Blended management fee signal in this market', '']
   ].map((s,i)=>`<div class="ts-card fade-up" style="animation-delay:${0.05+i*0.05}s"><div class="ts-label">${s[0]}</div><div class="ts-val ${s[3]}">${s[1]}</div><div class="ts-sub">${s[2]}</div></div>`).join('');
-  els.resultsTitle.textContent = `Property Managers · ${state.location}`;
+  els.resultsTitle.textContent = `Property Management · ${state.location}`;
   els.resultsSub.textContent = `Filtered for ${state.useCase.toLowerCase()} and ${state.tab === 'all' ? 'all operating styles' : state.tab + ' managers'}`;
   els.matchCount.textContent = `${matched} MATCHES`;
   els.list.innerHTML = pool.map(makeCard).join('');
