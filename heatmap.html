@@ -49,7 +49,7 @@ a{text-decoration:none;color:inherit}
 .sidebar{border-left:1px solid var(--line);background:linear-gradient(180deg,#121513,#0f1210);display:flex;flex-direction:column;min-height:0}.sidebar-head{padding:18px 18px 14px;border-bottom:1px solid var(--line)}.sidebar-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin:2px 0 4px}.sidebar-sub{font-size:14px;color:var(--muted)}.search-wrap{padding:14px 18px 8px;border-bottom:1px solid rgba(255,255,255,.04)}.search{width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);padding:13px 14px;color:var(--text);font-size:14px;outline:none}
 .list{padding:10px 12px 18px;overflow:auto;min-height:0}.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:14px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);border-radius:18px;margin-bottom:10px;cursor:pointer;transition:.18s}.item:hover{border-color:rgba(201,168,76,.28);background:rgba(201,168,76,.06)}.item.active{border-color:rgba(201,168,76,.42);background:rgba(201,168,76,.09);box-shadow:inset 0 0 0 1px rgba(201,168,76,.12)}.item-title{font-size:15px;font-weight:700;margin-bottom:4px}.item-sub{font-size:13px;color:var(--muted);margin-bottom:10px}.mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.mini{padding:8px 6px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);text-align:center}.mini-k{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px}.mini-v{font-size:12px;font-weight:700}.rank-badge{font-family:'DM Mono',monospace;font-size:12px;padding:7px 10px;border-radius:999px;background:#7fd18d;color:#112113;align-self:flex-start;font-weight:700}
 .leaflet-container{background:#0b0d0c;font:inherit}.leaflet-control-attribution{background:rgba(10,12,10,.72)!important;color:rgba(255,255,255,.45)!important;border-radius:8px 0 0 0;backdrop-filter:blur(8px)}.leaflet-control-attribution a{color:rgba(255,255,255,.55)!important}
-.bottom-sheet{display:none}.bottom-sheet{pointer-events:auto;touch-action:auto;-webkit-user-select:none;user-select:none}.bottom-sheet *{pointer-events:auto}.bottom-sheet.is-collapsed .selection-body{display:none}.mobile-sheet-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.mobile-sheet-title-wrap{flex:1;min-width:0}.mobile-sheet-toggle{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:rgba(245,242,236,.95);border-radius:12px;padding:10px 14px;min-height:44px;min-width:108px;display:inline-flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;z-index:50;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bottom-sheet{display:none}.bottom-sheet{pointer-events:auto;touch-action:auto;-webkit-user-select:none;user-select:none;z-index:9999}.bottom-sheet *{pointer-events:auto}.bottom-sheet.is-collapsed .selection-body{display:none}.mobile-sheet-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:rgba(12,15,13,.96);z-index:2}.mobile-sheet-title-wrap{flex:1;min-width:0}.mobile-sheet-toggle{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(245,242,236,.98);border-radius:12px;padding:10px 14px;min-height:44px;min-width:108px;display:inline-flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;z-index:10000;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @media (max-width:980px){body{overflow:auto}.shell{grid-template-columns:1fr;min-height:auto}.main{display:flex;flex-direction:column;min-height:auto;background:#0c0f0d}#map{position:relative;inset:auto;height:56vh;min-height:430px}.map-topbar{position:static;display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:14px}.selection-card{width:100%;max-width:none;margin-left:0}.legend{position:static;margin:0 14px 14px;min-width:0}.sidebar{border-left:none;border-top:1px solid var(--line);min-height:420px}}
 @media (max-width:680px){.toolbar-helper{padding:8px 14px;font-size:11px}html,body{height:auto}body{overflow:auto}.nav{padding:12px 14px;gap:10px;flex-wrap:wrap}.nav-left,.nav-right{gap:10px;flex-wrap:wrap}.badge{display:none}.toolbar{padding:12px 14px;gap:12px;overflow-x:auto;flex-wrap:nowrap;align-items:flex-start}.toolbar-spacer{display:none}.group{display:flex;gap:8px;flex-wrap:nowrap;min-width:max-content;align-items:center}.group-label{white-space:nowrap}.pill{padding:8px 12px;font-size:12px;white-space:nowrap}#map{height:52vh;min-height:360px}.map-topbar{padding:10px;gap:10px}.stat-strip{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:hidden}.stat{padding:10px 8px}.stat:nth-child(2n){border-right:none}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.selection-card,.legend,.hover-tip{display:none!important}.mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.bottom-sheet{display:block;position:fixed;left:10px;right:10px;bottom:10px;z-index:1400;background:rgba(12,15,13,.96);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:18px;padding:12px 13px;box-shadow:0 20px 40px rgba(0,0,0,.35)}}
 </style>
@@ -156,18 +156,19 @@ function bindMobileSheetToggle(sheet){
   if(!sheet) return;
   const toggle = sheet.querySelector('.mobile-sheet-toggle');
   if(!toggle) return;
-  const handler = (e) => {
-    if(e){
-      e.preventDefault();
-      e.stopPropagation();
-    }
+
+  const clickHandler = function(e){
+    e.preventDefault();
+    e.stopPropagation();
     sheet.classList.toggle('is-collapsed');
     toggle.textContent = sheet.classList.contains('is-collapsed') ? 'Expand' : 'Collapse';
-    return false;
   };
-  toggle.onclick = handler;
-  toggle.ontouchstart = function(e){ e.stopPropagation(); };
-  toggle.ontouchend = handler;
+
+  toggle.replaceWith(toggle.cloneNode(true));
+  const freshToggle = sheet.querySelector('.mobile-sheet-toggle');
+  freshToggle.addEventListener('click', clickHandler, {passive:false});
+  freshToggle.addEventListener('touchend', clickHandler, {passive:false});
+  freshToggle.addEventListener('touchstart', function(e){ e.stopPropagation(); }, {passive:true});
 }
 function renderSelected(){const card=document.getElementById('selectionCard'),sheet=document.getElementById('bottomSheet'); if(!selectedSubmarket){const empty=`<div class="selection-head"><div><div class="eyebrow">Selected Market</div><h3 class="selection-title">Click a submarket</h3><div class="selection-sub">Hover to preview an area. Click any submarket to load details for the current market view.</div></div><button class="selection-toggle" type="button">Collapse</button></div>`; card.innerHTML=empty; sheet.innerHTML=`<div class="eyebrow">Selected Market</div><h3 class="selection-title">Tap a submarket</h3><div class="selection-sub">Tap any neighborhood area to open details for the current market view.</div>`; bindCardToggle(card); return}
 const f=featureById(selectedSubmarket),m=getMetric(selectedSubmarket);
@@ -200,6 +201,29 @@ function hideHoverTip(){document.getElementById('hoverTip').style.display='none'
 function renderAll(){renderToolbarState();renderLegend();renderStats();renderSelected();refreshStyles();renderList()}
 function selectSubmarket(id,fit){selectedSubmarket=id; renderAll(); if(fit){const l=getLayerById(id); if(l) map.fitBounds(l.getBounds().pad(window.innerWidth>680?0.40:0.16), {animate:true,duration:0.35,padding:[16,16]})}}
 function initMap(){map=L.map('map',{zoomControl:true,attributionControl:true,center:[40.735,-73.965],zoom:11,minZoom:10,maxZoom:14,scrollWheelZoom:true,preferCanvas:true}); const bounds=L.latLngBounds([[40.54,-74.08],[40.90,-73.88]]); map.setMaxBounds(bounds.pad(.18)); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map); geoLayer=L.geoJSON(GEOJSON,{style:f=>styleFor(f,normalize(rankedFeatures(''))), onEachFeature:(feature,layer)=>{layer.on('mouseover',e=>{setHovered(feature.properties.id);showHoverTip(e,feature)});layer.on('mousemove',e=>moveHoverTip(e));layer.on('mouseout',()=>{setHovered(null);hideHoverTip()});layer.on('click',()=>selectSubmarket(feature.properties.id,false))}}).addTo(map); const cityBounds=L.latLngBounds([[40.60,-74.05],[40.86,-73.90]]); map.fitBounds(cityBounds,{animate:false}); renderAll()}
+
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.mobile-sheet-toggle');
+  if(!btn) return;
+  const sheet = document.getElementById('bottomSheet');
+  if(!sheet) return;
+  e.preventDefault();
+  e.stopPropagation();
+  sheet.classList.toggle('is-collapsed');
+  btn.textContent = sheet.classList.contains('is-collapsed') ? 'Expand' : 'Collapse';
+}, true);
+
+document.addEventListener('touchend', function(e){
+  const btn = e.target.closest('.mobile-sheet-toggle');
+  if(!btn) return;
+  const sheet = document.getElementById('bottomSheet');
+  if(!sheet) return;
+  e.preventDefault();
+  e.stopPropagation();
+  sheet.classList.toggle('is-collapsed');
+  btn.textContent = sheet.classList.contains('is-collapsed') ? 'Expand' : 'Collapse';
+}, {capture:true, passive:false});
+
 document.querySelectorAll('.signal-pill').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.signal-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');signal=btn.dataset.signal;renderAll()}))
 document.querySelectorAll('.intent-pill').forEach(btn=>btn.addEventListener('click',()=>{
   if(signal !== 'intent') return;
