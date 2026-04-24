@@ -3,358 +3,182 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BRIC Studios — NYC Heatmap</title>
+<title>BRIC Studios — NYC Submarket Heatmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%;margin:0;background:#0d0f0e;color:#f5f2ec}
 body{font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 a{text-decoration:none;color:inherit}
-:root{
-  --bg:#0d0f0e;
-  --panel:#121513;
-  --panel-2:#171b18;
-  --line:rgba(255,255,255,.08);
-  --line-2:rgba(201,168,76,.24);
-  --gold:#c9a84c;
-  --text:#f5f2ec;
-  --muted:rgba(245,242,236,.62);
-  --muted-2:rgba(245,242,236,.36);
-}
+:root{--line:rgba(255,255,255,.08);--line2:rgba(201,168,76,.24);--gold:#c9a84c;--text:#f5f2ec;--muted:rgba(245,242,236,.62);--muted2:rgba(245,242,236,.36)}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(8,9,9,.96),rgba(13,15,14,.94));position:relative;z-index:1200}
-.nav-left,.nav-right{display:flex;align-items:center;gap:14px}
-.logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:19px}
+.nav-left,.nav-right{display:flex;align-items:center;gap:14px}.logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:19px}
 .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,.15)}
-.badge{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line-2);padding:7px 12px;border-radius:999px;color:var(--gold);background:rgba(201,168,76,.08)}
-.nav-link{font-size:14px;color:var(--muted);transition:.18s}
-.nav-link:hover{color:var(--text)}
+.badge{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line2);padding:7px 12px;border-radius:999px;color:var(--gold);background:rgba(201,168,76,.08)}
+.nav-link{font-size:14px;color:var(--muted)}
 .toolbar{display:flex;flex-wrap:wrap;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(13,15,14,.84);position:relative;z-index:1100}
-.group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.group-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);margin-right:4px}
+.group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.group-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-right:4px}
 .pill{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--muted);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:.18s}
-.pill:hover{border-color:rgba(201,168,76,.32);color:var(--text)}
-.pill.active{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.45);color:var(--gold)}
+.pill:hover{border-color:rgba(201,168,76,.32);color:var(--text)}.pill.active{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.45);color:var(--gold)}
 .toolbar-spacer{width:1px;background:var(--line);margin:0 2px}
+.intent-group{transition:.18s ease}
+.intent-group.is-hidden{opacity:.45}
+.intent-group.is-hidden .pill{pointer-events:none}
+.toolbar-helper{padding:8px 22px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(10,12,11,.74);font-size:12px;color:var(--muted)}
+.toolbar-helper strong{color:var(--text);font-weight:600}
 .shell{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:0;flex:1;min-height:0}
-.main{position:relative;min-height:0;background:#0c0f0d}
-#map{position:absolute;inset:0}
-.map-topbar{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none;z-index:900}
-.map-topbar > *{pointer-events:auto}
-.stat-strip{display:inline-flex;align-items:stretch;overflow:hidden;background:rgba(12,15,13,.84);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.2);width:auto;max-width:none;flex:0 0 auto}
-.stat{min-width:0;padding:8px 12px;border-right:1px solid var(--line);text-align:center;flex:0 0 auto}
-.stat:last-child{border-right:none}
+.main{position:relative;min-height:0;background:#0c0f0d}#map{position:absolute;inset:0}
+.map-topbar{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none;z-index:900}.map-topbar>*{pointer-events:auto}
+.stat-strip{display:inline-flex;align-items:stretch;overflow:hidden;background:rgba(12,15,13,.84);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.2);flex:0 0 auto}
+.stat{padding:8px 12px;border-right:1px solid var(--line);text-align:center}.stat:last-child{border-right:none}
 .stat-value{font-family:'Playfair Display',serif;font-size:19px;line-height:1;color:var(--gold)}
-.stat-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted-2);margin-top:5px;white-space:nowrap}
-.selection-card{width:340px;max-width:42vw;background:rgba(12,15,13,.9);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:22px;padding:16px 18px;box-shadow:0 16px 42px rgba(0,0,0,.28);margin-left:auto}
-.eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted-2);margin-bottom:4px}
-.selection-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin:0 0 4px}
-.selection-sub{font-size:13px;color:var(--muted);margin-bottom:12px}
-.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
-.metric-box{padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-.metric-k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:6px}
-.metric-v{font-size:28px;font-weight:700;line-height:1.05}
-.detail-list{display:grid;grid-template-columns:1fr auto;row-gap:9px;column-gap:14px;font-size:14px}
-.detail-list .k{color:var(--muted)}
-.detail-list .v{font-family:'DM Mono',monospace;color:var(--text);font-weight:500;text-align:right}
-.intent-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-.intent-chip{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.intent-chip.active{border-color:rgba(201,168,76,.42);background:rgba(201,168,76,.12);color:var(--gold)}
-.intent-highlight{padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(201,168,76,.12),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.22);margin-bottom:12px}
-.intent-highlight-k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:6px}
-.intent-highlight-v{font-size:30px;font-weight:700;line-height:1;color:var(--gold)}
-.legend{position:absolute;left:16px;bottom:16px;background:rgba(12,15,13,.88);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:220px;z-index:900}
-.legend-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);margin-bottom:10px}
-.legend-scale{height:10px;border-radius:999px;overflow:hidden;display:grid;grid-template-columns:repeat(24,1fr);border:1px solid rgba(255,255,255,.06)}
-.legend-scale span{display:block;height:100%}
-.legend-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted-2);margin-top:7px}
-.sidebar{border-left:1px solid var(--line);background:linear-gradient(180deg,#121513,#0f1210);display:flex;flex-direction:column;min-height:0}
-.sidebar-head{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
-.sidebar-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin:2px 0 4px}
-.sidebar-sub{font-size:14px;color:var(--muted)}
-.search-wrap{padding:14px 18px 8px;border-bottom:1px solid rgba(255,255,255,.04)}
-.search{width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);padding:13px 14px;color:var(--text);font-size:14px;outline:none}
-.search::placeholder{color:rgba(245,242,236,.34)}
-.list{padding:10px 12px 18px;overflow:auto;min-height:0}
-.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:14px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);border-radius:18px;margin-bottom:10px;cursor:pointer;transition:.18s}
-.item:hover{border-color:rgba(201,168,76,.28);background:rgba(201,168,76,.06)}
-.item.active{border-color:rgba(201,168,76,.42);background:rgba(201,168,76,.09);box-shadow:inset 0 0 0 1px rgba(201,168,76,.12)}
-.item-title{font-size:15px;font-weight:700;margin-bottom:4px}
-.item-sub{font-size:13px;color:var(--muted);margin-bottom:10px}
-.mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.mini{padding:8px 6px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);text-align:center}
-.mini-k{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:5px}
-.mini-v{font-size:12px;font-weight:700}
-.rank-badge{font-family:'DM Mono',monospace;font-size:12px;padding:7px 10px;border-radius:999px;background:#7fd18d;color:#112113;align-self:flex-start;font-weight:700}
-.leaflet-container{background:#0b0d0c;font:inherit}
-.leaflet-control-attribution{background:rgba(10,12,10,.72)!important;color:rgba(255,255,255,.45)!important;border-radius:8px 0 0 0;backdrop-filter:blur(8px)}
-.leaflet-control-attribution a{color:rgba(255,255,255,.55)!important}
-.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:rgba(16,19,17,.95);color:#f5f2ec;border:1px solid rgba(201,168,76,.2)}
-.leaflet-popup-content{margin:12px 14px}
-.map-popup-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:4px}
-.map-popup-sub{font-size:12px;color:var(--muted);margin-bottom:10px}
-.map-popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.map-popup-grid div{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:10px}
-.map-popup-grid b{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted-2);text-transform:uppercase;margin-bottom:4px}
-.submarket-marker{background:transparent;border:none}
-.marker-card{min-width:86px;transform:translate(-50%,-50%);padding:9px 10px;border-radius:14px;background:rgba(17,20,18,.92);border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 28px rgba(0,0,0,.25);backdrop-filter:blur(8px);text-align:center;transition:.16s}
-.marker-card.active{box-shadow:0 0 0 1px rgba(255,255,255,.25),0 14px 34px rgba(0,0,0,.35);transform:translate(-50%,-50%) scale(1.03)}
-.marker-name{font-size:11px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:5px;white-space:nowrap}
-.marker-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;line-height:1}
-.marker-meta{margin-top:5px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.55);letter-spacing:.05em;text-transform:uppercase}
-.marker-pointer{width:10px;height:10px;position:absolute;left:50%;bottom:-6px;transform:translateX(-50%) rotate(45deg);border-right:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-@media (max-width:980px){
-  body{overflow:auto}
-  .shell{grid-template-columns:1fr;min-height:auto}
-  .main{display:flex;flex-direction:column;min-height:auto;background:#0c0f0d}
-  #map{position:relative;inset:auto;height:56vh;min-height:430px}
-  .map-topbar{position:static;left:auto;right:auto;top:auto;display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:14px}
-  .stat-strip{align-self:flex-start}
-  .selection-card{width:100%;max-width:none;margin-left:0}
-  .legend{position:static;left:auto;right:auto;bottom:auto;margin:0 14px 14px;min-width:0}
-  .sidebar{border-left:none;border-top:1px solid var(--line);min-height:420px}
-}
-
-@media (max-width:680px){
-  html,body{height:auto}
-  body{overflow:auto}
-  .nav{padding:12px 14px;gap:10px;flex-wrap:wrap}
-  .nav-left,.nav-right{gap:10px;flex-wrap:wrap}
-  .logo{font-size:17px}
-  .badge{display:none}
-  .nav-link{font-size:13px}
-  .toolbar{padding:12px 14px;gap:12px;overflow-x:auto;flex-wrap:nowrap;align-items:flex-start}
-  .toolbar-spacer{display:none}
-  .group{display:flex;gap:8px;flex-wrap:nowrap;min-width:max-content;align-items:center}
-  .group-label{width:auto;white-space:nowrap;margin-right:2px}
-  .pill{padding:8px 12px;font-size:12px;white-space:nowrap}
-  .main{display:flex;flex-direction:column}
-  #map{height:50vh;min-height:360px}
-  .map-topbar{padding:12px;gap:10px}
-  .stat-strip{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-radius:14px;overflow:hidden}
-  .stat{padding:10px 8px;min-width:0}
-  .stat:nth-child(2n){border-right:none}
-  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
-  .stat-value{font-size:18px}
-  .stat-label{font-size:8px}
-  .selection-card{padding:14px;border-radius:18px}
-  .selection-title{font-size:17px}
-  .selection-sub{font-size:12px}
-  .intent-highlight-v{font-size:26px}
-  .intent-chip-row{gap:6px}
-  .intent-chip{font-size:9px;padding:6px 8px}
-  .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .metric-box{padding:10px}
-  .metric-v{font-size:22px}
-  .detail-list{font-size:13px;column-gap:10px;row-gap:8px}
-  .legend{margin:0 12px 12px;padding:12px 14px}
-  .legend-title,.legend-labels{font-size:9px}
-  .sidebar-head{padding:14px}
-  .sidebar-title{font-size:20px}
-  .sidebar-sub{font-size:13px}
-  .search-wrap{padding:12px 14px 8px}
-  .list{padding:10px 10px 16px}
-  .item{padding:12px;border-radius:16px}
-  .item-sub{font-size:12px}
-  .mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .mini{padding:7px 5px}
-  .mini-k{font-size:8px}
-  .mini-v{font-size:11px}
-  .rank-badge{font-size:11px;padding:6px 8px}
-  .marker-card{min-width:68px;padding:7px 8px;border-radius:12px}
-  .marker-name{font-size:10px}
-  .marker-value{font-size:12px}
-  .marker-meta{font-size:8px;margin-top:4px}
-  .leaflet-control-zoom{margin-top:8px!important;margin-left:8px!important}
-  .leaflet-top.leaflet-left{top:6px}
-}
-
-@media (max-width:420px){
-  #map{height:46vh;min-height:320px}
-  .logo{font-size:16px}
-  .pill{padding:7px 10px;font-size:11px}
-  .selection-card{padding:12px}
-  .metric-v{font-size:20px}
-}
+.stat-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted2);margin-top:5px;white-space:nowrap}
+.selection-card{width:248px;max-width:28vw;background:rgba(12,15,13,.86);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:10px 11px;box-shadow:0 14px 30px rgba(0,0,0,.24);margin-left:auto;transition:.18s}
+.selection-card.is-collapsed{width:188px;max-width:188px}.selection-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.selection-toggle{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:rgba(245,242,236,.75);border-radius:10px;padding:6px 8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.selection-card.is-collapsed .selection-body{display:none}
+.eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
+.selection-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin:0 0 3px;line-height:1.15}
+.selection-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:8px}.metric-box{padding:8px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.metric-k{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}.metric-v{font-size:17px;font-weight:700;line-height:1.05}
+.detail-list{display:grid;grid-template-columns:1fr auto;row-gap:6px;column-gap:9px;font-size:11px}.detail-list .k{color:var(--muted)}.detail-list .v{font-family:'DM Mono',monospace;color:var(--text);font-weight:500;text-align:right}
+.legend{position:absolute;left:16px;bottom:16px;background:rgba(12,15,13,.88);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:220px;z-index:900}.legend-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}.legend-scale{height:10px;border-radius:999px;overflow:hidden;display:grid;grid-template-columns:repeat(24,1fr);border:1px solid rgba(255,255,255,.06)}.legend-scale span{display:block;height:100%}.legend-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:7px}
+.hover-tip{position:absolute;z-index:1300;pointer-events:none;background:rgba(12,15,13,.96);border:1px solid rgba(201,168,76,.22);backdrop-filter:blur(10px);border-radius:14px;padding:10px 12px;min-width:220px;box-shadow:0 18px 34px rgba(0,0,0,.32);display:none}.hover-tip-title{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:4px}.hover-tip-sub{font-size:12px;color:var(--muted);margin-bottom:8px}.hover-tip-grid{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:12px}.hover-tip-grid .k{color:var(--muted)}.hover-tip-grid .v{font-family:'DM Mono',monospace}
+.sidebar{border-left:1px solid var(--line);background:linear-gradient(180deg,#121513,#0f1210);display:flex;flex-direction:column;min-height:0}.sidebar-head{padding:18px 18px 14px;border-bottom:1px solid var(--line)}.sidebar-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin:2px 0 4px}.sidebar-sub{font-size:14px;color:var(--muted)}.search-wrap{padding:14px 18px 8px;border-bottom:1px solid rgba(255,255,255,.04)}.search{width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);padding:13px 14px;color:var(--text);font-size:14px;outline:none}
+.list{padding:10px 12px 18px;overflow:auto;min-height:0}.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:14px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);border-radius:18px;margin-bottom:10px;cursor:pointer;transition:.18s}.item:hover{border-color:rgba(201,168,76,.28);background:rgba(201,168,76,.06)}.item.active{border-color:rgba(201,168,76,.42);background:rgba(201,168,76,.09);box-shadow:inset 0 0 0 1px rgba(201,168,76,.12)}.item-title{font-size:15px;font-weight:700;margin-bottom:4px}.item-sub{font-size:13px;color:var(--muted);margin-bottom:10px}.mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.mini{padding:8px 6px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);text-align:center}.mini-k{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px}.mini-v{font-size:12px;font-weight:700}.rank-badge{font-family:'DM Mono',monospace;font-size:12px;padding:7px 10px;border-radius:999px;background:#7fd18d;color:#112113;align-self:flex-start;font-weight:700}
+.leaflet-container{background:#0b0d0c;font:inherit}.leaflet-control-attribution{background:rgba(10,12,10,.72)!important;color:rgba(255,255,255,.45)!important;border-radius:8px 0 0 0;backdrop-filter:blur(8px)}.leaflet-control-attribution a{color:rgba(255,255,255,.55)!important}
+.bottom-sheet{display:none}
+@media (max-width:980px){body{overflow:auto}.shell{grid-template-columns:1fr;min-height:auto}.main{display:flex;flex-direction:column;min-height:auto;background:#0c0f0d}#map{position:relative;inset:auto;height:56vh;min-height:430px}.map-topbar{position:static;display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:14px}.selection-card{width:100%;max-width:none;margin-left:0}.legend{position:static;margin:0 14px 14px;min-width:0}.sidebar{border-left:none;border-top:1px solid var(--line);min-height:420px}}
+@media (max-width:680px){.toolbar-helper{padding:8px 14px;font-size:11px}html,body{height:auto}body{overflow:auto}.nav{padding:12px 14px;gap:10px;flex-wrap:wrap}.nav-left,.nav-right{gap:10px;flex-wrap:wrap}.badge{display:none}.toolbar{padding:12px 14px;gap:12px;overflow-x:auto;flex-wrap:nowrap;align-items:flex-start}.toolbar-spacer{display:none}.group{display:flex;gap:8px;flex-wrap:nowrap;min-width:max-content;align-items:center}.group-label{white-space:nowrap}.pill{padding:8px 12px;font-size:12px;white-space:nowrap}#map{height:52vh;min-height:360px}.map-topbar{padding:10px;gap:10px}.stat-strip{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:hidden}.stat{padding:10px 8px}.stat:nth-child(2n){border-right:none}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.selection-card,.legend,.hover-tip{display:none!important}.mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.bottom-sheet{display:block;position:fixed;left:10px;right:10px;bottom:10px;z-index:1400;background:rgba(12,15,13,.96);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:18px;padding:12px 13px;box-shadow:0 20px 40px rgba(0,0,0,.35)}}
 </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="nav-left">
-      <a href="index.html" class="logo"><span class="logo-dot"></span><span>BRIC Studios</span></a>
-      <span class="badge">NYC Heatmap</span>
-    </div>
-    <div class="nav-right">
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="index.html" class="nav-link">Home</a>
-    </div>
-  </header>
-
-  <div class="toolbar">
-    <div class="group">
-      <span class="group-label">Intent Focus</span>
-      <button class="pill intent-pill active" data-intent="buying">Buying</button>
-      <button class="pill intent-pill" data-intent="selling">Selling</button>
-      <button class="pill intent-pill" data-intent="refinancing">Refinancing</button>
-      <button class="pill intent-pill" data-intent="renovating">Renovating</button>
-    </div>
-    <div class="toolbar-spacer"></div>
-    <div class="group">
-      <span class="group-label">Signal</span>
-      <button class="pill signal-pill active" data-signal="rent">Rent Trend</button>
-      <button class="pill signal-pill" data-signal="activity">Buyer Activity</button>
-      <button class="pill signal-pill" data-signal="value">Value Trend</button>
-      <button class="pill signal-pill" data-signal="intent">Owner Intent</button>
-    </div>
-  </div>
-
-  <main class="shell">
-    <section class="main">
-      <div id="map"></div>
-      <div class="map-topbar">
-        <div class="stat-strip" id="statStrip"></div>
-        <aside class="selection-card" id="selectionCard"></aside>
-      </div>
-      <div class="legend">
-        <div class="legend-title" id="legendTitle">Rent Trend</div>
-        <div class="legend-scale" id="legendScale"></div>
-        <div class="legend-labels"><span>Soft</span><span>Moderate</span><span>Strong</span></div>
-      </div>
-    </section>
-
-    <aside class="sidebar">
-      <div class="sidebar-head">
-        <div class="eyebrow">NYC Submarket Ranking</div>
-        <div class="sidebar-title" id="sidebarTitle">Rent Trend</div>
-        <div class="sidebar-sub" id="sidebarSub">Year-over-year and trailing 30-day rent movement by submarket.</div>
-      </div>
-      <div class="search-wrap">
-        <input id="searchInput" class="search" type="text" placeholder="Search submarket..." />
-      </div>
-      <div class="list" id="rankingList"></div>
-    </aside>
-  </main>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<header class="nav"><div class="nav-left"><a href="index.html" class="logo"><span class="logo-dot"></span><span>BRIC Studios</span></a><span class="badge">NYC Heatmap</span></div><div class="nav-right"><a href="dashboard.html" class="nav-link">Dashboard</a><a href="index.html" class="nav-link">Home</a></div></header>
+<div class="toolbar"><div class="group intent-group" id="intentGroup"><span class="group-label">Owner Intent Type</span><button class="pill intent-pill active" data-intent="buying" type="button">Buying</button><button class="pill intent-pill" data-intent="selling" type="button">Selling</button><button class="pill intent-pill" data-intent="refinancing" type="button">Refinancing</button><button class="pill intent-pill" data-intent="renovating" type="button">Renovating</button></div><div class="toolbar-spacer"></div><div class="group"><span class="group-label">Market View</span><button class="pill signal-pill active" data-signal="rent" type="button">Rent Trend</button><button class="pill signal-pill" data-signal="activity" type="button">Buyer Activity</button><button class="pill signal-pill" data-signal="value" type="button">Value Trend</button><button class="pill signal-pill" data-signal="intent" type="button">Owner Intent</button><button class="pill signal-pill" data-signal="listings" type="button">Listings</button></div></div>
+<div class="toolbar-helper" id="toolbarHelper"></div>
+<main class="shell"><section class="main"><div id="map"></div><div class="map-topbar"><div class="stat-strip" id="statStrip"></div><aside class="selection-card" id="selectionCard"></aside></div><div class="legend"><div class="legend-title" id="legendTitle"></div><div class="legend-scale" id="legendScale"></div><div class="legend-labels"><span>Soft</span><span>Moderate</span><span>Strong</span></div></div><div class="hover-tip" id="hoverTip"></div></section><aside class="sidebar"><div class="sidebar-head"><div class="eyebrow">NYC Submarket Ranking</div><div class="sidebar-title" id="sidebarTitle"></div><div class="sidebar-sub" id="sidebarSub"></div></div><div class="search-wrap"><input id="searchInput" class="search" type="text" placeholder="Search submarket..." /></div><div class="list" id="rankingList"></div></aside></main>
+<div class="bottom-sheet" id="bottomSheet"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const SUBMARKETS = [
-  {id:'williamsburg', name:'Williamsburg', borough:'Brooklyn', lat:40.7081, lng:-73.9571, rentYoY:7.8, rent30:1.1, transactions:28, avgPsf:742, buyers:22, volume:168, unitsSold:214, valueYoY:6.4, value30:0.8, intents:{buying:18,selling:12,refinancing:9,renovating:15}},
-  {id:'greenpoint', name:'Greenpoint', borough:'Brooklyn', lat:40.7295, lng:-73.9540, rentYoY:6.3, rent30:0.8, transactions:18, avgPsf:775, buyers:14, volume:118, unitsSold:133, valueYoY:5.7, value30:0.6, intents:{buying:12,selling:7,refinancing:6,renovating:9}},
-  {id:'bushwick', name:'Bushwick', borough:'Brooklyn', lat:40.6958, lng:-73.9171, rentYoY:8.9, rent30:1.4, transactions:34, avgPsf:618, buyers:27, volume:181, unitsSold:269, valueYoY:7.1, value30:0.9, intents:{buying:24,selling:18,refinancing:12,renovating:21}},
-  {id:'ridgewood', name:'Ridgewood', borough:'Queens', lat:40.7062, lng:-73.8976, rentYoY:9.4, rent30:1.2, transactions:21, avgPsf:566, buyers:16, volume:124, unitsSold:171, valueYoY:7.6, value30:0.9, intents:{buying:15,selling:11,refinancing:7,renovating:14}},
-  {id:'bedstuy', name:'Bed-Stuy', borough:'Brooklyn', lat:40.6872, lng:-73.9418, rentYoY:7.2, rent30:0.9, transactions:32, avgPsf:582, buyers:25, volume:176, unitsSold:246, valueYoY:6.6, value30:0.7, intents:{buying:20,selling:14,refinancing:10,renovating:17}},
-  {id:'crownheights', name:'Crown Heights', borough:'Brooklyn', lat:40.6681, lng:-73.9448, rentYoY:8.1, rent30:1.0, transactions:31, avgPsf:603, buyers:24, volume:162, unitsSold:238, valueYoY:6.3, value30:0.8, intents:{buying:21,selling:15,refinancing:10,renovating:18}},
-  {id:'plg', name:'Prospect Lefferts Gardens', borough:'Brooklyn', lat:40.6584, lng:-73.9549, rentYoY:7.5, rent30:0.8, transactions:19, avgPsf:544, buyers:14, volume:92, unitsSold:141, valueYoY:5.8, value30:0.6, intents:{buying:14,selling:11,refinancing:8,renovating:12}},
-  {id:'parkslope', name:'Park Slope', borough:'Brooklyn', lat:40.6710, lng:-73.9770, rentYoY:4.7, rent30:0.4, transactions:16, avgPsf:861, buyers:12, volume:145, unitsSold:96, valueYoY:4.2, value30:0.3, intents:{buying:10,selling:8,refinancing:5,renovating:9}},
-  {id:'sunsetpark', name:'Sunset Park', borough:'Brooklyn', lat:40.6455, lng:-74.0124, rentYoY:6.8, rent30:0.7, transactions:24, avgPsf:491, buyers:18, volume:131, unitsSold:184, valueYoY:5.9, value30:0.5, intents:{buying:17,selling:13,refinancing:8,renovating:13}},
-  {id:'flatbush', name:'Flatbush', borough:'Brooklyn', lat:40.6409, lng:-73.9581, rentYoY:6.4, rent30:0.6, transactions:27, avgPsf:463, buyers:19, volume:119, unitsSold:205, valueYoY:5.4, value30:0.4, intents:{buying:18,selling:14,refinancing:9,renovating:15}},
-  {id:'lic', name:'Long Island City', borough:'Queens', lat:40.7447, lng:-73.9485, rentYoY:5.1, rent30:0.5, transactions:14, avgPsf:835, buyers:11, volume:133, unitsSold:88, valueYoY:4.8, value30:0.4, intents:{buying:9,selling:6,refinancing:5,renovating:7}},
-  {id:'astoria', name:'Astoria', borough:'Queens', lat:40.7644, lng:-73.9235, rentYoY:5.8, rent30:0.6, transactions:17, avgPsf:619, buyers:13, volume:101, unitsSold:123, valueYoY:5.1, value30:0.4, intents:{buying:11,selling:8,refinancing:6,renovating:8}},
-  {id:'flushing', name:'Flushing', borough:'Queens', lat:40.7654, lng:-73.8173, rentYoY:4.9, rent30:0.3, transactions:22, avgPsf:512, buyers:18, volume:127, unitsSold:189, valueYoY:4.6, value30:0.3, intents:{buying:13,selling:10,refinancing:8,renovating:9}},
-  {id:'harlem', name:'Harlem', borough:'Manhattan', lat:40.8116, lng:-73.9465, rentYoY:6.0, rent30:0.6, transactions:26, avgPsf:688, buyers:19, volume:159, unitsSold:231, valueYoY:5.5, value30:0.5, intents:{buying:16,selling:13,refinancing:10,renovating:12}},
-  {id:'ues', name:'Upper East Side', borough:'Manhattan', lat:40.7736, lng:-73.9566, rentYoY:2.4, rent30:0.1, transactions:12, avgPsf:1142, buyers:9, volume:176, unitsSold:67, valueYoY:2.8, value30:0.1, intents:{buying:7,selling:5,refinancing:4,renovating:6}},
-  {id:'les', name:'Lower East Side', borough:'Manhattan', lat:40.7150, lng:-73.9843, rentYoY:4.3, rent30:0.3, transactions:15, avgPsf:1018, buyers:11, volume:149, unitsSold:81, valueYoY:3.9, value30:0.2, intents:{buying:8,selling:6,refinancing:4,renovating:6}},
-  {id:'southbronx', name:'South Bronx', borough:'Bronx', lat:40.8162, lng:-73.9174, rentYoY:6.7, rent30:0.7, transactions:29, avgPsf:409, buyers:21, volume:137, unitsSold:312, valueYoY:6.1, value30:0.6, intents:{buying:19,selling:17,refinancing:13,renovating:16}},
-  {id:'washheights', name:'Washington Heights', borough:'Manhattan', lat:40.8486, lng:-73.9361, rentYoY:5.6, rent30:0.4, transactions:20, avgPsf:471, buyers:15, volume:96, unitsSold:176, valueYoY:4.7, value30:0.3, intents:{buying:12,selling:10,refinancing:7,renovating:10}}
-];
-let signal='rent', intentFocus='buying', selectedId='williamsburg', map, markersLayer;
+const GEOJSON = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"id": "greenpoint", "name": "Greenpoint", "borough": "Brooklyn", "slug": "greenpoint"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.964, 40.739], [-73.94, 40.739], [-73.938, 40.728], [-73.946, 40.723], [-73.959, 40.724], [-73.966, 40.73], [-73.964, 40.739]]]}}, {"type": "Feature", "properties": {"id": "williamsburg-north", "name": "Williamsburg North", "borough": "Brooklyn", "slug": "williamsburg-north"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.964, 40.724], [-73.942, 40.724], [-73.94, 40.713], [-73.948, 40.709], [-73.959, 40.711], [-73.966, 40.716], [-73.964, 40.724]]]}}, {"type": "Feature", "properties": {"id": "williamsburg-south", "name": "Williamsburg South", "borough": "Brooklyn", "slug": "williamsburg-south"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.959, 40.711], [-73.944, 40.709], [-73.942, 40.7], [-73.949, 40.696], [-73.961, 40.698], [-73.964, 40.705], [-73.959, 40.711]]]}}, {"type": "Feature", "properties": {"id": "east-williamsburg", "name": "East Williamsburg", "borough": "Brooklyn", "slug": "east-williamsburg"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.948, 40.724], [-73.925, 40.724], [-73.922, 40.708], [-73.94, 40.709], [-73.942, 40.724], [-73.948, 40.724]]]}}, {"type": "Feature", "properties": {"id": "bushwick-west", "name": "Bushwick West", "borough": "Brooklyn", "slug": "bushwick-west"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.925, 40.716], [-73.908, 40.716], [-73.905, 40.697], [-73.92, 40.694], [-73.927, 40.703], [-73.925, 40.716]]]}}, {"type": "Feature", "properties": {"id": "bushwick-east", "name": "Bushwick East", "borough": "Brooklyn", "slug": "bushwick-east"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.908, 40.716], [-73.89, 40.713], [-73.888, 40.693], [-73.905, 40.697], [-73.908, 40.716]]]}}, {"type": "Feature", "properties": {"id": "bed-stuy-west", "name": "Bed-Stuy West", "borough": "Brooklyn", "slug": "bed-stuy-west"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.958, 40.7], [-73.939, 40.7], [-73.938, 40.684], [-73.952, 40.682], [-73.96, 40.689], [-73.958, 40.7]]]}}, {"type": "Feature", "properties": {"id": "bed-stuy-east", "name": "Bed-Stuy East", "borough": "Brooklyn", "slug": "bed-stuy-east"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.939, 40.7], [-73.916, 40.7], [-73.913, 40.681], [-73.938, 40.684], [-73.939, 40.7]]]}}, {"type": "Feature", "properties": {"id": "prospect-heights", "name": "Prospect Heights", "borough": "Brooklyn", "slug": "prospect-heights"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.976, 40.687], [-73.962, 40.687], [-73.959, 40.676], [-73.972, 40.673], [-73.978, 40.678], [-73.976, 40.687]]]}}, {"type": "Feature", "properties": {"id": "crown-heights-north", "name": "Crown Heights North", "borough": "Brooklyn", "slug": "crown-heights-north"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.972, 40.678], [-73.944, 40.678], [-73.941, 40.665], [-73.962, 40.663], [-73.975, 40.668], [-73.972, 40.678]]]}}, {"type": "Feature", "properties": {"id": "crown-heights-south", "name": "Crown Heights South", "borough": "Brooklyn", "slug": "crown-heights-south"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.962, 40.663], [-73.941, 40.665], [-73.938, 40.652], [-73.955, 40.65], [-73.966, 40.654], [-73.962, 40.663]]]}}, {"type": "Feature", "properties": {"id": "park-slope", "name": "Park Slope", "borough": "Brooklyn", "slug": "park-slope"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.989, 40.681], [-73.976, 40.681], [-73.974, 40.659], [-73.987, 40.657], [-73.994, 40.668], [-73.989, 40.681]]]}}, {"type": "Feature", "properties": {"id": "prospect-lefferts-gardens", "name": "Prospect Lefferts Gardens", "borough": "Brooklyn", "slug": "prospect-lefferts-gardens"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.97, 40.663], [-73.955, 40.663], [-73.953, 40.65], [-73.964, 40.647], [-73.971, 40.652], [-73.97, 40.663]]]}}, {"type": "Feature", "properties": {"id": "flatbush", "name": "Flatbush", "borough": "Brooklyn", "slug": "flatbush"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.964, 40.65], [-73.935, 40.651], [-73.934, 40.631], [-73.955, 40.628], [-73.968, 40.636], [-73.964, 40.65]]]}}, {"type": "Feature", "properties": {"id": "downtown-brooklyn", "name": "Downtown Brooklyn", "borough": "Brooklyn", "slug": "downtown-brooklyn"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.015, 40.703], [-73.993, 40.703], [-73.988, 40.688], [-74.003, 40.684], [-74.015, 40.691], [-74.015, 40.703]]]}}, {"type": "Feature", "properties": {"id": "brooklyn-heights-carroll-gardens", "name": "Brooklyn Heights / Carroll Gardens", "borough": "Brooklyn", "slug": "brooklyn-heights-carroll-gardens"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.012, 40.69], [-73.989, 40.69], [-73.985, 40.67], [-74.002, 40.665], [-74.013, 40.676], [-74.012, 40.69]]]}}, {"type": "Feature", "properties": {"id": "sunset-park", "name": "Sunset Park", "borough": "Brooklyn", "slug": "sunset-park"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.028, 40.665], [-74.001, 40.665], [-73.995, 40.632], [-74.015, 40.621], [-74.03, 40.64], [-74.028, 40.665]]]}}, {"type": "Feature", "properties": {"id": "inwood", "name": "Inwood", "borough": "Manhattan", "slug": "inwood"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.017, 40.879], [-73.929, 40.879], [-73.926, 40.862], [-74.013, 40.861], [-74.017, 40.879]]]}}, {"type": "Feature", "properties": {"id": "washington-heights", "name": "Washington Heights", "borough": "Manhattan", "slug": "washington-heights"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.013, 40.862], [-73.93, 40.862], [-73.929, 40.842], [-74.008, 40.841], [-74.013, 40.862]]]}}, {"type": "Feature", "properties": {"id": "harlem-west", "name": "Harlem West", "borough": "Manhattan", "slug": "harlem-west"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.006, 40.841], [-73.965, 40.841], [-73.963, 40.807], [-74.003, 40.807], [-74.006, 40.841]]]}}, {"type": "Feature", "properties": {"id": "harlem-east", "name": "Harlem East", "borough": "Manhattan", "slug": "harlem-east"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.965, 40.841], [-73.928, 40.841], [-73.925, 40.8], [-73.963, 40.807], [-73.965, 40.841]]]}}, {"type": "Feature", "properties": {"id": "upper-west-side", "name": "Upper West Side", "borough": "Manhattan", "slug": "upper-west-side"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.005, 40.807], [-73.97, 40.807], [-73.97, 40.772], [-74.002, 40.772], [-74.005, 40.807]]]}}, {"type": "Feature", "properties": {"id": "upper-east-side", "name": "Upper East Side", "borough": "Manhattan", "slug": "upper-east-side"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.97, 40.8], [-73.935, 40.8], [-73.934, 40.764], [-73.969, 40.764], [-73.97, 40.8]]]}}, {"type": "Feature", "properties": {"id": "midtown-west", "name": "Midtown West", "borough": "Manhattan", "slug": "midtown-west"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.008, 40.772], [-73.977, 40.772], [-73.976, 40.744], [-74.006, 40.744], [-74.008, 40.772]]]}}, {"type": "Feature", "properties": {"id": "midtown-east", "name": "Midtown East", "borough": "Manhattan", "slug": "midtown-east"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.977, 40.764], [-73.96, 40.764], [-73.958, 40.744], [-73.976, 40.744], [-73.977, 40.764]]]}}, {"type": "Feature", "properties": {"id": "chelsea-flatiron", "name": "Chelsea / Flatiron", "borough": "Manhattan", "slug": "chelsea-flatiron"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.01, 40.744], [-73.983, 40.744], [-73.982, 40.727], [-74.008, 40.727], [-74.01, 40.744]]]}}, {"type": "Feature", "properties": {"id": "west-village", "name": "West Village", "borough": "Manhattan", "slug": "west-village"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.015, 40.737], [-73.995, 40.737], [-73.994, 40.722], [-74.012, 40.72], [-74.015, 40.737]]]}}, {"type": "Feature", "properties": {"id": "lower-east-side", "name": "Lower East Side", "borough": "Manhattan", "slug": "lower-east-side"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.994, 40.727], [-73.971, 40.727], [-73.969, 40.708], [-73.992, 40.707], [-73.994, 40.727]]]}}, {"type": "Feature", "properties": {"id": "financial-district", "name": "Financial District", "borough": "Manhattan", "slug": "financial-district"}, "geometry": {"type": "Polygon", "coordinates": [[[-74.02, 40.72], [-73.998, 40.72], [-73.994, 40.7], [-74.014, 40.7], [-74.02, 40.72]]]}}]};
+const METRICS = {"greenpoint": {"rentYoY": 6.2, "rent30d": 0.7, "transactions": 18, "avgPsf": 790, "buyers": 14, "volumeM": 118, "unitsSold": 133, "valueYoY": 5.4, "value30d": 0.5, "activeListings": 28, "avgAskM": 3.95, "avgAskPsf": 850, "avgAskUnit": 615000, "avgDom": 59, "intent": {"buying": 9, "selling": 7, "refinancing": 4, "renovating": 6}, "buyingStats": {"sold6mo": 18, "avgSalePrice": 6555556, "avgSalePsf": 790, "avgDom": 53, "unitsSold": 133}, "sellingStats": {"activeListings": 28, "avgAskPrice": 3950000, "avgAskPsf": 850, "avgDom": 59, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 2291000, "avgRate": 6.1, "loanCount": 11, "topLender": "Signature / Regional", "avgLtv": 52}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 287000, "cosmeticShare": 49, "fullGutShare": 26, "avgTimelineMonths": 8.0}}, "williamsburg-north": {"rentYoY": 7.6, "rent30d": 1.0, "transactions": 22, "avgPsf": 915, "buyers": 18, "volumeM": 142, "unitsSold": 151, "valueYoY": 6.2, "value30d": 0.7, "activeListings": 32, "avgAskM": 5.6, "avgAskPsf": 1020, "avgAskUnit": 845000, "avgDom": 64, "intent": {"buying": 10, "selling": 8, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 22, "avgSalePrice": 6454545, "avgSalePsf": 915, "avgDom": 58, "unitsSold": 151}, "sellingStats": {"activeListings": 32, "avgAskPrice": 5600000, "avgAskPsf": 1020, "avgDom": 64, "newListings30d": 9}, "refinancingStats": {"avgLoanAmount": 3248000, "avgRate": 5.78, "loanCount": 14, "topLender": "Signature / Regional", "avgLtv": 62}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 307400, "cosmeticShare": 61, "fullGutShare": 20, "avgTimelineMonths": 7.2}}, "williamsburg-south": {"rentYoY": 8.1, "rent30d": 1.1, "transactions": 29, "avgPsf": 805, "buyers": 22, "volumeM": 171, "unitsSold": 208, "valueYoY": 6.8, "value30d": 0.8, "activeListings": 41, "avgAskM": 4.78, "avgAskPsf": 842, "avgAskUnit": 612000, "avgDom": 61, "intent": {"buying": 13, "selling": 10, "refinancing": 7, "renovating": 9}, "buyingStats": {"sold6mo": 29, "avgSalePrice": 5896552, "avgSalePsf": 805, "avgDom": 55, "unitsSold": 208}, "sellingStats": {"activeListings": 41, "avgAskPrice": 4780000, "avgAskPsf": 842, "avgDom": 61, "newListings30d": 11}, "refinancingStats": {"avgLoanAmount": 2772400, "avgRate": 6.26, "loanCount": 18, "topLender": "Signature / Regional", "avgLtv": 54}, "renovatingStats": {"renovationLeads": 9, "avgProjectCost": 286040, "cosmeticShare": 61, "fullGutShare": 20, "avgTimelineMonths": 4.8}}, "east-williamsburg": {"rentYoY": 7.0, "rent30d": 0.8, "transactions": 21, "avgPsf": 684, "buyers": 17, "volumeM": 126, "unitsSold": 162, "valueYoY": 6.0, "value30d": 0.7, "activeListings": 26, "avgAskM": 3.88, "avgAskPsf": 720, "avgAskUnit": 496000, "avgDom": 67, "intent": {"buying": 8, "selling": 6, "refinancing": 4, "renovating": 5}, "buyingStats": {"sold6mo": 21, "avgSalePrice": 6000000, "avgSalePsf": 684, "avgDom": 61, "unitsSold": 162}, "sellingStats": {"activeListings": 26, "avgAskPrice": 3880000, "avgAskPsf": 720, "avgDom": 67, "newListings30d": 7}, "refinancingStats": {"avgLoanAmount": 2250400, "avgRate": 6.02, "loanCount": 13, "topLender": "NYCB / Local Bank", "avgLtv": 60}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 271400, "cosmeticShare": 70, "fullGutShare": 18, "avgTimelineMonths": 4.8}}, "bushwick-west": {"rentYoY": 8.7, "rent30d": 1.3, "transactions": 30, "avgPsf": 642, "buyers": 25, "volumeM": 176, "unitsSold": 244, "valueYoY": 7.0, "value30d": 0.9, "activeListings": 46, "avgAskM": 3.44, "avgAskPsf": 676, "avgAskUnit": 418000, "avgDom": 73, "intent": {"buying": 15, "selling": 11, "refinancing": 7, "renovating": 10}, "buyingStats": {"sold6mo": 30, "avgSalePrice": 5866667, "avgSalePsf": 642, "avgDom": 67, "unitsSold": 244}, "sellingStats": {"activeListings": 46, "avgAskPrice": 3440000, "avgAskPsf": 676, "avgDom": 73, "newListings30d": 13}, "refinancingStats": {"avgLoanAmount": 1995200, "avgRate": 5.78, "loanCount": 19, "topLender": "NYCB / Local Bank", "avgLtv": 62}, "renovatingStats": {"renovationLeads": 10, "avgProjectCost": 266120, "cosmeticShare": 49, "fullGutShare": 22, "avgTimelineMonths": 4.8}}, "bushwick-east": {"rentYoY": 8.3, "rent30d": 1.2, "transactions": 24, "avgPsf": 586, "buyers": 19, "volumeM": 133, "unitsSold": 212, "valueYoY": 6.5, "value30d": 0.8, "activeListings": 33, "avgAskM": 3.08, "avgAskPsf": 612, "avgAskUnit": 385000, "avgDom": 78, "intent": {"buying": 11, "selling": 8, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 24, "avgSalePrice": 5541667, "avgSalePsf": 586, "avgDom": 72, "unitsSold": 212}, "sellingStats": {"activeListings": 33, "avgAskPrice": 3080000, "avgAskPsf": 612, "avgDom": 78, "newListings30d": 9}, "refinancingStats": {"avgLoanAmount": 1786400, "avgRate": 6.18, "loanCount": 15, "topLender": "NYCB / Local Bank", "avgLtv": 64}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 258440, "cosmeticShare": 64, "fullGutShare": 24, "avgTimelineMonths": 4.0}}, "bed-stuy-west": {"rentYoY": 7.3, "rent30d": 0.8, "transactions": 28, "avgPsf": 615, "buyers": 21, "volumeM": 148, "unitsSold": 219, "valueYoY": 6.2, "value30d": 0.7, "activeListings": 39, "avgAskM": 3.72, "avgAskPsf": 658, "avgAskUnit": 446000, "avgDom": 68, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 28, "avgSalePrice": 5285714, "avgSalePsf": 615, "avgDom": 62, "unitsSold": 219}, "sellingStats": {"activeListings": 39, "avgAskPrice": 3720000, "avgAskPsf": 658, "avgDom": 68, "newListings30d": 11}, "refinancingStats": {"avgLoanAmount": 2157600, "avgRate": 6.1, "loanCount": 17, "topLender": "NYCB / Local Bank", "avgLtv": 52}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 263960, "cosmeticShare": 55, "fullGutShare": 18, "avgTimelineMonths": 5.6}}, "bed-stuy-east": {"rentYoY": 7.5, "rent30d": 0.9, "transactions": 27, "avgPsf": 572, "buyers": 19, "volumeM": 136, "unitsSold": 204, "valueYoY": 6.1, "value30d": 0.7, "activeListings": 36, "avgAskM": 3.36, "avgAskPsf": 612, "avgAskUnit": 412000, "avgDom": 71, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 27, "avgSalePrice": 5037037, "avgSalePsf": 572, "avgDom": 65, "unitsSold": 204}, "sellingStats": {"activeListings": 36, "avgAskPrice": 3360000, "avgAskPsf": 612, "avgDom": 71, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 1948800, "avgRate": 6.34, "loanCount": 17, "topLender": "NYCB / Local Bank", "avgLtv": 64}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 258440, "cosmeticShare": 46, "fullGutShare": 30, "avgTimelineMonths": 8.0}}, "prospect-heights": {"rentYoY": 5.2, "rent30d": 0.4, "transactions": 16, "avgPsf": 898, "buyers": 12, "volumeM": 124, "unitsSold": 108, "valueYoY": 4.6, "value30d": 0.3, "activeListings": 21, "avgAskM": 5.22, "avgAskPsf": 960, "avgAskUnit": 784000, "avgDom": 69, "intent": {"buying": 7, "selling": 5, "refinancing": 3, "renovating": 4}, "buyingStats": {"sold6mo": 16, "avgSalePrice": 7750000, "avgSalePsf": 898, "avgDom": 63, "unitsSold": 108}, "sellingStats": {"activeListings": 21, "avgAskPrice": 5220000, "avgAskPsf": 960, "avgDom": 69, "newListings30d": 6}, "refinancingStats": {"avgLoanAmount": 3027600, "avgRate": 6.18, "loanCount": 10, "topLender": "NYCB / Local Bank", "avgLtv": 64}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 300200, "cosmeticShare": 55, "fullGutShare": 22, "avgTimelineMonths": 6.4}}, "crown-heights-north": {"rentYoY": 8.0, "rent30d": 1.0, "transactions": 26, "avgPsf": 628, "buyers": 21, "volumeM": 151, "unitsSold": 229, "valueYoY": 6.6, "value30d": 0.8, "activeListings": 37, "avgAskM": 3.61, "avgAskPsf": 664, "avgAskUnit": 434000, "avgDom": 66, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 26, "avgSalePrice": 5807692, "avgSalePsf": 628, "avgDom": 60, "unitsSold": 229}, "sellingStats": {"activeListings": 37, "avgAskPrice": 3610000, "avgAskPsf": 664, "avgDom": 66, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 2093800, "avgRate": 5.94, "loanCount": 16, "topLender": "NYCB / Local Bank", "avgLtv": 52}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 264680, "cosmeticShare": 49, "fullGutShare": 28, "avgTimelineMonths": 4.0}}, "crown-heights-south": {"rentYoY": 7.1, "rent30d": 0.8, "transactions": 20, "avgPsf": 562, "buyers": 16, "volumeM": 108, "unitsSold": 177, "valueYoY": 5.8, "value30d": 0.6, "activeListings": 27, "avgAskM": 3.14, "avgAskPsf": 596, "avgAskUnit": 392000, "avgDom": 72, "intent": {"buying": 9, "selling": 6, "refinancing": 4, "renovating": 6}, "buyingStats": {"sold6mo": 20, "avgSalePrice": 5400000, "avgSalePsf": 562, "avgDom": 66, "unitsSold": 177}, "sellingStats": {"activeListings": 27, "avgAskPrice": 3140000, "avgAskPsf": 596, "avgDom": 72, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 1821200, "avgRate": 5.7, "loanCount": 12, "topLender": "NYCB / Local Bank", "avgLtv": 57}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 256520, "cosmeticShare": 46, "fullGutShare": 30, "avgTimelineMonths": 4.0}}, "park-slope": {"rentYoY": 4.8, "rent30d": 0.3, "transactions": 17, "avgPsf": 932, "buyers": 13, "volumeM": 139, "unitsSold": 101, "valueYoY": 4.1, "value30d": 0.2, "activeListings": 29, "avgAskM": 6.35, "avgAskPsf": 1048, "avgAskUnit": 898000, "avgDom": 76, "intent": {"buying": 9, "selling": 7, "refinancing": 5, "renovating": 6}, "buyingStats": {"sold6mo": 17, "avgSalePrice": 8176471, "avgSalePsf": 932, "avgDom": 70, "unitsSold": 101}, "sellingStats": {"activeListings": 29, "avgAskPrice": 6350000, "avgAskPsf": 1048, "avgDom": 76, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 3683000, "avgRate": 6.02, "loanCount": 11, "topLender": "Signature / Regional", "avgLtv": 67}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 310760, "cosmeticShare": 52, "fullGutShare": 24, "avgTimelineMonths": 7.2}}, "prospect-lefferts-gardens": {"rentYoY": 7.4, "rent30d": 0.8, "transactions": 18, "avgPsf": 548, "buyers": 14, "volumeM": 96, "unitsSold": 141, "valueYoY": 5.7, "value30d": 0.5, "activeListings": 24, "avgAskM": 2.82, "avgAskPsf": 584, "avgAskUnit": 382000, "avgDom": 62, "intent": {"buying": 8, "selling": 6, "refinancing": 4, "renovating": 5}, "buyingStats": {"sold6mo": 18, "avgSalePrice": 5333333, "avgSalePsf": 548, "avgDom": 56, "unitsSold": 141}, "sellingStats": {"activeListings": 24, "avgAskPrice": 2820000, "avgAskPsf": 584, "avgDom": 62, "newListings30d": 7}, "refinancingStats": {"avgLoanAmount": 1635600, "avgRate": 6.34, "loanCount": 11, "topLender": "NYCB / Local Bank", "avgLtv": 52}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 255080, "cosmeticShare": 64, "fullGutShare": 26, "avgTimelineMonths": 5.6}}, "flatbush": {"rentYoY": 6.4, "rent30d": 0.6, "transactions": 23, "avgPsf": 482, "buyers": 18, "volumeM": 117, "unitsSold": 190, "valueYoY": 5.2, "value30d": 0.4, "activeListings": 34, "avgAskM": 2.95, "avgAskPsf": 514, "avgAskUnit": 337000, "avgDom": 74, "intent": {"buying": 11, "selling": 8, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 23, "avgSalePrice": 5086957, "avgSalePsf": 482, "avgDom": 68, "unitsSold": 190}, "sellingStats": {"activeListings": 34, "avgAskPrice": 2950000, "avgAskPsf": 514, "avgDom": 74, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 1711000, "avgRate": 5.86, "loanCount": 14, "topLender": "NYCB / Local Bank", "avgLtv": 62}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 246680, "cosmeticShare": 67, "fullGutShare": 22, "avgTimelineMonths": 5.6}}, "downtown-brooklyn": {"rentYoY": 5.0, "rent30d": 0.4, "transactions": 14, "avgPsf": 998, "buyers": 11, "volumeM": 164, "unitsSold": 84, "valueYoY": 4.4, "value30d": 0.3, "activeListings": 38, "avgAskM": 7.28, "avgAskPsf": 1110, "avgAskUnit": 1022000, "avgDom": 82, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 14, "avgSalePrice": 11714286, "avgSalePsf": 998, "avgDom": 76, "unitsSold": 84}, "sellingStats": {"activeListings": 38, "avgAskPrice": 7280000, "avgAskPsf": 1110, "avgDom": 82, "newListings30d": 11}, "refinancingStats": {"avgLoanAmount": 4222400, "avgRate": 5.78, "loanCount": 9, "topLender": "Signature / Regional", "avgLtv": 62}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 318200, "cosmeticShare": 52, "fullGutShare": 18, "avgTimelineMonths": 7.2}}, "brooklyn-heights-carroll-gardens": {"rentYoY": 4.5, "rent30d": 0.3, "transactions": 15, "avgPsf": 1044, "buyers": 12, "volumeM": 158, "unitsSold": 86, "valueYoY": 4.0, "value30d": 0.2, "activeListings": 31, "avgAskM": 7.62, "avgAskPsf": 1184, "avgAskUnit": 1088000, "avgDom": 84, "intent": {"buying": 10, "selling": 7, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 15, "avgSalePrice": 10533333, "avgSalePsf": 1044, "avgDom": 78, "unitsSold": 86}, "sellingStats": {"activeListings": 31, "avgAskPrice": 7620000, "avgAskPsf": 1184, "avgDom": 84, "newListings30d": 9}, "refinancingStats": {"avgLoanAmount": 4419600, "avgRate": 5.94, "loanCount": 9, "topLender": "Signature / Regional", "avgLtv": 64}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 327080, "cosmeticShare": 58, "fullGutShare": 20, "avgTimelineMonths": 4.0}}, "sunset-park": {"rentYoY": 6.7, "rent30d": 0.7, "transactions": 22, "avgPsf": 516, "buyers": 17, "volumeM": 122, "unitsSold": 181, "valueYoY": 5.6, "value30d": 0.5, "activeListings": 30, "avgAskM": 3.18, "avgAskPsf": 552, "avgAskUnit": 359000, "avgDom": 77, "intent": {"buying": 10, "selling": 7, "refinancing": 5, "renovating": 6}, "buyingStats": {"sold6mo": 22, "avgSalePrice": 5545455, "avgSalePsf": 516, "avgDom": 71, "unitsSold": 181}, "sellingStats": {"activeListings": 30, "avgAskPrice": 3180000, "avgAskPsf": 552, "avgDom": 77, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 1844400, "avgRate": 6.1, "loanCount": 14, "topLender": "NYCB / Local Bank", "avgLtv": 60}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 251240, "cosmeticShare": 55, "fullGutShare": 20, "avgTimelineMonths": 8.0}}, "inwood": {"rentYoY": 5.4, "rent30d": 0.4, "transactions": 17, "avgPsf": 432, "buyers": 13, "volumeM": 86, "unitsSold": 164, "valueYoY": 4.9, "value30d": 0.3, "activeListings": 22, "avgAskM": 2.88, "avgAskPsf": 486, "avgAskUnit": 312000, "avgDom": 69, "intent": {"buying": 7, "selling": 5, "refinancing": 4, "renovating": 5}, "buyingStats": {"sold6mo": 17, "avgSalePrice": 5058824, "avgSalePsf": 432, "avgDom": 63, "unitsSold": 164}, "sellingStats": {"activeListings": 22, "avgAskPrice": 2880000, "avgAskPsf": 486, "avgDom": 69, "newListings30d": 6}, "refinancingStats": {"avgLoanAmount": 1670400, "avgRate": 6.18, "loanCount": 11, "topLender": "NYCB / Local Bank", "avgLtv": 67}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 243320, "cosmeticShare": 58, "fullGutShare": 24, "avgTimelineMonths": 6.4}}, "washington-heights": {"rentYoY": 5.8, "rent30d": 0.5, "transactions": 19, "avgPsf": 468, "buyers": 15, "volumeM": 93, "unitsSold": 178, "valueYoY": 5.1, "value30d": 0.4, "activeListings": 25, "avgAskM": 3.04, "avgAskPsf": 518, "avgAskUnit": 339000, "avgDom": 70, "intent": {"buying": 8, "selling": 6, "refinancing": 4, "renovating": 5}, "buyingStats": {"sold6mo": 19, "avgSalePrice": 4894737, "avgSalePsf": 468, "avgDom": 64, "unitsSold": 178}, "sellingStats": {"activeListings": 25, "avgAskPrice": 3040000, "avgAskPsf": 518, "avgDom": 70, "newListings30d": 7}, "refinancingStats": {"avgLoanAmount": 1763200, "avgRate": 6.26, "loanCount": 12, "topLender": "NYCB / Local Bank", "avgLtv": 54}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 247160, "cosmeticShare": 67, "fullGutShare": 28, "avgTimelineMonths": 7.2}}, "harlem-west": {"rentYoY": 6.1, "rent30d": 0.5, "transactions": 22, "avgPsf": 708, "buyers": 17, "volumeM": 146, "unitsSold": 198, "valueYoY": 5.5, "value30d": 0.5, "activeListings": 34, "avgAskM": 4.54, "avgAskPsf": 762, "avgAskUnit": 528000, "avgDom": 64, "intent": {"buying": 11, "selling": 8, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 22, "avgSalePrice": 6636364, "avgSalePsf": 708, "avgDom": 58, "unitsSold": 198}, "sellingStats": {"activeListings": 34, "avgAskPrice": 4540000, "avgAskPsf": 762, "avgDom": 64, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 2633200, "avgRate": 5.78, "loanCount": 14, "topLender": "NYCB / Local Bank", "avgLtv": 60}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 276440, "cosmeticShare": 67, "fullGutShare": 20, "avgTimelineMonths": 7.2}}, "harlem-east": {"rentYoY": 6.3, "rent30d": 0.6, "transactions": 21, "avgPsf": 652, "buyers": 16, "volumeM": 138, "unitsSold": 205, "valueYoY": 5.6, "value30d": 0.5, "activeListings": 31, "avgAskM": 4.18, "avgAskPsf": 702, "avgAskUnit": 496000, "avgDom": 66, "intent": {"buying": 10, "selling": 7, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 21, "avgSalePrice": 6571429, "avgSalePsf": 652, "avgDom": 60, "unitsSold": 205}, "sellingStats": {"activeListings": 31, "avgAskPrice": 4180000, "avgAskPsf": 702, "avgDom": 66, "newListings30d": 9}, "refinancingStats": {"avgLoanAmount": 2424400, "avgRate": 5.94, "loanCount": 13, "topLender": "NYCB / Local Bank", "avgLtv": 57}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 269240, "cosmeticShare": 58, "fullGutShare": 18, "avgTimelineMonths": 4.0}}, "upper-west-side": {"rentYoY": 3.4, "rent30d": 0.1, "transactions": 12, "avgPsf": 1262, "buyers": 9, "volumeM": 176, "unitsSold": 72, "valueYoY": 3.0, "value30d": 0.1, "activeListings": 35, "avgAskM": 9.45, "avgAskPsf": 1352, "avgAskUnit": 1296000, "avgDom": 93, "intent": {"buying": 11, "selling": 8, "refinancing": 6, "renovating": 7}, "buyingStats": {"sold6mo": 12, "avgSalePrice": 14666667, "avgSalePsf": 1262, "avgDom": 87, "unitsSold": 72}, "sellingStats": {"activeListings": 35, "avgAskPrice": 9450000, "avgAskPsf": 1352, "avgDom": 93, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 5481000, "avgRate": 5.94, "loanCount": 7, "topLender": "JPMorgan", "avgLtv": 57}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 347240, "cosmeticShare": 70, "fullGutShare": 28, "avgTimelineMonths": 6.4}}, "upper-east-side": {"rentYoY": 2.8, "rent30d": 0.1, "transactions": 11, "avgPsf": 1226, "buyers": 8, "volumeM": 171, "unitsSold": 68, "valueYoY": 2.9, "value30d": 0.1, "activeListings": 37, "avgAskM": 9.12, "avgAskPsf": 1318, "avgAskUnit": 1244000, "avgDom": 94, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 11, "avgSalePrice": 15545455, "avgSalePsf": 1226, "avgDom": 88, "unitsSold": 68}, "sellingStats": {"activeListings": 37, "avgAskPrice": 9120000, "avgAskPsf": 1318, "avgDom": 94, "newListings30d": 10}, "refinancingStats": {"avgLoanAmount": 5289600, "avgRate": 6.02, "loanCount": 7, "topLender": "JPMorgan", "avgLtv": 54}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 343160, "cosmeticShare": 49, "fullGutShare": 26, "avgTimelineMonths": 7.2}}, "midtown-west": {"rentYoY": 3.0, "rent30d": 0.1, "transactions": 10, "avgPsf": 1388, "buyers": 8, "volumeM": 182, "unitsSold": 61, "valueYoY": 3.1, "value30d": 0.1, "activeListings": 42, "avgAskM": 10.84, "avgAskPsf": 1460, "avgAskUnit": 1382000, "avgDom": 95, "intent": {"buying": 13, "selling": 10, "refinancing": 7, "renovating": 9}, "buyingStats": {"sold6mo": 10, "avgSalePrice": 18200000, "avgSalePsf": 1388, "avgDom": 89, "unitsSold": 61}, "sellingStats": {"activeListings": 42, "avgAskPrice": 10840000, "avgAskPsf": 1460, "avgDom": 95, "newListings30d": 12}, "refinancingStats": {"avgLoanAmount": 6287200, "avgRate": 6.1, "loanCount": 6, "topLender": "JPMorgan", "avgLtv": 54}, "renovatingStats": {"renovationLeads": 9, "avgProjectCost": 360200, "cosmeticShare": 64, "fullGutShare": 24, "avgTimelineMonths": 8.0}}, "midtown-east": {"rentYoY": 2.9, "rent30d": 0.1, "transactions": 10, "avgPsf": 1410, "buyers": 8, "volumeM": 186, "unitsSold": 60, "valueYoY": 3.0, "value30d": 0.1, "activeListings": 39, "avgAskM": 10.96, "avgAskPsf": 1492, "avgAskUnit": 1404000, "avgDom": 96, "intent": {"buying": 12, "selling": 9, "refinancing": 6, "renovating": 8}, "buyingStats": {"sold6mo": 10, "avgSalePrice": 18600000, "avgSalePsf": 1410, "avgDom": 90, "unitsSold": 60}, "sellingStats": {"activeListings": 39, "avgAskPrice": 10960000, "avgAskPsf": 1492, "avgDom": 96, "newListings30d": 11}, "refinancingStats": {"avgLoanAmount": 6356800, "avgRate": 6.18, "loanCount": 6, "topLender": "JPMorgan", "avgLtv": 54}, "renovatingStats": {"renovationLeads": 8, "avgProjectCost": 364040, "cosmeticShare": 55, "fullGutShare": 24, "avgTimelineMonths": 4.0}}, "chelsea-flatiron": {"rentYoY": 4.1, "rent30d": 0.2, "transactions": 14, "avgPsf": 1188, "buyers": 11, "volumeM": 168, "unitsSold": 83, "valueYoY": 3.8, "value30d": 0.2, "activeListings": 33, "avgAskM": 8.24, "avgAskPsf": 1284, "avgAskUnit": 1132000, "avgDom": 88, "intent": {"buying": 11, "selling": 8, "refinancing": 5, "renovating": 7}, "buyingStats": {"sold6mo": 14, "avgSalePrice": 12000000, "avgSalePsf": 1188, "avgDom": 82, "unitsSold": 83}, "sellingStats": {"activeListings": 33, "avgAskPrice": 8240000, "avgAskPsf": 1284, "avgDom": 88, "newListings30d": 9}, "refinancingStats": {"avgLoanAmount": 4779200, "avgRate": 6.26, "loanCount": 9, "topLender": "JPMorgan", "avgLtv": 62}, "renovatingStats": {"renovationLeads": 7, "avgProjectCost": 339080, "cosmeticShare": 64, "fullGutShare": 18, "avgTimelineMonths": 7.2}}, "west-village": {"rentYoY": 4.4, "rent30d": 0.3, "transactions": 13, "avgPsf": 1296, "buyers": 10, "volumeM": 175, "unitsSold": 76, "valueYoY": 4.0, "value30d": 0.2, "activeListings": 28, "avgAskM": 9.66, "avgAskPsf": 1390, "avgAskUnit": 1328000, "avgDom": 90, "intent": {"buying": 9, "selling": 7, "refinancing": 4, "renovating": 6}, "buyingStats": {"sold6mo": 13, "avgSalePrice": 13461538, "avgSalePsf": 1296, "avgDom": 84, "unitsSold": 76}, "sellingStats": {"activeListings": 28, "avgAskPrice": 9660000, "avgAskPsf": 1390, "avgDom": 90, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 5602800, "avgRate": 5.7, "loanCount": 8, "topLender": "NYCB / Local Bank", "avgLtv": 60}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 351800, "cosmeticShare": 49, "fullGutShare": 30, "avgTimelineMonths": 4.0}}, "lower-east-side": {"rentYoY": 4.7, "rent30d": 0.3, "transactions": 16, "avgPsf": 1034, "buyers": 12, "volumeM": 151, "unitsSold": 94, "valueYoY": 4.1, "value30d": 0.2, "activeListings": 24, "avgAskM": 6.28, "avgAskPsf": 1106, "avgAskUnit": 876000, "avgDom": 74, "intent": {"buying": 8, "selling": 6, "refinancing": 4, "renovating": 5}, "buyingStats": {"sold6mo": 16, "avgSalePrice": 9437500, "avgSalePsf": 1034, "avgDom": 68, "unitsSold": 94}, "sellingStats": {"activeListings": 24, "avgAskPrice": 6280000, "avgAskPsf": 1106, "avgDom": 74, "newListings30d": 7}, "refinancingStats": {"avgLoanAmount": 3642400, "avgRate": 5.86, "loanCount": 10, "topLender": "NYCB / Local Bank", "avgLtv": 64}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 317720, "cosmeticShare": 64, "fullGutShare": 22, "avgTimelineMonths": 5.6}}, "financial-district": {"rentYoY": 3.2, "rent30d": 0.2, "transactions": 12, "avgPsf": 1328, "buyers": 9, "volumeM": 183, "unitsSold": 63, "valueYoY": 3.3, "value30d": 0.2, "activeListings": 29, "avgAskM": 10.22, "avgAskPsf": 1440, "avgAskUnit": 1366000, "avgDom": 91, "intent": {"buying": 9, "selling": 7, "refinancing": 5, "renovating": 6}, "buyingStats": {"sold6mo": 12, "avgSalePrice": 15250000, "avgSalePsf": 1328, "avgDom": 85, "unitsSold": 63}, "sellingStats": {"activeListings": 29, "avgAskPrice": 10220000, "avgAskPsf": 1440, "avgDom": 91, "newListings30d": 8}, "refinancingStats": {"avgLoanAmount": 5927600, "avgRate": 5.78, "loanCount": 7, "topLender": "JPMorgan", "avgLtv": 57}, "renovatingStats": {"renovationLeads": 6, "avgProjectCost": 357800, "cosmeticShare": 52, "fullGutShare": 28, "avgTimelineMonths": 4.8}}};
+let signal='rent', intentFocus='buying', selectedSubmarket=null, hoveredSubmarket=null, map, geoLayer;
 const signalMeta={
-  rent:{title:'Rent Trend',subtitle:'Year-over-year and trailing 30-day rent movement by submarket.',legend:'Rent Trend Strength',
-    value:n=>`${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%`,
-    subline:n=>`${n.borough} · ${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}% YoY · ${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}% 30d`,
-    score:n=>(n.rentYoY*.82)+(n.rent30*9),
-    sideMetrics:n=>[['Rent',`${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%`],['Buyer',String(n.transactions)],['Value',`${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%`],['Intent',String(n.intents[intentFocus])]]
-  },
-  activity:{title:'Buyer Activity',subtitle:'Transactions, pricing, buyer depth, volume and units sold by submarket.',legend:'Buyer Activity Strength',
-    value:n=>`${n.transactions}`,subline:n=>`${n.borough} · ${n.transactions} sales · $${n.avgPsf}/SF`,
-    score:n=>n.transactions*1.55+n.buyers*1.05+(n.unitsSold/24)+(n.volume/12),
-    sideMetrics:n=>[['Sales',String(n.transactions)],['$/SF',`$${n.avgPsf}`],['Value',`${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%`],['Intent',String(n.intents[intentFocus])]]
-  },
-  value:{title:'Value Trend',subtitle:'Year-over-year and trailing 30-day value movement by submarket.',legend:'Value Trend Strength',
-    value:n=>`${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%`,
-    subline:n=>`${n.borough} · ${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}% YoY · ${n.value30>=0?'+':''}${n.value30.toFixed(1)}% 30d`,
-    score:n=>(n.valueYoY*.9)+(n.value30*10),
-    sideMetrics:n=>[['Value',`${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%`],['Buyer',String(n.transactions)],['Rent',`${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%`],['Intent',String(n.intents[intentFocus])]]
-  },
-  intent:{title:'Owner Intent',subtitle:'Count of owners signaling buying, selling, refinancing or renovating by submarket.',legend:'Owner Intent Count',
-    value:n=>`${n.intents[intentFocus]}`,subline:n=>`${n.borough} · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} intent count`,
-    score:n=>n.intents[intentFocus],
-    sideMetrics:n=>[['Buy',String(n.intents.buying)],['Sell',String(n.intents.selling)],['Refi',String(n.intents.refinancing)],['Reno',String(n.intents.renovating)]]
-  }
+  rent:{title:'Rent Trend',subtitle:'Year-over-year and trailing 30-day rent movement by submarket.',legend:'Rent Trend Strength',score:m=>(m.rentYoY*.82)+(m.rent30d*9)+(m.activeListings/40),subline:(f,m)=>`${f.properties.borough} · ${m.rentYoY>=0?'+':''}${m.rentYoY.toFixed(1)}% YoY · ${m.rent30d>=0?'+':''}${m.rent30d.toFixed(1)}% 30d`,side:m=>[['Rent',`${m.rentYoY>=0?'+':''}${m.rentYoY.toFixed(1)}%`],['30d',`${m.rent30d>=0?'+':''}${m.rent30d.toFixed(1)}%`],['List',String(m.activeListings)],['$/SF',`$${m.avgAskPsf}`]]},
+  activity:{title:'Buyer Activity',subtitle:'Transactions, pricing, buyer depth, volume and units sold by submarket.',legend:'Buyer Activity Strength',score:m=>m.transactions*1.55+m.buyers*1.05+(m.unitsSold/24)+(m.volumeM/12),subline:(f,m)=>`${f.properties.borough} · ${m.transactions} sales · $${m.avgPsf}/SF`,side:m=>[['Sales',String(m.transactions)],['$/SF',`$${m.avgPsf}`],['Buyers',String(m.buyers)],['Units',String(m.unitsSold)]]},
+  value:{title:'Value Trend',subtitle:'Year-over-year and trailing 30-day value movement by submarket.',legend:'Value Trend Strength',score:m=>(m.valueYoY*.9)+(m.value30d*10)+(m.avgAskPsf/900),subline:(f,m)=>`${f.properties.borough} · ${m.valueYoY>=0?'+':''}${m.valueYoY.toFixed(1)}% YoY · ${m.value30d>=0?'+':''}${m.value30d.toFixed(1)}% 30d`,side:m=>[['Value',`${m.valueYoY>=0?'+':''}${m.valueYoY.toFixed(1)}%`],['30d',`${m.value30d>=0?'+':''}${m.value30d.toFixed(1)}%`],['Ask',`$${m.avgAskPsf}`],['List',String(m.activeListings)]]},
+  intent:{title:'Owner Intent',subtitle:'Intent-specific demand and activity by submarket for buying, selling, refinancing, and renovating.',legend:'Owner Intent Count',score:m=>m.intent[intentFocus],subline:(f,m)=>`${f.properties.borough} · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} intent count`,side:m=> intentFocus === 'buying' ? [['Sold 6mo',String(m.buyingStats.sold6mo)],['Avg Sale',`$${Math.round(m.buyingStats.avgSalePrice/1000000*100)/100}M`],['$/SF',`$${m.buyingStats.avgSalePsf}`],['DOM',String(m.buyingStats.avgDom)]] : intentFocus === 'selling' ? [['On Market',String(m.sellingStats.activeListings)],['Avg Ask',`$${Math.round(m.sellingStats.avgAskPrice/1000000*100)/100}M`],['$/SF',`$${m.sellingStats.avgAskPsf}`],['DOM',String(m.sellingStats.avgDom)]] : intentFocus === 'refinancing' ? [['Avg Loan',`$${Math.round(m.refinancingStats.avgLoanAmount/1000)}k`],['Rate',`${m.refinancingStats.avgRate.toFixed(2)}%`],['Loans',String(m.refinancingStats.loanCount)],['Lender',m.refinancingStats.topLender]] : [['Leads',String(m.renovatingStats.renovationLeads)],['Avg Cost',`$${Math.round(m.renovatingStats.avgProjectCost/1000)}k`],['Cosmetic',`${m.renovatingStats.cosmeticShare}%`],['Timeline',`${m.renovatingStats.avgTimelineMonths} mo`]]},
+  listings:{title:'Listings',subtitle:'Active listings, average ask, ask $/SF, ask $/unit, and days on market by submarket.',legend:'Listings Market Pulse',score:m=>m.activeListings*1.35+(m.avgAskPsf/70)-(m.avgDom/22)+(m.avgAskM*1.8),subline:(f,m)=>`${f.properties.borough} · ${m.activeListings} active · $${m.avgAskPsf}/SF ask`,side:m=>[['Active',String(m.activeListings)],['Ask',`$${m.avgAskM.toFixed(2)}M`],['$/SF',`$${m.avgAskPsf}`],['DOM',String(m.avgDom)]]}
 };
-function colorScale(t){t=Math.max(0,Math.min(1,t));const stops=[[0,[39,68,55]],[.3,[89,139,100]],[.58,[201,168,76]],[.8,[215,125,68]],[1,[180,80,68]]];for(let i=1;i<stops.length;i++){if(t<=stops[i][0]){const[t0,a]=stops[i-1],[t1,b]=stops[i],p=(t-t0)/(t1-t0);return`rgb(${Math.round(a[0]+(b[0]-a[0])*p)},${Math.round(a[1]+(b[1]-a[1])*p)},${Math.round(a[2]+(b[2]-a[2])*p)})`;}}return'rgb(180,80,68)'}
-function rankedData(query=''){const q=query.trim().toLowerCase();return [...SUBMARKETS].filter(n=>!q||n.name.toLowerCase().includes(q)||n.borough.toLowerCase().includes(q)).sort((a,b)=>signalMeta[signal].score(b)-signalMeta[signal].score(a))}
-function normalizeScores(items){const scores=items.map(n=>signalMeta[signal].score(n)),min=Math.min(...scores),max=Math.max(...scores);return new Map(items.map(n=>[n.id,max===min?.65:(signalMeta[signal].score(n)-min)/(max-min)]))}
-function selected(){return SUBMARKETS.find(n=>n.id===selectedId)||SUBMARKETS[0]}
-function renderLegend(){document.getElementById('legendTitle').textContent=signalMeta[signal].legend;document.getElementById('legendScale').innerHTML=Array.from({length:24},(_,i)=>`<span style="background:${colorScale(i/23)}"></span>`).join('')}
-function renderStats(){
-  const items=rankedData('');
-  let cards=[];
-  if(signal==='rent'){
-    const increasing=items.filter(n=>n.rentYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.rentYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.rent30,0)/items.length,declining=items.filter(n=>n.rentYoY<0).length;
-    cards=[[String(increasing),'Increasing'],[`${avgYoY>=0?'+':''}${avgYoY.toFixed(1)}%`,'Avg YoY'],[`${avg30>=0?'+':''}${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']];
-  }else if(signal==='activity'){
-    const tx=items.reduce((s,n)=>s+n.transactions,0),avg=Math.round(items.reduce((s,n)=>s+n.avgPsf,0)/items.length),buyers=items.reduce((s,n)=>s+n.buyers,0),units=items.reduce((s,n)=>s+n.unitsSold,0);
-    cards=[[String(tx),'Transactions'],[`$${avg}`,'Avg Price / SF'],[String(buyers),'Different Buyers'],[String(units),'Units Sold']];
-  }else if(signal==='value'){
-    const increasing=items.filter(n=>n.valueYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.valueYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.value30,0)/items.length,declining=items.filter(n=>n.valueYoY<0).length;
-    cards=[[String(increasing),'Increasing'],[`+${avgYoY.toFixed(1)}%`,'Avg YoY'],[`+${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']];
-  }else{
-    const total=items.reduce((s,n)=>s+n.intents[intentFocus],0);
-    const avg=total/items.length;
-    const top=items[0];
-    const concentration = top ? ((top.intents[intentFocus]/total)*100) : 0;
-    cards=[[String(total),`${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Signals`],[top.name,'Top Submarket'],[avg.toFixed(1),'Avg / Market'],[`${concentration.toFixed(0)}%`,'Top Share']];
+function getMetric(id){return METRICS[id]}
+function currentIntentHoverRows(m){
+  if(intentFocus === 'buying'){
+    return [
+      ['Sold (6 mo)', String(m.buyingStats.sold6mo)],
+      ['Avg Sale Price', '$' + Math.round(m.buyingStats.avgSalePrice).toLocaleString()],
+      ['Avg Sale / SF', '$' + m.buyingStats.avgSalePsf],
+      ['Avg DOM', String(m.buyingStats.avgDom)],
+      ['Units Sold', String(m.buyingStats.unitsSold)]
+    ];
   }
-  document.getElementById('statStrip').innerHTML=cards.map(([v,l])=>`<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`).join('');
+  if(intentFocus === 'selling'){
+    return [
+      ['On Market', String(m.sellingStats.activeListings)],
+      ['Avg Ask Price', '$' + Math.round(m.sellingStats.avgAskPrice).toLocaleString()],
+      ['Avg Ask / SF', '$' + m.sellingStats.avgAskPsf],
+      ['Avg DOM', String(m.sellingStats.avgDom)],
+      ['New 30d', String(m.sellingStats.newListings30d)]
+    ];
+  }
+  if(intentFocus === 'refinancing'){
+    return [
+      ['Avg Loan', '$' + Math.round(m.refinancingStats.avgLoanAmount).toLocaleString()],
+      ['Avg Rate', m.refinancingStats.avgRate.toFixed(2) + '%'],
+      ['Loan Count', String(m.refinancingStats.loanCount)],
+      ['Top Lender', m.refinancingStats.topLender],
+      ['Avg LTV', String(m.refinancingStats.avgLtv) + '%']
+    ];
+  }
+  return [
+    ['Renovation Leads', String(m.renovatingStats.renovationLeads)],
+    ['Avg Cost', '$' + Math.round(m.renovatingStats.avgProjectCost).toLocaleString()],
+    ['Cosmetic Share', String(m.renovatingStats.cosmeticShare) + '%'],
+    ['Full Gut Share', String(m.renovatingStats.fullGutShare) + '%'],
+    ['Timeline', String(m.renovatingStats.avgTimelineMonths) + ' mo']
+  ];
 }
-function renderSelectionCard(){
-  const n=selected();
-  const intentChips=['buying','selling','refinancing','renovating'].map(k=>`<div class="intent-chip ${intentFocus===k?'active':''}">${k.charAt(0).toUpperCase()+k.slice(1)} ${n.intents[k]}</div>`).join('');
-  const intentHighlight = `<div class="intent-highlight"><div class="intent-highlight-k">${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Intent Count</div><div class="intent-highlight-v">${n.intents[intentFocus]}</div></div>`;
-  document.getElementById('selectionCard').innerHTML=
-    `<div class="eyebrow">Selected Submarket</div>
-     <h3 class="selection-title">${n.name}</h3>
-     <div class="selection-sub">${n.borough} · signal view: ${signalMeta[signal].title}${signal==='intent'?` · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)}`:''}</div>
-     ${intentHighlight}
-     <div class="intent-chip-row">${intentChips}</div>
-     <div class="metric-grid">
-      <div class="metric-box"><div class="metric-k">Rent YoY</div><div class="metric-v">${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%</div></div>
-      <div class="metric-box"><div class="metric-k">30 Day Rent</div><div class="metric-v">${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}%</div></div>
-      <div class="metric-box"><div class="metric-k">Transactions</div><div class="metric-v">${n.transactions}</div></div>
-      <div class="metric-box"><div class="metric-k">Avg Price / SF</div><div class="metric-v">$${n.avgPsf}</div></div>
-     </div>
-     <div class="detail-list">
-      <div class="k">Total Sales Volume</div><div class="v">$${n.volume}M</div>
-      <div class="k">Different Buyers</div><div class="v">${n.buyers}</div>
-      <div class="k">Units Sold</div><div class="v">${n.unitsSold}</div>
-      <div class="k">Value Trend YoY</div><div class="v">${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%</div>
-      <div class="k">Value Trend 30 Day</div><div class="v">${n.value30>=0?'+':''}${n.value30.toFixed(1)}%</div>
-      <div class="k">Buying / Selling</div><div class="v">${n.intents.buying} / ${n.intents.selling}</div>
-      <div class="k">Refi / Renovating</div><div class="v">${n.intents.refinancing} / ${n.intents.renovating}</div>
-     </div>`;
+
+function featureById(id){return GEOJSON.features.find(f=>f.properties.id===id)||GEOJSON.features[0]}
+function rankedFeatures(query=''){const q=query.trim().toLowerCase();return [...GEOJSON.features].filter(f=>!q||f.properties.name.toLowerCase().includes(q)||f.properties.borough.toLowerCase().includes(q)).sort((a,b)=>signalMeta[signal].score(getMetric(b.properties.id))-signalMeta[signal].score(getMetric(a.properties.id)))}
+function normalize(features){const scores=features.map(f=>signalMeta[signal].score(getMetric(f.properties.id)));const min=Math.min(...scores),max=Math.max(...scores);const n=new Map();features.forEach(f=>n.set(f.properties.id,max===min?0.65:(signalMeta[signal].score(getMetric(f.properties.id))-min)/(max-min)));return n}
+function colorScale(t){t=Math.max(0,Math.min(1,t));const stops=[[0,[39,68,55]],[.3,[89,139,100]],[.58,[201,168,76]],[.8,[215,125,68]],[1,[180,80,68]]];for(let i=1;i<stops.length;i++){if(t<=stops[i][0]){const [t0,a]=stops[i-1],[t1,b]=stops[i],p=(t-t0)/(t1-t0);return `rgb(${Math.round(a[0]+(b[0]-a[0])*p)},${Math.round(a[1]+(b[1]-a[1])*p)},${Math.round(a[2]+(b[2]-a[2])*p)})`}}return 'rgb(180,80,68)'}
+function styleFor(feature, normalized){const id=feature.properties.id, hovered=id===hoveredSubmarket; return {fillColor:'#7bc0ff',fillOpacity:hovered?0.18:0.01,color:hovered?'#4f88b4':'rgba(255,255,255,0.01)',weight:hovered?2.0:0.8}}
+function getLayerById(id){let found=null;geoLayer.eachLayer(l=>{if(l.feature.properties.id===id) found=l});return found}
+function refreshStyles(){const norm=normalize(rankedFeatures(''));geoLayer.eachLayer(l=>l.setStyle(styleFor(l.feature,norm)))}
+function setHovered(id){hoveredSubmarket=id;refreshStyles()}
+function renderLegend(){document.getElementById('legendTitle').textContent=signalMeta[signal].legend;document.getElementById('legendScale').innerHTML=Array.from({length:24},(_,i)=>`<span style="background:${colorScale(i/23)}"></span>`).join('')}
+function renderToolbarState(){
+  const helper = document.getElementById('toolbarHelper');
+  const group = document.getElementById('intentGroup');
+  const isIntent = signal === 'intent';
+  group.classList.toggle('is-hidden', !isIntent);
+  if(isIntent){
+    helper.innerHTML = `<strong>Owner Intent View:</strong> choose an intent type to change the hover metrics and rankings for buying, selling, refinancing, or renovating.`;
+  } else if(signal === 'rent'){
+    helper.innerHTML = `<strong>Rent Trend View:</strong> hover any submarket to see rent growth and related market snapshot data.`;
+  } else if(signal === 'activity'){
+    helper.innerHTML = `<strong>Buyer Activity View:</strong> hover any submarket to see recent sale activity, pricing, and buyer depth.`;
+  } else if(signal === 'value'){
+    helper.innerHTML = `<strong>Value Trend View:</strong> hover any submarket to see value movement and pricing direction.`;
+  } else {
+    helper.innerHTML = `<strong>Listings View:</strong> hover any submarket to see current listings, asking prices, and days on market.`;
+  }
 }
-function markerHtml(n,intensity,active){const color=colorScale(intensity),value=signalMeta[signal].value(n),meta=signal==='activity' ? `$${n.avgPsf}/SF` : signal==='intent' ? intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1) : n.borough;return `<div class="marker-card ${active?'active':''}" style="border-color:${active?'rgba(255,255,255,.28)':'rgba(255,255,255,.08)'};background:linear-gradient(180deg,rgba(17,20,18,.95),rgba(13,16,14,.9));"><div class="marker-name">${n.name}</div><div class="marker-value" style="color:${color}">${value}</div><div class="marker-meta">${meta}</div><div class="marker-pointer" style="background:rgba(14,17,15,.92)"></div></div>`}
-function popupHtml(n){return `<div class="map-popup-title">${n.name}</div><div class="map-popup-sub">${n.borough}</div><div class="map-popup-grid"><div><b>Rent YoY</b>${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%</div><div><b>30 Day Rent</b>${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}%</div><div><b>Transactions</b>${n.transactions}</div><div><b>Avg Price / SF</b>$${n.avgPsf}</div><div><b>Value YoY</b>${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%</div><div><b>Units Sold</b>${n.unitsSold}</div></div>`}
-function renderMarkers(){const items=rankedData(''),normalized=normalizeScores(items);markersLayer.clearLayers();items.forEach(n=>{const size=84+(normalized.get(n.id)*12);const icon=L.divIcon({className:'submarket-marker',html:markerHtml(n,normalized.get(n.id),n.id===selectedId),iconSize:[size,52],iconAnchor:[size/2,26]});const marker=L.marker([n.lat,n.lng],{icon,keyboard:false,riseOnHover:true}).addTo(markersLayer);marker.bindPopup(popupHtml(n),{offset:[0,-8],closeButton:false});marker.on('mouseover',()=>marker.openPopup());marker.on('mouseout',()=>marker.closePopup());marker.on('click',()=>{selectedId=n.id;renderAll()})})}
-function renderList(){const q=document.getElementById('searchInput').value||'',items=rankedData(q),normalized=normalizeScores(rankedData(''));document.getElementById('sidebarTitle').textContent=signalMeta[signal].title;document.getElementById('sidebarSub').textContent=signalMeta[signal].subtitle;document.getElementById('rankingList').innerHTML=items.map(n=>{const metrics=signalMeta[signal].sideMetrics(n);return `<div class="item ${n.id===selectedId?'active':''}" data-id="${n.id}"><div><div class="item-title">${n.name}</div><div class="item-sub">${signalMeta[signal].subline(n)}</div><div class="mini-grid">${metrics.map(([k,v])=>`<div class="mini"><div class="mini-k">${k}</div><div class="mini-v">${v}</div></div>`).join('')}</div></div><div class="rank-badge">${Math.round(normalized.get(n.id)*100)}</div></div>`}).join('');document.querySelectorAll('.item').forEach(el=>el.addEventListener('click',()=>{selectedId=el.dataset.id;const n=selected();map.flyTo([n.lat,n.lng],Math.max(map.getZoom(),12),{duration:.6});renderAll()}))}
-function renderAll(){renderLegend();renderStats();renderSelectionCard();renderMarkers();renderList()}
-function initMap(){map=L.map('map',{zoomControl:true,attributionControl:true,center:[40.724,-73.944],zoom:11,minZoom:10,maxZoom:14,scrollWheelZoom:true,preferCanvas:true});const bounds=L.latLngBounds([[40.54,-74.25],[40.93,-73.68]]);map.setMaxBounds(bounds.pad(.15));L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);markersLayer=L.layerGroup().addTo(map);renderAll()}
+function renderStats(){const items=rankedFeatures(''),ms=items.map(f=>getMetric(f.properties.id));let cards=[];if(signal==='rent'){const inc=ms.filter(m=>m.rentYoY>0).length,avgY=ms.reduce((s,m)=>s+m.rentYoY,0)/ms.length,avg30=ms.reduce((s,m)=>s+m.rent30d,0)/ms.length;cards=[[String(inc),'Increasing'],[`${avgY>=0?'+':''}${avgY.toFixed(1)}%`,'Avg YoY'],[`${avg30>=0?'+':''}${avg30.toFixed(1)}%`,'Avg 30 Day'],[items[0].properties.name,'Top Market']]} else if(signal==='activity'){const tx=ms.reduce((s,m)=>s+m.transactions,0),avg=Math.round(ms.reduce((s,m)=>s+m.avgPsf,0)/ms.length),buyers=ms.reduce((s,m)=>s+m.buyers,0),units=ms.reduce((s,m)=>s+m.unitsSold,0);cards=[[String(tx),'Transactions'],[`$${avg}`,'Avg Price / SF'],[String(buyers),'Different Buyers'],[String(units),'Units Sold']]} else if(signal==='value'){const inc=ms.filter(m=>m.valueYoY>0).length,avgY=ms.reduce((s,m)=>s+m.valueYoY,0)/ms.length,avg30=ms.reduce((s,m)=>s+m.value30d,0)/ms.length;cards=[[String(inc),'Increasing'],[`+${avgY.toFixed(1)}%`,'Avg YoY'],[`+${avg30.toFixed(1)}%`,'Avg 30 Day'],[items[0].properties.name,'Top Market']]} else if(signal==='intent'){const total=ms.reduce((s,m)=>s+m.intent[intentFocus],0),avg=total/ms.length,top=items[0],concentration=total?(getMetric(top.properties.id).intent[intentFocus]/total)*100:0;cards=[[String(total),`${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Signals`],[top.properties.name,'Top Submarket'],[avg.toFixed(1),'Avg / Market'],[`${concentration.toFixed(0)}%`,'Top Share']]} else {const total=ms.reduce((s,m)=>s+m.activeListings,0),avgP=ms.reduce((s,m)=>s+m.avgAskM,0)/ms.length,avgPsf=Math.round(ms.reduce((s,m)=>s+m.avgAskPsf,0)/ms.length),avgDom=Math.round(ms.reduce((s,m)=>s+m.avgDom,0)/ms.length);cards=[[String(total),'Active Listings'],[`$${avgP.toFixed(2)}M`,'Avg Ask'],[`$${avgPsf}`,'Avg Ask / SF'],[String(avgDom),'Avg DOM']]}document.getElementById('statStrip').innerHTML=cards.map(([v,l])=>`<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`).join('')}
+function bindCardToggle(card){const toggle=card.querySelector('.selection-toggle'); if(toggle){toggle.onclick=()=>{card.classList.toggle('is-collapsed');toggle.textContent=card.classList.contains('is-collapsed')?'Expand':'Collapse'}}}
+function renderSelected(){const card=document.getElementById('selectionCard'),sheet=document.getElementById('bottomSheet'); if(!selectedSubmarket){const empty=`<div class="selection-head"><div><div class="eyebrow">Selected Market</div><h3 class="selection-title">Click a submarket</h3><div class="selection-sub">Hover to preview an area. Click any submarket to load details for the current market view.</div></div><button class="selection-toggle" type="button">Collapse</button></div>`; card.innerHTML=empty; sheet.innerHTML=`<div class="eyebrow">Selected Market</div><h3 class="selection-title">Tap a submarket</h3><div class="selection-sub">Tap any neighborhood area to open details for the current market view.</div>`; bindCardToggle(card); return}
+const f=featureById(selectedSubmarket),m=getMetric(selectedSubmarket);
+const primary=signal==='listings'?[['Active Listings',`${m.activeListings}`],['Avg Ask Price',`$${m.avgAskM.toFixed(2)}M`],['Avg Ask / SF',`$${m.avgAskPsf}`],['Avg DOM',`${m.avgDom}`]]:signal==='activity'?[['Transactions',`${m.transactions}`],['Avg Price / SF',`$${m.avgPsf}`],['Different Buyers',`${m.buyers}`],['Units Sold',`${m.unitsSold}`]]:signal==='value'?[['Value YoY',`${m.valueYoY>=0?'+':''}${m.valueYoY.toFixed(1)}%`],['30 Day Value',`${m.value30d>=0?'+':''}${m.value30d.toFixed(1)}%`],['Avg Ask Price',`$${m.avgAskM.toFixed(2)}M`],['Avg Ask / Unit',`$${Math.round(m.avgAskUnit).toLocaleString()}`]]:signal==='intent'?[[`${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)}`,`${m.intent[intentFocus]}`],['Buying / Selling',`${m.intent.buying} / ${m.intent.selling}`],['Refi / Reno',`${m.intent.refinancing} / ${m.intent.renovating}`],['Listings',`${m.activeListings}`]]:[['Rent YoY',`${m.rentYoY>=0?'+':''}${m.rentYoY.toFixed(1)}%`],['30 Day Rent',`${m.rent30d>=0?'+':''}${m.rent30d.toFixed(1)}%`],['Active Listings',`${m.activeListings}`],['Avg Ask / SF',`$${m.avgAskPsf}`]];
+const details=[['Total Sales Volume',`$${m.volumeM}M`],['Different Buyers',`${m.buyers}`],['Units Sold',`${m.unitsSold}`],['Average Closed $ / SF',`$${m.avgPsf}`],['Active Listings',`${m.activeListings}`],['Average Ask Price',`$${m.avgAskM.toFixed(2)}M`],['Average Ask / SF',`$${m.avgAskPsf}`],['Average Ask / Unit',`$${Math.round(m.avgAskUnit).toLocaleString()}`],['Average DOM',`${m.avgDom}`]];
+const markup=`<div class="selection-head"><div><div class="eyebrow">Selected Market</div><h3 class="selection-title">${f.properties.name}</h3><div class="selection-sub">${f.properties.borough} · ${signalMeta[signal].title}${signal==='intent' ? ` · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)}` : ''}</div></div><button class="selection-toggle" type="button">Collapse</button></div><div class="selection-body"><div class="metric-grid">${primary.map(([k,v])=>`<div class="metric-box"><div class="metric-k">${k}</div><div class="metric-v">${v}</div></div>`).join('')}</div><div class="detail-list">${details.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('')}</div></div>`;
+card.innerHTML=markup; sheet.innerHTML=markup; bindCardToggle(card)}
+function renderList(){const q=document.getElementById('searchInput').value||'',items=rankedFeatures(q),normalized=normalize(rankedFeatures(''));document.getElementById('sidebarTitle').textContent=signalMeta[signal].title;document.getElementById('sidebarSub').textContent=signalMeta[signal].subtitle;document.getElementById('rankingList').innerHTML=items.map(f=>{const m=getMetric(f.properties.id),side=signalMeta[signal].side(m);return `<div class="item ${selectedSubmarket&&f.properties.id===selectedSubmarket?'active':''}" data-id="${f.properties.id}"><div><div class="item-title">${f.properties.name}</div><div class="item-sub">${signalMeta[signal].subline(f,m)}</div><div class="mini-grid">${side.map(([k,v])=>`<div class="mini"><div class="mini-k">${k}</div><div class="mini-v">${v}</div></div>`).join('')}</div></div><div class="rank-badge">${Math.round((normalized.get(f.properties.id)??.5)*100)}</div></div>`}).join('');document.querySelectorAll('.item').forEach(el=>{el.onmouseenter=()=>setHovered(el.dataset.id);el.onmouseleave=()=>setHovered(null);el.onclick=()=>selectSubmarket(el.dataset.id,true)})}
+function showHoverTip(e,feature){
+  if(window.innerWidth<=680) return;
+  const tip=document.getElementById('hoverTip'), m=getMetric(feature.properties.id);
+  let rows;
+  if(signal === 'intent'){
+    rows = currentIntentHoverRows(m);
+  } else if(signal === 'rent'){
+    rows = [['Rent YoY', `${m.rentYoY>=0?'+':''}${m.rentYoY.toFixed(1)}%`], ['30 Day Rent', `${m.rent30d>=0?'+':''}${m.rent30d.toFixed(1)}%`], ['Sold (6 mo)', String(m.buyingStats.sold6mo)], ['Avg Sale / SF', '$' + m.buyingStats.avgSalePsf], ['Avg DOM', String(m.buyingStats.avgDom)]];
+  } else if(signal === 'activity'){
+    rows = [['Transactions', String(m.transactions)], ['Different Buyers', String(m.buyers)], ['Volume', '$' + m.volumeM + 'M'], ['Units Sold', String(m.unitsSold)], ['Avg $ / SF', '$' + m.avgPsf]];
+  } else if(signal === 'value'){
+    rows = [['Value YoY', `${m.valueYoY>=0?'+':''}${m.valueYoY.toFixed(1)}%`], ['30 Day Value', `${m.value30d>=0?'+':''}${m.value30d.toFixed(1)}%`], ['Avg Ask Price', '$' + Math.round(m.sellingStats.avgAskPrice).toLocaleString()], ['Avg Ask / SF', '$' + m.sellingStats.avgAskPsf], ['Avg DOM', String(m.sellingStats.avgDom)]];
+  } else {
+    rows = [['On Market', String(m.sellingStats.activeListings)], ['Avg Ask Price', '$' + Math.round(m.sellingStats.avgAskPrice).toLocaleString()], ['Avg Ask / SF', '$' + m.sellingStats.avgAskPsf], ['Avg DOM', String(m.sellingStats.avgDom)], ['New 30d', String(m.sellingStats.newListings30d)]];
+  }
+  tip.innerHTML = `<div class="hover-tip-title">${feature.properties.name}</div><div class="hover-tip-sub">${signalMeta[signal].subline(feature,m)}</div><div class="hover-tip-grid">${rows.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('')}</div>`;
+  tip.style.display='block';
+  moveHoverTip(e);
+}
+function moveHoverTip(e){const tip=document.getElementById('hoverTip'); if(window.innerWidth<=680||tip.style.display==='none') return; const rect=document.getElementById('map').getBoundingClientRect(), tipRect=tip.getBoundingClientRect(); let x=e.originalEvent.clientX-rect.left+16, y=e.originalEvent.clientY-rect.top+16; if(x+tipRect.width>rect.width-12) x=rect.width-tipRect.width-12; if(y+tipRect.height>rect.height-12) y=rect.height-tipRect.height-12; tip.style.left=x+'px'; tip.style.top=y+'px'}
+function hideHoverTip(){document.getElementById('hoverTip').style.display='none'}
+function renderAll(){renderToolbarState();renderLegend();renderStats();renderSelected();refreshStyles();renderList()}
+function selectSubmarket(id,fit){selectedSubmarket=id; renderAll(); if(fit){const l=getLayerById(id); if(l) map.fitBounds(l.getBounds().pad(window.innerWidth>680?0.40:0.16), {animate:true,duration:0.35,padding:[16,16]})}}
+function initMap(){map=L.map('map',{zoomControl:true,attributionControl:true,center:[40.735,-73.965],zoom:11,minZoom:10,maxZoom:14,scrollWheelZoom:true,preferCanvas:true}); const bounds=L.latLngBounds([[40.54,-74.08],[40.90,-73.88]]); map.setMaxBounds(bounds.pad(.18)); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map); geoLayer=L.geoJSON(GEOJSON,{style:f=>styleFor(f,normalize(rankedFeatures(''))), onEachFeature:(feature,layer)=>{layer.on('mouseover',e=>{setHovered(feature.properties.id);showHoverTip(e,feature)});layer.on('mousemove',e=>moveHoverTip(e));layer.on('mouseout',()=>{setHovered(null);hideHoverTip()});layer.on('click',()=>selectSubmarket(feature.properties.id,false))}}).addTo(map); const cityBounds=L.latLngBounds([[40.60,-74.05],[40.86,-73.90]]); map.fitBounds(cityBounds,{animate:false}); renderAll()}
 document.querySelectorAll('.signal-pill').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.signal-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');signal=btn.dataset.signal;renderAll()}))
 document.querySelectorAll('.intent-pill').forEach(btn=>btn.addEventListener('click',()=>{
+  if(signal !== 'intent') return;
   document.querySelectorAll('.intent-pill').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   intentFocus=btn.dataset.intent;
-  document.querySelectorAll('.signal-pill').forEach(b=>b.classList.remove('active'));
-  const intentSignalBtn = document.querySelector('.signal-pill[data-signal="intent"]');
-  if(intentSignalBtn){ intentSignalBtn.classList.add('active'); }
-  signal='intent';
   renderAll();
 }))
 document.getElementById('searchInput').addEventListener('input',renderList)
-initMap();
+initMap()
 </script>
 </body>
 </html>
