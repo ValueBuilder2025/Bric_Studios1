@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#0d0f0e;--paper:#f5f2ec;--cream:#faf8f3;--gold:#c9a84c;--gold-light:#e8d08a;--gold-dim:rgba(201,168,76,0.13);--slate:#3a4a52;--muted:#7a8a82;--border-gold:rgba(201,168,76,0.3);--line:rgba(255,255,255,0.07);--panel:#181b1a;--serif:'Playfair Display',serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace}
+:root{--ink:#0d0f0e;--panel-left-width:560px;--paper:#f5f2ec;--cream:#faf8f3;--gold:#c9a84c;--gold-light:#e8d08a;--gold-dim:rgba(201,168,76,0.13);--slate:#3a4a52;--muted:#7a8a82;--border-gold:rgba(201,168,76,0.3);--line:rgba(255,255,255,0.07);--panel:#181b1a;--serif:'Playfair Display',serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55}
 nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.95);backdrop-filter:blur(16px)}
@@ -19,11 +19,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .tier-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
 .tier-wrap{display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px}
 .tier-btn{padding:0.38rem 0.95rem;border:none;background:transparent;color:rgba(255,255,255,0.5);font-family:var(--sans);font-size:0.76rem;font-weight:600;cursor:pointer;border-radius:16px;transition:all 0.2s}.tier-btn.active{background:var(--gold);color:var(--ink)}
-.app{display:grid;grid-template-columns:460px 1fr;min-height:calc(100vh - 107px)}
-.panel-left{border-right:1px solid var(--line);overflow-y:auto;max-height:calc(100vh - 107px);position:sticky;top:107px}.panel-right{padding:1.75rem;overflow-y:auto;max-height:calc(100vh - 61px);background:var(--panel)}
+.app{display:grid;grid-template-columns:minmax(520px,var(--panel-left-width)) 10px minmax(0,1fr);min-height:calc(100vh - 107px)}
+.panel-left{border-right:1px solid var(--line);overflow-y:auto;max-height:calc(100vh - 107px);position:sticky;top:107px;min-width:520px}.panel-resizer{position:sticky;top:107px;max-height:calc(100vh - 107px);min-height:calc(100vh - 107px);cursor:col-resize;background:rgba(255,255,255,.03);border-right:1px solid rgba(255,255,255,.06);border-left:1px solid rgba(255,255,255,.03);grid-column:2}.panel-resizer:hover,.panel-resizer.dragging{background:rgba(201,168,76,.14)}.panel-resizer::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:72px;border-radius:999px;background:rgba(201,168,76,.45);box-shadow:-3px 0 0 rgba(255,255,255,.06),3px 0 0 rgba(255,255,255,.06)}.panel-right{padding:1.75rem;overflow-y:auto;max-height:calc(100vh - 61px);background:var(--panel);grid-column:3}
 .panel-left::-webkit-scrollbar,.panel-right::-webkit-scrollbar{width:3px}.panel-left::-webkit-scrollbar-thumb,.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
 .panel-header{padding:1.6rem 2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.06)}.panel-eyebrow{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}.panel-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--paper)}.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.4rem;line-height:1.6}
-.form-section{padding:0;border-bottom:1px solid rgba(255,255,255,0.05)}.form-section-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.5rem;padding:1.3rem 2rem;cursor:pointer;user-select:none}.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}.form-section-title::before{content:'+';order:2;flex:none;font-size:0.9rem;color:var(--gold);margin-left:0.65rem;transition:transform 0.2s ease, opacity 0.2s ease}.form-section.expanded .form-section-title::before{content:'−'}.form-section-body{padding:0 2rem 1.3rem;display:none}.form-section.expanded .form-section-body{display:block}
+.form-section{padding:0;border-bottom:1px solid rgba(255,255,255,0.05)}.form-section-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.5rem;padding:1.3rem 2rem;cursor:pointer;user-select:none;transition:background 0.2s,color 0.2s}.form-section-title:hover{background:rgba(255,255,255,0.02);color:var(--gold)}.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}.form-section-title::before{content:'+';order:2;flex:none;font-size:0.9rem;color:var(--gold);margin-left:0.65rem;transition:transform 0.2s ease, opacity 0.2s ease}.form-section.expanded .form-section-title::before{content:'−'}.form-section-body{padding:0 2rem 1.3rem;display:none}.form-section.expanded .form-section-body{display:block}
 .section-action{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;cursor:pointer;padding:0.2rem 0.5rem;border-radius:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2)}.section-action:hover{background:rgba(201,168,76,0.2)}
 .field{margin-bottom:0.8rem}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem}label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;letter-spacing:0.02em;font-weight:500}
 .input-wrap{position:relative}.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.75rem;color:rgba(255,255,255,0.28);pointer-events:none}.input-prefix{left:0.75rem}.input-suffix{right:0.75rem}
@@ -63,7 +63,7 @@ input[type="text"],input[type="number"],input[type="date"],select,textarea{width
 .disclaimer{font-family:var(--mono);font-size:0.6rem;color:var(--muted);line-height:1.7;letter-spacing:0.02em;border-top:1px solid rgba(13,15,14,0.1);padding-top:0.9rem;margin-top:1.75rem}
 .empty-preview{display:flex;align-items:center;justify-content:center;min-height:520px;flex-direction:column;gap:0.8rem;text-align:center;padding:2rem;opacity:0.5}.empty-icon{font-size:2.6rem;color:rgba(255,255,255,0.25)}.empty-title{font-family:var(--serif);font-size:1.2rem;color:rgba(255,255,255,0.6)}.empty-sub{font-size:0.8rem;color:rgba(255,255,255,0.3);max-width:320px;line-height:1.6}
 @media print{nav,.tier-bar,.panel-left,.preview-header{display:none}body{overflow:auto;background:white}.app{display:block}.panel-right{padding:0;max-height:none;background:white;overflow:visible}.om-doc{box-shadow:none;border-radius:0;max-width:none}.om-page,.om-cover{page-break-after:always;min-height:auto}}
-@media(max-width:980px){.app{grid-template-columns:1fr}.panel-left{position:static;max-height:none}.highlights-grid{grid-template-columns:1fr 1fr}.financial-grid{grid-template-columns:1fr}.om-page,.om-cover{padding:1.75rem 1.25rem}.om-cover-title{font-size:2rem}.om-cover-title em{font-size:1.6rem}}
+@media(max-width:980px){.app{grid-template-columns:1fr}.panel-left{position:static;max-height:none;min-width:0}.panel-resizer{display:none}.highlights-grid{grid-template-columns:1fr 1fr}.financial-grid{grid-template-columns:1fr}.om-page,.om-cover{padding:1.75rem 1.25rem}.om-cover-title{font-size:2rem}.om-cover-title em{font-size:1.6rem}}
 @media(max-width:720px){.field-row,.count-grid,.rr-grid-res,.rr-grid-ret,.rr-grid-ret-second,.highlights-grid{grid-template-columns:1fr}.panel-left .form-section,.panel-left .panel-header,.panel-right{padding-left:1.1rem;padding-right:1.1rem}}
 </style></head>
 <body>
@@ -78,6 +78,7 @@ input[type="text"],input[type="number"],input[type="date"],select,textarea{width
 <div class="form-section"><div class="form-section-title">Growth Transfer</div><div class="import-note" id="importNote"><b>Growth only:</b> Import saved details from Valuation Studio so you don't have to enter the same information twice.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn" type="button" id="importBtn" onclick="importFromValuation()" style="width:100%">Import From Valuation</button><button class="action-btn" type="button" id="saveBtn" onclick="saveOmDraft()" style="width:100%">Save OM Draft</button></div></div>
 <div class="form-section"><div class="form-section-title">Sections to Include</div><div class="section-toggles"><div class="section-toggle active" data-toggle="toggleCover"><div class="section-toggle-info"><div class="section-toggle-name">Cover Page</div><div class="section-toggle-sub">Hero with address</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleHighlights"><div class="section-toggle-info"><div class="section-toggle-name">Highlights</div><div class="section-toggle-sub">Key stats grid</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleRentRoll"><div class="section-toggle-info"><div class="section-toggle-name">Rent Roll</div><div class="section-toggle-sub">Unit-by-unit detail</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleFinancial"><div class="section-toggle-info"><div class="section-toggle-name">Financial Summary</div><div class="section-toggle-sub">Income & expenses</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleValuation"><div class="section-toggle-info"><div class="section-toggle-name">Valuation</div><div class="section-toggle-sub">Cap rate analysis</div></div><div class="toggle on"></div></div><div class="section-toggle active" data-toggle="toggleMarket"><div class="section-toggle-info"><div class="section-toggle-name">Market Overview</div><div class="section-toggle-sub">Submarket context</div></div><div class="toggle on"></div></div></div></div>
 <div class="form-section" style="border-bottom:none"><button class="generate-btn" onclick="generate()">Generate OM</button></div></div>
+<div class="panel-resizer" id="panelResizer" aria-label="Resize panels" title="Drag to resize"></div>
 <div class="panel-right"><div class="preview-header"><div class="preview-title">Live OM Preview</div><div class="preview-actions"><button class="action-btn" onclick="window.print()">Print / Save PDF</button><button class="action-btn primary" onclick="generate()">Refresh</button></div></div><div id="omPreview"></div></div></div>
 <script>
 let currentTier='free',rentRollActive=false,sectionsActive={toggleCover:true,toggleHighlights:true,toggleRentRoll:true,toggleFinancial:true,toggleValuation:true,toggleMarket:true},rrItems=[],expenseId=0;
@@ -187,22 +188,40 @@ document.querySelectorAll('.section-toggle').forEach(el=>{el.addEventListener('c
 
 function initExpandableSections(){
   document.querySelectorAll('.form-section').forEach((section,idx)=>{
-    if(section.querySelector('.form-section-body')) return;
-    const title=section.querySelector('.form-section-title');
+    let title=section.querySelector('.form-section-title');
     if(!title) return;
-    const body=document.createElement('div');
-    body.className='form-section-body';
-    while(title.nextSibling){body.appendChild(title.nextSibling)}
-    section.appendChild(body);
-    const expandedByDefault=idx < 2;
-    section.classList.toggle('expanded', expandedByDefault);
-    title.addEventListener('click',function(){
-      section.classList.toggle('expanded');
-    });
+
+    let body=section.querySelector('.form-section-body');
+    if(!body){
+      body=document.createElement('div');
+      body.className='form-section-body';
+      const nodes=Array.from(section.childNodes).filter(node=>node!==title);
+      nodes.forEach(node=>body.appendChild(node));
+      section.appendChild(body);
+    }
+
+    const shouldStartExpanded = idx === 0;
+    section.classList.toggle('expanded', shouldStartExpanded);
+
+    if(!title.dataset.expandBound){
+      title.dataset.expandBound='1';
+      title.setAttribute('role','button');
+      title.setAttribute('tabindex','0');
+      const toggleSection=function(){
+        section.classList.toggle('expanded');
+      };
+      title.addEventListener('click', toggleSection);
+      title.addEventListener('keydown', function(e){
+        if(e.key==='Enter' || e.key===' '){
+          e.preventDefault();
+          toggleSection();
+        }
+      });
+    }
   });
 }
 
-initExpandableSections();
+window.addEventListener('load', initExpandableSections);
 fillCountOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));setTier('free');
 (function(){
   const ws=getWorkspace();
@@ -213,4 +232,41 @@ fillCountOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));s
   if(!draft && propertyId) draft=ws.oms.find(o=>o.propertyId===propertyId);
   if(draft) loadOmDraftIntoForm(draft); else generate();
 })();
+
+function setupPanelResizer(){
+  const root=document.documentElement;
+  const resizer=document.getElementById('panelResizer');
+  if(!resizer||window.innerWidth<=980) return;
+  const stored=parseInt(localStorage.getItem('bricOmPanelWidth')||'',10);
+  if(stored){ root.style.setProperty('--panel-left-width', stored+'px'); }
+  let dragging=false;
+  function setWidth(clientX){
+    const min=520;
+    const max=Math.max(620, Math.floor(window.innerWidth*0.72));
+    const width=Math.min(max, Math.max(min, clientX));
+    root.style.setProperty('--panel-left-width', width+'px');
+  }
+  function onMove(e){
+    if(!dragging) return;
+    setWidth(e.clientX);
+  }
+  function stopDrag(){
+    if(!dragging) return;
+    dragging=false;
+    resizer.classList.remove('dragging');
+    document.body.style.userSelect='';
+    const current=parseInt(getComputedStyle(root).getPropertyValue('--panel-left-width'),10);
+    if(current) localStorage.setItem('bricOmPanelWidth', current);
+  }
+  resizer.addEventListener('mousedown', (e)=>{
+    dragging=true;
+    resizer.classList.add('dragging');
+    document.body.style.userSelect='none';
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', stopDrag);
+}
+setupPanelResizer();
+
 </script></body></html>
