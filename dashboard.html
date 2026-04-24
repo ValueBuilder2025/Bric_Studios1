@@ -432,7 +432,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <input type="text" placeholder="Search properties, addresses, markets, buyers..."/>
       </div>
       <div class="tb-right">
-        <button class="tb-btn" onclick="window.location.href='valuation-updated.html'">⬆ Upload Rent Roll</button>
+        <button class="tb-btn" onclick="window.location.href='valuation.html'">⬆ Upload Rent Roll</button>
         <button class="tb-btn tb-btn-primary">+ Add Property</button>
         <button class="tb-icon-btn">◈<span class="tb-notif-dot"></span></button>
       </div>
@@ -592,7 +592,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="panel-title">Quick Actions</div>
           </div>
           <div class="qa-list">
-            <a href="valuation-updated-v11.html" class="qa-item">
+            <a href="valuation.html" class="qa-item">
               <div class="qa-icon">▲</div>
               <div class="qa-text">
                 <div class="qa-name">Run a Valuation</div>
@@ -600,7 +600,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               </div>
               <span class="qa-arrow">→</span>
             </a>
-            <a href="om-studio-updated-v2.html" class="qa-item">
+            <a href="om-studio.html" class="qa-item">
               <div class="qa-icon">▤</div>
               <div class="qa-text">
                 <div class="qa-name">Generate OM</div>
@@ -863,7 +863,7 @@ function reportMetaLabel(item){
 function buildPropertyRow(p){
   const perf=calcPerf(p);
   const sub=[p.submarket||'Submarket', p.units?`${p.units} units`:null].filter(Boolean).join(' · ');
-  const valuationHref=`valuation-updated-v11.html?propertyId=${encodeURIComponent(p.id)}`;
+  const valuationHref=`valuation.html?propertyId=${encodeURIComponent(p.id)}`;
   return `<tr onclick="window.location.href='${valuationHref}'"><td><div class="p-name"><div class="p-thumb">◫</div><div class="p-name-text"><div class="p-addr">${esc(p.address)}</div><div class="p-sub">${esc(sub)}</div></div></div></td><td class="num">${fmtCompact(p.lastValuationValue||0)}</td><td class="num">${fmtCompact(p.lastNoi||0)}</td><td><div class="perf-mini"><div class="perf-bar"><div class="perf-fill" style="width:${perf}%"></div></div><span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perf}</span></div></td><td><span class="status-pill ${statusClass(p.status)}">● ${esc(p.status||'Analyzing')}</span></td></tr>`;
 }
 function renderWorkspaceProperties(ws){
@@ -907,8 +907,8 @@ function buildReportItems(ws){
   return vals.concat(oms).sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
 }
 function reportHref(item){
-  if(item.kind==='valuation') return `valuation-updated-v11.html?propertyId=${encodeURIComponent(item.propertyId||'')}&valuationId=${encodeURIComponent(item.id)}`;
-  return `om-studio-updated-v2.html?propertyId=${encodeURIComponent(item.propertyId||'')}&omId=${encodeURIComponent(item.id)}`;
+  if(item.kind==='valuation') return `valuation.html?propertyId=${encodeURIComponent(item.propertyId||'')}&valuationId=${encodeURIComponent(item.id)}`;
+  return `om-studio.html?propertyId=${encodeURIComponent(item.propertyId||'')}&omId=${encodeURIComponent(item.id)}`;
 }
 function renderSavedReports(ws){
   const list=document.getElementById('savedReportsList');
