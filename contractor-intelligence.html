@@ -188,33 +188,56 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
 
 <div class="filter-bar">
   <span class="fb-label">Location</span>
-  <select class="fb-select">
-    <option>Williamsburg, Brooklyn</option>
-    <option>Bushwick, Brooklyn</option>
-    <option>Crown Heights, Brooklyn</option>
+  <select class="fb-select" id="locationSelect">
     <option>All NYC</option>
+    <option>All Brooklyn</option>
+    <option>All Queens</option>
+    <option>Williamsburg North</option>
+    <option>Williamsburg South</option>
+    <option>Greenpoint</option>
+    <option>East Williamsburg</option>
+    <option>Bushwick West</option>
+    <option>Bushwick East</option>
+    <option>Bed-Stuy West</option>
+    <option>Bed-Stuy East</option>
+    <option>Prospect Heights</option>
+    <option>Crown Heights North</option>
+    <option>Crown Heights South</option>
+    <option>Prospect Lefferts Gardens</option>
+    <option>Park Slope</option>
+    <option>Sunset Park</option>
+    <option>Downtown Brooklyn</option>
+    <option>Long Island City</option>
+    <option>Astoria</option>
+    <option>Ridgewood</option>
+    <option>Flushing</option>
   </select>
   <div class="fb-divider"></div>
   <span class="fb-label">Trade</span>
-  <button class="fb-chip active">All Trades</button>
-  <button class="fb-chip">General Contractor</button>
-  <button class="fb-chip">Plumbing</button>
-  <button class="fb-chip">Electrical</button>
-  <button class="fb-chip">HVAC</button>
-  <button class="fb-chip">Roofing</button>
+  <button class="fb-chip active" data-trade="all">All Trades</button>
+  <button class="fb-chip" data-trade="gc">General Contractor</button>
+  <button class="fb-chip" data-trade="plumbing">Plumbing</button>
+  <button class="fb-chip" data-trade="electrical">Electrical</button>
+  <button class="fb-chip" data-trade="hvac">HVAC</button>
+  <button class="fb-chip" data-trade="roofing">Roofing</button>
   <div class="fb-divider"></div>
   <span class="fb-label">Project</span>
-  <select class="fb-select">
+  <select class="fb-select" id="projectSelect">
     <option>Full Gut Renovation</option>
     <option>Kitchen / Bath</option>
     <option>Boiler Replacement</option>
     <option>Roof Repair</option>
+    <option>Facade / Masonry</option>
+    <option>Common Area Upgrade</option>
+    <option>Apartment Turnover</option>
+    <option>Storefront Buildout</option>
+    <option>Waterproofing</option>
   </select>
 </div>
 
 <div class="main">
 
-  <div class="top-stats">
+  <div class="top-stats" id="topStats">
     <div class="ts-card fade-up">
       <div class="ts-label">Contractors Analyzed</div>
       <div class="ts-val gold">1,847</div>
@@ -242,13 +265,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
     <div class="panel fade-up">
       <div class="panel-hd">
         <div>
-          <div class="panel-title">Top Contractors · Williamsburg</div>
-          <div class="panel-sub">Filtered for 6-unit multifamily renovation projects</div>
+          <div class="panel-title" id="resultsTitle">Top Contractors · Williamsburg</div>
+          <div class="panel-sub" id="resultsSub">Filtered for 6-unit multifamily renovation projects</div>
         </div>
-        <span style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">24 MATCHES</span>
+        <span id="matchCount" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">24 MATCHES</span>
       </div>
 
-      <div class="c-list">
+      <div class="c-list" id="contractorList">
 
         <!-- CONTRACTOR 1 -->
         <div class="c-card">
@@ -488,7 +511,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
     <!-- SIDE COLUMN -->
     <div class="side-col">
 
-      <div class="alert-box fade-up">
+      <div class="alert-box fade-up" id="alertBox">
         <div class="ab-hd">△ Risk Alert</div>
         <div class="ab-title">2 contractors in your area have active complaints</div>
         <div class="ab-text">
@@ -499,11 +522,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
       <div class="panel fade-up">
         <div class="panel-hd">
           <div>
-            <div class="panel-title">Submarket Pricing Benchmark</div>
-            <div class="panel-sub">Average costs · Brooklyn · 6-unit multifamily</div>
+            <div class="panel-title" id="benchmarkTitle">Submarket Pricing Benchmark</div>
+            <div class="panel-sub" id="benchmarkSub">Average costs · Brooklyn · 6-unit multifamily</div>
           </div>
         </div>
-        <div class="benchmark">
+        <div class="benchmark" id="benchmarkRows">
           <div class="bm-row">
             <span class="bm-cat">Kitchen renovation (per unit)</span>
             <div class="bm-bar"><div class="bm-fill" style="width:65%"></div></div>
@@ -540,11 +563,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
       <div class="panel fade-up">
         <div class="panel-hd">
           <div>
-            <div class="panel-title">Renovation ROI Impact</div>
-            <div class="panel-sub">Est. NOI uplift by project type</div>
+            <div class="panel-title" id="roiTitle">Renovation ROI Impact</div>
+            <div class="panel-sub" id="roiSub">Est. NOI uplift by project type</div>
           </div>
         </div>
-        <div class="benchmark">
+        <div class="benchmark" id="roiRows">
           <div class="bm-row">
             <span class="bm-cat">Kitchen + Bath refresh</span>
             <div class="bm-bar"><div class="bm-fill" style="width:72%"></div></div>
@@ -567,7 +590,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
           </div>
         </div>
         <div style="padding:0.85rem 1.4rem;border-top:1px solid var(--border);font-size:0.7rem;color:rgba(255,255,255,0.35);font-family:var(--mono);letter-spacing:0.04em">
-          Based on Williamsburg rent repricing data from comparable value-add projects (2022–2024).
+          <span id='roiFootnote'>Based on Williamsburg rent repricing data from comparable value-add projects (2022–2024).</span>
         </div>
       </div>
 
@@ -584,17 +607,576 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
 
 </div>
 
+
+
+
 <script>
-document.querySelectorAll('.c-btn-gold').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    btn.textContent = '✓ Request Sent';
-    btn.style.background = 'rgba(109,186,143,0.15)';
-    btn.style.color = 'var(--success)';
-    btn.style.borderColor = 'rgba(109,186,143,0.3)';
-    btn.disabled = true;
+const TRADE_META = {
+  all: { label: 'All Trades', bias: 1.0 },
+  gc: { label: 'General Contractor', bias: 0.48 },
+  plumbing: { label: 'Plumbing', bias: 0.22 },
+  electrical: { label: 'Electrical', bias: 0.19 },
+  hvac: { label: 'HVAC', bias: 0.17 },
+  roofing: { label: 'Roofing', bias: 0.14 }
+};
+
+const SUBMARKETS = {
+  "All NYC": { borough: "NYC", vibe: "citywide contractor search across boroughs", premium: 1.05, risk: 14, reviews: 124400, contractors: 6128, matched: 84, savings: 16800 },
+  "All Brooklyn": { borough: "Brooklyn", vibe: "cross-submarket contractor search across Brooklyn", premium: 1.00, risk: 11, reviews: 86400, contractors: 4182, matched: 57, savings: 14800 },
+  "All Queens": { borough: "Queens", vibe: "borough-wide contractor coverage across mixed neighborhoods", premium: 0.96, risk: 8, reviews: 61800, contractors: 2946, matched: 44, savings: 12700 },
+  "Williamsburg North": { borough: "Brooklyn", vibe: "premium finish and condo-adjacent renovation work", premium: 1.16, risk: 2, reviews: 31800, contractors: 1188, matched: 22, savings: 11600 },
+  "Williamsburg South": { borough: "Brooklyn", vibe: "value-add multifamily and mixed-use repositioning", premium: 1.07, risk: 3, reviews: 28600, contractors: 1072, matched: 19, savings: 13900 },
+  "Greenpoint": { borough: "Brooklyn", vibe: "design-forward upgrades and boutique owner renovations", premium: 1.13, risk: 2, reviews: 22400, contractors: 864, matched: 17, savings: 9800 },
+  "East Williamsburg": { borough: "Brooklyn", vibe: "light industrial, mixed-use, and investor renovation work", premium: 1.01, risk: 3, reviews: 20500, contractors: 782, matched: 16, savings: 12100 },
+  "Bushwick West": { borough: "Brooklyn", vibe: "faster-turn investor renovations and occupancy-sensitive scopes", premium: 0.93, risk: 4, reviews: 24700, contractors: 1016, matched: 21, savings: 15800 },
+  "Bushwick East": { borough: "Brooklyn", vibe: "budget-focused renovation and systems replacement work", premium: 0.89, risk: 4, reviews: 19900, contractors: 812, matched: 16, savings: 17400 },
+  "Bed-Stuy West": { borough: "Brooklyn", vibe: "brownstone-sensitive and multifamily value-add scopes", premium: 1.02, risk: 3, reviews: 27100, contractors: 995, matched: 20, savings: 12100 },
+  "Bed-Stuy East": { borough: "Brooklyn", vibe: "turnover renovations and landlord-driven improvements", premium: 0.95, risk: 3, reviews: 21500, contractors: 876, matched: 18, savings: 13300 },
+  "Prospect Heights": { borough: "Brooklyn", vibe: "owner-user upgrades and higher-finish renovation scopes", premium: 1.14, risk: 2, reviews: 18800, contractors: 704, matched: 13, savings: 8400 },
+  "Crown Heights North": { borough: "Brooklyn", vibe: "pre-war layout work and mid-tier finish upgrades", premium: 1.01, risk: 3, reviews: 26800, contractors: 944, matched: 20, savings: 11200 },
+  "Crown Heights South": { borough: "Brooklyn", vibe: "owner-user and rental renovation hybrid scopes", premium: 0.98, risk: 3, reviews: 20700, contractors: 793, matched: 16, savings: 10700 },
+  "Prospect Lefferts Gardens": { borough: "Brooklyn", vibe: "brownstone, townhouse, and small multifamily renovations", premium: 0.99, risk: 2, reviews: 18900, contractors: 731, matched: 15, savings: 9900 },
+  "Park Slope": { borough: "Brooklyn", vibe: "higher-end finish packages and tighter owner oversight", premium: 1.21, risk: 2, reviews: 30200, contractors: 1104, matched: 19, savings: 8600 },
+  "Sunset Park": { borough: "Brooklyn", vibe: "mixed-use buildings and practical capex scopes", premium: 0.94, risk: 4, reviews: 17400, contractors: 688, matched: 14, savings: 11800 },
+  "Downtown Brooklyn": { borough: "Brooklyn", vibe: "larger-scale mixed-use and elevator building scopes", premium: 1.18, risk: 2, reviews: 22900, contractors: 902, matched: 17, savings: 9200 },
+  "Long Island City": { borough: "Queens", vibe: "newer-construction interiors and systems-heavy work", premium: 1.12, risk: 2, reviews: 24100, contractors: 936, matched: 16, savings: 8700 },
+  "Astoria": { borough: "Queens", vibe: "owner-user renovation work and mixed multifamily scopes", premium: 0.98, risk: 3, reviews: 21600, contractors: 822, matched: 15, savings: 10600 },
+  "Ridgewood": { borough: "Queens", vibe: "value-focused multifamily and mixed-use upgrades", premium: 0.92, risk: 3, reviews: 17300, contractors: 694, matched: 14, savings: 13100 },
+  "Flushing": { borough: "Queens", vibe: "larger mixed-use ownership and practical trade coordination", premium: 1.00, risk: 4, reviews: 19800, contractors: 744, matched: 13, savings: 9700 }
+};
+
+const PROJECTS = {
+  "Full Gut Renovation": {
+    contractorBias: "gut-reno, multi-trade coordination, and building-level scope management",
+    benchmarkTitle: "Submarket Pricing Benchmark",
+    benchmarkSub: "Average costs · 6-unit multifamily",
+    benchmarkRows: [
+      ["Kitchen renovation (per unit)", 0.62, [16000,28000]],
+      ["Bathroom renovation (per unit)", 0.46, [10000,18000]],
+      ["Full unit gut (per unit)", 0.89, [42000,72000]],
+      ["Electrical upgrade (building)", 0.41, [21000,38000]],
+      ["Common area package", 0.26, [8000,18000]]
+    ],
+    roiTitle: "Renovation ROI Impact",
+    roiSub: "Est. NOI uplift by project type",
+    roiRows: [
+      ["Kitchen + Bath refresh", 0.71, "+$310/mo"],
+      ["Full unit gut", 0.91, "+$610/mo"],
+      ["Common area update", 0.24, "+$95/mo"],
+      ["Mechanical upgrade", 0.17, "+$45/mo"]
+    ],
+    footnote: "Based on submarket rent repricing data from comparable multifamily value-add projects."
+  },
+  "Kitchen / Bath": {
+    contractorBias: "interior finish quality, speed, and owner communication",
+    benchmarkTitle: "Unit Renovation Benchmark",
+    benchmarkSub: "Average costs · kitchen, bath, and finish packages",
+    benchmarkRows: [
+      ["Kitchen refresh (per unit)", 0.54, [14000,22000]],
+      ["Bathroom refresh (per unit)", 0.43, [9000,16000]],
+      ["Cabinet / countertop package", 0.34, [7000,13000]],
+      ["Tile + waterproofing", 0.41, [5000,9000]],
+      ["Finish carpentry / paint", 0.27, [4000,7000]]
+    ],
+    roiTitle: "Rent Premium Potential",
+    roiSub: "Est. monthly uplift after cosmetic refresh",
+    roiRows: [
+      ["Kitchen refresh", 0.66, "+$225/mo"],
+      ["Bathroom refresh", 0.48, "+$145/mo"],
+      ["Full K/B package", 0.82, "+$390/mo"],
+      ["Finish + paint package", 0.26, "+$85/mo"]
+    ],
+    footnote: "Based on renovated-unit spreads and observed cosmetic refresh premiums."
+  },
+  "Boiler Replacement": {
+    contractorBias: "licensed mechanicals, responsiveness, and permit closeout",
+    benchmarkTitle: "Mechanical Scope Benchmark",
+    benchmarkSub: "Average costs · boiler and heating plant work",
+    benchmarkRows: [
+      ["Boiler replacement", 0.51, [18000,32000]],
+      ["Near-boiler piping", 0.32, [6000,12000]],
+      ["Controls / thermostats", 0.21, [3000,7000]],
+      ["Circulator / pumps", 0.16, [2000,5000]],
+      ["Emergency patch work", 0.12, [1000,4000]]
+    ],
+    roiTitle: "Owner Impact",
+    roiSub: "Operational lift vs. direct rent lift",
+    roiRows: [
+      ["Reduced heat complaints", 0.73, "High impact"],
+      ["Lower maintenance calls", 0.58, "Moderate"],
+      ["Fuel efficiency gain", 0.46, "8–15%"],
+      ["Rent premium potential", 0.12, "Limited"]
+    ],
+    footnote: "Mechanical upgrades are primarily operating and risk-control plays."
+  },
+  "Roof Repair": {
+    contractorBias: "flat roof leaks, waterproofing, and preventative capex planning",
+    benchmarkTitle: "Roofing Benchmark",
+    benchmarkSub: "Average costs · flat roof properties",
+    benchmarkRows: [
+      ["Roof repair / patch", 0.24, [4000,12000]],
+      ["Coating system", 0.37, [12000,20000]],
+      ["Partial replacement", 0.48, [18000,30000]],
+      ["Full replacement", 0.63, [28000,45000]],
+      ["Parapet / masonry tie-in", 0.29, [6000,14000]]
+    ],
+    roiTitle: "Ownership Impact",
+    roiSub: "Preservation value and operating risk reduction",
+    roiRows: [
+      ["Leak risk reduction", 0.88, "Very high"],
+      ["Insurance posture improvement", 0.33, "Moderate"],
+      ["Capex deferral value", 0.57, "High"],
+      ["Direct rent premium", 0.08, "Minimal"]
+    ],
+    footnote: "Roof work protects value and reduces future capex more than it drives rents."
+  },
+  "Facade / Masonry": {
+    contractorBias: "façade stabilization, parapets, brickwork, and exterior compliance scopes",
+    benchmarkTitle: "Facade / Masonry Benchmark",
+    benchmarkSub: "Average costs · exterior envelope work",
+    benchmarkRows: [
+      ["Spot pointing / patching", 0.28, [5000,14000]],
+      ["Parapet rebuild", 0.34, [12000,28000]],
+      ["Facade restoration", 0.57, [24000,65000]],
+      ["Waterproof coating", 0.23, [7000,18000]],
+      ["Lintel / sill replacement", 0.19, [4000,12000]]
+    ],
+    roiTitle: "Preservation Impact",
+    roiSub: "Risk reduction and asset preservation value",
+    roiRows: [
+      ["Leak / water intrusion reduction", 0.79, "High"],
+      ["Violation risk reduction", 0.61, "High"],
+      ["Insurance posture improvement", 0.32, "Moderate"],
+      ["Direct rent premium", 0.07, "Minimal"]
+    ],
+    footnote: "Facade work is primarily risk and preservation oriented, with limited direct rent impact."
+  },
+  "Common Area Upgrade": {
+    contractorBias: "lobby, hall, stair, and common-area repositioning work",
+    benchmarkTitle: "Common Area Benchmark",
+    benchmarkSub: "Average costs · shared building spaces",
+    benchmarkRows: [
+      ["Lobby refresh", 0.36, [8000,22000]],
+      ["Hallway / stair repaint", 0.21, [3000,9000]],
+      ["Lighting / hardware package", 0.18, [2500,8000]],
+      ["Flooring / tile replacement", 0.31, [6000,16000]],
+      ["Mail / entry package", 0.16, [2500,7000]]
+    ],
+    roiTitle: "Tenant Perception Impact",
+    roiSub: "Retention and leasing optics",
+    roiRows: [
+      ["Improved first impression", 0.72, "High"],
+      ["Tenant retention support", 0.38, "Moderate"],
+      ["Leasing velocity support", 0.33, "Moderate"],
+      ["Direct rent premium", 0.14, "Limited"]
+    ],
+    footnote: "Common area upgrades tend to support leasing optics and retention more than headline rent jumps."
+  },
+  "Apartment Turnover": {
+    contractorBias: "speed, price control, and repeatable turnover scope execution",
+    benchmarkTitle: "Turnover Benchmark",
+    benchmarkSub: "Average costs · unit-ready scopes",
+    benchmarkRows: [
+      ["Paint + patch + clean", 0.19, [1800,4800]],
+      ["Floor refinish / replace", 0.22, [2500,7000]],
+      ["Fixture / appliance swap", 0.17, [2200,6500]],
+      ["Turnover plumbing / electrical", 0.15, [1800,5200]],
+      ["Full make-ready package", 0.41, [7000,18000]]
+    ],
+    roiTitle: "Leasing Speed Impact",
+    roiSub: "Time-to-market and downtime reduction",
+    roiRows: [
+      ["Days vacant reduced", 0.63, "High"],
+      ["Faster showing readiness", 0.57, "High"],
+      ["Reduced make-ready surprises", 0.28, "Moderate"],
+      ["Direct rent premium", 0.11, "Limited"]
+    ],
+    footnote: "Turnover work is usually a velocity play — less downtime, faster leasing, tighter control on rehab spend."
+  },
+  "Storefront Buildout": {
+    contractorBias: "retail frontage, MEP coordination, and commercial turnover scopes",
+    benchmarkTitle: "Storefront Buildout Benchmark",
+    benchmarkSub: "Average costs · neighborhood retail and mixed-use",
+    benchmarkRows: [
+      ["Storefront refresh", 0.29, [12000,32000]],
+      ["Interior vanilla box", 0.48, [28000,85000]],
+      ["MEP coordination package", 0.35, [18000,52000]],
+      ["Signage / facade package", 0.19, [6000,18000]],
+      ["Code / ADA adjustments", 0.24, [9000,26000]]
+    ],
+    roiTitle: "Retail Leasing Impact",
+    roiSub: "Leasing readiness and rent potential",
+    roiRows: [
+      ["Leasing readiness", 0.66, "High"],
+      ["Tenant interest improvement", 0.41, "Moderate"],
+      ["Vacancy reduction support", 0.38, "Moderate"],
+      ["Direct rent premium", 0.22, "Selective"]
+    ],
+    footnote: "Storefront work can materially improve leasing readiness, especially in higher-foot-traffic corridors."
+  },
+  "Waterproofing": {
+    contractorBias: "leak prevention, below-grade work, and envelope coordination",
+    benchmarkTitle: "Waterproofing Benchmark",
+    benchmarkSub: "Average costs · leak prevention and envelope work",
+    benchmarkRows: [
+      ["Basement waterproofing", 0.44, [12000,34000]],
+      ["Facade sealing", 0.26, [7000,20000]],
+      ["Roof / parapet sealing", 0.21, [6000,17000]],
+      ["Drainage correction", 0.19, [5000,16000]],
+      ["Localized leak remediation", 0.14, [2000,7000]]
+    ],
+    roiTitle: "Risk Reduction Impact",
+    roiSub: "Loss prevention and deferred-capex reduction",
+    roiRows: [
+      ["Leak recurrence reduction", 0.81, "Very high"],
+      ["Interior damage prevention", 0.58, "High"],
+      ["Insurance posture support", 0.29, "Moderate"],
+      ["Direct rent premium", 0.06, "Minimal"]
+    ],
+    footnote: "Waterproofing is mostly a risk-control and asset-protection spend rather than a rent-push investment."
+  }
+};
+
+const TRADE_POOLS = {
+  gc: [
+    ["HB","Hudson Brothers Contracting",true,"General Contractor","Pre-War Expert|Multifamily|Gut Reno|DOB Licensed"],
+    ["BR","Brookline Restoration Group",true,"General Contractor","Value-Add|Kitchen & Bath|Quick Turnaround|DOB Licensed"],
+    ["NY","Northside Renovations",true,"Design-Build GC","Modern Finishes|Boutique|Design-Build"],
+    ["LB","Linden Build Group",true,"General Contractor","Value-Add|Multifamily|Fast Turns|DOB Licensed"],
+    ["CH","Crown Heritage Builders",true,"General Contractor","Brownstones|Pre-War|Gut Reno|DOB Licensed"],
+    ["RT","Ridgewood Trades",false,"General Contractor","Budget-Focused|Quick Turn|Investor Friendly"],
+    ["PS","Prospect Structure Co.",false,"General Contractor","Structural|Brownstone|Multifamily"]
+  ],
+  plumbing: [
+    ["AP","Apex Plumbing & Heating",true,"Plumbing & Heating","Boilers|Gas Lines|Multifamily|Licensed Master Plumber"],
+    ["BK","Brooklyn Pipe Works",true,"Plumbing Contractor","Apartment Stacks|Drainage|Value-Focused"],
+    ["MP","Metro Pipe & Boiler",true,"Plumbing Contractor","Boiler Rooms|Emergency Response|Permits"],
+    ["FS","FlowState Plumbing",false,"Plumbing Contractor","Leak Work|Occupied Buildings|Quick Dispatch"]
+  ],
+  electrical: [
+    ["VE","VoltEdge Electric",true,"Electrical Contractor","Service Upgrades|Panels|DOB Filings|Multifamily"],
+    ["LC","Line Current NYC",false,"Electrical Contractor","Apartment Rewire|Lighting|Quick Turn"],
+    ["PR","Panel Room Electric",true,"Electrical Contractor","Common Areas|Feeders|Tenant Coordination"],
+    ["GS","Grid Source Electric",false,"Electrical Contractor","Budget-Focused|Rewire|Fixtures"]
+  ],
+  hvac: [
+    ["AT","AirTech Mechanical",true,"HVAC Contractor","Splits|Boiler Rooms|Ventilation|Multifamily"],
+    ["KM","Kings Mechanical",true,"Mechanical Contractor","Boilers|Controls|Service Contracts"],
+    ["CS","Climate Set Systems",false,"HVAC Contractor","Split Systems|Refrigerant|Quick Installs"],
+    ["DV","DraftVent Mechanical",true,"HVAC Contractor","Ventilation|Make-Up Air|Roof Equipment"]
+  ],
+  roofing: [
+    ["SR","Skyline Roofing",true,"Roofing Contractor","Flat Roofs|Waterproofing|Parapets|Local Law"],
+    ["UR","Urban Roof Systems",false,"Roofing Contractor","Repairs|Coatings|Budget-Friendly"],
+    ["TP","Topline Parapet & Roof",true,"Roofing Contractor","Leak Tracing|Parapets|Masonry Tie-In"],
+    ["WB","WeatherBlock Roofing",false,"Roofing Contractor","Emergency Repair|Coatings|Maintenance"]
+  ]
+};
+
+function fmtMoney(n){
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(2).replace(/\.00$/,'') + 'M';
+  if (n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function mulRange(range, factor){
+  return [Math.round(range[0]*factor), Math.round(range[1]*factor)];
+}
+function seededNum(str){
+  let h = 0;
+  for(let i=0;i<str.length;i++) h = (h * 31 + str.charCodeAt(i)) % 100000;
+  return h;
+}
+function tradeProjectFit(trade, project){
+  if(project === 'Boiler Replacement') return {gc:0.72, plumbing:1.16, electrical:0.92, hvac:1.10, roofing:0.42, all:1}[trade];
+  if(project === 'Roof Repair') return {gc:0.70, plumbing:0.55, electrical:0.60, hvac:0.66, roofing:1.22, all:1}[trade];
+  if(project === 'Kitchen / Bath') return {gc:1.00, plumbing:0.98, electrical:0.92, hvac:0.54, roofing:0.34, all:1}[trade];
+  if(project === 'Facade / Masonry') return {gc:0.86, plumbing:0.42, electrical:0.46, hvac:0.44, roofing:0.88, all:1}[trade];
+  if(project === 'Common Area Upgrade') return {gc:0.94, plumbing:0.58, electrical:0.74, hvac:0.42, roofing:0.36, all:1}[trade];
+  if(project === 'Apartment Turnover') return {gc:0.82, plumbing:0.72, electrical:0.68, hvac:0.34, roofing:0.22, all:1}[trade];
+  if(project === 'Storefront Buildout') return {gc:1.08, plumbing:0.76, electrical:0.80, hvac:0.72, roofing:0.26, all:1}[trade];
+  if(project === 'Waterproofing') return {gc:0.84, plumbing:0.48, electrical:0.32, hvac:0.30, roofing:1.02, all:1}[trade];
+  return {gc:1.05, plumbing:0.80, electrical:0.82, hvac:0.72, roofing:0.55, all:1}[trade];
+}
+function tradeMetricBias(trade){
+  return {all:1.0,gc:0.46,plumbing:0.21,electrical:0.19,hvac:0.16,roofing:0.13}[trade];
+}
+function makeContractor(base, locationName, projectName, trade){
+  const sm = SUBMARKETS[locationName];
+  const hash = seededNum(base[1] + locationName + projectName + trade);
+  const premium = sm.premium;
+  const fit = tradeProjectFit(trade, projectName);
+  const years = 6 + (hash % 13);
+  const reviews = 82 + (hash % 340);
+  const stars = Math.min(4.9, 4.2 + ((hash % 8) * 0.1));
+  const jobs = Math.round((28 + (hash % 76)) * fit);
+  const onTime = Math.min(96, Math.max(72, 76 + (hash % 18)));
+  let avgProject = 0;
+  if(trade === 'gc' || trade === 'all') avgProject = Math.round((145000 + (hash % 80000)) * premium);
+  else if(trade === 'plumbing') avgProject = Math.round((14000 + (hash % 18000)) * premium);
+  else if(trade === 'electrical') avgProject = Math.round((16000 + (hash % 22000)) * premium);
+  else if(trade === 'hvac') avgProject = Math.round((18000 + (hash % 28000)) * premium);
+  else if(trade === 'roofing') avgProject = Math.round((12000 + (hash % 26000)) * premium);
+
+  const projectLabel = {
+    gc:'Typical range for your project',
+    plumbing:'Typical plumbing range',
+    electrical:'Typical electrical range',
+    hvac:'Typical HVAC range',
+    roofing:'Typical roofing range',
+    all:'Typical range for your project'
+  }[trade];
+
+  const low = Math.round(avgProject * 0.88);
+  const high = Math.round(avgProject * 1.12);
+
+  const tradeSub = `${base[2]} · ${sm.borough}, NY · Est. ${2025 - years} · ${years} years`;
+  const tradePros = {
+    gc:['Strong project coordination across multiple trades','Clearer scoping and fewer late-stage surprises',`Good fit for ${projectName.toLowerCase()} work in ${locationName}`],
+    plumbing:['Fast response on leak, riser, and boiler-related issues','Solid permit handling and closeout for plumbing scopes',`Better-than-average pricing for ${projectName.toLowerCase()} work`],
+    electrical:['Strong on service upgrades, feeders, and apartment rewires','Faster inspection turnover than local median',`Reliable fit for ${projectName.toLowerCase()} scopes`],
+    hvac:['Good mechanical coordination and system startup','Strong maintenance and controls recommendations',`Responsive for ${projectName.toLowerCase()} planning`],
+    roofing:['Good leak tracing and waterproofing documentation','Competitive pricing on flat-roof and coating scopes',`Strong fit for ${projectName.toLowerCase()} needs`],
+    all:['Good overall local review profile across pricing, speed, and quality','Matched to the property type and project scope',`Strong presence in ${locationName}`]
+  }[trade];
+  const tradeCons = {
+    gc:['Booked out during peak renovation periods','Pricing tends to run above budget contractors','Punch-list speed can vary by superintendent'],
+    plumbing:['Emergency work priced above scheduled work','Weekend availability is limited','Finish restoration may be subcontracted'],
+    electrical:['Shutoff coordination can add lead time','Smaller projects may get lower scheduling priority','Fixture-level finish work can be inconsistent'],
+    hvac:['Lead times increase during summer season','Premium equipment options can raise change orders','Some teams are stronger on systems than aesthetics'],
+    roofing:['Storm periods can delay response windows','Guarantee terms vary by membrane/coating system','Parapet/masonry tie-ins may require separate trade coordination'],
+    all:['Availability may tighten on larger projects','Pricing is not always the cheapest in the submarket','Owner oversight still matters during punch-list phase']
+  }[trade];
+
+  const metrics = trade === 'gc' || trade === 'all'
+    ? [["Jobs (24m)", String(jobs)], ["Avg. Project", fmtMoney(avgProject)], ["On-Time Rate", onTime + '%'], ["Response Time", (hash % 2 ? '<24h' : '12–24h')]]
+    : trade === 'plumbing'
+    ? [["Jobs (24m)", String(jobs)], ["Avg. Ticket", fmtMoney(avgProject)], ["Permit Closeout", Math.min(97, onTime + 4) + '%'], ["Response Time", (hash % 2 ? '<8h' : '12–24h')]]
+    : trade === 'electrical'
+    ? [["Jobs (24m)", String(jobs)], ["Avg. Ticket", fmtMoney(avgProject)], ["Reinspection Rate", Math.max(3, 12 - (hash % 6)) + '%'], ["Response Time", (hash % 2 ? '<24h' : '24–48h')]]
+    : trade === 'hvac'
+    ? [["Jobs (24m)", String(jobs)], ["Avg. Ticket", fmtMoney(avgProject)], ["Callback Rate", Math.max(4, 10 - (hash % 4)) + '%'], ["Response Time", (hash % 2 ? '<24h' : '24h')]]
+    : [["Jobs (24m)", String(jobs)], ["Avg. Ticket", fmtMoney(avgProject)], ["Leak Recurrence", Math.max(5, 13 - (hash % 5)) + '%'], ["Response Time", (hash % 2 ? '<12h' : '<24h')]];
+
+  return {
+    initials: base[0], name: base[1], verified: base[2], sub: tradeSub,
+    tags: base[3].split('|'), stars, reviews, pros: tradePros, cons: tradeCons,
+    metrics, pricingLabel: projectLabel, pricing: fmtMoney(low) + ' – ' + fmtMoney(high)
+  };
+}
+function generateTradeBlock(locationName, projectName, trade){
+  const sm = SUBMARKETS[locationName];
+  const pool = trade === 'all'
+    ? [...TRADE_POOLS.gc.slice(0,2), TRADE_POOLS.plumbing[0], TRADE_POOLS.electrical[0]]
+    : TRADE_POOLS[trade];
+  const contractors = pool.map(x => makeContractor(x, locationName, projectName, trade));
+  const baseMatches = sm.matched;
+  const fit = tradeProjectFit(trade, projectName);
+  const count = trade === 'all' ? baseMatches : Math.max(4, Math.round(baseMatches * fit * 0.52));
+  const label = TRADE_META[trade].label;
+  return {
+    resultsTitle: `${trade === 'all' ? 'Top Contractors' : label + ' Contractors'} · ${locationName}`,
+    resultsSub: `Filtered for ${PROJECTS[projectName].contractorBias}`,
+    matchCount: `${count} MATCHES`,
+    contractors,
+    contractorCount: trade === 'all' ? sm.contractors : Math.max(62, Math.round(sm.contractors * tradeMetricBias(trade) * fit)),
+    reviewCount: trade === 'all' ? sm.reviews : Math.max(1800, Math.round(sm.reviews * tradeMetricBias(trade) * fit)),
+    matchedCount: count,
+    avgProjectDisplay: trade === 'all'
+      ? fmtMoney((contractors.reduce((a,c)=> a + parseInt(String(c.pricing.match(/\$([0-9,.]+)(K|M)?/)[1]).replace(/,/g,'')),0) / contractors.length) * 1000)
+      : contractors[0].metrics[1][1]
+  };
+}
+function buildLocationProject(locationName, projectName, trade){
+  const sm = SUBMARKETS[locationName];
+  const proj = PROJECTS[projectName];
+  const factor = sm.premium;
+  const tradeBlock = generateTradeBlock(locationName, projectName, trade);
+  const benchmarks = proj.benchmarkRows.map(([label,width,range]) => {
+    const [lo, hi] = mulRange(range, factor);
+    return [label, `${Math.round(width*100)}%`, `${fmtMoney(lo)}–${fmtMoney(hi)}`];
+  });
+  const stats = [
+    {label:"Contractors Analyzed", value: tradeBlock.contractorCount.toLocaleString(), sub:`Across ${trade === 'all' ? locationName : TRADE_META[trade].label.toLowerCase()} contractor networks`, cls:"gold"},
+    {label:"Reviews Processed", value: tradeBlock.reviewCount >= 1000 ? (tradeBlock.reviewCount/1000).toFixed(1).replace(/\.0$/,'') + 'K' : String(tradeBlock.reviewCount), sub:`AI-analyzed for ${proj.contractorBias}`, cls:""},
+    {label:"Top Matched for You", value: String(tradeBlock.matchedCount), sub:"Based on your property type, location, and trade", cls:"success"},
+    {label: trade === 'all' || trade === 'gc' ? "Avg. Project Savings" : "Avg. Project", value: trade === 'all' ? fmtMoney(sm.savings) : tradeBlock.avgProjectDisplay, sub: trade === 'all' ? "Via benchmark comparison (vs. median bid)" : `Typical ${TRADE_META[trade].label.toLowerCase()} package size`, cls:""}
+  ];
+  return {
+    stats,
+    benchmarkTitle: proj.benchmarkTitle,
+    benchmarkSub: `${proj.benchmarkSub} · ${locationName}`,
+    benchmarks,
+    roiTitle: proj.roiTitle,
+    roiSub: proj.roiSub,
+    roiRows: proj.roiRows.map(([a,b,c]) => [a, `${Math.round(b*100)}%`, c]),
+    roiFootnote: proj.footnote,
+    alert: {
+      title: `${sm.risk} contractors in your area have active complaints`,
+      text: `BRIC's monitoring caught <b>${sm.risk} contractors with recent DOB issues, complaint spikes, or weak permit-closeout patterns</b> in ${locationName}. We've filtered these out of your best matches.`
+    },
+    tradeBlock
+  };
+}
+
+const els = {
+  location: document.getElementById('locationSelect'),
+  project: document.getElementById('projectSelect'),
+  tradeBtns: [...document.querySelectorAll('.fb-chip[data-trade]')],
+  topStats: document.getElementById('topStats'),
+  resultsTitle: document.getElementById('resultsTitle'),
+  resultsSub: document.getElementById('resultsSub'),
+  matchCount: document.getElementById('matchCount'),
+  contractorList: document.getElementById('contractorList'),
+  alertBox: document.getElementById('alertBox'),
+  benchmarkTitle: document.getElementById('benchmarkTitle'),
+  benchmarkSub: document.getElementById('benchmarkSub'),
+  benchmarkRows: document.getElementById('benchmarkRows'),
+  roiTitle: document.getElementById('roiTitle'),
+  roiSub: document.getElementById('roiSub'),
+  roiRows: document.getElementById('roiRows'),
+  roiFootnote: document.getElementById('roiFootnote')
+};
+
+let state = { location: els.location.value, project: els.project.value, trade: 'all' };
+
+function starMarkup(rating){
+  const full = Math.floor(rating);
+  let s = '';
+  for(let i=0;i<4;i++) s += i < Math.min(full,4) ? '★' : '<span class="dim">★</span>';
+  s += rating >= 4.5 || full >= 5 ? '★' : '<span class="dim">★</span>';
+  return s;
+}
+function renderStats(stats){
+  els.topStats.innerHTML = stats.map((s, i) => `
+    <div class="ts-card fade-up" style="animation-delay:${0.05 + i*0.05}s">
+      <div class="ts-label">${s.label}</div>
+      <div class="ts-val ${s.cls||''}">${s.value}</div>
+      <div class="ts-sub">${s.sub}</div>
+    </div>
+  `).join('');
+}
+function rowMarkup(rows){
+  return rows.map(r => `
+    <div class="bm-row">
+      <span class="bm-cat">${r[0]}</span>
+      <div class="bm-bar"><div class="bm-fill" style="width:${r[1]}"></div></div>
+      <span class="bm-range">${r[2]}</span>
+    </div>
+  `).join('');
+}
+function contractorMarkup(c){
+  const pros = c.pros.map(x => `<div class="pc-item"><span class="pc-marker pros">+</span>${x}</div>`).join('');
+  const cons = c.cons.map(x => `<div class="pc-item"><span class="pc-marker cons">−</span>${x}</div>`).join('');
+  const metrics = c.metrics.map(([k,v]) => `<div><div class="cm-lab">${k}</div><div class="cm-val">${v}</div></div>`).join('');
+  const tags = c.tags.map(t => `<span class="c-tag">${t}</span>`).join('');
+  return `
+    <div class="c-card">
+      <div class="c-top">
+        <div class="c-avatar">${c.initials}</div>
+        <div class="c-info">
+          <div class="c-name-row">
+            <span class="c-name">${c.name}</span>
+            ${c.verified ? '<span class="c-verified">◆ Verified</span>' : ''}
+          </div>
+          <div class="c-sub">${c.sub}</div>
+          <div class="c-tags">${tags}</div>
+        </div>
+        <div class="c-rating">
+          <div class="c-stars">${starMarkup(c.stars)}</div>
+          <div class="c-rating-val">${c.stars.toFixed(1)}</div>
+          <div class="c-rating-count">${c.reviews} reviews</div>
+        </div>
+      </div>
+
+      <div class="ai-summary">
+        <div class="ai-sum-hd"><span class="ai-sum-hd-icon">◈</span>AI Review Summary · Analyzed ${c.reviews} reviews</div>
+        <div class="pros-cons">
+          <div class="pc-col">
+            <div class="pc-title pros">✓ Top Strengths</div>
+            ${pros}
+          </div>
+          <div class="pc-col">
+            <div class="pc-title cons">△ Common Concerns</div>
+            ${cons}
+          </div>
+        </div>
+      </div>
+
+      <div class="c-metrics">${metrics}</div>
+
+      <div class="c-footer">
+        <div class="c-pricing">${c.pricingLabel}: <b>${c.pricing}</b></div>
+        <div class="c-actions">
+          <button class="c-btn">View Profile</button>
+          <button class="c-btn c-btn-gold">Request Bid</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function bindRequestButtons(){
+  document.querySelectorAll('.c-btn-gold').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.textContent = '✓ Request Sent';
+      btn.style.background = 'rgba(109,186,143,0.15)';
+      btn.style.color = 'var(--success)';
+      btn.style.borderColor = 'rgba(109,186,143,0.3)';
+      btn.disabled = true;
+    }, { once:true });
+  });
+}
+function maybeAutoSwitchTradeForProject(project){
+  if(project === 'Boiler Replacement' && state.trade === 'all') state.trade = 'plumbing';
+  if(project === 'Roof Repair' && state.trade === 'all') state.trade = 'roofing';
+}
+function render(){
+  const view = buildLocationProject(state.location, state.project, state.trade);
+  const tradeBlock = view.tradeBlock;
+
+  renderStats(view.stats);
+  els.resultsTitle.textContent = tradeBlock.resultsTitle;
+  els.resultsSub.textContent = tradeBlock.resultsSub;
+  els.matchCount.textContent = tradeBlock.matchCount;
+  els.contractorList.innerHTML = tradeBlock.contractors.map(contractorMarkup).join('');
+  bindRequestButtons();
+
+  els.alertBox.innerHTML = `
+    <div class="ab-hd">△ Risk Alert</div>
+    <div class="ab-title">${view.alert.title}</div>
+    <div class="ab-text">${view.alert.text}</div>
+  `;
+
+  els.benchmarkTitle.textContent = view.benchmarkTitle;
+  els.benchmarkSub.textContent = view.benchmarkSub;
+  els.benchmarkRows.innerHTML = rowMarkup(view.benchmarks);
+
+  els.roiTitle.textContent = view.roiTitle;
+  els.roiSub.textContent = view.roiSub;
+  els.roiRows.innerHTML = rowMarkup(view.roiRows);
+  els.roiFootnote.textContent = view.roiFootnote;
+
+  els.tradeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.trade === state.trade));
+}
+
+els.location.addEventListener('change', () => {
+  state.location = els.location.value;
+  render();
+});
+els.project.addEventListener('change', () => {
+  state.project = els.project.value;
+  maybeAutoSwitchTradeForProject(state.project);
+  render();
+});
+els.tradeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.trade = btn.dataset.trade;
+    render();
   });
 });
+
+render();
 </script>
+
 </body>
 </html>
