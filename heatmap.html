@@ -59,6 +59,12 @@ a{text-decoration:none;color:inherit}
 .detail-list{display:grid;grid-template-columns:1fr auto;row-gap:9px;column-gap:14px;font-size:14px}
 .detail-list .k{color:var(--muted)}
 .detail-list .v{font-family:'DM Mono',monospace;color:var(--text);font-weight:500;text-align:right}
+.intent-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.intent-chip{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.intent-chip.active{border-color:rgba(201,168,76,.42);background:rgba(201,168,76,.12);color:var(--gold)}
+.intent-highlight{padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(201,168,76,.12),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.22);margin-bottom:12px}
+.intent-highlight-k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:6px}
+.intent-highlight-v{font-size:30px;font-weight:700;line-height:1;color:var(--gold)}
 .legend{position:absolute;left:16px;bottom:16px;background:rgba(12,15,13,.88);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:220px;z-index:900}
 .legend-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);margin-bottom:10px}
 .legend-scale{height:10px;border-radius:999px;overflow:hidden;display:grid;grid-template-columns:repeat(24,1fr);border:1px solid rgba(255,255,255,.06)}
@@ -234,8 +240,53 @@ function rankedData(query=''){const q=query.trim().toLowerCase();return [...SUBM
 function normalizeScores(items){const scores=items.map(n=>signalMeta[signal].score(n)),min=Math.min(...scores),max=Math.max(...scores);return new Map(items.map(n=>[n.id,max===min?.65:(signalMeta[signal].score(n)-min)/(max-min)]))}
 function selected(){return SUBMARKETS.find(n=>n.id===selectedId)||SUBMARKETS[0]}
 function renderLegend(){document.getElementById('legendTitle').textContent=signalMeta[signal].legend;document.getElementById('legendScale').innerHTML=Array.from({length:24},(_,i)=>`<span style="background:${colorScale(i/23)}"></span>`).join('')}
-function renderStats(){const items=rankedData('');let cards=[];if(signal==='rent'){const increasing=items.filter(n=>n.rentYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.rentYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.rent30,0)/items.length,declining=items.filter(n=>n.rentYoY<0).length;cards=[[String(increasing),'Increasing'],[`${avgYoY>=0?'+':''}${avgYoY.toFixed(1)}%`,'Avg YoY'],[`${avg30>=0?'+':''}${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']]}else if(signal==='activity'){const tx=items.reduce((s,n)=>s+n.transactions,0),avg=Math.round(items.reduce((s,n)=>s+n.avgPsf,0)/items.length),buyers=items.reduce((s,n)=>s+n.buyers,0),units=items.reduce((s,n)=>s+n.unitsSold,0);cards=[[String(tx),'Transactions'],[`$${avg}`,'Avg Price / SF'],[String(buyers),'Different Buyers'],[String(units),'Units Sold']]}else if(signal==='value'){const increasing=items.filter(n=>n.valueYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.valueYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.value30,0)/items.length,declining=items.filter(n=>n.valueYoY<0).length;cards=[[String(increasing),'Increasing'],[`+${avgYoY.toFixed(1)}%`,'Avg YoY'],[`+${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']]}else{const total=items.reduce((s,n)=>s+n.intents[intentFocus],0),avg=total/items.length,top=rankedData('')[0];cards=[[String(total),`${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Signals`],[top.name,'Top Submarket'],[avg.toFixed(1),'Avg / Market'],[String(items.length),'Submarkets']]}document.getElementById('statStrip').innerHTML=cards.map(([v,l])=>`<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`).join('')}
-function renderSelectionCard(){const n=selected();document.getElementById('selectionCard').innerHTML=`<div class="eyebrow">Selected Submarket</div><h3 class="selection-title">${n.name}</h3><div class="selection-sub">${n.borough} · signal view: ${signalMeta[signal].title}${signal==='intent'?` · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)}`:''}</div><div class="metric-grid"><div class="metric-box"><div class="metric-k">Rent YoY</div><div class="metric-v">${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%</div></div><div class="metric-box"><div class="metric-k">30 Day Rent</div><div class="metric-v">${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}%</div></div><div class="metric-box"><div class="metric-k">Transactions</div><div class="metric-v">${n.transactions}</div></div><div class="metric-box"><div class="metric-k">Avg Price / SF</div><div class="metric-v">$${n.avgPsf}</div></div></div><div class="detail-list"><div class="k">Total Sales Volume</div><div class="v">$${n.volume}M</div><div class="k">Different Buyers</div><div class="v">${n.buyers}</div><div class="k">Units Sold</div><div class="v">${n.unitsSold}</div><div class="k">Value Trend YoY</div><div class="v">${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%</div><div class="k">Value Trend 30 Day</div><div class="v">${n.value30>=0?'+':''}${n.value30.toFixed(1)}%</div><div class="k">Buying / Selling</div><div class="v">${n.intents.buying} / ${n.intents.selling}</div><div class="k">Refi / Renovating</div><div class="v">${n.intents.refinancing} / ${n.intents.renovating}</div></div>`}
+function renderStats(){
+  const items=rankedData('');
+  let cards=[];
+  if(signal==='rent'){
+    const increasing=items.filter(n=>n.rentYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.rentYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.rent30,0)/items.length,declining=items.filter(n=>n.rentYoY<0).length;
+    cards=[[String(increasing),'Increasing'],[`${avgYoY>=0?'+':''}${avgYoY.toFixed(1)}%`,'Avg YoY'],[`${avg30>=0?'+':''}${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']];
+  }else if(signal==='activity'){
+    const tx=items.reduce((s,n)=>s+n.transactions,0),avg=Math.round(items.reduce((s,n)=>s+n.avgPsf,0)/items.length),buyers=items.reduce((s,n)=>s+n.buyers,0),units=items.reduce((s,n)=>s+n.unitsSold,0);
+    cards=[[String(tx),'Transactions'],[`$${avg}`,'Avg Price / SF'],[String(buyers),'Different Buyers'],[String(units),'Units Sold']];
+  }else if(signal==='value'){
+    const increasing=items.filter(n=>n.valueYoY>0).length,avgYoY=items.reduce((s,n)=>s+n.valueYoY,0)/items.length,avg30=items.reduce((s,n)=>s+n.value30,0)/items.length,declining=items.filter(n=>n.valueYoY<0).length;
+    cards=[[String(increasing),'Increasing'],[`+${avgYoY.toFixed(1)}%`,'Avg YoY'],[`+${avg30.toFixed(1)}%`,'Avg 30 Day'],[String(declining),'Declining']];
+  }else{
+    const total=items.reduce((s,n)=>s+n.intents[intentFocus],0);
+    const avg=total/items.length;
+    const top=items[0];
+    const concentration = top ? ((top.intents[intentFocus]/total)*100) : 0;
+    cards=[[String(total),`${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Signals`],[top.name,'Top Submarket'],[avg.toFixed(1),'Avg / Market'],[`${concentration.toFixed(0)}%`,'Top Share']];
+  }
+  document.getElementById('statStrip').innerHTML=cards.map(([v,l])=>`<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`).join('');
+}
+function renderSelectionCard(){
+  const n=selected();
+  const intentChips=['buying','selling','refinancing','renovating'].map(k=>`<div class="intent-chip ${intentFocus===k?'active':''}">${k.charAt(0).toUpperCase()+k.slice(1)} ${n.intents[k]}</div>`).join('');
+  const intentHighlight = `<div class="intent-highlight"><div class="intent-highlight-k">${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)} Intent Count</div><div class="intent-highlight-v">${n.intents[intentFocus]}</div></div>`;
+  document.getElementById('selectionCard').innerHTML=
+    `<div class="eyebrow">Selected Submarket</div>
+     <h3 class="selection-title">${n.name}</h3>
+     <div class="selection-sub">${n.borough} · signal view: ${signalMeta[signal].title}${signal==='intent'?` · ${intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1)}`:''}</div>
+     ${intentHighlight}
+     <div class="intent-chip-row">${intentChips}</div>
+     <div class="metric-grid">
+      <div class="metric-box"><div class="metric-k">Rent YoY</div><div class="metric-v">${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%</div></div>
+      <div class="metric-box"><div class="metric-k">30 Day Rent</div><div class="metric-v">${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}%</div></div>
+      <div class="metric-box"><div class="metric-k">Transactions</div><div class="metric-v">${n.transactions}</div></div>
+      <div class="metric-box"><div class="metric-k">Avg Price / SF</div><div class="metric-v">$${n.avgPsf}</div></div>
+     </div>
+     <div class="detail-list">
+      <div class="k">Total Sales Volume</div><div class="v">$${n.volume}M</div>
+      <div class="k">Different Buyers</div><div class="v">${n.buyers}</div>
+      <div class="k">Units Sold</div><div class="v">${n.unitsSold}</div>
+      <div class="k">Value Trend YoY</div><div class="v">${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%</div>
+      <div class="k">Value Trend 30 Day</div><div class="v">${n.value30>=0?'+':''}${n.value30.toFixed(1)}%</div>
+      <div class="k">Buying / Selling</div><div class="v">${n.intents.buying} / ${n.intents.selling}</div>
+      <div class="k">Refi / Renovating</div><div class="v">${n.intents.refinancing} / ${n.intents.renovating}</div>
+     </div>`;
+}
 function markerHtml(n,intensity,active){const color=colorScale(intensity),value=signalMeta[signal].value(n),meta=signal==='activity' ? `$${n.avgPsf}/SF` : signal==='intent' ? intentFocus.charAt(0).toUpperCase()+intentFocus.slice(1) : n.borough;return `<div class="marker-card ${active?'active':''}" style="border-color:${active?'rgba(255,255,255,.28)':'rgba(255,255,255,.08)'};background:linear-gradient(180deg,rgba(17,20,18,.95),rgba(13,16,14,.9));"><div class="marker-name">${n.name}</div><div class="marker-value" style="color:${color}">${value}</div><div class="marker-meta">${meta}</div><div class="marker-pointer" style="background:rgba(14,17,15,.92)"></div></div>`}
 function popupHtml(n){return `<div class="map-popup-title">${n.name}</div><div class="map-popup-sub">${n.borough}</div><div class="map-popup-grid"><div><b>Rent YoY</b>${n.rentYoY>=0?'+':''}${n.rentYoY.toFixed(1)}%</div><div><b>30 Day Rent</b>${n.rent30>=0?'+':''}${n.rent30.toFixed(1)}%</div><div><b>Transactions</b>${n.transactions}</div><div><b>Avg Price / SF</b>$${n.avgPsf}</div><div><b>Value YoY</b>${n.valueYoY>=0?'+':''}${n.valueYoY.toFixed(1)}%</div><div><b>Units Sold</b>${n.unitsSold}</div></div>`}
 function renderMarkers(){const items=rankedData(''),normalized=normalizeScores(items);markersLayer.clearLayers();items.forEach(n=>{const size=84+(normalized.get(n.id)*12);const icon=L.divIcon({className:'submarket-marker',html:markerHtml(n,normalized.get(n.id),n.id===selectedId),iconSize:[size,52],iconAnchor:[size/2,26]});const marker=L.marker([n.lat,n.lng],{icon,keyboard:false,riseOnHover:true}).addTo(markersLayer);marker.bindPopup(popupHtml(n),{offset:[0,-8],closeButton:false});marker.on('mouseover',()=>marker.openPopup());marker.on('mouseout',()=>marker.closePopup());marker.on('click',()=>{selectedId=n.id;renderAll()})})}
@@ -243,7 +294,16 @@ function renderList(){const q=document.getElementById('searchInput').value||'',i
 function renderAll(){renderLegend();renderStats();renderSelectionCard();renderMarkers();renderList()}
 function initMap(){map=L.map('map',{zoomControl:true,attributionControl:true,center:[40.724,-73.944],zoom:11,minZoom:10,maxZoom:14,scrollWheelZoom:true,preferCanvas:true});const bounds=L.latLngBounds([[40.54,-74.25],[40.93,-73.68]]);map.setMaxBounds(bounds.pad(.15));L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);markersLayer=L.layerGroup().addTo(map);renderAll()}
 document.querySelectorAll('.signal-pill').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.signal-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');signal=btn.dataset.signal;renderAll()}))
-document.querySelectorAll('.intent-pill').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.intent-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');intentFocus=btn.dataset.intent;renderAll()}))
+document.querySelectorAll('.intent-pill').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.intent-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  intentFocus=btn.dataset.intent;
+  document.querySelectorAll('.signal-pill').forEach(b=>b.classList.remove('active'));
+  const intentSignalBtn = document.querySelector('.signal-pill[data-signal="intent"]');
+  if(intentSignalBtn){ intentSignalBtn.classList.add('active'); }
+  signal='intent';
+  renderAll();
+}))
 document.getElementById('searchInput').addEventListener('input',renderList)
 initMap();
 </script>
