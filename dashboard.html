@@ -91,13 +91,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   background:rgba(13,15,14,0.85);backdrop-filter:blur(14px);
   position:sticky;top:0;z-index:50;
 }
-
-.tb-left{display:flex;align-items:center;gap:0.6rem;min-width:0}
-.tb-home{display:none;align-items:center;gap:0.35rem;padding:0.5rem 0.8rem;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.6);font-size:0.78rem;font-family:var(--sans);border-radius:3px;cursor:pointer;transition:all 0.2s;text-decoration:none}
-.tb-home:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
-.tb-menu{display:none;width:34px;height:34px;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.6);border-radius:3px;cursor:pointer;font-size:1rem}
-.tb-menu:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:180}
 .tb-search{
   flex:1;max-width:440px;position:relative;
 }
@@ -352,29 +345,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 }
 .ai-btn:hover{background:var(--gold-dim);border-color:var(--gold)}
 
-
-/* ═══ REPORTS ═══ */
-.panel-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.18rem}
-.reports-list{padding:0.85rem 1rem 1rem}
-.report-item{
-  display:flex;justify-content:space-between;align-items:center;gap:1rem;
-  padding:0.85rem 0.4rem;border-bottom:1px solid rgba(255,255,255,0.05)
-}
-.report-item:last-child{border-bottom:none}
-.report-main{min-width:0;flex:1}
-.report-title{font-size:0.82rem;font-weight:600;color:var(--paper);margin-bottom:0.12rem}
-.report-sub{font-size:0.72rem;color:rgba(255,255,255,0.46);line-height:1.45}
-.report-meta{font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.3);margin-top:0.28rem;letter-spacing:0.03em}
-.report-actions{flex-shrink:0}
-.report-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;
-  padding:0.45rem 0.8rem;border-radius:3px;border:1px solid rgba(201,168,76,0.3);
-  color:var(--gold);text-decoration:none;background:transparent
-}
-.report-btn:hover{background:var(--gold-dim)}
-.empty-note,.report-item.empty{color:rgba(255,255,255,0.4)}
-
 /* ═══ ANIMATIONS ═══ */
 .fade-up{opacity:0;transform:translateY(10px);animation:fadeUp 0.5s ease forwards}
 .fade-up:nth-child(1){animation-delay:0.05s}
@@ -396,11 +366,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .app{grid-template-columns:1fr}
   .sidebar{position:fixed;left:-240px;top:0;z-index:200;transition:left 0.3s}
   .sidebar.open{left:0}
-  .topbar{padding:1rem 1.25rem;gap:0.75rem;flex-wrap:wrap}
-  .tb-left{width:100%}
-  .tb-menu,.tb-home,.sidebar-overlay.show{display:flex}
-  .tb-search{max-width:none}
-  .tb-right{width:100%;justify-content:flex-start;flex-wrap:wrap}
+  .topbar{padding:1rem 1.25rem}
   .content{padding:1.5rem 1.25rem 3rem}
   .kpi-row{grid-template-columns:1fr 1fr;gap:0.75rem}
   .kpi-val{font-size:1.4rem}
@@ -412,13 +378,16 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .kpi-row{grid-template-columns:1fr 1fr}
   .welcome-title{font-size:1.4rem}
   .ai-banner{flex-direction:column}
-  .tb-search{order:3;width:100%}
-  .tb-right{gap:.5rem}
 }
 </style>
+
+<style>
+.network-link-card{display:block;text-decoration:none;color:inherit}
+.network-link-card *{pointer-events:none}
+</style>
+
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="app">
 
@@ -432,9 +401,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <nav class="sb-section">
       <div class="sb-label">Workspace</div>
       <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
-      <a class="sb-item" href="#propertiesSection"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="propertyCountBadge">0</span></a>
-      <a class="sb-item" href="#activitySection"><span class="sb-icon">⬥</span> Activity <span class="sb-badge" id="activityCountBadge">0</span></a>
-      <a class="sb-item" href="#reportsSection"><span class="sb-icon">◈</span> Saved Reports <span class="sb-badge" id="reportCountBadge">0</span></a>
+      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge">3</span></a>
+      <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
+      <a class="sb-item"><span class="sb-icon">◈</span> Saved Reports</a>
 
       <div class="sb-label" style="margin-top:0.75rem">Studios</div>
       <a class="sb-item" href="valuation.html"><span class="sb-icon">▲</span> Valuation Studio</a>
@@ -465,16 +434,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
     <!-- Topbar -->
     <div class="topbar">
-      <div class="tb-left">
-        <button class="tb-menu" id="mobileMenuBtn" aria-label="Open workspace menu">☰</button>
-        <a href="index.html" class="tb-home">← Home</a>
-        <div class="tb-search">
-          <input type="text" placeholder="Search properties, addresses, markets, buyers..."/>
-        </div>
+      <div class="tb-search">
+        <input type="text" placeholder="Search properties, addresses, markets, buyers..."/>
       </div>
       <div class="tb-right">
-        <button class="tb-btn" onclick="window.location.href='valuation.html'">⬆ Upload Rent Roll</button>
-        <button class="tb-btn tb-btn-primary" onclick="window.location.href='valuation.html'">+ Add Property</button>
+        <button class="tb-btn">⬆ Upload Rent Roll</button>
+        <button class="tb-btn tb-btn-primary">+ Add Property</button>
         <button class="tb-icon-btn">◈<span class="tb-notif-dot"></span></button>
       </div>
     </div>
@@ -492,16 +457,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
 
       <!-- AI INSIGHT BANNER -->
-      <div class="ai-banner fade-up" id="aiInsightBanner">
+      <div class="ai-banner fade-up">
         <div class="ai-icon pulse">◈</div>
         <div class="ai-content">
-          <div class="ai-label" id="aiInsightLabel">Workspace Insight</div>
-          <div class="ai-text" id="aiInsightText">
-            Save a few valuations and BRIC will summarize portfolio movement, NOI trends, and submarket concentration here.
+          <div class="ai-label">AI Market Insight · Updated 12m ago</div>
+          <div class="ai-text">
+            <b>142 Bedford Ave</b> is in a submarket with <b>+8.4% YoY rent growth</b>. Based on comparable sales, your property's estimated value has increased approximately <b>$280K</b> since your last valuation. Consider re-running your valuation or exploring refinancing options.
           </div>
           <div class="ai-actions">
-            <a href="valuation.html" class="ai-btn">→ Run Valuation</a>
+            <a href="valuation.html" class="ai-btn">→ Re-run Valuation</a>
             <a href="heatmap.html" class="ai-btn">→ View Submarket Heatmap</a>
+            <a class="ai-btn" style="border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4)">Dismiss</a>
           </div>
         </div>
       </div>
@@ -511,34 +477,34 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <div class="kpi-card fade-up">
           <div class="kpi-top">
             <div class="kpi-label">Portfolio Value</div>
-            <div class="kpi-trend up" id="kpiPortfolioTrend">LIVE</div>
+            <div class="kpi-trend up">↑ 12.4%</div>
           </div>
-          <div class="kpi-val" id="kpiPortfolioValue">$0</div>
-          <div class="kpi-sub" id="kpiPortfolioSub">No saved valuations yet</div>
+          <div class="kpi-val">$7.84M</div>
+          <div class="kpi-sub">Across 3 properties · 18 units</div>
         </div>
         <div class="kpi-card fade-up">
           <div class="kpi-top">
             <div class="kpi-label">Annual NOI</div>
-            <div class="kpi-trend up" id="kpiNoiTrend">NOI</div>
+            <div class="kpi-trend up">↑ 6.1%</div>
           </div>
-          <div class="kpi-val" id="kpiAnnualNoi">$0</div>
-          <div class="kpi-sub" id="kpiNoiSub">Based on saved valuations</div>
+          <div class="kpi-val">$412K</div>
+          <div class="kpi-sub">Trailing 12 months</div>
         </div>
         <div class="kpi-card fade-up">
           <div class="kpi-top">
             <div class="kpi-label">Avg. Cap Rate</div>
-            <div class="kpi-trend down" id="kpiCapTrend">CAP</div>
+            <div class="kpi-trend down">↓ 0.3%</div>
           </div>
-          <div class="kpi-val" id="kpiAvgCap">—</div>
-          <div class="kpi-sub" id="kpiCapSub">Across saved valuations</div>
+          <div class="kpi-val">5.26%</div>
+          <div class="kpi-sub">Weighted across portfolio</div>
         </div>
         <div class="kpi-card fade-up">
           <div class="kpi-top">
-            <div class="kpi-label">Properties Tracked</div>
-            <div class="kpi-trend up" id="kpiPropertyTrend">WORKSPACE</div>
+            <div class="kpi-label">Occupancy</div>
+            <div class="kpi-trend up">↑ 100%</div>
           </div>
-          <div class="kpi-val" id="kpiPropertyCount">0</div>
-          <div class="kpi-sub" id="kpiPropertySub">Save a valuation to start</div>
+          <div class="kpi-val">100%</div>
+          <div class="kpi-sub">18 of 18 units occupied</div>
         </div>
       </div>
 
@@ -546,7 +512,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="grid-2">
 
         <!-- Properties Table -->
-        <div class="panel" id="propertiesSection">
+        <div class="panel">
           <div class="panel-hd">
             <div class="panel-title">Your Properties</div>
             <a class="panel-link">View All →</a>
@@ -561,7 +527,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="propertiesTableBody">
+            <tbody>
               <tr>
                 <td>
                   <div class="p-name">
@@ -676,29 +642,60 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <div class="panel">
           <div class="panel-hd">
             <div class="panel-title">Portfolio NOI Trend</div>
-            <a class="panel-link" id="noiTrendWindowLabel">Latest 12 valuations</a>
+            <a class="panel-link">12M</a>
           </div>
           <div class="chart-area">
             <div class="chart-legend">
               <div class="cl-item"><div class="cl-dot" style="background:var(--gold)"></div>Your Portfolio</div>
-              <div class="cl-item"><div class="cl-dot" style="background:rgba(139,158,232,0.5)"></div>Prior Average</div>
+              <div class="cl-item"><div class="cl-dot" style="background:rgba(139,158,232,0.5)"></div>Submarket Avg</div>
             </div>
-            <svg class="chart-svg" id="portfolioNoiChart" viewBox="0 0 320 180" preserveAspectRatio="none"></svg>
+            <svg class="chart-svg" viewBox="0 0 320 180" preserveAspectRatio="none">
+              <!-- grid -->
+              <line x1="0" y1="30" x2="320" y2="30" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="75" x2="320" y2="75" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="165" x2="320" y2="165" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+              <!-- Submarket (bg line) -->
+              <path d="M 10 110 L 40 105 L 70 108 L 100 100 L 130 95 L 160 90 L 190 88 L 220 85 L 250 80 L 280 76 L 310 72"
+                fill="none" stroke="rgba(139,158,232,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+              <!-- Portfolio -->
+              <defs>
+                <linearGradient id="goldGrad" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(201,168,76,0.25)"/>
+                  <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+                </linearGradient>
+              </defs>
+              <path d="M 10 125 L 40 115 L 70 118 L 100 100 L 130 92 L 160 85 L 190 75 L 220 65 L 250 55 L 280 45 L 310 32 L 310 165 L 10 165 Z"
+                fill="url(#goldGrad)"/>
+              <path d="M 10 125 L 40 115 L 70 118 L 100 100 L 130 92 L 160 85 L 190 75 L 220 65 L 250 55 L 280 45 L 310 32"
+                fill="none" stroke="var(--gold)" stroke-width="2"/>
+              <!-- data points -->
+              <circle cx="310" cy="32" r="4" fill="var(--gold)"/>
+              <circle cx="310" cy="32" r="8" fill="var(--gold)" fill-opacity="0.25"/>
+
+              <!-- x labels -->
+              <text x="10" y="178" fill="rgba(255,255,255,0.25)" font-family="DM Mono" font-size="8">MAY</text>
+              <text x="100" y="178" fill="rgba(255,255,255,0.25)" font-family="DM Mono" font-size="8">AUG</text>
+              <text x="190" y="178" fill="rgba(255,255,255,0.25)" font-family="DM Mono" font-size="8">NOV</text>
+              <text x="280" y="178" fill="rgba(255,255,255,0.25)" font-family="DM Mono" font-size="8">APR</text>
+            </svg>
             <div style="display:flex;justify-content:space-between;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border)">
-              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">CURRENT</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--gold-light)" id="noiCurrentLabel">$0</div></div>
-              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">CHANGE</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--success)" id="noiChangeLabel">—</div></div>
-              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">VS. AVG</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--success)" id="noiVsAvgLabel">—</div></div>
+              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">CURRENT</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--gold-light)">$412K</div></div>
+              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">12M Δ</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--success)">+$23.6K</div></div>
+              <div><div style="font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-bottom:0.2rem">VS. MKT</div><div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--success)">+2.4%</div></div>
             </div>
           </div>
         </div>
 
         <!-- Activity Feed -->
-        <div class="panel" id="activitySection">
+        <div class="panel">
           <div class="panel-hd">
             <div class="panel-title">Recent Activity</div>
             <a class="panel-link">View All</a>
           </div>
-          <div class="feed-list" id="activityFeed">
+          <div class="feed-list">
             <div class="feed-item">
               <div class="feed-dot buyer"></div>
               <div class="feed-content">
@@ -743,348 +740,121 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="panel-title">Your Submarkets</div>
             <a class="panel-link" href="heatmap.html">Open Heatmap</a>
           </div>
-          <div class="sig-grid" id="submarketSignals">
+          <div class="sig-grid">
+            <div class="sig-row">
+              <div class="sig-left">
+                <div class="sig-dot" style="background:#9e1a0c"></div>
+                <div class="sig-name">Bushwick</div>
+              </div>
+              <span class="sig-val hot">+9.1% YoY</span>
+            </div>
+            <div class="sig-row">
+              <div class="sig-left">
+                <div class="sig-dot" style="background:#c96030"></div>
+                <div class="sig-name">Crown Heights</div>
+              </div>
+              <span class="sig-val hot">+8.8% YoY</span>
+            </div>
+            <div class="sig-row">
+              <div class="sig-left">
+                <div class="sig-dot" style="background:#c96030"></div>
+                <div class="sig-name">Williamsburg</div>
+              </div>
+              <span class="sig-val hot">+8.4% YoY</span>
+            </div>
             <div class="sig-row">
               <div class="sig-left">
                 <div class="sig-dot" style="background:#c9a84c"></div>
-                <div class="sig-name">No submarkets yet</div>
+                <div class="sig-name">Flatbush</div>
               </div>
-              <span class="sig-val">Save a valuation</span>
+              <span class="sig-val warm">+7.0% YoY</span>
+            </div>
+            <div class="sig-row">
+              <div class="sig-left">
+                <div class="sig-dot" style="background:#3d9e6a"></div>
+                <div class="sig-name">Upper East Side</div>
+              </div>
+              <span class="sig-val">+2.1% YoY</span>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- ROW: Saved Reports full-width -->
-      <div style="margin-top:1.25rem" id="reportsSection">
-        <div class="panel">
-          <div class="panel-hd">
-            <div>
-              <div class="panel-title">Saved Reports</div>
-              <div class="panel-sub" id="reportSummaryLabel">0 reports</div>
-            </div>
-            <a class="panel-link">Workspace Files</a>
-          </div>
-          <div class="reports-list" id="savedReportsList"></div>
-        </div>
-      </div>
-
-      <!-- ROW: Workspace Snapshot full-width -->
+      <!-- ROW: Buyer Intelligence full-width -->
       <div style="margin-top:1.25rem">
         <div class="panel">
           <div class="panel-hd">
-            <div class="panel-title">Workspace Snapshot</div>
-            <a href="buyer-intelligence.html" class="panel-link">Explore Buyers →</a>
+            <div class="panel-title">Buyer Intelligence · Matched to Your Portfolio</div>
+            <a href="buyer-intelligence.html" class="panel-link">View All Buyers (12) →</a>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)" id="workspaceSnapshotGrid">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)">
             <div style="background:var(--ink-2);padding:1rem 1.25rem">
               <div class="buyer-item" style="border:none;padding:0">
-                <div class="buyer-avatar">◫</div>
+                <div class="buyer-avatar">CP</div>
                 <div class="buyer-info">
-                  <div class="buyer-name">No properties yet</div>
-                  <div class="buyer-sub">Save a valuation to populate the workspace</div>
+                  <div class="buyer-name">Cooper Properties LLC</div>
+                  <div class="buyer-sub">Brooklyn-focused · 14 acquisitions (24m)</div>
                 </div>
-                <div class="buyer-score">—</div>
+                <div class="buyer-score">94%</div>
+              </div>
+            </div>
+            <div style="background:var(--ink-2);padding:1rem 1.25rem">
+              <div class="buyer-item" style="border:none;padding:0">
+                <div class="buyer-avatar">RE</div>
+                <div class="buyer-info">
+                  <div class="buyer-name">Regent Equity Partners</div>
+                  <div class="buyer-sub">Mid-size multifamily · $2M–$5M range</div>
+                </div>
+                <div class="buyer-score">89%</div>
+              </div>
+            </div>
+            <div style="background:var(--ink-2);padding:1rem 1.25rem">
+              <div class="buyer-item" style="border:none;padding:0">
+                <div class="buyer-avatar">ST</div>
+                <div class="buyer-info">
+                  <div class="buyer-name">Stonebridge Capital</div>
+                  <div class="buyer-sub">Value-add Williamsburg/Bushwick</div>
+                </div>
+                <div class="buyer-score">87%</div>
               </div>
             </div>
           </div>
-          <div style="padding:0.85rem 1.4rem;border-top:1px solid var(--border);font-size:0.72rem;color:rgba(255,255,255,0.35);font-family:var(--mono);letter-spacing:0.04em" id="workspaceSnapshotNote">
-            Snapshot updates from your saved valuations and OM drafts.
+          <div style="padding:0.85rem 1.4rem;border-top:1px solid var(--border);font-size:0.72rem;color:rgba(255,255,255,0.35);font-family:var(--mono);letter-spacing:0.04em">
+            Match scores based on acquisition history, submarket focus, price range, and recent activity patterns.
           </div>
         </div>
       </div>
 
     </div>
-  </main>
+  
+<section style="padding:24px 28px;border-top:1px solid rgba(255,255,255,.08)">
+  <div style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px">Network Tools</div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+    <a class="network-link-card" href="contractor-intelligence-interactive-v3.html" style="display:block;padding:18px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.03)">
+      <div style="font-weight:700;margin-bottom:6px">Contractor Intelligence</div>
+      <div style="color:rgba(255,255,255,.65);font-size:14px">Explore contractors, pricing, and project-fit intelligence.</div>
+    </a>
+    <a class="network-link-card" href="property-manager-intelligence.html" style="display:block;padding:18px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.03)">
+      <div style="font-weight:700;margin-bottom:6px">Property Managers</div>
+      <div style="color:rgba(255,255,255,.65);font-size:14px">Compare operating style, fee profile, and owner fit.</div>
+    </a>
+    <a class="network-link-card" href="broker-advisor-intelligence.html" style="display:block;padding:18px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.03)">
+      <div style="font-weight:700;margin-bottom:6px">Brokers / Advisors</div>
+      <div style="color:rgba(255,255,255,.65);font-size:14px">Review broker/advisor coverage and execution fit.</div>
+    </a>
+  </div>
+</section>
+
+</main>
 
 </div>
 
-
 <script>
-function getWorkspace(){
-  try{return JSON.parse(localStorage.getItem('bricWorkspaceV1'))||{properties:[],valuations:[],oms:[],activity:[]}}catch(e){return {properties:[],valuations:[],oms:[],activity:[]}}
-}
-function fmtCompact(n){n=Number(n)||0;if(Math.abs(n)>=1000000)return '$'+(n/1000000).toFixed(2)+'M';if(Math.abs(n)>=1000)return '$'+Math.round(n/1000)+'K';return '$'+Math.round(n).toLocaleString()}
-function fmtPct(n,d=2){n=Number(n); return Number.isFinite(n)?`${n.toFixed(d)}%`:'—'}
-function esc(v){return String(v||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
-function calcPerf(property){
-  const base=property.lastValuationValue||0, noi=property.lastNoi||0;
-  if(!base||!noi) return 72;
-  const ratio=(noi/base)*100;
-  return Math.max(55, Math.min(96, Math.round((ratio*900)+40)));
-}
-function statusClass(status){
-  status=(status||'').toLowerCase();
-  if(status.includes('active')) return 'status-active';
-  if(status.includes('listed')) return 'status-listed';
-  return 'status-analyzing';
-}
-function timeAgo(iso){
-  const t=new Date(iso||Date.now()).getTime();
-  const diff=Math.max(0, Date.now()-t);
-  const mins=Math.floor(diff/60000);
-  if(mins<1) return 'Just now';
-  if(mins<60) return mins+' minute'+(mins===1?'':'s')+' ago';
-  const hrs=Math.floor(mins/60);
-  if(hrs<24) return hrs+' hour'+(hrs===1?'':'s')+' ago';
-  const days=Math.floor(hrs/24);
-  if(days<30) return days+' day'+(days===1?'':'s')+' ago';
-  return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-}
-function reportMetaLabel(item){
-  if(item.kind==='valuation') return 'Valuation';
-  if(item.kind==='om') return 'OM Draft';
-  return 'Report';
-}
-function numberOr(v,fallback=0){ const n=Number(v); return Number.isFinite(n)?n:fallback; }
-function latestValuationsByProperty(ws){
-  const latestByProperty=new Map();
-  (ws.valuations||[]).forEach(v=>{
-    const key=v.propertyId||v.id;
-    const existing=latestByProperty.get(key);
-    const t=new Date(v.updatedAt||v.time||0).getTime();
-    const et=existing?new Date(existing.updatedAt||existing.time||0).getTime():0;
-    if(!existing || t>=et) latestByProperty.set(key,v);
-  });
-  return [...latestByProperty.values()];
-}
-function buildPropertyRow(p){
-  const perf=calcPerf(p);
-  const sub=[p.submarket||'Submarket', p.units?`${p.units} units`:null].filter(Boolean).join(' · ');
-  const valuationHref=`valuation.html?propertyId=${encodeURIComponent(p.id)}`;
-  return `<tr onclick="window.location.href='${valuationHref}'"><td><div class="p-name"><div class="p-thumb">◫</div><div class="p-name-text"><div class="p-addr">${esc(p.address)}</div><div class="p-sub">${esc(sub)}</div></div></div></td><td class="num">${fmtCompact(p.lastValuationValue||0)}</td><td class="num">${fmtCompact(p.lastNoi||0)}</td><td><div class="perf-mini"><div class="perf-bar"><div class="perf-fill" style="width:${perf}%"></div></div><span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perf}</span></div></td><td><span class="status-pill ${statusClass(p.status)}">● ${esc(p.status||'Analyzing')}</span></td></tr>`;
-}
-function renderWorkspaceProperties(ws){
-  const body=document.getElementById('propertiesTableBody');
-  if(!body) return;
-  const props=(ws.properties||[]).slice().sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
-  const badge=document.getElementById('propertyCountBadge');
-  if(badge) badge.textContent=String(props.length||0);
-  if(!props.length){
-    body.innerHTML=`<tr><td colspan="5"><div class="empty-note">No saved properties yet. Run a valuation and click <b>Save to Dashboard</b> to create your first property workspace.</div></td></tr>`;
-    return;
-  }
-  body.innerHTML=props.map(buildPropertyRow).join('');
-}
-function activityDotClass(type){
-  if(type==='om_saved') return 'warn';
-  if(type==='valuation_saved') return 'success';
-  return 'buyer';
-}
-function activityText(item){
-  const address=esc(item.address||'this property');
-  if(item.type==='valuation_saved') return `Valuation saved for <b>${address}</b>`;
-  if(item.type==='om_saved') return `OM draft saved for <b>${address}</b>`;
-  return esc(item.detail||'Workspace updated');
-}
-function renderActivity(ws){
-  const list=document.getElementById('activityFeed');
-  const badge=document.getElementById('activityCountBadge');
-  const items=(ws.activity||[]).slice().sort((a,b)=>new Date(b.time||0)-new Date(a.time||0)).slice(0,8);
-  if(badge) badge.textContent=String((ws.activity||[]).length||0);
-  if(!list) return;
-  if(!items.length){
-    list.innerHTML=`<div class="feed-item"><div class="feed-dot"></div><div class="feed-content"><div class="feed-title">No activity yet. Saved valuations and OM drafts will show up here.</div><div class="feed-time">Waiting for first save</div></div></div>`;
-    return;
-  }
-  list.innerHTML=items.map(item=>`<div class="feed-item"><div class="feed-dot ${activityDotClass(item.type)}"></div><div class="feed-content"><div class="feed-title">${activityText(item)}</div><div class="feed-time">${timeAgo(item.time)}</div></div></div>`).join('');
-}
-function buildReportItems(ws){
-  const vals=(ws.valuations||[]).map(v=>({kind:'valuation',id:v.id,propertyId:v.propertyId,address:v.address||'Untitled Property',updatedAt:v.updatedAt||v.time||new Date().toISOString(),value:numberOr(v.baseVal),sub:(v.submarket||'Valuation')+(v.noi!=null?` · NOI ${fmtCompact(v.noi)}`:'')}));
-  const oms=(ws.oms||[]).map(o=>({kind:'om',id:o.id,propertyId:o.propertyId,address:o.address||'Untitled Property',updatedAt:o.updatedAt||new Date().toISOString(),value:numberOr(o.askingPrice),sub:(o.neighborhood||o.submarket||'OM Draft')+(o.marketCap!=null?` · Cap ${Number(o.marketCap).toFixed(2)}%`:'')}));
-  return vals.concat(oms).sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
-}
-function reportHref(item){
-  if(item.kind==='valuation') return `valuation.html?propertyId=${encodeURIComponent(item.propertyId||'')}&valuationId=${encodeURIComponent(item.id)}`;
-  return `om-studio.html?propertyId=${encodeURIComponent(item.propertyId||'')}&omId=${encodeURIComponent(item.id)}`;
-}
-function renderSavedReports(ws){
-  const list=document.getElementById('savedReportsList');
-  const badge=document.getElementById('reportCountBadge');
-  const summary=document.getElementById('reportSummaryLabel');
-  const items=buildReportItems(ws);
-  if(badge) badge.textContent=String(items.length||0);
-  if(summary) summary.textContent=`${items.length} report${items.length===1?'':'s'} saved`;
-  if(!list) return;
-  if(!items.length){
-    list.innerHTML=`<div class="report-item empty"><div class="report-main"><div class="report-title">No saved reports yet</div><div class="report-sub">Save a valuation or OM draft and it will appear here.</div></div></div>`;
-    return;
-  }
-  list.innerHTML=items.slice(0,8).map(item=>`<div class="report-item"><div class="report-main"><div class="report-title">${esc(item.address)}</div><div class="report-sub">${esc(item.sub)}</div><div class="report-meta">${reportMetaLabel(item)} · ${timeAgo(item.updatedAt)}${item.value?` · ${fmtCompact(item.value)}`:''}</div></div><div class="report-actions"><a class="report-btn" href="${reportHref(item)}">Open</a></div></div>`).join('');
-}
-function renderInsight(ws, latestVals){
-  const label=document.getElementById('aiInsightLabel');
-  const text=document.getElementById('aiInsightText');
-  const props=ws.properties||[];
-  if(!label || !text) return;
-  if(!latestVals.length){
-    label.textContent='Workspace Insight';
-    text.innerHTML='Save a few valuations and BRIC will summarize portfolio movement, NOI trends, and submarket concentration here.';
-    return;
-  }
-  const topByValue=[...latestVals].sort((a,b)=>numberOr(b.baseVal)-numberOr(a.baseVal))[0];
-  const totalValue=latestVals.reduce((s,v)=>s+numberOr(v.baseVal),0);
-  const totalNoi=latestVals.reduce((s,v)=>s+numberOr(v.noi),0);
-  const marketCounts={};
-  props.forEach(p=>{ const key=p.submarket||'Unknown'; marketCounts[key]=(marketCounts[key]||0)+1; });
-  const topMarket=Object.entries(marketCounts).sort((a,b)=>b[1]-a[1])[0];
-  label.textContent=`Workspace Insight · ${latestVals.length} saved valuation${latestVals.length===1?'':'s'}`;
-  text.innerHTML=`<b>${esc(topByValue.address||'Top asset')}</b> is currently your highest saved valuation at <b>${fmtCompact(topByValue.baseVal)}</b>. Portfolio totals are now <b>${fmtCompact(totalValue)}</b> in value and <b>${fmtCompact(totalNoi)}</b> in NOI${topMarket?`, with your heaviest concentration in <b>${esc(topMarket[0])}</b>`:''}.`;
-}
-function renderChart(ws, latestVals){
-  const svg=document.getElementById('portfolioNoiChart');
-  const currentLabel=document.getElementById('noiCurrentLabel');
-  const changeLabel=document.getElementById('noiChangeLabel');
-  const vsAvgLabel=document.getElementById('noiVsAvgLabel');
-  if(!svg) return;
-  const vals=(ws.valuations||[]).slice().sort((a,b)=>new Date(a.updatedAt||a.time||0)-new Date(b.updatedAt||b.time||0)).slice(-12);
-  if(!vals.length){
-    svg.innerHTML=`<text x="16" y="90" fill="rgba(255,255,255,0.35)" font-family="DM Sans" font-size="12">No saved valuations yet</text>`;
-    if(currentLabel) currentLabel.textContent='$0';
-    if(changeLabel) changeLabel.textContent='—';
-    if(vsAvgLabel) vsAvgLabel.textContent='—';
-    return;
-  }
-  const noiSeries=vals.map(v=>numberOr(v.noi));
-  const current=noiSeries[noiSeries.length-1]||0;
-  const first=noiSeries[0]||0;
-  const avg=noiSeries.reduce((a,b)=>a+b,0)/noiSeries.length;
-  const max=Math.max(...noiSeries, avg, 1), min=Math.min(...noiSeries, avg, 0);
-  const range=Math.max(1, max-min);
-  const x=(i)=>10+(300*(i/(Math.max(1,noiSeries.length-1))));
-  const y=(n)=>165-((n-min)/range)*135;
-  const areaPoints=noiSeries.map((n,i)=>`${x(i)} ${y(n)}`).join(' L ');
-  const linePoints=noiSeries.map((n,i)=>`${x(i)} ${y(n)}`).join(' L ');
-  const avgPoints=noiSeries.map((_,i)=>`${x(i)} ${y(avg)}`).join(' L ');
-  const monthLabels=vals.map(v=>new Date(v.updatedAt||v.time||Date.now()).toLocaleDateString('en-US',{month:'short'}));
-  const labelIdx=[0, Math.floor((noiSeries.length-1)/3), Math.floor((noiSeries.length-1)*2/3), noiSeries.length-1].filter((v,i,a)=>a.indexOf(v)===i);
-  svg.innerHTML=`
-    <line x1="0" y1="30" x2="320" y2="30" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-    <line x1="0" y1="75" x2="320" y2="75" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-    <line x1="0" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-    <line x1="0" y1="165" x2="320" y2="165" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <defs><linearGradient id="goldGradLive" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(201,168,76,0.25)"/><stop offset="100%" stop-color="rgba(201,168,76,0)"/></linearGradient></defs>
-    <path d="M ${avgPoints}" fill="none" stroke="rgba(139,158,232,0.55)" stroke-width="1.5" stroke-dasharray="3 3"/>
-    <path d="M ${areaPoints} L ${x(noiSeries.length-1)} 165 L 10 165 Z" fill="url(#goldGradLive)"/>
-    <path d="M ${linePoints}" fill="none" stroke="var(--gold)" stroke-width="2"/>
-    <circle cx="${x(noiSeries.length-1)}" cy="${y(current)}" r="4" fill="var(--gold)"/>
-    <circle cx="${x(noiSeries.length-1)}" cy="${y(current)}" r="8" fill="var(--gold)" fill-opacity="0.25"/>
-    ${labelIdx.map(i=>`<text x="${x(i)}" y="178" fill="rgba(255,255,255,0.25)" font-family="DM Mono" font-size="8" text-anchor="middle">${monthLabels[i]||''}</text>`).join('')}
-  `;
-  if(currentLabel) currentLabel.textContent=fmtCompact(current);
-  const diff=current-first;
-  if(changeLabel) changeLabel.textContent=(diff>=0?'+':'-')+fmtCompact(Math.abs(diff)).replace('$','');
-  const vsAvg=((current-avg)/Math.max(1,avg))*100;
-  if(vsAvgLabel) vsAvgLabel.textContent=(vsAvg>=0?'+':'')+vsAvg.toFixed(1)+'%';
-}
-function renderSignals(ws, latestVals){
-  const wrap=document.getElementById('submarketSignals');
-  if(!wrap) return;
-  const map={};
-  (ws.properties||[]).forEach(p=>{
-    const key=p.submarket||'Unknown';
-    if(!map[key]) map[key]={count:0, values:[], nois:[]};
-    map[key].count += 1;
-    if(numberOr(p.lastValuationValue)) map[key].values.push(numberOr(p.lastValuationValue));
-    if(numberOr(p.lastNoi)) map[key].nois.push(numberOr(p.lastNoi));
-  });
-  latestVals.forEach(v=>{
-    const key=v.submarket||'Unknown';
-    if(!map[key]) map[key]={count:0, values:[], nois:[]};
-    if(numberOr(v.baseVal)) map[key].values.push(numberOr(v.baseVal));
-    if(numberOr(v.noi)) map[key].nois.push(numberOr(v.noi));
-  });
-  const items=Object.entries(map).map(([name,data])=>{
-    const avgValue=data.values.length?data.values.reduce((a,b)=>a+b,0)/data.values.length:0;
-    const avgNoi=data.nois.length?data.nois.reduce((a,b)=>a+b,0)/data.nois.length:0;
-    return {name,count:data.count||1,avgValue,avgNoi};
-  }).sort((a,b)=>b.avgValue-a.avgValue || b.count-a.count).slice(0,5);
-  if(!items.length){
-    wrap.innerHTML=`<div class="sig-row"><div class="sig-left"><div class="sig-dot" style="background:#c9a84c"></div><div class="sig-name">No submarkets yet</div></div><span class="sig-val">Save a valuation</span></div>`;
-    return;
-  }
-  function color(v){
-    if(v>=3000000) return '#9e1a0c';
-    if(v>=1750000) return '#c96030';
-    if(v>=900000) return '#c9a84c';
-    return '#3d9e6a';
-  }
-  function cls(v){
-    if(v>=3000000) return 'hot';
-    if(v>=900000) return 'warm';
-    return '';
-  }
-  wrap.innerHTML=items.map(item=>`<div class="sig-row"><div class="sig-left"><div class="sig-dot" style="background:${color(item.avgValue)}"></div><div><div class="sig-name">${esc(item.name)}</div><div style="font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.28);margin-top:0.12rem">${item.count} property${item.count===1?'':'ies'} · NOI ${fmtCompact(item.avgNoi)}</div></div></div><span class="sig-val ${cls(item.avgValue)}">${fmtCompact(item.avgValue)}</span></div>`).join('');
-}
-function renderWorkspaceSnapshot(ws, latestVals){
-  const grid=document.getElementById('workspaceSnapshotGrid');
-  const note=document.getElementById('workspaceSnapshotNote');
-  if(!grid || !note) return;
-  const props=(ws.properties||[]).slice().sort((a,b)=>numberOr(b.lastValuationValue)-numberOr(a.lastValuationValue));
-  if(!props.length){
-    grid.innerHTML=`<div style="background:var(--ink-2);padding:1rem 1.25rem"><div class="buyer-item" style="border:none;padding:0"><div class="buyer-avatar">◫</div><div class="buyer-info"><div class="buyer-name">No properties yet</div><div class="buyer-sub">Save a valuation to populate the workspace</div></div><div class="buyer-score">—</div></div></div>`;
-    note.textContent='Snapshot updates from your saved valuations and OM drafts.';
-    return;
-  }
-  const cards = [
-    {
-      avatar:'Σ',
-      name:'Portfolio Totals',
-      sub:`${props.length} properties · ${(ws.oms||[]).length} OM draft${(ws.oms||[]).length===1?'':'s'}`,
-      score:fmtCompact(props.reduce((s,p)=>s+numberOr(p.lastValuationValue),0))
-    },
-    {
-      avatar:'NOI',
-      name:'Latest NOI',
-      sub:`Across ${latestVals.length} saved valuation${latestVals.length===1?'':'s'}`,
-      score:fmtCompact(latestVals.reduce((s,v)=>s+numberOr(v.noi),0))
-    },
-    {
-      avatar:'TOP',
-      name:props[0].address || 'Top Asset',
-      sub:`${props[0].submarket || 'Submarket'} · ${props[0].units || 0} units`,
-      score:fmtCompact(props[0].lastValuationValue)
-    }
-  ];
-  grid.innerHTML = cards.map(card=>`<div style="background:var(--ink-2);padding:1rem 1.25rem"><div class="buyer-item" style="border:none;padding:0"><div class="buyer-avatar">${card.avatar}</div><div class="buyer-info"><div class="buyer-name">${esc(card.name)}</div><div class="buyer-sub">${esc(card.sub)}</div></div><div class="buyer-score">${esc(card.score)}</div></div></div>`).join('');
-  note.textContent='These tiles now read directly from your saved workspace data instead of fixed demo values.';
-}
-function renderKPIs(ws, latestVals){
-  const props=ws.properties||[];
-  const totalValue=latestVals.reduce((s,v)=>s+numberOr(v.baseVal),0);
-  const totalNoi=latestVals.reduce((s,v)=>s+numberOr(v.noi),0);
-  const avgCapVals=latestVals.map(v=>Number(v.capRate||v.marketCap)).filter(n=>!isNaN(n)&&n>0);
-  const avgCap=avgCapVals.length ? avgCapVals.reduce((a,b)=>a+b,0)/avgCapVals.length : null;
-  const totalUnits=props.reduce((s,p)=>s+numberOr(p.units),0);
-
-  const setText=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
-  setText('kpiPortfolioValue', fmtCompact(totalValue));
-  setText('kpiAnnualNoi', fmtCompact(totalNoi));
-  setText('kpiAvgCap', avgCap!=null ? `${avgCap.toFixed(2)}%` : '—');
-  setText('kpiPropertyCount', String(props.length||0));
-  setText('kpiPortfolioSub', props.length ? `Across ${props.length} properties · ${totalUnits||0} units` : 'No saved valuations yet');
-  setText('kpiNoiSub', latestVals.length ? `From ${latestVals.length} latest valuation${latestVals.length===1?'':'s'}` : 'Based on saved valuations');
-  setText('kpiCapSub', avgCapVals.length ? `Across ${avgCapVals.length} saved valuation${avgCapVals.length===1?'':'s'}` : 'Across saved valuations');
-  setText('kpiPropertySub', props.length ? 'Workspace properties' : 'Save a valuation to start');
-}
-function refreshDashboard(){
-  const ws=getWorkspace();
-  const latestVals=latestValuationsByProperty(ws);
-  renderKPIs(ws, latestVals);
-  renderWorkspaceProperties(ws);
-  renderActivity(ws);
-  renderSavedReports(ws);
-  renderInsight(ws, latestVals);
-  renderChart(ws, latestVals);
-  renderSignals(ws, latestVals);
-  renderWorkspaceSnapshot(ws, latestVals);
-}
+// Set today's date
 const now = new Date();
-document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-refreshDashboard();
-window.addEventListener('storage', e=>{ if(e.key==='bricWorkspaceV1') refreshDashboard(); });
+document.getElementById('todayDate').textContent =
+  now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
 </script>
-
 </body>
 </html>
