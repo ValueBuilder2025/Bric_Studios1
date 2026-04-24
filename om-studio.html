@@ -23,7 +23,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .panel-left{border-right:1px solid var(--line);overflow-y:auto;max-height:calc(100vh - 107px);position:sticky;top:107px}.panel-right{padding:1.75rem;overflow-y:auto;max-height:calc(100vh - 61px);background:var(--panel)}
 .panel-left::-webkit-scrollbar,.panel-right::-webkit-scrollbar{width:3px}.panel-left::-webkit-scrollbar-thumb,.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
 .panel-header{padding:1.6rem 2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.06)}.panel-eyebrow{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}.panel-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--paper)}.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.4rem;line-height:1.6}
-.form-section{padding:1.3rem 2rem;border-bottom:1px solid rgba(255,255,255,0.05)}.form-section-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}
+.form-section{padding:0;border-bottom:1px solid rgba(255,255,255,0.05)}.form-section-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.5rem;padding:1.3rem 2rem;cursor:pointer;user-select:none}.form-section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06)}.form-section-title::before{content:'+';order:2;flex:none;font-size:0.9rem;color:var(--gold);margin-left:0.65rem;transition:transform 0.2s ease, opacity 0.2s ease}.form-section.expanded .form-section-title::before{content:'−'}.form-section-body{padding:0 2rem 1.3rem;display:none}.form-section.expanded .form-section-body{display:block}
 .section-action{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;cursor:pointer;padding:0.2rem 0.5rem;border-radius:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2)}.section-action:hover{background:rgba(201,168,76,0.2)}
 .field{margin-bottom:0.8rem}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem}label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.45);margin-bottom:0.3rem;letter-spacing:0.02em;font-weight:500}
 .input-wrap{position:relative}.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.75rem;color:rgba(255,255,255,0.28);pointer-events:none}.input-prefix{left:0.75rem}.input-suffix{right:0.75rem}
@@ -184,6 +184,25 @@ function loadSample(){document.getElementById('address').value='1782 Nostrand Av
 document.addEventListener('input',e=>{if(['address','city','yearBuilt','sqft','askingPrice','grossIncome','otherIncome','marketCap','description'].includes(e.target.id))generate()})
 document.getElementById('neighborhood').addEventListener('change',()=>{autoGenAll();generate()});document.getElementById('propertyType').addEventListener('change',generate);document.getElementById('submarketTrend').addEventListener('change',generate);document.getElementById('resCount').addEventListener('change',()=>{toggleRentRoll(true);rebuildRowsFromCounts()});document.getElementById('retailCount').addEventListener('change',()=>{toggleRentRoll(true);rebuildRowsFromCounts()})
 document.querySelectorAll('.section-toggle').forEach(el=>{el.addEventListener('click',function(){const toggleId=el.getAttribute('data-toggle'),toggle=el.querySelector('.toggle'),on=!toggle.classList.contains('on');toggle.classList.toggle('on',on);el.classList.toggle('active',on);sectionsActive[toggleId]=on;generate()})})
+
+function initExpandableSections(){
+  document.querySelectorAll('.form-section').forEach((section,idx)=>{
+    if(section.querySelector('.form-section-body')) return;
+    const title=section.querySelector('.form-section-title');
+    if(!title) return;
+    const body=document.createElement('div');
+    body.className='form-section-body';
+    while(title.nextSibling){body.appendChild(title.nextSibling)}
+    section.appendChild(body);
+    const expandedByDefault=idx < 2;
+    section.classList.toggle('expanded', expandedByDefault);
+    title.addEventListener('click',function(){
+      section.classList.toggle('expanded');
+    });
+  });
+}
+
+initExpandableSections();
 fillCountOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));setTier('free');
 (function(){
   const ws=getWorkspace();
