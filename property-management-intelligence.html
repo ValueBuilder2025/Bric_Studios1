@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Property Manager Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f0e; --ink-2:#141715; --ink-3:#1a1e1d; --paper:#f5f2ec;
+  --gold:#c9a84c; --gold-light:#e8d08a; --gold-dim:rgba(201,168,76,0.13);
+  --muted:#7a8a82; --border:rgba(255,255,255,0.07); --success:#6dba8f;
+  --warn:#e8a050; --danger:#d46a55; --indigo:#8b9ee8;
+  --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.3}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.93);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
+.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.8rem;border-radius:2px}
+.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.32);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--gold)}
+.page-header{padding:2rem 2.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.ph-eyebrow{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.6rem}
+.ph-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold)}
+.ph-title{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--paper);line-height:1.1;margin-bottom:0.4rem}
+.ph-sub{font-size:0.9rem;color:rgba(255,255,255,0.4);max-width:720px;line-height:1.65}
+.filter-bar{padding:1rem 2.25rem;border-bottom:1px solid var(--border);background:rgba(13,15,14,0.5);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap}
+.fb-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.fb-chip{padding:0.4rem 0.85rem;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.55);font-family:var(--sans);font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-weight:500}
+.fb-chip:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.fb-chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.fb-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.82rem;padding:0.4rem 0.7rem;border-radius:2px;outline:none;cursor:pointer}
+.fb-select option{background:var(--ink)}
+.fb-divider{width:1px;height:20px;background:rgba(255,255,255,0.08)}
+.main{padding:2rem 2.25rem 4rem}
+.top-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.ts-card{background:var(--ink-2);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.4rem;transition:border-color 0.2s}
+.ts-card:hover{border-color:rgba(201,168,76,0.2)}
+.ts-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.5rem}
+.ts-val{font-family:var(--serif);font-size:1.75rem;font-weight:700;color:var(--paper);line-height:1;margin-bottom:0.3rem}
+.ts-val.gold{color:var(--gold-light)} .ts-val.success{color:var(--success)}
+.ts-sub{font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.4}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:1.25rem}
+.panel{background:var(--ink-2);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.panel-hd{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper)}
+.panel-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.15rem}
+.c-list{padding:1rem}
+.c-card{background:var(--ink-3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.35rem 1.5rem;margin-bottom:0.85rem;transition:all 0.2s;cursor:pointer}
+.c-card:last-child{margin-bottom:0}
+.c-card:hover{border-color:rgba(201,168,76,0.3);background:#1f2322;transform:translateX(2px)}
+.c-top{display:flex;align-items:flex-start;gap:1.1rem;margin-bottom:1rem}
+.c-avatar{width:52px;height:52px;border-radius:4px;flex-shrink:0;background:linear-gradient(135deg,rgba(201,168,76,0.2),rgba(201,168,76,0.05));border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--gold-light)}
+.c-info{flex:1;min-width:0}
+.c-name-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;flex-wrap:wrap}
+.c-name{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--paper)}
+.c-verified{font-size:0.72rem;color:var(--gold);flex-shrink:0}
+.c-sub{font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.03em;margin-bottom:0.5rem}
+.c-tags{display:flex;gap:0.35rem;flex-wrap:wrap}
+.c-tag{font-family:var(--mono);font-size:0.58rem;padding:0.15rem 0.5rem;border-radius:2px;letter-spacing:0.04em;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.07)}
+.c-rating{text-align:right;flex-shrink:0}
+.c-stars{color:var(--gold);font-size:0.9rem;letter-spacing:0.05em;margin-bottom:0.25rem}
+.c-stars .dim{color:rgba(255,255,255,0.15)}
+.c-rating-val{font-family:var(--serif);font-size:0.92rem;font-weight:700;color:var(--paper)}
+.c-rating-count{font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35)}
+.ai-summary{background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:1rem 1.2rem;margin:1rem 0}
+.ai-sum-hd{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.4rem}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.pc-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.55rem;display:flex;align-items:center;gap:0.35rem}
+.pc-title.pros{color:var(--success)} .pc-title.cons{color:var(--danger)}
+.pc-item{font-size:0.78rem;color:rgba(255,255,255,0.65);padding:0.35rem 0;display:flex;gap:0.45rem;line-height:1.5}
+.pc-marker{flex-shrink:0;padding-top:0.1rem} .pc-marker.pros{color:var(--success)} .pc-marker.cons{color:var(--danger)}
+.c-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;padding:0.95rem 0;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)}
+.cm-lab{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:0.2rem}
+.cm-val{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--paper);line-height:1}
+.c-footer{display:flex;justify-content:space-between;align-items:center;margin-top:0.9rem;flex-wrap:wrap;gap:0.5rem}
+.c-pricing{font-size:0.78rem;color:rgba(255,255,255,0.55)} .c-pricing b{color:var(--gold-light);font-family:var(--mono);font-weight:500}
+.c-actions{display:flex;gap:0.4rem}
+.c-btn{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.05em;padding:0.4rem 0.8rem;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;text-transform:uppercase}
+.c-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
+.c-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.c-btn-gold:hover{background:var(--gold-light)}
+.side-col{display:flex;flex-direction:column;gap:1.25rem}
+.benchmark{padding:1.25rem 1.4rem}
+.bm-row{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.78rem}
+.bm-row:last-child{border-bottom:none}
+.bm-cat{flex:1;color:rgba(255,255,255,0.55)} .bm-range{font-family:var(--mono);font-size:0.72rem;color:var(--gold-light);flex-shrink:0}
+.bm-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;min-width:60px;max-width:90px}
+.bm-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px}
+.alert-box{background:linear-gradient(135deg,rgba(212,106,85,0.08),rgba(212,106,85,0.02));border:1px solid rgba(212,106,85,0.25);border-radius:4px;padding:1.1rem 1.3rem}
+.ab-hd{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--danger);margin-bottom:0.5rem}
+.ab-title{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--paper);margin-bottom:0.5rem;line-height:1.4}
+.ab-text{font-size:0.78rem;color:rgba(255,255,255,0.55);line-height:1.6}
+.ab-text b{color:var(--danger);font-weight:600}
+.privacy{margin-top:2rem;padding:1rem 1.4rem;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:4px;font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.6;font-family:var(--mono);letter-spacing:0.02em;display:flex;gap:0.85rem}
+.privacy-icon{color:var(--gold);flex-shrink:0}
+@media(max-width:1100px){.grid{grid-template-columns:1fr}.top-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.page-header,.filter-bar,.main{padding-left:1.25rem;padding-right:1.25rem}.top-stats{grid-template-columns:1fr}.c-metrics{grid-template-columns:1fr 1fr}.pros-cons{grid-template-columns:1fr}}
+.fade-up{opacity:0;transform:translateY(8px);animation:fadeUp 0.45s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
+  <span class="nav-badge">Property Manager Intelligence</span>
+  <a href="dashboard.html" class="nav-back">← Dashboard</a>
+</nav>
+
+<div class="page-header">
+  <div>
+    <div class="ph-eyebrow">Network Layer</div>
+    <h1 class="ph-title">Property Manager Intelligence</h1>
+    <p class="ph-sub">AI-filtered insights on local property managers. Compare operating style, responsiveness, fee profile, reporting quality, and owner fit without guessing off a logo alone.</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="fb-label">Location</span>
+  <select class="fb-select" id="locationSelect"></select>
+  <div class="fb-divider"></div>
+  <span class="fb-label">Focus</span>
+  <button class="fb-chip active" data-tab="all">All</button>
+  <button class="fb-chip" data-tab="primary">Primary</button>
+  <button class="fb-chip" data-tab="owner">Owner / Investor</button>
+  <button class="fb-chip" data-tab="institutional">Institutional</button>
+  <div class="fb-divider"></div>
+  <span class="fb-label">Use Case</span>
+  <select class="fb-select" id="useCaseSelect"></select>
+</div>
+
+<div class="main">
+  <div class="top-stats" id="topStats"></div>
+  <div class="grid">
+    <div class="panel fade-up">
+      <div class="panel-hd">
+        <div>
+          <div class="panel-title" id="resultsTitle"></div>
+          <div class="panel-sub" id="resultsSub"></div>
+        </div>
+        <span id="matchCount" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em"></span>
+      </div>
+      <div class="c-list" id="cardList"></div>
+    </div>
+
+    <div class="side-col">
+      <div class="alert-box fade-up" id="alertBox"></div>
+
+      <div class="panel fade-up">
+        <div class="panel-hd">
+          <div>
+            <div class="panel-title" id="benchmarkTitle"></div>
+            <div class="panel-sub" id="benchmarkSub"></div>
+          </div>
+        </div>
+        <div class="benchmark" id="benchmarkRows"></div>
+      </div>
+
+      <div class="panel fade-up">
+        <div class="panel-hd">
+          <div>
+            <div class="panel-title" id="roiTitle"></div>
+            <div class="panel-sub" id="roiSub"></div>
+          </div>
+        </div>
+        <div class="benchmark" id="roiRows"></div>
+        <div style="padding:0.85rem 1.4rem;border-top:1px solid var(--border);font-size:0.7rem;color:rgba(255,255,255,0.35);font-family:var(--mono);letter-spacing:0.04em" id="roiFootnote"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="privacy">
+    <span class="privacy-icon">⬡</span>
+    <div><span style='color:var(--gold);font-weight:600'>NETWORK INTELLIGENCE:</span> Property manager summaries are demo-generated to show how BRIC could surface owner-relevant operating signals, fee patterns, complaint risk, and submarket fit. No paid placements are implied.</div>
+  </div>
+</div>
+<script>
+const LOCATIONS = ["All NYC","All Brooklyn","All Queens","Williamsburg North","Williamsburg South","Greenpoint","Bushwick West","Bed-Stuy West","Crown Heights North","Park Slope","Long Island City","Astoria"];
+const USE_CASES = ["Stabilized Multifamily","Mixed-Use Building","Value-Add Lease-Up","Retail / Mixed-Use","Small Portfolio Operations","Condo / Co-op Management"];
+const MARKET = {
+  "All NYC": { firms: 1842, reviews: 42100, matched: 61, fee: "4.2%", risk: 12 },
+  "All Brooklyn": { firms: 826, reviews: 19800, matched: 34, fee: "4.4%", risk: 6 },
+  "All Queens": { firms: 612, reviews: 14100, matched: 24, fee: "4.1%", risk: 4 },
+  "Williamsburg North": { firms: 184, reviews: 4200, matched: 12, fee: "4.8%", risk: 2 },
+  "Williamsburg South": { firms: 176, reviews: 3900, matched: 11, fee: "4.7%", risk: 2 },
+  "Greenpoint": { firms: 142, reviews: 3200, matched: 9, fee: "4.9%", risk: 2 },
+  "Bushwick West": { firms: 121, reviews: 2800, matched: 8, fee: "4.3%", risk: 3 },
+  "Bed-Stuy West": { firms: 154, reviews: 3500, matched: 9, fee: "4.2%", risk: 3 },
+  "Crown Heights North": { firms: 139, reviews: 3100, matched: 8, fee: "4.1%", risk: 3 },
+  "Park Slope": { firms: 164, reviews: 4300, matched: 10, fee: "5.1%", risk: 2 },
+  "Long Island City": { firms: 131, reviews: 3000, matched: 8, fee: "4.6%", risk: 2 },
+  "Astoria": { firms: 126, reviews: 2900, matched: 8, fee: "4.2%", risk: 2 }
+};
+const POOLS = {
+  primary: [
+    ["BT","Bridgeview Management",true,"Property Management Firm","Collections|Capex Planning|Rent Stabilized|24/7 Ops"],
+    ["NV","Northline Asset Services",true,"Property Management Firm","Mixed-Use|Vendor Control|Reporting|Multifamily"],
+    ["ST","Sterling Tenant Ops",false,"Property Management Firm","Leasing|Turnover|Tenant Relations|Portfolio Reporting"]
+  ],
+  owner: [
+    ["OC","OwnerCircle Management",true,"Boutique Manager","Hands-On|Small Portfolio|Expense Control|Communication"],
+    ["FR","Fieldstone Residential",false,"Boutique Manager","Walk-Ups|Rent Collections|Vendor Oversight|Value-Add"],
+    ["HP","Harbor PM Advisors",true,"Asset Management Boutique","Investor Reporting|Budgeting|Lease-Up|Capex"]
+  ],
+  institutional: [
+    ["AP","Axis Property Services",true,"Institutional Operator","Compliance|Portfolio Scale|Controls|Reporting"],
+    ["MP","Metropolitan PM Group",true,"Institutional Operator","Receivership|Large Sites|Mixed-Use|Procurement"],
+    ["RC","Ridge Capital Residential",false,"Institutional Operator","Lease-Up|Budgeting|KPI Dashboards|Collections"]
+  ]
+};
+const tabs = [...document.querySelectorAll('.fb-chip[data-tab]')];
+const els = {
+  location: document.getElementById('locationSelect'),
+  useCase: document.getElementById('useCaseSelect'),
+  topStats: document.getElementById('topStats'),
+  resultsTitle: document.getElementById('resultsTitle'),
+  resultsSub: document.getElementById('resultsSub'),
+  matchCount: document.getElementById('matchCount'),
+  list: document.getElementById('cardList'),
+  alert: document.getElementById('alertBox'),
+  benchmarkTitle: document.getElementById('benchmarkTitle'),
+  benchmarkSub: document.getElementById('benchmarkSub'),
+  benchmarkRows: document.getElementById('benchmarkRows'),
+  roiTitle: document.getElementById('roiTitle'),
+  roiSub: document.getElementById('roiSub'),
+  roiRows: document.getElementById('roiRows'),
+  roiFootnote: document.getElementById('roiFootnote')
+};
+LOCATIONS.forEach(x=>els.location.insertAdjacentHTML('beforeend', `<option>${x}</option>`));
+USE_CASES.forEach(x=>els.useCase.insertAdjacentHTML('beforeend', `<option>${x}</option>`));
+let state = { location: LOCATIONS[0], tab: 'all', useCase: USE_CASES[0] };
+function fmtK(n){ return n >= 1000 ? (n/1000).toFixed(1).replace('.0','') + 'K' : String(n); }
+function stars(v){ const full=Math.floor(v); let s=''; for(let i=0;i<4;i++) s += i<Math.min(full,4)?'★':'<span class="dim">★</span>'; s += v>=4.5||full>=5?'★':'<span class="dim">★</span>'; return s; }
+function seeded(str){ let h=0; for(let i=0;i<str.length;i++) h=(h*33+str.charCodeAt(i))%100000; return h; }
+function makeCard(base){
+  const m = MARKET[state.location];
+  const seed = seeded(base[1] + state.location + state.useCase + state.tab);
+  const rating = Math.min(4.9, 4.2 + (seed%7)*0.1);
+  const reviews = 80 + (seed%260);
+  const units = 650 + (seed%4200);
+  const response = seed%2 ? "<24h" : "24h";
+  const retention = 74 + (seed%19);
+  const fee = (parseFloat(m.fee) + ((seed%5)-2)*0.1).toFixed(1) + "%";
+  const pros = [
+    "Strong owner communication and monthly reporting cadence",
+    "Good control over vendor pricing and day-to-day field issues",
+    `Well matched for ${state.useCase.toLowerCase()} in ${state.location}`
+  ];
+  const cons = [
+    "Portfolio onboarding can take 30–45 days",
+    "After-hours escalation varies by property size",
+    "Premium oversight packages increase fees"
+  ];
+  return `
+    <div class="c-card">
+      <div class="c-top">
+        <div class="c-avatar">${base[0]}</div>
+        <div class="c-info">
+          <div class="c-name-row"><span class="c-name">${base[1]}</span>${base[2] ? '<span class="c-verified">◆ Verified</span>' : ''}</div>
+          <div class="c-sub">${base[3]} · NYC Metro · Est. ${2007 + (seed%12)} · ${(6 + (seed%14))} years</div>
+          <div class="c-tags">${base[4].split('|').map(t=>`<span class="c-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="c-rating">
+          <div class="c-stars">${stars(rating)}</div>
+          <div class="c-rating-val">${rating.toFixed(1)}</div>
+          <div class="c-rating-count">${reviews} reviews</div>
+        </div>
+      </div>
+      <div class="ai-summary">
+        <div class="ai-sum-hd">◈ AI Operating Summary · Analyzed ${reviews} reviews</div>
+        <div class="pros-cons">
+          <div><div class="pc-title pros">✓ Top Strengths</div>${pros.map(x=>`<div class="pc-item"><span class="pc-marker pros">+</span>${x}</div>`).join('')}</div>
+          <div><div class="pc-title cons">△ Common Concerns</div>${cons.map(x=>`<div class="pc-item"><span class="pc-marker cons">−</span>${x}</div>`).join('')}</div>
+        </div>
+      </div>
+      <div class="c-metrics">
+        <div><div class="cm-lab">Units Managed</div><div class="cm-val">${fmtK(units)}</div></div>
+        <div><div class="cm-lab">Mgmt Fee</div><div class="cm-val">${fee}</div></div>
+        <div><div class="cm-lab">Retention</div><div class="cm-val">${retention}%</div></div>
+        <div><div class="cm-lab">Response</div><div class="cm-val">${response}</div></div>
+      </div>
+      <div class="c-footer">
+        <div class="c-pricing">Typical fit: <b>${state.useCase}</b></div>
+        <div class="c-actions"><button class="c-btn">View Profile</button><button class="c-btn c-btn-gold">Request Intro</button></div>
+      </div>
+    </div>`;
+}
+function rows(items){ return items.map(r=>`<div class="bm-row"><span class="bm-cat">${r[0]}</span><div class="bm-bar"><div class="bm-fill" style="width:${r[1]}"></div></div><span class="bm-range">${r[2]}</span></div>`).join(''); }
+function render(){
+  const m = MARKET[state.location];
+  const tabKey = state.tab === 'all' ? 'primary' : state.tab;
+  const pool = state.tab === 'all' ? [...POOLS.primary.slice(0,2), POOLS.owner[0], POOLS.institutional[0]] : POOLS[tabKey];
+  const matched = state.tab === 'all' ? m.matched : Math.max(5, Math.round(m.matched * (state.tab==='primary'?0.55:state.tab==='owner'?0.48:0.34)));
+  const analyzed = state.tab === 'all' ? m.firms : Math.max(72, Math.round(m.firms * (state.tab==='primary'?0.52:state.tab==='owner'?0.38:0.26)));
+  const reviews = state.tab === 'all' ? m.reviews : Math.max(1300, Math.round(m.reviews * (state.tab==='primary'?0.5:state.tab==='owner'?0.36:0.24)));
+  const feeBase = parseFloat(m.fee);
+  els.topStats.innerHTML = [
+    ['Managers Analyzed', analyzed.toLocaleString(), `Across ${state.tab==='all'?'all operating styles':state.tab} managers in ${state.location}`, 'gold'],
+    ['Reviews Processed', fmtK(reviews), `AI-read for ${state.useCase.toLowerCase()} fit`, ''],
+    ['Top Matched for You', String(matched), 'Based on location, use case, and operating style', 'success'],
+    ['Avg. Fee Profile', feeBase.toFixed(1) + '%', 'Blended management fee signal in this market', '']
+  ].map((s,i)=>`<div class="ts-card fade-up" style="animation-delay:${0.05+i*0.05}s"><div class="ts-label">${s[0]}</div><div class="ts-val ${s[3]}">${s[1]}</div><div class="ts-sub">${s[2]}</div></div>`).join('');
+  els.resultsTitle.textContent = `Property Managers · ${state.location}`;
+  els.resultsSub.textContent = `Filtered for ${state.useCase.toLowerCase()} and ${state.tab === 'all' ? 'all operating styles' : state.tab + ' managers'}`;
+  els.matchCount.textContent = `${matched} MATCHES`;
+  els.list.innerHTML = pool.map(makeCard).join('');
+  els.alert.innerHTML = `<div class="ab-hd">△ Risk Alert</div><div class="ab-title">${m.risk} managers flagged for elevated issues</div><div class="ab-text">BRIC filtered out <b>${m.risk} firms with complaint spikes, weak owner reporting, or poor vendor-control patterns</b> in ${state.location}.</div>`;
+  els.benchmarkTitle.textContent = 'Management Benchmark';
+  els.benchmarkSub.textContent = `${state.location} · ${state.useCase}`;
+  els.benchmarkRows.innerHTML = rows([
+    ['Typical management fee','58%', (feeBase-0.4).toFixed(1)+'%–'+(feeBase+0.7).toFixed(1)+'%'],
+    ['Vacancy oversight depth','42%', 'Moderate–High'],
+    ['Capex coordination','36%', 'Project-based'],
+    ['Collections discipline','48%', 'Strong'],
+    ['Owner reporting cadence','31%', 'Monthly']
+  ]);
+  els.roiTitle.textContent = 'Operating Impact';
+  els.roiSub.textContent = 'Potential ownership improvements by manager quality';
+  els.roiRows.innerHTML = rows([
+    ['Expense control opportunity','74%','High'],
+    ['Turnover speed improvement','46%','Moderate'],
+    ['Collections improvement','39%','Moderate'],
+    ['Reporting visibility','63%','High']
+  ]);
+  els.roiFootnote.textContent = 'Modeled for demo purposes to show how operator intelligence would vary by submarket, use case, and manager type.';
+  tabs.forEach(btn=>btn.classList.toggle('active', btn.dataset.tab===state.tab));
+  document.querySelectorAll('.c-btn-gold').forEach(btn=>{
+    btn.onclick=(e)=>{e.stopPropagation(); btn.textContent='✓ Intro Sent'; btn.style.background='rgba(109,186,143,0.15)'; btn.style.color='var(--success)'; btn.style.borderColor='rgba(109,186,143,0.3)'; btn.disabled=true;};
+  });
+}
+els.location.onchange = ()=>{ state.location = els.location.value; render(); };
+els.useCase.onchange = ()=>{ state.useCase = els.useCase.value; render(); };
+tabs.forEach(btn=>btn.onclick=()=>{ state.tab = btn.dataset.tab; render(); });
+render();
+</script>
+</body>
+</html>
