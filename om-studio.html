@@ -1520,4 +1520,232 @@ setupPanelResizer();
 })();
 </script>
 
+
+<script>
+/* --- BRIC patch: import itemized rent roll/expenses + auto apartment SF for PSF --- */
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function isSet(v){ return v !== undefined && v !== null && String(v).trim() !== ''; }
+  function first(){ for(var i=0;i<arguments.length;i++){ if(isSet(arguments[i])) return arguments[i]; } return ''; }
+  function num(v){ var n=parseFloat(String(v||'').replace(/[$,]/g,'')); return Number.isFinite(n) ? n : 0; }
+  function norm(v){ return String(v||'').trim().toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' '); }
+  function getWS(){ try { return JSON.parse(localStorage.getItem('bricWorkspaceV1')) || {properties:[], valuations:[], oms:[], activity:[]}; } catch(e){ return {properties:[], valuations:[], oms:[], activity:[]}; } }
+  function setVal(id,v){ var el=byId(id); if(el && isSet(v)){ el.value=v; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); } }
+  function setSelect(id,v){
+    var el=byId(id); if(!el || !isSet(v)) return;
+    var target=norm(v), match=null;
+    Array.prototype.slice.call(el.options).some(function(o){ if(norm(o.value)===target || norm(o.textContent)===target || norm(o.label)===target){ match=o; return true; } return false; });
+    if(!match){ match=document.createElement('option'); match.value=id==='neighborhood'?String(v).trim().toLowerCase():String(v).trim(); match.textContent=String(v).trim(); el.appendChild(match); }
+    el.value=match.value; el.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  function get(obj, keys){ if(!obj) return ''; for(var i=0;i<keys.length;i++){ var v=obj[keys[i]]; if(isSet(v)) return v; } return ''; }
+  function flatRecord(record){
+    var out={};
+    function absorb(o){
+      if(!o || typeof o!=='object') return;
+      Object.keys(o).forEach(function(k){ if(!isSet(out[k]) && isSet(o[k])) out[k]=o[k]; else if(Array.isArray(o[k]) && o[k].length) out[k]=o[k]; });
+    }
+    ['property','propertyData','propertyDetails','details','inputs','formData','valuation','valuationData','om','omData','draft','data','payload'].forEach(function(k){ if(record && record[k] && typeof record[k]==='object' && !Array.isArray(record[k])) absorb(record[k]); });
+    absorb(record);
+    return out;
+  }
+  function getBundleForProperty(property){
+    var ws=getWS(); property=property||{};
+    var pid=first(property.id, property.propertyId);
+    var addr=norm(first(property.address, property.propertyAddress));
+    var vals=(ws.valuations||[]).filter(function(v){ return (pid && v.propertyId===pid) || (addr && norm(first(v.address,v.propertyAddress))===addr); });
+    var oms=(ws.oms||[]).filter(function(o){ return (pid && o.propertyId===pid) || (addr && norm(first(o.address,o.propertyAddress))===addr); });
+    vals.sort(function(a,b){ return String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||'')); });
+    oms.sort(function(a,b){ return String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||'')); });
+    return {property:flatRecord(property), valuations:vals.map(flatRecord), oms:oms.map(flatRecord)};
+  }
+  function mergeBasics(records){
+    var out={};
+    records.forEach(function(r){ if(!r) return; Object.keys(r).forEach(function(k){ var v=r[k]; if(Array.isArray(v)){ if(v.length && !out[k]) out[k]=v; } else if(isSet(v) && !isSet(out[k])) out[k]=v; }); });
+    return out;
+  }
+  function expenseArraysFromRecord(r){
+    var keys=['expenses','expenseList','itemizedExpenses','expenseRows','expensesBreakdown','operatingExpensesList','operatingExpenseRows'];
+    var out=[]; keys.forEach(function(k){ if(Array.isArray(r&&r[k])) out=out.concat(r[k]); });
+    return out;
+  }
+  function normalizeExpensesFromRecords(records){
+    var out=[], seen={};
+    records.forEach(function(r){
+      expenseArraysFromRecord(r).forEach(function(e){
+        var name=first(e.name,e.label,e.expenseName,e.expense,e.category,'Expense');
+        var amount=num(first(e.amount,e.value,e.annualAmount,e.total,e.cost,0));
+        var key=norm(name)+'|'+amount;
+        if((name || amount) && !seen[key]){ seen[key]=1; out.push({name:name, amount:amount}); }
+      });
+    });
+    return out;
+  }
+  function rentArraysFromRecord(r){
+    var out=[];
+    ['rentRoll','rentroll','unitRentRoll','itemizedRentRoll','rentRollItems','unitRows'].forEach(function(k){ if(Array.isArray(r&&r[k])) out=out.concat(r[k]); });
+    ['residentialRentRoll','apartmentRentRoll','residentialRows','residentialUnitsList'].forEach(function(k){ if(Array.isArray(r&&r[k])) out=out.concat(r[k].map(function(x){ var y=Object.assign({},x); y.__forcedType='apartment'; return y; })); });
+    // Only treat apartments/stores as rent-roll arrays if the array elements are objects, not a numeric/unit-count field.
+    ['apartments','stores','retailSpaces','commercialUnits'].forEach(function(k){ if(Array.isArray(r&&r[k]) && r[k].some(function(x){return x && typeof x==='object';})) out=out.concat(r[k]); });
+    ['retailRentRoll','commercialRentRoll','retailRows','commercialRows'].forEach(function(k){ if(Array.isArray(r&&r[k])) out=out.concat(r[k].map(function(x){ var y=Object.assign({},x); y.__forcedType='retail'; return y; })); });
+    return out;
+  }
+  function normalizeRentRollFromRecords(records, totalSF, aptCountHint){
+    var rows=[];
+    function addApt(x,idx){
+      rows.push({
+        id:Date.now()+Math.floor(Math.random()*999999)+idx,
+        order:idx,
+        type:'apartment',
+        unit:first(x.unit,x.unitNumber,x.apartment,x.name,'Apt '+(idx+1)),
+        unitSqft:num(first(x.unitSqft,x.sqft,x.sf,x.squareFeet,x.unitSF,0)),
+        bed:num(first(x.bed,x.beds,x.bedrooms,x.br,0)),
+        bath:num(first(x.bath,x.baths,x.bathrooms,x.ba,1)),
+        currentRent:num(first(x.currentRent,x.rent,x.monthlyRent,x.actualRent,x.inPlaceRent,0)),
+        proformaRent:num(first(x.proformaRent,x.marketRent,x.projectedRent,x.rent,x.currentRent,x.monthlyRent,0)),
+        proformaAuto:false
+      });
+    }
+    function addRetail(x,idx){
+      rows.push({
+        id:Date.now()+1000000+Math.floor(Math.random()*999999)+idx,
+        order:idx,
+        type:'retail',
+        unit:first(x.unit,x.space,x.spaceName,x.name,'Retail '+(idx+1)),
+        sqft:num(first(x.sqft,x.sf,x.squareFeet,x.unitSqft,0)),
+        tenant:first(x.tenant,x.tenantName,''),
+        currentRent:num(first(x.currentRent,x.rent,x.monthlyRent,x.actualRent,x.inPlaceRent,x.annualRent,0)),
+        frequency:first(x.frequency,x.rentFrequency,'monthly'),
+        expiration:first(x.expiration,x.leaseExpiration,x.leaseExp,''),
+        increase:first(x.increase,x.inc,x.annualIncrease,x.annualRentIncrease,'3.0'),
+        proformaRent:num(first(x.proformaRent,x.marketRent,x.projectedRent,x.rent,x.currentRent,x.monthlyRent,x.annualRent,0)),
+        proformaAuto:false
+      });
+    }
+    records.forEach(function(r){ rentArraysFromRecord(r).forEach(function(x,idx){ var t=norm(first(x.__forcedType,x.type,x.useType,x.unitType,x.category,x.spaceType,'')); if(t.indexOf('retail')>=0 || t.indexOf('commercial')>=0 || t.indexOf('store')>=0 || isSet(x.tenant)) addRetail(x,idx); else addApt(x,idx); }); });
+    // De-dupe imported rows.
+    var seen={}, dedup=[]; rows.forEach(function(row){ var key=row.type+'|'+norm(row.unit)+'|'+row.currentRent+'|'+row.proformaRent; if(!seen[key]){ seen[key]=1; dedup.push(row); } }); rows=dedup;
+    var aptRows=rows.filter(function(x){return x.type==='apartment';});
+    var avgSF=(num(totalSF)>0 && aptRows.length>0) ? Math.round(num(totalSF)/aptRows.length) : (num(totalSF)>0 && num(aptCountHint)>0 ? Math.round(num(totalSF)/num(aptCountHint)) : 0);
+    rows.forEach(function(row){ if(row.type==='apartment' && !num(row.unitSqft) && avgSF) row.unitSqft=avgSF; });
+    return rows;
+  }
+  function collectRecordsForImport(selected){
+    selected=selected||{};
+    var bundle=getBundleForProperty(selected);
+    return [bundle.property].concat(bundle.valuations||[]).concat(bundle.oms||[]).concat([flatRecord(selected)]).filter(function(x){ return x && typeof x==='object'; });
+  }
+  function currentImportRecord(opt){ return (opt && (opt.fullData || opt.data)) || {}; }
+
+  window.collectImportOptions=function(){
+    var ws=getWS();
+    return (ws.properties||[]).map(function(p,i){
+      var records=collectRecordsForImport(p);
+      var d=mergeBasics(records);
+      var label=first(d.address,d.propertyAddress,p.address,'Property '+(i+1));
+      var meta=[first(d.borough,d.city), first(d.submarket,d.neighborhood), first(d.propertyType,d.assetType,d.type)].filter(Boolean).join(' · ');
+      return {id:'property_'+i, sourceType:'property', label:label, meta:meta, data:p, fullData:d, records:records};
+    });
+  };
+  window.previewImportSelection=function(){
+    var sel=byId('valuationImportSelect'), preview=byId('importPickerPreview'); if(!sel||!preview) return;
+    var opt=(window.importOptionsCache||[]).find(function(x){return x.id===sel.value;});
+    if(!opt){ preview.textContent='Select a dashboard property to preview what will be imported.'; return; }
+    var records=opt.records || collectRecordsForImport(opt.data), d=mergeBasics(records);
+    var ex=normalizeExpensesFromRecords(records);
+    var sqft=num(first(d.sqft,d.buildingSf,d.buildingSF,d.grossSF,d.grossSf,d.squareFeet,d.totalSF,d.totalSqft));
+    var aptHint=num(first(d.residentialUnitCount,d.residentialUnits,d.apartmentCount,d.aptCount,d.resCount));
+    var rr=normalizeRentRollFromRecords(records,sqft,aptHint);
+    var aptCt=rr.filter(function(x){return x.type==='apartment';}).length || aptHint;
+    var retCt=rr.filter(function(x){return x.type==='retail';}).length || num(first(d.retailUnitCount,d.retailUnits,d.stores,d.storeCount,d.retailCount,d.commercialSpaces));
+    var avgSF=(sqft && aptCt) ? Math.round(sqft/aptCt) : 0;
+    preview.innerHTML='<b>'+esc(opt.label)+'</b><br>'+[
+      first(d.address,d.propertyAddress,'Address not saved'),
+      [first(d.borough,d.city), first(d.submarket,d.neighborhood)].filter(Boolean).join(' · '),
+      first(d.propertyType,d.assetType,d.type),
+      first(d.yearBuilt,d.buildingYearBuilt,d.year_built)?'Built: '+first(d.yearBuilt,d.buildingYearBuilt,d.year_built):'',
+      sqft?'SF: '+sqft.toLocaleString():'',
+      (aptCt||retCt)?(aptCt+' residential / '+retCt+' retail'):'',
+      avgSF?'Avg apartment SF: '+avgSF.toLocaleString()+' SF':'',
+      rr.length?'Itemized rent roll rows: '+rr.length:'',
+      ex.length?'Itemized expense rows: '+ex.length:''
+    ].filter(Boolean).map(esc).join('<br>');
+  };
+  window.applyImportedData=function(d){
+    var records=collectRecordsForImport(d||{}), data=mergeBasics(records);
+    var sqft=num(first(data.sqft,data.buildingSf,data.buildingSF,data.grossSF,data.grossSf,data.squareFeet,data.totalSF,data.totalSqft));
+    var expenses=normalizeExpensesFromRecords(records);
+    var aptHint=num(first(data.residentialUnitCount,data.residentialUnits,data.apartmentCount,data.aptCount,data.resCount));
+    var rr=normalizeRentRollFromRecords(records,sqft,aptHint);
+    var aptCt=rr.filter(function(x){return x.type==='apartment';}).length || aptHint;
+    var retCt=rr.filter(function(x){return x.type==='retail';}).length || num(first(data.retailUnitCount,data.retailUnits,data.stores,data.storeCount,data.retailCount,data.commercialSpaces));
+    var avgAptSF=(sqft && aptCt) ? Math.round(sqft/aptCt) : 0;
+
+    setVal('address',first(data.address,data.propertyAddress,data.fullAddress,data.location));
+    setSelect('city',first(data.borough,data.city,data.propertyBorough));
+    setSelect('neighborhood',first(data.submarket,data.neighborhood,data.subMarket,data.propertySubmarket,data.area));
+    setSelect('propertyType',first(data.propertyType,data.assetType,data.type,data.propertyClass));
+    setVal('yearBuilt',first(data.yearBuilt,data.built,data.buildingYearBuilt,data.year_built));
+    setVal('sqft',sqft || first(data.sqft,data.buildingSf,data.grossSF));
+    setVal('askingPrice',first(data.askingPrice,data.price,data.listPrice,data.valuationPrice,data.targetPrice,data.estimatedValue));
+    setVal('marketCap',first(data.marketCap,data.capRate,data.marketCapRate,data.capRateAssumption));
+    setVal('grossIncome',first(data.grossIncome,data.grossRentalIncome,data.annualIncome,data.currentGrossIncome,data.projectedGrossIncome));
+    setVal('otherIncome',first(data.otherIncome,data.additionalIncome,data.miscIncome));
+    setVal('description',first(data.description,data.propertyDescription,data.omDescription));
+    setSelect('submarketTrend',first(data.trend,data.submarketTrend,data.positioning,data.marketTrend));
+    if(aptCt || retCt){ setVal('residentialUnitCount',aptCt); setVal('retailUnitCount',retCt); }
+    setVal('unitMixBreakdown', first(data.unitMixBreakdown,data.unitMix,data.unitBreakdown,data.mix) || ((aptCt||retCt) ? (aptCt+' residential unit'+(aptCt!==1?'s':'')+(retCt?' + '+retCt+' retail/commercial space'+(retCt!==1?'s':''):'')+(avgAptSF?' · Avg apartment SF: '+avgAptSF.toLocaleString():'') ) : ''));
+
+    if(expenses.length){
+      var rows=byId('expenseRows'); if(rows) rows.innerHTML='';
+      if(typeof expenseId!=='undefined') expenseId=0;
+      expenses.forEach(function(e){ if(typeof addExpenseRow==='function') addExpenseRow(e.name,e.amount); });
+      setVal('totalExpenses', Math.round(expenses.reduce(function(s,e){return s+num(e.amount);},0)));
+      try{ expenseItemizedActive=true; }catch(e){}
+      byId('expenseItemizedToggle')?.classList.add('on');
+      byId('expenseItemizedWrap')?.classList.add('visible');
+    } else {
+      setVal('totalExpenses', first(data.totalExpenses,data.expensesTotal,data.totalOperatingExpenses,data.annualExpenses));
+    }
+
+    if(rr.length){
+      try{ rrItems=rr; }catch(e){ window.rrItems=rr; }
+      setVal('resCount',rr.filter(function(x){return x.type==='apartment';}).length);
+      setVal('retailCount',rr.filter(function(x){return x.type==='retail';}).length);
+      setVal('residentialUnitCount',rr.filter(function(x){return x.type==='apartment';}).length);
+      setVal('retailUnitCount',rr.filter(function(x){return x.type==='retail';}).length);
+      try{ rentRollActive=true; }catch(e){}
+      byId('rentRollToggle')?.classList.add('on');
+      byId('rentRollControls')?.classList.add('visible');
+      byId('rentRollWrap')?.classList.add('visible');
+      if(typeof renderRR==='function') renderRR();
+      if(typeof updateSummary==='function') updateSummary();
+    }
+    if(typeof updateExpenseTotalFromRows==='function') updateExpenseTotalFromRows();
+    if(typeof generate==='function' && (window.__bricOmGenerated || (typeof omGenerated!=='undefined' && omGenerated))) generate(false);
+  };
+  window.importSelectedActivity=function(){
+    var growth=(typeof currentTier!=='undefined' && currentTier==='growth') || byId('tierGrowth')?.classList.contains('active');
+    if(!growth){ alert('Import from previous activity is a Growth feature.'); return; }
+    var sel=byId('valuationImportSelect');
+    var opt=sel?(window.importOptionsCache||[]).find(function(x){return x.id===sel.value;}):null;
+    if(!opt){ alert('Please choose a dashboard property to import.'); return; }
+    window.applyImportedData(opt.data || currentImportRecord(opt));
+    if(typeof closeImportPicker==='function') closeImportPicker(); else byId('importPicker')?.classList.remove('visible');
+    alert('Imported dashboard property: '+opt.label+'\n\nItemized rent roll and expenses were imported when saved data was available. Apartment unit SF is auto-filled as total SF ÷ residential units when row-level SF is missing.');
+  };
+
+  // Fix live editing of apartment unit SF and let PSF update correctly.
+  if(typeof setRRField==='function'){
+    var oldSetRRField=setRRField;
+    window.setRRField=function(id,field,value){
+      var numeric=['sqft','unitSqft','currentRent','proformaRent','bed','bath'];
+      var item=(typeof rrItems!=='undefined' ? rrItems : []).find(function(x){return x.id===id;});
+      if(item){ item[field]=numeric.indexOf(field)>=0 ? num(value) : value; if(field==='proformaRent') item.proformaAuto=false; if((field==='bed'||field==='sqft'||field==='unitSqft')&&item.proformaAuto){ item.proformaRent=item.type==='apartment'?autoProformaResidential(item.bed):autoProformaRetail(item.sqft); } if(typeof renderRR==='function' && (field==='unitSqft'||field==='sqft')) renderRR(); if(typeof updateSummary==='function') updateSummary(); if(typeof generate==='function') generate(); return; }
+      oldSetRRField(id,field,value);
+    };
+  }
+})();
+</script>
+
 </body></html>
