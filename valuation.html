@@ -273,6 +273,7 @@ const BENCHMARKS={
   'Management Fee':{calc:(ctx)=>{const base=(ctx.grossIncome||0)*0.05; return {low:Math.round(base*0.8),mid:Math.round(base),high:Math.round(base*1.2)};}, type:'flat'}
 };
 let expenseIdCounter=0,rentRollActive=false;
+let currentValuationPDFData=null;
 function getContext(){
   const sqft=parseFloat(document.getElementById('sqft').value)||0;
   const manualUnits=parseInt(document.getElementById('units').value||0,10);
@@ -489,6 +490,7 @@ function calculate(){
   saveCurrentValuation();
 }
 function renderResults(d){
+  currentValuationPDFData=d;
   const panel=document.getElementById('panelRight');
   const typeLabels={multifamily:'Multifamily',mixed:'Mixed-Use',commercial:'Commercial'};
   const typeLabel=typeLabels[d.propType]||d.propType;
@@ -499,9 +501,186 @@ function renderResults(d){
     return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .5rem 0;font-family:var(--mono);font-size:.62rem;color:#e1a06f">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}`;
   }).join('') || `<div style="font-size:.8rem;color:rgba(255,255,255,.4)">No benchmarked expenses yet.</div>`;
   const expBreakdownHTML=d.expenseList.map(e=>`<div class="breakdown-row"><span class="breakdown-row-name">${e.name}</span><span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span></div>`).join('')||'<div class="breakdown-row"><span class="breakdown-row-name">No expenses entered</span></div>';
-  panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel} · ${d.units} Units ${d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''}</div></div><div class="result-timestamp">Generated</div></div><div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
+  panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel} · ${d.units} Units ${d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''}</div></div><div class="result-timestamp">Generated</div></div><div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div><button class="pdf-report-btn" onclick="downloadValuationPDF()">Save Valuation as PDF</button><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>${expRows}</div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="breakdown-total" style="margin-top:1rem;background:rgba(201,168,76,.08);padding:.85rem 1rem;border:1px solid rgba(201,168,76,.18);border-radius:10px"><span>Net Operating Income</span><span class="breakdown-total-val">${fmtFull(d.noi)}</span></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
+}
+
+
+function escapePDFHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, function(m){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
+  });
+}
+function getExpenseBenchmarkLabel(e){
+  if(!e || !e.bench) return 'Custom / No benchmark';
+  if(e.status==='bad') return 'Above Market Average';
+  if(e.status==='warn') return 'Near Top of Market Range';
+  return 'Within / Below Market Range';
+}
+function buildValuationPDFHtml(d){
+  const generatedAt=new Date().toLocaleString();
+  const borough=document.getElementById('boroughSelect')?.value || '';
+  const submarket=document.getElementById('submarketSelect')?.value || '';
+  const propertyType=document.getElementById('propertyType')?.value || '';
+
+  const expenseRows=(d.expenseList||[]).map(e=>{
+    const bench=e.bench ? `${fmtFull(e.bench.low)} – ${fmtFull(e.bench.high)}` : 'N/A';
+    const savings=e.savings>0 ? fmtFull(e.savings) : '—';
+    return `<tr>
+      <td>${escapePDFHtml(e.name)}</td>
+      <td class="num">${fmtFull(e.amount)}</td>
+      <td class="num">${bench}</td>
+      <td>${getExpenseBenchmarkLabel(e)}</td>
+      <td class="num">${savings}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="5">No expenses entered.</td></tr>`;
+
+  const incomeRows=`
+    <tr><td>Gross Rental Income</td><td class="num">${fmtFull(d.grossIncome)}</td></tr>
+    <tr><td>Vacancy Loss (${fmtPct(d.vacancyRate)})</td><td class="num negative">(${fmtFull(d.vacancyLoss)})</td></tr>
+    <tr><td>Additional Income</td><td class="num">${fmtFull(d.otherIncome)}</td></tr>
+    <tr class="total"><td>Effective Gross Income</td><td class="num">${fmtFull(d.effectiveGross)}</td></tr>
+    <tr><td>Total Expenses</td><td class="num negative">(${fmtFull(d.totalExpenses)})</td></tr>
+    <tr class="total"><td>Net Operating Income</td><td class="num">${fmtFull(d.noi)}</td></tr>
+  `;
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BRIC Studios Valuation Report</title>
+<style>
+  @page{size:letter;margin:.55in}
+  *{box-sizing:border-box}
+  body{font-family:Arial,Helvetica,sans-serif;color:#171717;margin:0;background:#fff;font-size:12px;line-height:1.45}
+  .report{max-width:8.5in;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #c9a84c;padding-bottom:14px;margin-bottom:18px}
+  .brand{font-family:Georgia,serif;font-size:24px;font-weight:700;color:#111}
+  .tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9a7c2e;margin-top:3px}
+  .meta{text-align:right;color:#666;font-size:10px}
+  h1{font-family:Georgia,serif;font-size:24px;margin:0 0 5px;color:#111;line-height:1.1}
+  .sub{color:#666;margin-bottom:16px}
+  .value-card{border:1px solid #ddd;background:#faf8f3;padding:16px;border-radius:8px;margin-bottom:14px}
+  .label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a7c2e;font-weight:bold;margin-bottom:5px}
+  .big-value{font-family:Georgia,serif;font-size:34px;font-weight:700;color:#111;margin-bottom:4px}
+  .range{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .mini{border:1px solid #e5e0d5;border-radius:6px;padding:10px;background:#fff}
+  .mini strong{display:block;font-family:Georgia,serif;font-size:17px;margin-bottom:2px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+  .kpi{border:1px solid #e2e2e2;border-radius:6px;padding:10px}
+  .kpi span{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#777;margin-bottom:4px}
+  .kpi strong{font-family:Georgia,serif;font-size:18px}
+  .section{margin-top:18px;break-inside:avoid}
+  h2{font-family:Georgia,serif;font-size:17px;margin:0 0 8px;border-bottom:1px solid #ddd;padding-bottom:6px}
+  table{width:100%;border-collapse:collapse}
+  th{background:#f5f2ec;color:#555;font-size:9px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:8px;border:1px solid #ddd}
+  td{padding:8px;border:1px solid #e5e5e5;vertical-align:top}
+  .num{text-align:right;white-space:nowrap}
+  .negative{color:#9b3b2f}
+  .total td{font-weight:bold;background:#fbfaf7}
+  .note{background:#fbfaf7;border-left:3px solid #c9a84c;padding:10px;margin-top:10px;color:#555}
+  .footer{border-top:1px solid #ddd;margin-top:20px;padding-top:10px;color:#777;font-size:10px}
+  @media print{button{display:none}}
+</style>
+</head>
+<body>
+<div class="report">
+  <div class="top">
+    <div>
+      <div class="brand">BRIC Studios</div>
+      <div class="tag">Valuation Studio Report</div>
+    </div>
+    <div class="meta">
+      Generated: ${generatedAt}<br>
+      Directional estimate only — not an appraisal.
+    </div>
+  </div>
+
+  <h1>${escapePDFHtml(d.address)}</h1>
+  <div class="sub">
+    ${escapePDFHtml(propertyType || 'Property')} · ${escapePDFHtml(submarket)} ${borough ? '· '+escapePDFHtml(borough) : ''} · ${d.units} units ${d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''}
+  </div>
+
+  <div class="value-card">
+    <div class="label">Estimated Market Value</div>
+    <div class="big-value">${fmtFull(Math.max(0,d.baseVal))}</div>
+    <div>Based on ${fmtFull(d.noi)} NOI at a ${fmtPct(d.capRate*100)} market cap rate.</div>
+
+    <div class="range">
+      <div class="mini"><span>Conservative</span><strong>${fmtFull(Math.max(0,d.lowVal))}</strong><small>${fmtPct((d.capRate*100)+0.75)} cap</small></div>
+      <div class="mini"><span>Market</span><strong>${fmtFull(Math.max(0,d.baseVal))}</strong><small>${fmtPct(d.capRate*100)} cap</small></div>
+      <div class="mini"><span>Aggressive</span><strong>${fmtFull(Math.max(0,d.highVal))}</strong><small>${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap</small></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="kpi"><span>Gross Income</span><strong>${fmtFull(d.grossIncome)}</strong></div>
+    <div class="kpi"><span>Effective Gross</span><strong>${fmtFull(d.effectiveGross)}</strong></div>
+    <div class="kpi"><span>Total Expenses</span><strong>${fmtFull(d.totalExpenses)}</strong></div>
+    <div class="kpi"><span>NOI</span><strong>${fmtFull(d.noi)}</strong></div>
+  </div>
+
+  <div class="section">
+    <h2>Income & Expense Breakdown</h2>
+    <table><tbody>${incomeRows}</tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>Expense Benchmark Analysis</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Expense</th>
+          <th class="num">Entered Amount</th>
+          <th class="num">Market Benchmark</th>
+          <th>Status</th>
+          <th class="num">Potential Savings</th>
+        </tr>
+      </thead>
+      <tbody>${expenseRows}</tbody>
+    </table>
+    <div class="note">
+      ${d.totalSavings>0
+        ? `Potential expense savings flagged: <strong>${fmtFull(d.totalSavings)}/yr</strong>. These are directional and should be verified against vendor contracts, building condition, and service requirements.`
+        : `No major expense overpayment flags were identified based on the current benchmark logic.`}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Pricing Metrics</h2>
+    <table>
+      <tbody>
+        <tr><td>Price Per Unit</td><td class="num">${fmtFull(Math.max(0,d.pricePerUnit))}</td></tr>
+        <tr><td>Price Per SF</td><td class="num">${d.pricePerSqft>0?fmtFull(Math.max(0,d.pricePerSqft)):'N/A'}</td></tr>
+        <tr><td>Cap Rate</td><td class="num">${fmtPct(d.capRate*100)}</td></tr>
+        <tr><td>Vacancy Rate</td><td class="num">${fmtPct(d.vacancyRate)}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    BRIC Studios Valuation Studio. This report is a directional estimate based on user-entered information and internal prototype benchmark assumptions. It is not an appraisal, broker price opinion, tax advice, legal advice, or financing commitment.
+  </div>
+</div>
+<script>window.onload=function(){window.print();};</script>
+</body>
+</html>`;
+}
+function downloadValuationPDF(){
+  if(!currentValuationPDFData){
+    alert('Generate a valuation first before saving as PDF.');
+    return;
+  }
+  const reportHtml=buildValuationPDFHtml(currentValuationPDFData);
+  const printWindow=window.open('', '_blank');
+  if(!printWindow){
+    alert('Your browser blocked the PDF window. Please allow pop-ups for this site and try again.');
+    return;
+  }
+  printWindow.document.open();
+  printWindow.document.write(reportHtml);
+  printWindow.document.close();
 }
 
 function getWorkspace(){
