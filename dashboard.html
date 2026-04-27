@@ -186,6 +186,25 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .panel-link:hover{opacity:0.75}
 
 /* ═══ PROPERTIES TABLE ═══ */
+
+.p-actions{display:flex;align-items:center;justify-content:flex-end;gap:.4rem;flex-wrap:wrap}
+.p-action-btn{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.65);
+  font-family:var(--mono);
+  font-size:.58rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:.32rem .52rem;
+  border-radius:3px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all .15s;
+}
+.p-action-btn:hover{border-color:rgba(201,168,76,.32);color:var(--gold);background:rgba(201,168,76,.06)}
+.p-action-btn.delete:hover{border-color:rgba(232,168,124,.32);color:var(--danger);background:rgba(232,168,124,.07)}
+
 .ptable{width:100%;border-collapse:collapse}
 .ptable th{
   font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;
@@ -401,7 +420,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <nav class="sb-section">
       <div class="sb-label">Workspace</div>
       <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
-      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge">3</span></a>
+      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="myPropertiesBadge">0</span></a>
       <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
       <a class="sb-item"><span class="sb-icon">◈</span> Saved Reports</a>
 
@@ -525,68 +544,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
                 <th class="num">NOI</th>
                 <th>Performance</th>
                 <th>Status</th>
+                <th class="num">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="dashboardPropertiesBody">
               <tr>
-                <td>
-                  <div class="p-name">
-                    <div class="p-thumb">◫</div>
-                    <div class="p-name-text">
-                      <div class="p-addr">142 Bedford Ave</div>
-                      <div class="p-sub">Williamsburg · 6 units</div>
-                    </div>
-                  </div>
+                <td colspan="6" style="color:rgba(255,255,255,.4);padding:1.1rem 1.4rem">
+                  Loading saved properties...
                 </td>
-                <td class="num">$3.2M</td>
-                <td class="num">$163K</td>
-                <td>
-                  <div class="perf-mini">
-                    <div class="perf-bar"><div class="perf-fill" style="width:84%"></div></div>
-                    <span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">84</span>
-                  </div>
-                </td>
-                <td><span class="status-pill status-active">● Active</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="p-name">
-                    <div class="p-thumb">◫</div>
-                    <div class="p-name-text">
-                      <div class="p-addr">88 Grand Street</div>
-                      <div class="p-sub">Bushwick · 8 units</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="num">$2.84M</td>
-                <td class="num">$148K</td>
-                <td>
-                  <div class="perf-mini">
-                    <div class="perf-bar"><div class="perf-fill" style="width:91%"></div></div>
-                    <span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">91</span>
-                  </div>
-                </td>
-                <td><span class="status-pill status-analyzing">◈ Analyzing</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="p-name">
-                    <div class="p-thumb">◫</div>
-                    <div class="p-name-text">
-                      <div class="p-addr">320 Prospect Ave</div>
-                      <div class="p-sub">Crown Heights · 4 units</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="num">$1.8M</td>
-                <td class="num">$101K</td>
-                <td>
-                  <div class="perf-mini">
-                    <div class="perf-bar"><div class="perf-fill" style="width:76%"></div></div>
-                    <span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">76</span>
-                  </div>
-                </td>
-                <td><span class="status-pill status-listed">● Listed</span></td>
               </tr>
             </tbody>
           </table>
@@ -855,6 +820,188 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 const now = new Date();
 document.getElementById('todayDate').textContent =
   now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+function getWorkspace(){
+  try{
+    return JSON.parse(localStorage.getItem('bricWorkspaceV1')) || {properties:[],valuations:[],oms:[],activity:[]};
+  }catch(e){
+    return {properties:[],valuations:[],oms:[],activity:[]};
+  }
+}
+
+function setWorkspace(ws){
+  localStorage.setItem('bricWorkspaceV1', JSON.stringify(ws));
+}
+
+function fmtDashMoney(n){
+  n=Number(n)||0;
+  if(Math.abs(n)>=1000000) return '$'+(n/1000000).toFixed(2)+'M';
+  if(Math.abs(n)>=1000) return '$'+Math.round(n/1000)+'K';
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function fmtDashFull(n){
+  n=Number(n)||0;
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function fmtDashPct(n){
+  n=Number(n)||0;
+  return n.toFixed(2)+'%';
+}
+
+function safeText(v){
+  return String(v ?? '').replace(/[&<>"']/g, m => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[m]));
+}
+
+function getPropertyLatestValuation(ws, property){
+  if(!property) return null;
+  if(property.lastValuationId){
+    const direct = (ws.valuations || []).find(v => v.id === property.lastValuationId);
+    if(direct) return direct;
+  }
+  return (ws.valuations || []).find(v => v.propertyId === property.id) || null;
+}
+
+function renderSavedProperties(){
+  const ws = getWorkspace();
+  const properties = ws.properties || [];
+  const tbody = document.getElementById('dashboardPropertiesBody');
+  const badge = document.getElementById('myPropertiesBadge');
+
+  if(badge) badge.textContent = properties.length;
+
+  if(!tbody) return;
+
+  if(!properties.length){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="padding:1.25rem 1.4rem;color:rgba(255,255,255,.45);line-height:1.55">
+          No saved properties yet. Go to <a href="valuation.html" style="color:var(--gold)">Valuation Studio</a>, enter a property, and click Generate Valuation or Save to Dashboard.
+        </td>
+      </tr>
+    `;
+    updateDashboardKpis([]);
+    return;
+  }
+
+  tbody.innerHTML = properties.map(property => {
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    const value = Number(property.lastValuationValue || valuation.baseVal || 0);
+    const noi = Number(property.lastNoi || valuation.noi || 0);
+    const capRate = Number(valuation.capRate || property.capRate || 0);
+    const capRateDisplay = capRate > 1 ? capRate : capRate * 100;
+    const units = Number(property.units || valuation.units || 0);
+    const submarket = property.submarket || valuation.submarket || 'Submarket';
+    const borough = property.borough || valuation.borough || '';
+    const status = property.status || 'Analyzing';
+    const perfScore = value > 0 && noi > 0 && capRateDisplay > 0 ? Math.min(98, Math.max(45, Math.round(100 - (capRateDisplay * 3)))) : 65;
+    const valuationId = property.lastValuationId || valuation.id || '';
+
+    return `
+      <tr>
+        <td>
+          <div class="p-name">
+            <div class="p-thumb">◫</div>
+            <div class="p-name-text">
+              <div class="p-addr">${safeText(property.address || 'Untitled Property')}</div>
+              <div class="p-sub">${safeText(submarket)}${borough ? ' · '+safeText(borough) : ''}${units ? ' · '+units+' units' : ''}</div>
+            </div>
+          </div>
+        </td>
+        <td class="num">${fmtDashMoney(value)}</td>
+        <td class="num">${fmtDashMoney(noi)}</td>
+        <td>
+          <div class="perf-mini">
+            <div class="perf-bar"><div class="perf-fill" style="width:${perfScore}%"></div></div>
+            <span style="font-family:var(--mono);font-size:0.7rem;color:var(--gold-light)">${perfScore}</span>
+          </div>
+        </td>
+        <td><span class="status-pill status-analyzing">◈ ${safeText(status)}</span></td>
+        <td class="num">
+          <div class="p-actions">
+            <button class="p-action-btn" onclick="editSavedProperty('${property.id}','${valuationId}')">Edit</button>
+            <button class="p-action-btn delete" onclick="deleteSavedProperty('${property.id}')">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  updateDashboardKpis(properties);
+}
+
+function updateDashboardKpis(properties){
+  const ws = getWorkspace();
+
+  let totalValue = 0;
+  let totalNoi = 0;
+  let totalUnits = 0;
+  let capRates = [];
+
+  properties.forEach(property => {
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    totalValue += Number(property.lastValuationValue || valuation.baseVal || 0);
+    totalNoi += Number(property.lastNoi || valuation.noi || 0);
+    totalUnits += Number(property.units || valuation.units || 0);
+
+    const capRate = Number(valuation.capRate || 0);
+    if(capRate) capRates.push(capRate > 1 ? capRate : capRate * 100);
+  });
+
+  const avgCap = capRates.length ? capRates.reduce((a,b)=>a+b,0) / capRates.length : 0;
+
+  const kpiVals = document.querySelectorAll('.kpi-val');
+  const kpiSubs = document.querySelectorAll('.kpi-sub');
+
+  if(kpiVals[0]) kpiVals[0].textContent = fmtDashMoney(totalValue);
+  if(kpiSubs[0]) kpiSubs[0].textContent = `Across ${properties.length} ${properties.length === 1 ? 'property' : 'properties'} · ${totalUnits} units`;
+
+  if(kpiVals[1]) kpiVals[1].textContent = fmtDashMoney(totalNoi);
+  if(kpiSubs[1]) kpiSubs[1].textContent = 'Saved valuation NOI';
+
+  if(kpiVals[2]) kpiVals[2].textContent = fmtDashPct(avgCap);
+  if(kpiSubs[2]) kpiSubs[2].textContent = 'Average saved cap rate';
+
+  if(kpiVals[3]) kpiVals[3].textContent = properties.length ? 'Saved' : '0';
+  if(kpiSubs[3]) kpiSubs[3].textContent = properties.length ? 'Dashboard connected to Valuation Studio' : 'No saved valuations yet';
+}
+
+function editSavedProperty(propertyId, valuationId){
+  let url = 'valuation.html?propertyId=' + encodeURIComponent(propertyId);
+  if(valuationId) url += '&valuationId=' + encodeURIComponent(valuationId);
+  window.location.href = url;
+}
+
+function deleteSavedProperty(propertyId){
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const label = property?.address || 'this property';
+  if(!confirm('Delete '+label+' from My Properties? This will also remove saved valuations tied to it.')) return;
+
+  ws.properties = (ws.properties || []).filter(p => p.id !== propertyId);
+  ws.valuations = (ws.valuations || []).filter(v => v.propertyId !== propertyId);
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({
+    type:'property_deleted',
+    propertyId,
+    address:label,
+    time:new Date().toISOString(),
+    detail:'Property deleted from dashboard'
+  });
+  ws.activity = ws.activity.slice(0,25);
+
+  setWorkspace(ws);
+  renderSavedProperties();
+}
+
+document.addEventListener('DOMContentLoaded', renderSavedProperties);
 </script>
 </body>
 </html>
