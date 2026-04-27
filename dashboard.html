@@ -39,8 +39,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
 }
 .sb-header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
-.sb-logo{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
-.sb-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
+.sb-logo{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.55rem}
+.sb-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;display:inline-block;box-shadow:none}
 .sb-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.4rem;margin-left:1rem}
 
 .sb-section{padding:1rem 0.85rem;flex:1;overflow-y:auto}
@@ -59,9 +59,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .sb-item:hover{background:rgba(255,255,255,0.04);color:var(--paper)}
 .sb-item.active{background:var(--gold-dim);color:var(--gold);border-left:2px solid var(--gold);padding-left:0.65rem}
 .sb-icon{
-  width:16px;height:16px;display:flex;align-items:center;justify-content:center;
-  font-size:0.9rem;opacity:0.8;flex-shrink:0;
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;border-radius:7px;border:1px solid rgba(201,168,76,.24);
+  background:rgba(201,168,76,.075);color:var(--gold);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
 }
+.sb-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sb-item.active .sb-icon{background:rgba(201,168,76,.16);border-color:rgba(201,168,76,.42);color:var(--gold-light)}
 .sb-badge{margin-left:auto;font-family:var(--mono);font-size:0.58rem;background:rgba(201,168,76,0.15);color:var(--gold);padding:0.1rem 0.4rem;border-radius:2px;border:1px solid rgba(201,168,76,0.25)}
 
 .sb-footer{padding:1rem 0.85rem;border-top:1px solid var(--border)}
@@ -224,10 +228,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 .p-name{display:flex;align-items:center;gap:0.75rem}
 .p-thumb{
-  width:32px;height:32px;border-radius:3px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--ink-3),#0a0c0b);
-  display:flex;align-items:center;justify-content:center;font-size:0.9rem;
-  border:1px solid rgba(255,255,255,0.08);
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  background:rgba(201,168,76,.10);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(201,168,76,.22);
+  color:var(--gold);font-family:var(--mono);font-size:.58rem;font-weight:800;letter-spacing:.02em;
 }
 .p-name-text{min-width:0}
 .p-addr{font-weight:600;color:var(--paper);margin-bottom:0.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
@@ -257,10 +262,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .qa-item:hover{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);transform:translateX(2px)}
 .qa-item:last-child{margin-bottom:0}
 .qa-icon{
-  width:36px;height:36px;border-radius:3px;flex-shrink:0;
-  background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);
-  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(180deg, rgba(201,168,76,0.10), rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.26);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
+.qa-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .qa-text{flex:1;min-width:0}
 .qa-name{font-size:0.82rem;font-weight:600;margin-bottom:0.1rem}
 .qa-desc{font-size:0.7rem;color:rgba(255,255,255,0.38);line-height:1.45}
@@ -345,12 +352,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   pointer-events:none;
 }
 .ai-icon{
-  width:42px;height:42px;border-radius:50%;flex-shrink:0;
-  background:rgba(201,168,76,0.15);border:1.5px solid rgba(201,168,76,0.35);
+  width:42px;height:42px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(180deg, rgba(201,168,76,0.12), rgba(201,168,76,0.045));border:1.5px solid rgba(201,168,76,0.35);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:1.2rem;color:var(--gold);
-  position:relative;z-index:1;
+  color:var(--gold);position:relative;z-index:1;
 }
+.ai-icon svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .ai-content{flex:1;min-width:0;position:relative;z-index:1}
 .ai-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--gold);margin-bottom:0.35rem}
 .ai-text{font-family:var(--serif);font-size:1.05rem;color:var(--paper);line-height:1.5;font-style:italic;margin-bottom:0.75rem}
@@ -437,22 +444,22 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
     <nav class="sb-section">
       <div class="sb-label">Workspace</div>
-      <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
-      <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="myPropertiesBadge">0</span></a>
-      <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
-      <a class="sb-item"><span class="sb-icon">◈</span> Saved OMs <span class="sb-badge" id="savedOmsBadge">0</span></a>
+      <a class="sb-item active"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6.5 24.5H25.5"></path><path d="M9 21V16.5"></path><path d="M13.5 21V11.5"></path><path d="M18 21V14.5"></path><path d="M22.5 21V8.5"></path></svg></span> Overview</a>
+      <a class="sb-item"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"></path><path d="M6 25.5H26"></path><path d="M11.5 11H14"></path><path d="M18 11H20.5"></path><path d="M11.5 15.5H14"></path><path d="M18 15.5H20.5"></path><path d="M14 25.5V20H18V25.5"></path></svg></span> My Properties <span class="sb-badge" id="myPropertiesBadge">0</span></a>
+      <a class="sb-item"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="8"></circle><path d="M16 8V16L21 19"></path><path d="M6 16H4"></path><path d="M28 16H26"></path></svg></span> Activity</a>
+      <a class="sb-item"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"></rect><path d="M11 11H21"></path><path d="M11 15H21"></path><rect x="11" y="18" width="10" height="5.5" rx="1.1"></rect></svg></span> Saved OMs <span class="sb-badge" id="savedOmsBadge">0</span></a>
 
       <div class="sb-label" style="margin-top:0.75rem">Studios</div>
-      <a class="sb-item" href="valuation.html"><span class="sb-icon">▲</span> Valuation Studio</a>
-      <a class="sb-item" href="om-studio.html"><span class="sb-icon">▤</span> OM Studio</a>
-      <a class="sb-item" href="deal-studio.html"><span class="sb-icon">✦</span> Deal Studio</a>
-      <a class="sb-item" href="heatmap.html"><span class="sb-icon">◆</span> Market Heatmap</a>
-      <a class="sb-item" href="buyer-intelligence.html"><span class="sb-icon">◉</span> Buyer Intelligence <span class="sb-badge">12</span></a>
+      <a class="sb-item" href="valuation.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"></path><path d="M8.5 21V16.5"></path><path d="M13 21V12.5"></path><path d="M17.5 21V15"></path><path d="M22 21V9.5"></path><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"></path><path d="M21 6.5H23.5V9"></path></svg></span> Valuation Studio</a>
+      <a class="sb-item" href="om-studio.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"></rect><path d="M11 11H21"></path><path d="M11 15H21"></path><rect x="11" y="18" width="10" height="5.5" rx="1.1"></rect></svg></span> OM Studio</a>
+      <a class="sb-item" href="deal-studio.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="6.5" width="12" height="18" rx="2"></rect><path d="M10.5 11H15.5"></path><path d="M10.5 15H15.5"></path><path d="M10.5 19H14"></path><path d="M21 11.5L25.8 16.3"></path><path d="M23.1 9.4L27.9 14.2"></path><path d="M20.1 18.3L17.8 20.6"></path></svg></span> Deal Studio</a>
+      <a class="sb-item" href="heatmap.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"></path><path d="M13 7V22"></path><path d="M19 9.5V24.5"></path><rect x="16.4" y="13.2" width="4.4" height="4.4" rx="0.9"></rect></svg></span> Market Heatmap</a>
+      <a class="sb-item" href="buyer-intelligence.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7.5"></circle><circle cx="16" cy="16" r="2"></circle><path d="M16 4.5V8"></path><path d="M27.5 16H24"></path><path d="M16 27.5V24"></path><path d="M4.5 16H8"></path><circle cx="23.7" cy="8.3" r="1.7"></circle></svg></span> Buyer Intelligence <span class="sb-badge">12</span></a>
 
       <div class="sb-label" style="margin-top:0.75rem">Network</div>
-      <a class="sb-item" href="contractor-intelligence.html"><span class="sb-icon">◐</span> Contractors</a>
-      <a class="sb-item" href="property-management-intelligence.html"><span class="sb-icon">◑</span> Property Managers</a>
-      <a class="sb-item" href="broker-advisor-intelligence.html"><span class="sb-icon">◒</span> Brokers & Advisors</a>
+      <a class="sb-item" href="contractor-intelligence.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M11 9.5L22.5 21"></path><path d="M9.2 11.3L12.8 7.7"></path><path d="M20.7 22.8L24.3 19.2"></path><path d="M18.8 7.8L24.2 13.2"></path><path d="M17.3 9.3L22.7 14.7"></path><path d="M7.8 24.2L14.4 17.6"></path><path d="M6.7 25.3L9.5 22.5"></path></svg></span> Contractors</a>
+      <a class="sb-item" href="property-management-intelligence.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 24.5H25"></path><rect x="9" y="7" width="14" height="17.5" rx="2"></rect><path d="M12.5 11H19.5"></path><path d="M12.5 15H19.5"></path><path d="M12.5 19H15"></path><path d="M18 24.5V20.5H21"></path></svg></span> Property Managers</a>
+      <a class="sb-item" href="broker-advisor-intelligence.html"><span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="9.5" cy="12" r="3"></circle><circle cx="22.5" cy="12" r="3"></circle><path d="M6 24C6.8 20.8 9 19.2 12.5 19.2"></path><path d="M26 24C25.2 20.8 23 19.2 19.5 19.2"></path><path d="M13 22H19"></path><path d="M16 18V25"></path></svg></span> Brokers & Advisors</a>
     </nav>
 
     <div class="sb-footer">
@@ -495,7 +502,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
       <!-- AI INSIGHT BANNER -->
       <div class="ai-banner fade-up">
-        <div class="ai-icon pulse">◈</div>
+        <div class="ai-icon pulse"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5L18.8 12.2L26 15L18.8 17.8L16 25L13.2 17.8L6 15L13.2 12.2Z"></path><path d="M24 5.5L25 8L27.5 9L25 10L24 12.5L23 10L20.5 9L23 8Z"></path></svg></div>
         <div class="ai-content">
           <div class="ai-label">AI Market Insight · Updated 12m ago</div>
           <div class="ai-text">
@@ -582,7 +589,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           </div>
           <div class="qa-list">
             <a href="valuation.html" class="qa-item">
-              <div class="qa-icon">▲</div>
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"></path><path d="M8.5 21V16.5"></path><path d="M13 21V12.5"></path><path d="M17.5 21V15"></path><path d="M22 21V9.5"></path><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"></path><path d="M21 6.5H23.5V9"></path></svg></div>
               <div class="qa-text">
                 <div class="qa-name">Run a Valuation</div>
                 <div class="qa-desc">Calculate NOI, cap rate & pricing</div>
@@ -590,7 +597,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <span class="qa-arrow">→</span>
             </a>
             <a href="om-studio.html" class="qa-item">
-              <div class="qa-icon">▤</div>
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"></rect><path d="M11 11H21"></path><path d="M11 15H21"></path><rect x="11" y="18" width="10" height="5.5" rx="1.1"></rect></svg></div>
               <div class="qa-text">
                 <div class="qa-name">Generate OM</div>
                 <div class="qa-desc">Investor-grade PDF package</div>
@@ -598,7 +605,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <span class="qa-arrow">→</span>
             </a>
             <a href="heatmap.html" class="qa-item">
-              <div class="qa-icon">◆</div>
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"></path><path d="M13 7V22"></path><path d="M19 9.5V24.5"></path><rect x="16.4" y="13.2" width="4.4" height="4.4" rx="0.9"></rect></svg></div>
               <div class="qa-text">
                 <div class="qa-name">Explore Market</div>
                 <div class="qa-desc">Heatmaps & neighborhood data</div>
@@ -606,7 +613,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <span class="qa-arrow">→</span>
             </a>
             <a href="buyer-intelligence.html" class="qa-item">
-              <div class="qa-icon">◉</div>
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7.5"></circle><circle cx="16" cy="16" r="2"></circle><path d="M16 4.5V8"></path><path d="M27.5 16H24"></path><path d="M16 27.5V24"></path><path d="M4.5 16H8"></path><circle cx="23.7" cy="8.3" r="1.7"></circle></svg></div>
               <div class="qa-text">
                 <div class="qa-name">Find Buyers</div>
                 <div class="qa-desc">12 active matches for 88 Grand</div>
@@ -1031,7 +1038,7 @@ function renderSavedProperties(){
       <tr>
         <td>
           <div class="p-name">
-            <div class="p-thumb">◫</div>
+            <div class="p-thumb"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"></path><path d="M6 25.5H26"></path><path d="M11.5 11H14"></path><path d="M18 11H20.5"></path><path d="M11.5 15.5H14"></path><path d="M18 15.5H20.5"></path><path d="M14 25.5V20H18V25.5"></path></svg></div>
             <div class="p-name-text">
               <div class="p-addr">${safeText(property.address || 'Untitled Property')}</div>
               <div class="p-sub">${safeText(submarket)}${borough ? ' · '+safeText(borough) : ''}${units ? ' · '+units+' units' : ''}</div>
