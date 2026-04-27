@@ -364,6 +364,24 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 }
 .ai-btn:hover{background:var(--gold-dim);border-color:var(--gold)}
 
+
+/* ═══ SAVED OMS ═══ */
+.om-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--border)}
+.om-card{background:var(--ink-2);padding:1.05rem 1.15rem;min-height:178px;display:flex;flex-direction:column;gap:.75rem}
+.om-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.om-card-title{font-weight:700;color:var(--paper);font-size:.9rem;line-height:1.3}
+.om-card-meta{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.36);letter-spacing:.03em;margin-top:.2rem}
+.om-card-status{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.22);padding:.18rem .42rem;border-radius:2px;white-space:nowrap}
+.om-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin-top:.1rem}
+.om-stat{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:.5rem .55rem}
+.om-stat-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.15rem}
+.om-stat-val{font-family:var(--serif);font-size:.95rem;font-weight:700;color:var(--paper);line-height:1.1}
+.om-card-actions{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-top:auto}
+.om-empty{padding:1.15rem 1.4rem;color:rgba(255,255,255,.45);line-height:1.6}
+.om-empty a{color:var(--gold);text-decoration:none}
+@media(max-width:1200px){.om-card-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.om-card-grid{grid-template-columns:1fr}.om-card-stats{grid-template-columns:1fr 1fr}}
+
 /* ═══ ANIMATIONS ═══ */
 .fade-up{opacity:0;transform:translateY(10px);animation:fadeUp 0.5s ease forwards}
 .fade-up:nth-child(1){animation-delay:0.05s}
@@ -422,7 +440,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <a class="sb-item active"><span class="sb-icon">◉</span> Overview</a>
       <a class="sb-item"><span class="sb-icon">◫</span> My Properties <span class="sb-badge" id="myPropertiesBadge">0</span></a>
       <a class="sb-item"><span class="sb-icon">⬥</span> Activity</a>
-      <a class="sb-item"><span class="sb-icon">◈</span> Saved Reports</a>
+      <a class="sb-item"><span class="sb-icon">◈</span> Saved OMs <span class="sb-badge" id="savedOmsBadge">0</span></a>
 
       <div class="sb-label" style="margin-top:0.75rem">Studios</div>
       <a class="sb-item" href="valuation.html"><span class="sb-icon">▲</span> Valuation Studio</a>
@@ -598,6 +616,20 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           </div>
         </div>
 
+      </div>
+
+
+      <!-- ROW: Saved Offering Memorandums -->
+      <div style="margin-bottom:1.25rem">
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Saved Offering Memorandums</div>
+            <a href="om-studio.html" class="panel-link">Create OM →</a>
+          </div>
+          <div id="savedOmsBody">
+            <div class="om-empty">Loading saved OMs...</div>
+          </div>
+        </div>
       </div>
 
       <!-- ROW: Chart + Activity + Signals -->
@@ -869,6 +901,97 @@ function getPropertyLatestValuation(ws, property){
   return (ws.valuations || []).find(v => v.propertyId === property.id) || null;
 }
 
+
+function getPropertyLatestOM(ws, property){
+  if(!property) return null;
+  if(property.lastOmId){
+    const direct = (ws.oms || []).find(o => o.id === property.lastOmId);
+    if(direct) return direct;
+  }
+  const linked = (ws.oms || []).filter(o => o.propertyId === property.id);
+  linked.sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  return linked[0] || null;
+}
+
+function getOmProperty(ws, om){
+  if(!om) return null;
+  if(om.propertyId){
+    const direct = (ws.properties || []).find(p => p.id === om.propertyId);
+    if(direct) return direct;
+  }
+  if(om.address){
+    return (ws.properties || []).find(p => String(p.address || '').trim().toLowerCase() === String(om.address || '').trim().toLowerCase()) || null;
+  }
+  return null;
+}
+
+function getOmMetric(om, property, valuation, keys){
+  for(const key of keys){
+    if(om && om[key] !== undefined && om[key] !== null && om[key] !== '') return om[key];
+    if(property && property[key] !== undefined && property[key] !== null && property[key] !== '') return property[key];
+    if(valuation && valuation[key] !== undefined && valuation[key] !== null && valuation[key] !== '') return valuation[key];
+  }
+  return '';
+}
+
+function renderSavedOms(){
+  const ws = getWorkspace();
+  const oms = (ws.oms || []).slice().sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  const body = document.getElementById('savedOmsBody');
+  const badge = document.getElementById('savedOmsBadge');
+  if(badge) badge.textContent = oms.length;
+  if(!body) return;
+
+  if(!oms.length){
+    body.innerHTML = `
+      <div class="om-empty">
+        No OMs saved yet. Open <a href="om-studio.html">OM Studio</a>, import a dashboard property, generate an OM, and click Save OM Draft.
+      </div>
+    `;
+    return;
+  }
+
+  body.innerHTML = '<div class="om-card-grid">' + oms.map(om => {
+    const property = getOmProperty(ws, om) || {};
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    const address = om.address || property.address || 'Untitled OM';
+    const borough = getOmMetric(om, property, valuation, ['city','borough','propertyBorough']) || '';
+    const submarket = getOmMetric(om, property, valuation, ['neighborhood','submarket','subMarket','area']) || '';
+    const propertyType = getOmMetric(om, property, valuation, ['propertyType','assetType','type']) || 'Property';
+    const asking = Number(getOmMetric(om, property, valuation, ['askingPrice','price','lastAskingPrice']) || 0);
+    const noi = Number(getOmMetric(om, property, valuation, ['noi','lastNoi','proformaNoi','noiPF']) || 0);
+    const cap = Number(getOmMetric(om, property, valuation, ['marketCap','capRate','lastCapRate']) || 0);
+    const capDisplay = cap ? (cap > 1 ? cap : cap * 100) : 0;
+    const status = om.status || 'Draft';
+    const updated = om.updatedAt || om.createdAt || property.updatedAt || '';
+    const updatedLabel = updated ? new Date(updated).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'Not dated';
+    const propertyId = om.propertyId || property.id || '';
+
+    return `
+      <div class="om-card">
+        <div class="om-card-top">
+          <div>
+            <div class="om-card-title">${safeText(address)}</div>
+            <div class="om-card-meta">${safeText(propertyType)}${submarket ? ' · '+safeText(submarket) : ''}${borough ? ' · '+safeText(borough) : ''}</div>
+          </div>
+          <span class="om-card-status">${safeText(status)}</span>
+        </div>
+        <div class="om-card-stats">
+          <div class="om-stat"><div class="om-stat-label">Ask</div><div class="om-stat-val">${asking ? fmtDashMoney(asking) : '—'}</div></div>
+          <div class="om-stat"><div class="om-stat-label">NOI</div><div class="om-stat-val">${noi ? fmtDashMoney(noi) : '—'}</div></div>
+          <div class="om-stat"><div class="om-stat-label">Cap</div><div class="om-stat-val">${capDisplay ? fmtDashPct(capDisplay) : '—'}</div></div>
+        </div>
+        <div class="om-card-meta">Last edited ${safeText(updatedLabel)}</div>
+        <div class="om-card-actions">
+          <button class="p-action-btn" onclick="openSavedOm('${om.id}','${propertyId}')">Open</button>
+          <button class="p-action-btn" onclick="duplicateSavedOm('${om.id}')">Duplicate</button>
+          <button class="p-action-btn delete" onclick="deleteSavedOm('${om.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
 function renderSavedProperties(){
   const ws = getWorkspace();
   const properties = ws.properties || [];
@@ -927,6 +1050,7 @@ function renderSavedProperties(){
         <td class="num">
           <div class="p-actions">
             <button class="p-action-btn" onclick="editSavedProperty('${property.id}','${valuationId}')">Edit</button>
+            <button class="p-action-btn" onclick="openOmForProperty('${property.id}')">OM</button>
             <button class="p-action-btn delete" onclick="deleteSavedProperty('${property.id}')">Delete</button>
           </div>
         </td>
@@ -983,10 +1107,11 @@ function deleteSavedProperty(propertyId){
   const ws = getWorkspace();
   const property = (ws.properties || []).find(p => p.id === propertyId);
   const label = property?.address || 'this property';
-  if(!confirm('Delete '+label+' from My Properties? This will also remove saved valuations tied to it.')) return;
+  if(!confirm('Delete '+label+' from My Properties? This will also remove saved valuations and OMs tied to it.')) return;
 
   ws.properties = (ws.properties || []).filter(p => p.id !== propertyId);
   ws.valuations = (ws.valuations || []).filter(v => v.propertyId !== propertyId);
+  ws.oms = (ws.oms || []).filter(o => o.propertyId !== propertyId);
   ws.activity = ws.activity || [];
   ws.activity.unshift({
     type:'property_deleted',
@@ -1001,7 +1126,73 @@ function deleteSavedProperty(propertyId){
   renderSavedProperties();
 }
 
-document.addEventListener('DOMContentLoaded', renderSavedProperties);
+
+function openOmForProperty(propertyId){
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const om = getPropertyLatestOM(ws, property);
+  let url = 'om-studio.html?propertyId=' + encodeURIComponent(propertyId);
+  if(om && om.id) url += '&omId=' + encodeURIComponent(om.id);
+  window.location.href = url;
+}
+
+function openSavedOm(omId, propertyId){
+  let url = 'om-studio.html?omId=' + encodeURIComponent(omId);
+  if(propertyId) url += '&propertyId=' + encodeURIComponent(propertyId);
+  window.location.href = url;
+}
+
+function duplicateSavedOm(omId){
+  const ws = getWorkspace();
+  const original = (ws.oms || []).find(o => o.id === omId);
+  if(!original) return alert('Could not find that saved OM.');
+  const copy = JSON.parse(JSON.stringify(original));
+  copy.id = 'om_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+  copy.status = 'Draft Copy';
+  copy.createdAt = new Date().toISOString();
+  copy.updatedAt = copy.createdAt;
+  copy.title = (original.title || original.address || 'Offering Memorandum') + ' Copy';
+  ws.oms = ws.oms || [];
+  ws.oms.unshift(copy);
+  if(copy.propertyId){
+    const property = (ws.properties || []).find(p => p.id === copy.propertyId);
+    if(property){
+      property.lastOmId = copy.id;
+      property.updatedAt = copy.updatedAt;
+    }
+  }
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({type:'om_duplicated', propertyId:copy.propertyId || '', address:copy.address || original.address || 'OM', time:copy.updatedAt, detail:'OM draft duplicated'});
+  ws.activity = ws.activity.slice(0,25);
+  setWorkspace(ws);
+  renderSavedOms();
+  renderSavedProperties();
+}
+
+function deleteSavedOm(omId){
+  const ws = getWorkspace();
+  const om = (ws.oms || []).find(o => o.id === omId);
+  const label = om?.address || om?.title || 'this OM';
+  if(!confirm('Delete '+label+' from Saved OMs?')) return;
+  ws.oms = (ws.oms || []).filter(o => o.id !== omId);
+  (ws.properties || []).forEach(property => {
+    if(property.lastOmId === omId){
+      const next = (ws.oms || []).find(o => o.propertyId === property.id);
+      property.lastOmId = next ? next.id : '';
+    }
+  });
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({type:'om_deleted', propertyId:om?.propertyId || '', address:label, time:new Date().toISOString(), detail:'OM draft deleted'});
+  ws.activity = ws.activity.slice(0,25);
+  setWorkspace(ws);
+  renderSavedOms();
+  renderSavedProperties();
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderSavedProperties();
+  renderSavedOms();
+});
 </script>
 </body>
 </html>
