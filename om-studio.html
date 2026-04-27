@@ -1773,4 +1773,116 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
 })();
 </script>
 
+
+<script>
+/* PATCH: keep cursor focus while editing OM inputs.
+   Previous rent-roll editing re-rendered the entire dropdown on every keystroke.
+   This version updates the underlying data and PSF fields in place, then refreshes the OM preview only when needed. */
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function n(v){ var x=parseFloat(String(v == null ? '' : v).replace(/[$,]/g,'')); return Number.isFinite(x) ? x : 0; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
+  function moneyInput(v){ return (v===undefined || v===null || v==='') ? '' : String(v); }
+  window.calcRentPSF = function(r,s,f){ r=n(r); s=n(s); if(!r||!s) return '—'; return '$'+(((f==='annual')?r:r*12)/s).toFixed(2); };
+  function items(){ return (typeof rrItems!=='undefined' ? rrItems : (window.rrItems||[])); }
+  function shouldLiveGenerate(){ return !!(window.__bricOmGenerated || window.omGenerated || (typeof omGenerated!=='undefined' && omGenerated)); }
+  var generateTimer=null;
+  function softGenerate(){
+    if(!shouldLiveGenerate() || typeof generate!=='function') return;
+    clearTimeout(generateTimer);
+    generateTimer=setTimeout(function(){ try{ generate(false); }catch(e){ console.warn('generate skipped', e); } }, 180);
+  }
+  function updateRowPsf(inputEl, item){
+    var row=inputEl && inputEl.closest ? inputEl.closest('.rr-item') : null;
+    if(!row || !item) return;
+    if(item.type==='retail'){
+      var pf=row.querySelector('[data-psf="retail-pf"]');
+      var cur=row.querySelector('[data-psf="retail-cur"]');
+      if(pf) pf.value=calcRentPSF(item.proformaRent,item.sqft,item.frequency);
+      if(cur) cur.value=calcRentPSF(item.currentRent,item.sqft,item.frequency);
+    }else{
+      var curA=row.querySelector('[data-psf="apt-cur"]');
+      var pfA=row.querySelector('[data-psf="apt-pf"]');
+      if(curA) curA.value=calcRentPSF(item.currentRent,item.unitSqft,'monthly');
+      if(pfA) pfA.value=calcRentPSF(item.proformaRent,item.unitSqft,'monthly');
+    }
+  }
+
+  window.setRRField = function(id, field, value, inputEl){
+    var list=items();
+    var it=list.find(function(x){ return String(x.id)===String(id); });
+    if(!it) return;
+    var numeric=['sqft','unitSqft','currentRent','marketRent','proformaRent','bed','bath'];
+    it[field]=numeric.indexOf(field)>=0 ? n(value) : value;
+    if(field==='marketRent' && (!it.proformaRent || it.proformaAuto)) it.proformaRent=n(value);
+    if(field==='proformaRent' || field==='marketRent') it.proformaAuto=false;
+    updateRowPsf(inputEl, it);
+    if(typeof updateSummary==='function') updateSummary();
+    softGenerate();
+  };
+
+  window.renderRR = function(){
+    var wrap=byId('rentRollWrap'), list=items();
+    if(!wrap) return;
+    if(!list.length){
+      wrap.innerHTML='<div class="info-note">No rent roll rows yet. In Growth, choose apartment/store count above or import a dashboard property with saved rent roll data.</div>';
+      return;
+    }
+    var html='';
+    list.forEach(function(it){
+      var id=it.id, ret=it.type==='retail';
+      html+='<div class="rr-item '+(ret?'retail':'')+'"><div class="rr-item-hd"><span class="rr-unit-badge">'+(ret?'RETAIL':'APT')+'</span><span class="info-note" style="margin:0">All fields are editable.</span><button class="rr-remove" type="button" onclick="clearRRRow('+id+')">×</button></div>';
+      if(ret){
+        html+='<div class="rr-scroll"><div class="rr-grid-ret" style="grid-template-columns:90px 130px 90px 110px 110px 110px 90px 90px;min-width:960px">'
+          +'<div class="rr-field"><label>Space</label><input type="text" value="'+esc(it.unit)+'" oninput="setRRField('+id+',\'unit\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Tenant</label><input type="text" value="'+esc(it.tenant||'')+'" oninput="setRRField('+id+',\'tenant\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.sqft)+'" oninput="setRRField('+id+',\'sqft\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="retail-cur" type="text" value="'+calcRentPSF(it.currentRent,it.sqft,it.frequency)+'" readonly></div>'
+          +'<div class="rr-field"><label>PF $/SF</label><input data-psf="retail-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.sqft,it.frequency)+'" readonly></div>'
+          +'</div><div class="rr-grid-ret-second">'
+          +'<div class="rr-field"><label>Frequency</label><select onchange="setRRField('+id+',\'frequency\',this.value,this)"><option value="monthly" '+(it.frequency==='monthly'?'selected':'')+'>Monthly</option><option value="annual" '+(it.frequency==='annual'?'selected':'')+'>Annual</option></select></div>'
+          +'<div class="rr-field"><label>Lease Exp.</label><input type="date" value="'+esc(it.expiration||'')+'" onchange="setRRField('+id+',\'expiration\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Annual Inc. %</label><input type="text" inputmode="decimal" value="'+moneyInput(it.increase||'')+'" oninput="setRRField('+id+',\'increase\',this.value,this)"></div>'
+          +'</div></div>';
+      }else{
+        html+='<div class="rr-scroll"><div class="rr-grid-res" style="grid-template-columns:80px 85px 85px 95px 110px 110px 110px 90px 90px;min-width:930px">'
+          +'<div class="rr-field"><label>Unit</label><input type="text" value="'+esc(it.unit)+'" oninput="setRRField('+id+',\'unit\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Beds</label><select onchange="setRRField('+id+',\'bed\',this.value,this)">'+[0,1,2,3,4].map(function(v){return '<option value="'+v+'" '+(Number(it.bed)===v?'selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
+          +'<div class="rr-field"><label>Baths</label><select onchange="setRRField('+id+',\'bath\',this.value,this)">'+[1,1.5,2,2.5,3,3.5,4].map(function(v){return '<option value="'+v+'" '+(Number(it.bath)===v?'selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
+          +'<div class="rr-field"><label>Unit SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.unitSqft)+'" oninput="setRRField('+id+',\'unitSqft\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="apt-cur" type="text" value="'+calcRentPSF(it.currentRent,it.unitSqft,'monthly')+'" readonly></div>'
+          +'<div class="rr-field"><label>PF $/SF</label><input data-psf="apt-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.unitSqft,'monthly')+'" readonly></div>'
+          +'</div></div>';
+      }
+      html+='</div>';
+    });
+    wrap.innerHTML=html;
+  };
+
+  // Expense rows should also not create any rerender/focus jump. Keep them simple and debounce the preview update.
+  window.addExpenseRow = function(name, amount){
+    name=name||''; amount=amount||'';
+    if(typeof expenseId==='undefined') window.expenseId=0; else expenseId++;
+    var id=(typeof expenseId!=='undefined'?expenseId:Date.now());
+    var wrap=byId('expenseRows'); if(!wrap) return;
+    var div=document.createElement('div');
+    div.className='expense-block'; div.id='exp-'+id;
+    div.innerHTML='<div class="field-row" style="margin-bottom:0.45rem"><div class="field"><label>Expense Name</label><input type="text" value="'+esc(name)+'" oninput="updateExpenseTotalFromRows();"></div><div class="field"><label>Annual Amount</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="text" inputmode="decimal" value="'+moneyInput(amount)+'" oninput="updateExpenseTotalFromRows();"></div></div></div>';
+    wrap.appendChild(div);
+    if(typeof updateExpenseTotalFromRows==='function') updateExpenseTotalFromRows();
+  };
+
+  var oldUpdateExpenseTotal=window.updateExpenseTotalFromRows;
+  if(typeof oldUpdateExpenseTotal==='function'){
+    window.updateExpenseTotalFromRows=function(){ oldUpdateExpenseTotal(); softGenerate(); };
+  }
+})();
+</script>
+
 </body></html>
