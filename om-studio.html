@@ -1382,4 +1382,142 @@ setupPanelResizer();
 })();
 </script>
 
+
+<script>
+/* --- BRIC patch: Growth import uses Dashboard Properties only --- */
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function getTierSafe(){
+    try { if (typeof currentTier !== 'undefined' && currentTier === 'growth') return 'growth'; } catch(e){}
+    try { if (window.__bricTier === 'growth') return 'growth'; } catch(e){}
+    var growthBtn=byId('tierGrowth');
+    return growthBtn && growthBtn.classList.contains('active') ? 'growth' : 'free';
+  }
+  function getWS(){ try { return JSON.parse(localStorage.getItem('bricWorkspaceV1')) || {properties:[], valuations:[], oms:[], activity:[]}; } catch(e){ return {properties:[], valuations:[], oms:[], activity:[]}; } }
+  function first(){ for(var i=0;i<arguments.length;i++){ var v=arguments[i]; if(v!==undefined && v!==null && String(v).trim()!=='') return v; } return ''; }
+  function norm(v){ return String(v||'').trim().toLowerCase(); }
+  function num(v){ var n=parseFloat(String(v||'').replace(/[$,]/g,'')); return Number.isFinite(n)?n:0; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function setVal(id,v){ var el=byId(id); if(el && v!==undefined && v!==null && String(v)!=='') el.value=v; }
+  function setSelect(id,v){
+    var el=byId(id); if(!el || v===undefined || v===null || String(v).trim()==='') return;
+    var target=norm(v), matched=false;
+    Array.prototype.slice.call(el.options).forEach(function(o){ if(norm(o.value)===target || norm(o.textContent)===target){ el.value=o.value; matched=true; } });
+    if(!matched && id==='neighborhood'){
+      var opt=document.createElement('option'); opt.value=String(v).trim().toLowerCase(); opt.textContent=String(v).trim(); el.appendChild(opt); el.value=opt.value;
+    }
+  }
+  function getLinkedBundle(property){
+    var ws=getWS();
+    var id=first(property && property.id, property && property.propertyId);
+    var addr=norm(property && property.address);
+    var valuation=(ws.valuations||[]).find(function(v){ return (id && v.propertyId===id) || (addr && norm(v.address)===addr); }) || {};
+    var om=(ws.oms||[]).find(function(o){ return (id && o.propertyId===id) || (addr && norm(o.address)===addr); }) || {};
+    return Object.assign({}, valuation, om, property || {});
+  }
+  function getField(d,keys){ for(var i=0;i<keys.length;i++){ if(d && d[keys[i]]!==undefined && d[keys[i]]!==null && String(d[keys[i]]).trim()!=='') return d[keys[i]]; } return ''; }
+  function normalizeExpenses(d){
+    var arr=getField(d,['expenses','expenseList','itemizedExpenses','operatingExpensesList']);
+    if(Array.isArray(arr)) return arr.map(function(e){ return {name:first(e.name,e.label,e.expense,'Expense'), amount:num(first(e.amount,e.value,e.annualAmount,e.total))}; }).filter(function(e){return e.name||e.amount;});
+    return [];
+  }
+  function normalizeRentRoll(d){
+    var out=[];
+    function apt(x,idx){ out.push({id:Date.now()+idx+Math.floor(Math.random()*999), order:idx, type:'apartment', unit:first(x.unit,x.unitNumber,x.name,'Apt '+(idx+1)), unitSqft:num(first(x.unitSqft,x.sqft,x.sf)), bed:num(first(x.bed,x.beds,x.bedrooms)), bath:num(first(x.bath,x.baths,x.bathrooms,1)), currentRent:num(first(x.currentRent,x.rent,x.monthlyRent)), proformaRent:num(first(x.proformaRent,x.marketRent,x.projectedRent,x.rent,x.monthlyRent)), proformaAuto:false}); }
+    function ret(x,idx){ out.push({id:Date.now()+1000+idx+Math.floor(Math.random()*999), order:idx, type:'retail', unit:first(x.unit,x.space,x.name,'Retail '+(idx+1)), sqft:num(first(x.sqft,x.sf,x.unitSqft)), tenant:first(x.tenant,x.name,''), currentRent:num(first(x.currentRent,x.rent,x.monthlyRent,x.annualRent)), frequency:(x.frequency||x.rentFrequency||'monthly'), expiration:first(x.expiration,x.leaseExpiration,''), increase:first(x.increase,x.annualIncrease,'3.0'), proformaRent:num(first(x.proformaRent,x.marketRent,x.projectedRent,x.rent,x.monthlyRent,x.annualRent)), proformaAuto:false}); }
+    var rr=getField(d,['rentRoll','rentroll','units','unitRows']);
+    if(Array.isArray(rr)) rr.forEach(function(x,idx){ var t=norm(first(x.type,x.useType,x.category)); if(t.indexOf('retail')>=0 || t.indexOf('commercial')>=0 || x.tenant) ret(x,idx); else apt(x,idx); });
+    var a=getField(d,['residentialRentRoll','apartmentRentRoll','residentialRows']); if(Array.isArray(a)) a.forEach(apt);
+    var r=getField(d,['retailRentRoll','commercialRentRoll','retailRows']); if(Array.isArray(r)) r.forEach(ret);
+    return out;
+  }
+  window.collectImportOptions=function(){
+    var ws=getWS(), props=ws.properties||[];
+    return props.map(function(p,i){
+      var d=getLinkedBundle(p);
+      var label=first(p.address,d.address,'Property '+(i+1));
+      var meta=[first(p.borough,d.borough,d.city), first(p.submarket,d.submarket,d.neighborhood), first(p.propertyType,d.propertyType,d.assetType)].filter(Boolean).join(' · ');
+      return {id:'property_'+i, sourceType:'property', label:label, meta:meta, data:p, fullData:d};
+    });
+  };
+  window.previewImportSelection=function(){
+    var sel=byId('valuationImportSelect'), preview=byId('importPickerPreview'); if(!sel||!preview) return;
+    var opt=(window.importOptionsCache||[]).find(function(x){return x.id===sel.value;});
+    if(!opt){ preview.textContent='Select a dashboard property to preview what will be imported.'; return; }
+    var d=opt.fullData||{}, rr=normalizeRentRoll(d), ex=normalizeExpenses(d);
+    var res=first(getField(d,['residentialUnitCount','residentialUnits','apartmentCount','aptCount','resCount']), rr.filter(function(x){return x.type==='apartment';}).length);
+    var ret=first(getField(d,['retailUnitCount','retailUnits','stores','storeCount','retailCount','commercialSpaces']), rr.filter(function(x){return x.type==='retail';}).length);
+    preview.innerHTML='<b>'+esc(opt.label)+'</b><br>'+[
+      first(d.address,d.propertyAddress,'Address not saved'),
+      [first(d.borough,d.city), first(d.submarket,d.neighborhood)].filter(Boolean).join(' · '),
+      first(d.propertyType,d.assetType,d.type),
+      first(d.yearBuilt,d.buildingYearBuilt,d.year_built)?'Built: '+first(d.yearBuilt,d.buildingYearBuilt,d.year_built):'',
+      first(d.sqft,d.buildingSf,d.grossSF,d.squareFeet,d.totalSF)?'SF: '+first(d.sqft,d.buildingSf,d.grossSF,d.squareFeet,d.totalSF):'',
+      (num(res)||num(ret))?(num(res)+' residential / '+num(ret)+' retail'):'',
+      rr.length?'Itemized rent roll rows: '+rr.length:'',
+      ex.length?'Itemized expense rows: '+ex.length:''
+    ].filter(Boolean).map(esc).join('<br>');
+  };
+  window.importFromValuation=function(){
+    if(getTierSafe()!=='growth'){ alert('Import from previous activity is a Growth feature.'); return; }
+    var picker=byId('importPicker'), select=byId('valuationImportSelect'), preview=byId('importPickerPreview'); if(!picker||!select) return;
+    window.importOptionsCache=window.collectImportOptions();
+    select.innerHTML='<option value="">Select dashboard property</option>';
+    (window.importOptionsCache||[]).forEach(function(opt){ var o=document.createElement('option'); o.value=opt.id; o.textContent=opt.label+(opt.meta?' · '+opt.meta:''); select.appendChild(o); });
+    if(preview) preview.innerHTML=(window.importOptionsCache||[]).length ? 'Select a dashboard property to preview what will be imported.' : '<div class="import-empty">No dashboard properties were found. Save a property to the dashboard first, then return here.</div>';
+    picker.classList.add('visible');
+  };
+  window.closeImportPicker=function(){ var p=byId('importPicker'); if(p) p.classList.remove('visible'); };
+  window.applyImportedData=function(d){
+    d=d||{};
+    var address=getField(d,['address','propertyAddress','fullAddress','location']);
+    var borough=getField(d,['borough','city','propertyBorough']);
+    var submarket=getField(d,['submarket','neighborhood','subMarket','propertySubmarket','area']);
+    var propertyType=getField(d,['propertyType','assetType','type','propertyClass']);
+    var yearBuilt=getField(d,['yearBuilt','built','buildingYearBuilt','year_built']);
+    var sqft=getField(d,['sqft','buildingSf','buildingSF','grossSF','grossSf','squareFeet','totalSF','totalSqft']);
+    var asking=getField(d,['askingPrice','price','listPrice','valuationPrice','targetPrice','estimatedValue']);
+    var cap=getField(d,['marketCap','capRate','marketCapRate','capRateAssumption']);
+    var gross=getField(d,['grossIncome','grossRentalIncome','annualIncome','currentGrossIncome','projectedGrossIncome']);
+    var other=getField(d,['otherIncome','additionalIncome','miscIncome']);
+    var desc=getField(d,['description','propertyDescription','omDescription']);
+    var trend=getField(d,['trend','submarketTrend','positioning','marketTrend']);
+    var unitMix=getField(d,['unitMixBreakdown','unitMix','unitBreakdown','mix']);
+    var rr=normalizeRentRoll(d), ex=normalizeExpenses(d);
+    var aptCt=first(getField(d,['residentialUnitCount','residentialUnits','apartmentCount','aptCount','resCount']), rr.filter(function(x){return x.type==='apartment';}).length);
+    var retCt=first(getField(d,['retailUnitCount','retailUnits','stores','storeCount','retailCount','commercialSpaces']), rr.filter(function(x){return x.type==='retail';}).length);
+    setVal('address',address); setSelect('city',borough); setSelect('neighborhood',submarket); setSelect('propertyType',propertyType); setVal('yearBuilt',yearBuilt); setVal('sqft',sqft); setVal('askingPrice',asking); setVal('marketCap',cap); setVal('grossIncome',gross); setVal('otherIncome',other); setVal('description',desc); setSelect('submarketTrend',trend);
+    if(num(aptCt)||num(retCt)){ setVal('residentialUnitCount',num(aptCt)); setVal('retailUnitCount',num(retCt)); }
+    if(unitMix) setVal('unitMixBreakdown',unitMix); else if(num(aptCt)||num(retCt)) setVal('unitMixBreakdown',num(aptCt)+' residential unit'+(num(aptCt)!==1?'s':'')+(num(retCt)?' + '+num(retCt)+' retail/commercial space'+(num(retCt)!==1?'s':''):''));
+    if(ex.length){
+      var rows=byId('expenseRows'); if(rows) rows.innerHTML='';
+      ex.forEach(function(e){ if(typeof addExpenseRow==='function') addExpenseRow(e.name,e.amount); });
+      setVal('totalExpenses',Math.round(ex.reduce(function(s,e){return s+num(e.amount);},0)));
+    } else setVal('totalExpenses',getField(d,['totalExpenses','expensesTotal','totalOperatingExpenses','annualExpenses']));
+    if(rr.length){
+      try{ rrItems=rr; }catch(e){ window.rrItems=rr; }
+      setVal('resCount',rr.filter(function(x){return x.type==='apartment';}).length); setVal('retailCount',rr.filter(function(x){return x.type==='retail';}).length);
+      setVal('residentialUnitCount',rr.filter(function(x){return x.type==='apartment';}).length); setVal('retailUnitCount',rr.filter(function(x){return x.type==='retail';}).length);
+      try{ rentRollActive=true; }catch(e){}
+      var tog=byId('rentRollToggle'), controls=byId('rentRollControls'), wrap=byId('rentRollWrap'), sum=byId('rrSummary');
+      if(tog) tog.classList.add('on'); if(controls) controls.classList.add('visible'); if(wrap) wrap.classList.add('visible'); if(sum) sum.style.display='block';
+      if(typeof renderRR==='function') renderRR(); if(typeof updateSummary==='function') updateSummary();
+    }
+    if(typeof generate==='function' && (window.__bricOmGenerated || (typeof omGenerated!=='undefined' && omGenerated))) generate(false);
+  };
+  window.importSelectedActivity=function(){
+    if(getTierSafe()!=='growth'){ alert('Import from previous activity is a Growth feature.'); return; }
+    var sel=byId('valuationImportSelect'); var opt=sel?(window.importOptionsCache||[]).find(function(x){return x.id===sel.value;}):null;
+    if(!opt){ alert('Please choose a dashboard property to import.'); return; }
+    window.applyImportedData(opt.fullData||opt.data);
+    window.closeImportPicker();
+    alert('Imported dashboard property: '+opt.label);
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=byId('importBtn'); if(btn){ btn.textContent='Choose Dashboard Property'; btn.onclick=null; btn.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); window.importFromValuation(); }, true); }
+    var label=document.querySelector('#importPicker label'); if(label) label.textContent='Dashboard Property';
+  });
+})();
+</script>
+
 </body></html>
