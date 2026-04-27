@@ -42,6 +42,7 @@ input[type="text"],input[type="number"],input[type="date"],select,textarea{width
 .rr-summary{padding:0.85rem 1rem;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.2);border-radius:10px;margin-top:0.6rem}.rr-summary-row{display:flex;justify-content:space-between;align-items:center;padding:0.22rem 0;font-size:0.78rem}.rr-summary-row.total{padding-top:0.45rem;margin-top:0.35rem;border-top:1px solid rgba(255,255,255,0.1);font-weight:600}.rr-summary-label{color:rgba(255,255,255,0.55);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.04em}.rr-summary-val{font-family:var(--mono);font-size:0.8rem;color:var(--paper);font-weight:500}.rr-summary-val.proforma{color:var(--gold-light)}.rr-summary-val.big{font-family:var(--serif);font-size:0.95rem;font-weight:700}.info-note{font-size:0.74rem;color:rgba(255,255,255,0.42);line-height:1.5;margin-top:0.45rem}
 .expense-block{margin-bottom:0.55rem}.add-btn{width:100%;padding:0.65rem;border-radius:10px;border:1px dashed rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-size:0.76rem;transition:all 0.2s;margin-top:0.25rem}.add-btn:hover{border-color:var(--border-gold);color:var(--gold);background:var(--gold-dim)}
 .import-note{padding:0.7rem 0.85rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);border-radius:8px;color:rgba(255,255,255,0.6);font-size:0.74rem;line-height:1.55}.import-note b{color:var(--gold-light);font-weight:600}
+.import-picker{display:none;margin-top:0.75rem;padding:0.85rem;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.09);border-radius:10px}.import-picker.visible{display:block}.import-picker-preview{margin-top:0.55rem;padding:0.65rem 0.75rem;border-radius:8px;background:rgba(13,15,14,0.18);border:1px solid rgba(255,255,255,0.06);font-size:0.73rem;color:rgba(255,255,255,0.55);line-height:1.55}.import-picker-preview b{color:var(--paper);font-weight:600}.import-empty{font-size:0.74rem;color:rgba(255,255,255,0.45);line-height:1.5}
 .section-toggles{display:flex;flex-direction:column;gap:0.3rem}.section-toggle{display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer}.section-toggle:hover{border-color:rgba(255,255,255,0.12)}.section-toggle.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.3)}.section-toggle-info{flex:1}.section-toggle-name{font-size:0.8rem;color:var(--paper);font-weight:500}.section-toggle.active .section-toggle-name{color:var(--gold-light)}.section-toggle-sub{font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:0.1rem}
 .generate-btn{width:100%;padding:0.85rem;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}.generate-btn:hover{background:var(--gold-light)}
 .preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:0.6rem}.preview-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4)}.preview-actions{display:flex;gap:0.4rem}
@@ -122,7 +123,7 @@ input[type="text"],input[type="number"],input[type="date"],select,textarea{width
 <nav><a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a><span class="nav-badge">OM Studio</span><div class="nav-right"><a href="index.html" class="nav-back">← Home</a><a href="dashboard.html" class="nav-back">Dashboard</a></div></nav>
 <div class="tier-bar"><span class="tier-label">Plan</span><div class="tier-wrap"><button class="tier-btn active" id="tierFree" onclick="setTier('free')">Free</button><button class="tier-btn" id="tierGrowth" onclick="setTier('growth')">Growth</button></div><span id="tierDesc" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">Build your OM with live preview and market pro forma</span></div>
 <div class="app"><div class="panel-left"><div class="panel-header"><div class="panel-eyebrow">Investor Document Generator</div><div class="panel-title">Offering Memorandum</div><div class="panel-sub">Start by importing from Valuation Studio, or build a one-page free property details sheet before upgrading to the full Growth OM.</div></div>
-<div class="form-section"><div class="form-section-title">Growth Transfer</div><div class="import-note" id="importNote"><b>Growth only:</b> Import saved details from Valuation Studio so you don't have to enter the same information twice.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn" type="button" id="importBtn" onclick="importFromValuation()" style="width:100%">Import From Valuation</button><button class="action-btn" type="button" id="saveBtn" onclick="saveOmDraft()" style="width:100%">Save OM Draft</button></div></div>
+<div class="form-section"><div class="form-section-title">Import From Previous Activity</div><div class="import-note" id="importNote"><b>Growth only:</b> Choose a saved property, valuation, or OM draft from previous activity so you don't have to enter the same information twice.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn" type="button" id="importBtn" onclick="importFromValuation()" style="width:100%">Choose Property / Valuation</button><button class="action-btn" type="button" id="saveBtn" onclick="saveOmDraft()" style="width:100%">Save OM Draft</button></div><div class="import-picker" id="importPicker"><div class="field"><label>Saved Activity</label><select id="valuationImportSelect" onchange="previewImportSelection()"><option value="">Select saved property or valuation</option></select></div><div id="importPickerPreview" class="import-picker-preview">Select a saved item to preview what will be imported.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn primary" type="button" onclick="importSelectedActivity()" style="width:100%">Import Selected</button><button class="action-btn" type="button" onclick="closeImportPicker()" style="width:100%">Cancel</button></div></div></div>
 <div class="form-section"><div class="form-section-title">Property Details</div><div class="field"><label>Property Address</label><input type="text" id="address" placeholder="Enter property address"></div><div class="field-row"><div class="field"><label>Borough</label><select id="city"><option value="" selected>Select borough</option><option value="Brooklyn">Brooklyn</option><option value="Manhattan">Manhattan</option><option value="Queens">Queens</option><option value="Bronx">Bronx</option><option value="Staten Island">Staten Island</option></select></div><div class="field"><label>Submarket</label><select id="neighborhood"><option value="" selected>Select submarket</option><option value="flatbush">Flatbush</option><option value="williamsburg">Williamsburg</option><option value="bushwick">Bushwick</option><option value="crown heights">Crown Heights</option><option value="harlem">Harlem</option><option value="default">Other</option></select></div></div><div class="field-row"><div class="field"><label>Property Type</label><select id="propertyType"><option value="" selected>Select property type</option><option value="Mixed-Use">Mixed-Use</option><option value="Multifamily">Multifamily</option><option value="Retail">Retail</option><option value="Commercial">Commercial</option></select></div><div class="field"><label>Year Built</label><input type="number" id="yearBuilt" placeholder="Year built"></div></div><div class="field-row"><div class="field"><label>Square Feet</label><input type="number" id="sqft" placeholder="Enter total SF"></div><div class="field"><label>Asking Price</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="askingPrice" placeholder="Enter asking price"></div></div></div><div class="field-row"><div class="field"><label>Residential Units</label><input type="number" id="residentialUnitCount" placeholder="Example: 5" min="0"></div><div class="field"><label>Retail / Commercial Spaces</label><input type="number" id="retailUnitCount" placeholder="Example: 1" min="0"></div></div><div class="field"><label>Unit Mix / Breakdown</label><textarea id="unitMixBreakdown" rows="3" placeholder="Free example: 5 apartments + 1 store, or 3 two-bedrooms, 2 one-bedrooms, 1 retail space"></textarea><div class="info-note">Free users can summarize the unit count here. Growth unlocks the full itemized rent roll with unit-by-unit inputs.</div></div></div>
 <div class="form-section"><div class="form-section-title">Income Snapshot</div><div class="field-row"><div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" placeholder="Free version uses this unless Growth rent roll is enabled"></div></div><div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" placeholder="Additional annual income"></div></div></div><div class="toggle-row growth-gated-row" id="rentRollGate" onclick="toggleRentRoll()"><div class="toggle-label-wrap"><div class="toggle-main">Use Itemized Rent Roll <span class="pill-badge">Growth</span></div><div class="toggle-sub">Select apartment/store count, then expand rows to input unit-level details like the valuation builder</div></div><div class="toggle" id="rentRollToggle"></div></div><div class="locked-inline-note" id="rentRollLockedNote">Free uses the annual gross rental income box above. Growth unlocks the itemized rent roll dropdown with apartment and retail rows.</div><div class="rr-controls-wrap" id="rentRollControls"><div class="count-grid"><div class="field"><label>Residential Units</label><select id="resCount"></select></div><div class="field"><label>Retail Spaces</label><select id="retailCount"></select></div></div><div class="upload-box"><div class="upload-label">Upload Rent Roll / PDFs / Excel</div><input type="file" id="rentRollUpload" multiple accept=".pdf,.xls,.xlsx,.csv,.png,.jpg,.jpeg"></div><div class="rr-wrap" id="rentRollWrap"></div><div class="rr-summary" id="rrSummary" style="display:none"></div><div class="info-note">Growth rent roll: choose the number of apartments and stores, then each generated row opens below with unit, bed/bath, SF, rent, pro forma, retail tenant, lease expiration, and rent bumps.</div></div></div>
 <div class="form-section"><div class="form-section-title">Expenses</div><div class="field"><label>Total Expenses (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="totalExpenses" placeholder="Enter total annual expenses"></div><div class="total-expense-note"><b>Free:</b> use the total expense box. <b>Growth:</b> open itemized expenses below if you want a detailed expense schedule.</div></div><div class="toggle-row growth-gated-row" id="expenseGate" onclick="toggleExpenseItemization()"><div class="toggle-label-wrap"><div class="toggle-main">Itemize Expenses <span class="pill-badge">Growth</span></div><div class="toggle-sub">Break out taxes, insurance, heat, water, common electric, repairs, management, and custom lines</div></div><div class="toggle" id="expenseItemizedToggle"></div></div><div class="locked-inline-note" id="expenseLockedNote">Free uses the single annual total expense input. Growth unlocks itemized expense rows.</div><div class="expense-itemized-wrap" id="expenseItemizedWrap"><div id="expenseRows"></div><button class="add-btn" type="button" onclick="addExpenseRow()">+ Add Additional Expense</button></div></div>
@@ -457,35 +458,145 @@ function saveOmDraft(){
   const url=new URL(window.location.href); url.searchParams.set('propertyId', property.id); url.searchParams.set('omId', omId); history.replaceState({},'',url.toString());
   alert('OM draft saved to your dashboard.');
 }
-function importFromValuation(){
-  if(currentTier!=='growth'){alert('Import from Valuation is a Growth feature.');return}
-  const ws=getWorkspace();
-  const propertyId=getQueryParam('propertyId');
-  let d=null;
-  if(propertyId) d=ws.valuations.find(v=>v.propertyId===propertyId);
-  if(!d){
-    try{d=JSON.parse(localStorage.getItem('bricValuationTransfer')||localStorage.getItem('bricValuationDraft')||'null')}catch(e){d=null}
+function collectImportOptions(){
+  const options=[];
+  const seen=new Set();
+  function addOption(sourceType,label,data,meta){
+    if(!data) return;
+    const key=(sourceType+'|'+(data.id||data.propertyId||data.address||label||'')+'|'+(data.updatedAt||data.createdAt||''));
+    if(seen.has(key)) return;
+    seen.add(key);
+    options.push({id:'imp_'+options.length,sourceType,label,data,meta:meta||''});
   }
-  if(!d){alert('No saved valuation data found in browser storage yet.');return}
-  if(d.address)document.getElementById('address').value=d.address;
-  if(d.borough)document.getElementById('city').value=d.borough;
-  if(d.submarket){const key=String(d.submarket).toLowerCase();const sel=document.getElementById('neighborhood');const match=[...sel.options].find(o=>o.value===key||o.text.toLowerCase()===key);if(match)sel.value=match.value}
-  if(d.propertyType)document.getElementById('propertyType').value=d.propertyType;
-  if(d.buildingSf||d.sqft)document.getElementById('sqft').value=d.buildingSf||d.sqft;
-  if(d.residentialUnits||d.units)document.getElementById('residentialUnitCount').value=d.residentialUnits||d.units;
-  if(d.retailUnits||d.stores)document.getElementById('retailUnitCount').value=d.retailUnits||d.stores;
-  if(d.unitMixBreakdown)document.getElementById('unitMixBreakdown').value=d.unitMixBreakdown;
-  if(d.marketCap||d.capRate)document.getElementById('marketCap').value=d.marketCap||d.capRate;
-  if(d.grossIncome)document.getElementById('grossIncome').value=d.grossIncome;
-  if(d.otherIncome)document.getElementById('otherIncome').value=d.otherIncome;
-  if(Array.isArray(d.expenseList||d.expenses)){document.getElementById('expenseRows').innerHTML='';(d.expenseList||d.expenses).forEach(e=>addExpenseRow(e.name||'',e.amount||0)); document.getElementById('totalExpenses').value=Math.round((d.expenseList||d.expenses).reduce((sum,e)=>sum+parseNum(e.amount),0)); toggleExpenseItemization(true)}
-  const rr=[];
-  (d.residentialRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+idx,order:idx,type:'apartment',unit:item.unit||('Apt '+(idx+1)),sqft:650,bed:item.bed||0,bath:item.bath||1,currentRent:item.rent||0,proformaRent:item.rent||0,proformaAuto:false}));
-  (d.retailRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+100+idx,order:idx,type:'retail',unit:'Retail '+(idx+1),sqft:400,tenant:item.tenant||'',currentRent:item.rent||0,frequency:'monthly',expiration:'',increase:item.inc||'3.0',proformaRent:item.rent||0,proformaAuto:false}));
-  if(rr.length){rrItems=rr; document.getElementById('resCount').value=rr.filter(x=>x.type==='apartment').length; document.getElementById('retailCount').value=rr.filter(x=>x.type==='retail').length; toggleRentRoll(true); renderRR(); updateSummary();}
-  alert('Imported the latest saved valuation.');
-  generate()
+  const ws=getWorkspace();
+  (ws.valuations||[]).forEach((v,idx)=>{
+    const property=(ws.properties||[]).find(p=>p.id===v.propertyId)||{};
+    const address=v.address||property.address||('Saved Valuation '+(idx+1));
+    addOption('valuation', address+' — Valuation', v, [property.borough||v.borough, property.submarket||v.submarket, v.updatedAt?new Date(v.updatedAt).toLocaleDateString():'' ].filter(Boolean).join(' · '));
+  });
+  (ws.oms||[]).forEach((o,idx)=>{
+    const property=(ws.properties||[]).find(p=>p.id===o.propertyId)||{};
+    const address=o.address||property.address||('Saved OM Draft '+(idx+1));
+    addOption('om', address+' — OM Draft', o, [o.city||property.borough, o.neighborhood||property.submarket, o.updatedAt?new Date(o.updatedAt).toLocaleDateString():'' ].filter(Boolean).join(' · '));
+  });
+  (ws.properties||[]).forEach((p,idx)=>{
+    addOption('property', (p.address||('Saved Property '+(idx+1)))+' — Property Record', p, [p.borough, p.submarket, p.status].filter(Boolean).join(' · '));
+  });
+  try{
+    const keys=[['bricValuationTransfer','Latest Valuation Transfer'],['bricValuationDraft','Saved Valuation Draft'],['bricOmDraft','Saved OM Draft']];
+    keys.forEach(([key,label])=>{
+      const raw=localStorage.getItem(key);
+      if(!raw) return;
+      const data=JSON.parse(raw);
+      addOption(key, (data.address?data.address+' — ':'')+label, data, 'Browser storage');
+    });
+  }catch(e){}
+  return options;
 }
+let importOptionsCache=[];
+function importFromValuation(){
+  if(currentTier!=='growth'){alert('Import from previous activity is a Growth feature.');return}
+  const picker=document.getElementById('importPicker');
+  const select=document.getElementById('valuationImportSelect');
+  const preview=document.getElementById('importPickerPreview');
+  if(!picker||!select) return;
+  importOptionsCache=collectImportOptions();
+  select.innerHTML='<option value="">Select saved property or valuation</option>';
+  if(!importOptionsCache.length){
+    if(preview) preview.innerHTML='<div class="import-empty">No saved valuations, OM drafts, or property records were found in this browser yet. Save a Valuation or OM Draft first, then return here.</div>';
+    picker.classList.add('visible');
+    return;
+  }
+  importOptionsCache.forEach(opt=>{
+    const option=document.createElement('option');
+    option.value=opt.id;
+    option.textContent=opt.label+(opt.meta?' · '+opt.meta:'');
+    select.appendChild(option);
+  });
+  picker.classList.add('visible');
+  previewImportSelection();
+}
+function closeImportPicker(){
+  const picker=document.getElementById('importPicker');
+  if(picker) picker.classList.remove('visible');
+}
+function previewImportSelection(){
+  const select=document.getElementById('valuationImportSelect');
+  const preview=document.getElementById('importPickerPreview');
+  if(!select||!preview) return;
+  const opt=importOptionsCache.find(x=>x.id===select.value);
+  if(!opt){preview.textContent='Select a saved item to preview what will be imported.';return;}
+  const d=opt.data||{};
+  const expenses=d.expenseList||d.expenses||[];
+  const rrCount=(d.rentRoll||[]).length+(d.residentialRentRoll||[]).length+(d.retailRentRoll||[]).length;
+  const unitCount=d.units||d.residentialUnits||d.residentialUnitCount||d.totalUnits||rrCount||0;
+  const gross=d.grossIncome||d.gross||0;
+  preview.innerHTML='<b>'+esc(opt.label)+'</b><br>'+[
+    d.address||'Address not saved',
+    (d.borough||d.city||'')+(d.submarket||d.neighborhood?' · '+(d.submarket||d.neighborhood):''),
+    d.propertyType||'',
+    unitCount?unitCount+' unit(s)':'',
+    gross?'Gross income: '+fmtFull(parseNum(gross)):'',
+    expenses.length?'Expenses: '+expenses.length+' line item(s)':'',
+    rrCount?'Rent roll rows: '+rrCount:''
+  ].filter(Boolean).map(esc).join('<br>');
+}
+function importSelectedActivity(){
+  if(currentTier!=='growth'){alert('Import from previous activity is a Growth feature.');return}
+  const select=document.getElementById('valuationImportSelect');
+  const opt=select?importOptionsCache.find(x=>x.id===select.value):null;
+  if(!opt){alert('Please choose a saved property or valuation to import.');return;}
+  applyImportedData(opt.data,opt.sourceType);
+  closeImportPicker();
+  alert('Imported: '+opt.label);
+  generate();
+}
+function applyImportedData(d,sourceType){
+  if(!d) return;
+  const set=(id,val)=>{const el=document.getElementById(id); if(el && val!==undefined && val!==null && val!=='') el.value=val;};
+  set('address',d.address);
+  set('city',d.borough||d.city);
+  const sub=d.submarket||d.neighborhood;
+  if(sub){const key=String(sub).toLowerCase();const sel=document.getElementById('neighborhood');if(sel){const match=[...sel.options].find(o=>o.value===key||o.text.toLowerCase()===key); if(match)sel.value=match.value;}}
+  set('propertyType',d.propertyType);
+  set('yearBuilt',d.yearBuilt);
+  set('sqft',d.buildingSf||d.sqft);
+  set('askingPrice',d.askingPrice||d.price);
+  set('residentialUnitCount',d.residentialUnits||d.residentialUnitCount||d.apartmentCount||d.units);
+  set('retailUnitCount',d.retailUnits||d.retailUnitCount||d.stores||d.commercialSpaces);
+  set('unitMixBreakdown',d.unitMixBreakdown||d.unitMix);
+  set('marketCap',d.marketCap||d.capRate);
+  set('grossIncome',d.grossIncome||d.gross);
+  set('otherIncome',d.otherIncome);
+  set('description',d.description);
+  set('submarketTrend',d.trend||d.submarketTrend);
+  const expenses=d.expenseList||d.expenses;
+  if(Array.isArray(expenses)&&expenses.length){
+    const rows=document.getElementById('expenseRows'); if(rows) rows.innerHTML='';
+    expenses.forEach(e=>addExpenseRow(e.name||e.label||'Expense',e.amount||e.value||0));
+    const total=Math.round(expenses.reduce((sum,e)=>sum+parseNum(e.amount||e.value),0));
+    set('totalExpenses',total);
+    toggleExpenseItemization(true);
+  }else if(d.totalExpenses||d.expensesTotal){
+    set('totalExpenses',d.totalExpenses||d.expensesTotal);
+  }
+  const rr=[];
+  if(Array.isArray(d.rentRoll)){
+    d.rentRoll.forEach((item,idx)=>rr.push({...item,id:Date.now()+idx,type:item.type||'apartment'}));
+  }
+  (d.residentialRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+100+idx,order:idx,type:'apartment',unit:item.unit||('Apt '+(idx+1)),unitSqft:item.unitSqft||item.sqft||'',bed:item.bed||item.beds||0,bath:item.bath||item.baths||1,currentRent:item.rent||item.currentRent||0,proformaRent:item.proformaRent||item.marketRent||item.rent||0,proformaAuto:false}));
+  (d.retailRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+200+idx,order:idx,type:'retail',unit:item.unit||item.space||('Retail '+(idx+1)),sqft:item.sqft||'',tenant:item.tenant||'',currentRent:item.rent||item.currentRent||0,frequency:item.frequency||'monthly',expiration:item.expiration||'',increase:item.inc||item.increase||'3.0',proformaRent:item.proformaRent||item.marketRent||item.rent||0,proformaAuto:false}));
+  if(rr.length){
+    rrItems=rr;
+    set('resCount',rr.filter(x=>x.type==='apartment').length);
+    set('retailCount',rr.filter(x=>x.type==='retail').length);
+    set('residentialUnitCount',rr.filter(x=>x.type==='apartment').length);
+    set('retailUnitCount',rr.filter(x=>x.type==='retail').length);
+    toggleRentRoll(true);
+    renderRR();
+    updateSummary();
+  }
+} 
 function getSelectedNeighborhoodLabel(){const sel=document.getElementById('neighborhood');return sel&&sel.selectedOptions&&sel.selectedOptions[0]?sel.selectedOptions[0].textContent:''}
 function generateAIDescription(){
   if(currentTier!=='growth'){alert('AI-generated descriptions are a Growth feature. Free generates only the one-page Property Details sheet.');return;}
@@ -844,4 +955,162 @@ setupPanelResizer();
   setTier(currentTier || 'free');
 })();
 
-</script></body></html>
+</script>
+<script>
+/* --- BRIC OM Studio hard reset patch: guaranteed Generate + AI Description handlers --- */
+(function(){
+  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function byId(id){ return document.getElementById(id); }
+  function val(id, fallback){ var el=byId(id); return el ? el.value : (fallback || ''); }
+  function num(id){ var n=parseFloat(String(val(id,'0')).replace(/,/g,'')); return Number.isFinite(n) ? n : 0; }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmtFull(n){ return '$' + Math.round(Number(n)||0).toLocaleString(); }
+  function fmtShort(n){ n=Number(n)||0; if(Math.abs(n)>=1000000) return '$'+(n/1000000).toFixed(2)+'M'; if(Math.abs(n)>=10000) return '$'+Math.round(n/1000)+'K'; return fmtFull(n); }
+  function pct(n){ n=Number(n)||0; return n.toFixed(2)+'%'; }
+  function getTier(){ try { return currentTier === 'growth' ? 'growth' : 'free'; } catch(e){ return window.__bricTier === 'growth' ? 'growth' : 'free'; } }
+  function setTierVar(t){ window.__bricTier = (t === 'growth') ? 'growth' : 'free'; try { currentTier = window.__bricTier; } catch(e){} }
+  function getNeighborhoodLabel(){ var sel=byId('neighborhood'); if(!sel) return ''; return sel.selectedOptions && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : sel.value; }
+  function getRentRoll(){ try { return Array.isArray(rrItems) ? rrItems : []; } catch(e){ return []; } }
+  function getSections(){ try { return sectionsActive || {}; } catch(e){ return {}; } }
+  function setSectionsForTier(growth){
+    var s=getSections();
+    ['toggleCover','toggleHighlights','toggleRentRoll','toggleFinancial','toggleValuation','toggleLocalMap','toggleTransitMap','toggleMarket','togglePropertyPhotos'].forEach(function(k){ s[k]=!!growth; });
+  }
+  function itemizedExpensesTotal(){
+    try {
+      if(getTier()==='growth' && typeof collectItemizedExpenses === 'function' && expenseItemizedActive){
+        return collectItemizedExpenses().reduce(function(sum,e){ return sum + (parseFloat(e.amount)||0); },0);
+      }
+    } catch(e){}
+    return num('totalExpenses');
+  }
+  function collect(){
+    var rr=getRentRoll();
+    var residentialUnits = num('residentialUnitCount');
+    var retailUnits = num('retailUnitCount');
+    var totalUnits = rr.length || residentialUnits + retailUnits;
+    var gross = num('grossIncome') + num('otherIncome');
+    if(rr.length){
+      gross = num('otherIncome');
+      rr.forEach(function(it){
+        var current=parseFloat(it.currentRent)||0;
+        gross += (it.type==='retail' && it.frequency==='annual') ? current : current*12;
+      });
+    }
+    var expenses = itemizedExpensesTotal();
+    var noi = gross*0.96 - expenses;
+    var price = num('askingPrice');
+    var sf = num('sqft');
+    var marketCap = num('marketCap');
+    return {
+      address: val('address','Property Address') || 'Property Address',
+      city: val('city',''),
+      neighborhood: getNeighborhoodLabel(),
+      propertyType: val('propertyType','Property'),
+      yearBuilt: val('yearBuilt',''),
+      sf: sf,
+      price: price,
+      residentialUnits: residentialUnits,
+      retailUnits: retailUnits,
+      totalUnits: totalUnits,
+      unitMix: val('unitMixBreakdown',''),
+      gross: gross,
+      expenses: expenses,
+      noi: noi,
+      marketCap: marketCap,
+      trend: val('submarketTrend',''),
+      description: val('description',''),
+      pricePerUnit: totalUnits ? price/totalUnits : 0,
+      pricePerSF: sf ? price/sf : 0,
+      capAtAsk: price ? (noi/price)*100 : 0,
+      rr: rr
+    };
+  }
+  function lockedPreview(){
+    var preview=byId('omPreview');
+    if(preview) preview.innerHTML='<div class="preview-locked"><div class="empty-icon">◊</div><div class="empty-title">OM Preview Locked</div><div class="empty-sub">Enter your property information, then click Generate OM. After that, edits update the preview live.</div></div>';
+  }
+  function freePage(p){
+    return '<div class="om-doc"><div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Details</div><div class="om-page-hd-brand">Free Property Sheet</div></div>'+
+      '<div class="om-section"><div class="om-section-eyebrow">Property Snapshot</div><div class="om-section-heading">'+esc(p.address)+'</div>'+
+      '<div class="highlights-grid">'+
+      card('Asking Price', fmtShort(p.price), p.pricePerSF ? fmtFull(p.pricePerSF)+' / SF' : 'Price guidance')+
+      card('Total Units', String(p.totalUnits||'—'), (p.residentialUnits||0)+' Residential · '+(p.retailUnits||0)+' Retail')+
+      card('Gross SF', p.sf ? p.sf.toLocaleString() : '—', p.pricePerUnit ? fmtFull(p.pricePerUnit)+' / unit' : 'Building size')+
+      card('Gross Income', fmtShort(p.gross), 'Annual submitted income')+
+      card('Total Expenses', fmtShort(p.expenses), 'Annual submitted expenses')+
+      card('Estimated NOI', fmtShort(p.noi), p.capAtAsk ? pct(p.capAtAsk)+' at ask' : 'After 4% vacancy')+
+      '</div></div>'+
+      '<div class="om-section"><div class="om-section-heading">Basic Details</div><table class="om-table"><tbody>'+
+      row('Address', p.address)+row('Borough', p.city)+row('Submarket', p.neighborhood)+row('Property Type', p.propertyType)+row('Year Built', p.yearBuilt||'—')+row('Unit Mix / Breakdown', p.unitMix||((p.residentialUnits||0)+' apartments + '+(p.retailUnits||0)+' retail/commercial spaces'))+
+      '</tbody></table></div><div class="disclaimer">Free version output. Growth unlocks the full OM, AI description, rent roll, maps, photos, valuation, and financial summary pages.</div></div></div>';
+  }
+  function card(label,value,sub){ return '<div class="highlight-card"><div class="highlight-label">'+esc(label)+'</div><div class="highlight-val">'+esc(value)+'</div><div class="highlight-sub">'+esc(sub||'')+'</div></div>'; }
+  function row(a,b){ return '<tr><td>'+esc(a)+'</td><td class="num">'+esc(b)+'</td></tr>'; }
+  function growthDoc(p){
+    var s=getSections();
+    var html='<div class="om-doc">';
+    if(s.toggleCover){ html+='<div class="om-cover"><div><div class="om-cover-brand"><span class="om-cover-brand-dot"></span>BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">'+esc(p.address)+'<em>'+esc(p.neighborhood)+' · '+esc(p.city)+'</em></div><div class="om-cover-subtitle">'+esc(p.propertyType)+' · '+esc(p.totalUnits)+' Units · '+(p.sf?p.sf.toLocaleString():'—')+' SF</div></div><div class="om-cover-bottom"><div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">'+fmtShort(p.price)+'</div></div><div><div class="om-cover-stat-label">NOI</div><div class="om-cover-stat-val">'+fmtShort(p.noi)+'</div></div><div><div class="om-cover-stat-label">Cap at Ask</div><div class="om-cover-stat-val">'+pct(p.capAtAsk)+'</div></div></div></div>'; }
+    if(s.toggleHighlights){ html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="highlights-grid">'+card('Asking Price',fmtShort(p.price),fmtFull(p.pricePerSF)+' / SF')+card('Total Units',String(p.totalUnits||'—'),(p.residentialUnits||0)+' Apt · '+(p.retailUnits||0)+' Retail')+card('Gross SF',p.sf?p.sf.toLocaleString():'—',fmtFull(p.pricePerUnit)+' / unit')+card('Gross Income',fmtShort(p.gross),'Annual')+card('Estimated NOI',fmtShort(p.noi),'After 4% vacancy')+card('Cap Rate',pct(p.capAtAsk),'At asking price')+'</div><div class="om-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">'+(p.description? p.description.split('\n').filter(Boolean).map(function(t){return '<p>'+esc(t)+'</p>';}).join('') : '<p>Use AI Build Description to generate a property narrative from the submitted information.</p>')+'</div></div></div>'; }
+    if(s.toggleRentRoll && p.rr.length){ html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><table class="rr-display-table"><thead><tr><th>Unit</th><th>Type</th><th>Current Rent</th><th>Pro Forma</th></tr></thead><tbody>'+p.rr.map(function(it){return '<tr><td>'+esc(it.unit||'Unit')+'</td><td>'+esc(it.type||'')+'</td><td>'+fmtFull(it.currentRent||0)+'</td><td>'+fmtFull(it.proformaRent||0)+'</td></tr>';}).join('')+'</tbody></table></div>'; }
+    if(s.toggleFinancial){ html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Income</span><span class="fin-row-val">'+fmtFull(p.gross)+'</span></div><div class="fin-row"><span class="fin-row-name">Vacancy / Credit Loss (4%)</span><span class="fin-row-val">('+fmtFull(p.gross*.04)+')</span></div><div class="fin-row"><span class="fin-row-name">Expenses</span><span class="fin-row-val">('+fmtFull(p.expenses)+')</span></div><div class="fin-total"><span>Estimated NOI</span><span>'+fmtFull(p.noi)+'</span></div></div></div></div>'; }
+    if(s.toggleValuation){ var base=p.marketCap?p.noi/(p.marketCap/100):0; html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="val-card"><div class="val-label">Market Cap Rate Assumption · '+pct(p.marketCap)+'</div><div class="val-range">'+fmtShort(base)+'</div><div class="val-detail"><div><div class="val-detail-label">Cap at Ask</div><div class="val-detail-val">'+pct(p.capAtAsk)+'</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">'+fmtFull(p.pricePerUnit)+'</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">'+fmtFull(p.pricePerSF)+'</div></div></div></div></div>'; }
+    if(s.toggleLocalMap){ html+=mapPage('Local Map',p,'local'); }
+    if(s.toggleTransitMap){ html+=mapPage('Transit Map',p,'transit'); }
+    if(s.toggleMarket){ html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">'+esc(p.neighborhood)+' · '+esc(p.city)+'</div></div><div class="om-description"><p>'+esc(p.neighborhood||'The selected submarket')+' is positioned as '+esc((p.trend||'a stable market').toLowerCase())+'. This section can be expanded with comparable sales, rent trends, buyer activity, and submarket demand drivers.</p></div></div>'; }
+    if(s.togglePropertyPhotos){ html+='<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div></div>'; }
+    return html+'</div>';
+  }
+  function mapPage(title,p,type){ var q=encodeURIComponent([p.address,p.city,'NY', type==='transit'?'subway station transit':''].filter(Boolean).join(' ')); return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">'+title+'</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="map-card"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z='+(type==='transit'?13:16)+'&output=embed"></iframe></div></div>'; }
+  function hardGenerate(userRequested){
+    if(userRequested){ window.__bricOmGenerated=true; try{ omGenerated=true; }catch(e){} }
+    var generated = window.__bricOmGenerated; try{ generated = generated || omGenerated; }catch(e){}
+    if(!generated){ lockedPreview(); return; }
+    var preview=byId('omPreview'); if(!preview) return;
+    var p=collect();
+    preview.innerHTML = getTier()==='growth' ? growthDoc(p) : freePage(p);
+  }
+  function hardSetTier(t){
+    setTierVar(t);
+    var growth=getTier()==='growth';
+    var free=byId('tierFree'), grow=byId('tierGrowth'), desc=byId('tierDesc');
+    if(free) free.classList.toggle('active', !growth);
+    if(grow) grow.classList.toggle('active', growth);
+    if(desc) desc.textContent = growth ? 'Growth unlocks the full OM builder, AI description, itemized rent roll, itemized expenses, valuation transfer, maps, photos, and saved drafts.' : 'Free builds a one-page Property Details sheet using basic property details, total income, and total expenses.';
+    ['generateOmBtn','refreshOmBtn'].forEach(function(id){ var b=byId(id); if(b){ b.disabled=false; b.removeAttribute('disabled'); b.style.opacity='1'; b.style.pointerEvents='auto'; b.style.cursor='pointer'; b.classList.remove('locked','locked-growth'); }});
+    var importBtn=byId('importBtn'), saveBtn=byId('saveBtn'); if(importBtn) importBtn.style.opacity=growth?'1':'.45'; if(saveBtn) saveBtn.style.opacity=growth?'1':'.45';
+    var note=byId('importNote'); if(note) note.innerHTML=growth?'<b>Growth enabled:</b> Import saved details from Valuation Studio using browser storage.':'<b>Growth only:</b> Import saved details from Valuation Studio so you don\'t have to enter the same information twice.';
+    var rg=byId('rentRollGate'), rn=byId('rentRollLockedNote'); if(rg) rg.classList.toggle('locked',!growth); if(rn) rn.style.display=growth?'none':'block';
+    var eg=byId('expenseGate'), en=byId('expenseLockedNote'); if(eg) eg.classList.toggle('locked',!growth); if(en) en.style.display=growth?'none':'block';
+    var dg=byId('descriptionGate'), dn=byId('descriptionLockedNote'); if(dg) dg.classList.toggle('locked',!growth); if(dn) dn.style.display=growth?'none':'block';
+    ['description','descCustomNotes','descTone','descLength','descEmphasis'].forEach(function(id){ var el=byId(id); if(el){ el.disabled=!growth; el.style.pointerEvents=growth?'auto':'none'; el.style.opacity=growth?'1':'.45'; }});
+    var ai=document.querySelector('.ai-description-box button'); if(ai){ ai.disabled=!growth; ai.style.pointerEvents=growth?'auto':'none'; ai.style.opacity=growth?'1':'.45'; }
+    setSectionsForTier(growth);
+    document.querySelectorAll('[data-growth-only="true"]').forEach(function(el){ var tgl=el.querySelector('.toggle'); el.classList.toggle('locked-growth',!growth); el.classList.toggle('active',growth); if(tgl) tgl.classList.toggle('on',growth); });
+    if(window.__bricOmGenerated) hardGenerate(false); else lockedPreview();
+  }
+  function hardAiDescription(){
+    if(getTier()!=='growth'){ alert('AI-generated descriptions are a Growth feature.'); return; }
+    var p=collect();
+    var unitMix = p.unitMix || ((p.residentialUnits||0)+' residential units'+(p.retailUnits?(' and '+p.retailUnits+' retail/commercial spaces'):''));
+    var text = p.address+' is a '+(p.propertyType||'property').toLowerCase()+' opportunity located in '+(p.neighborhood||'the selected submarket')+', '+(p.city||'New York')+'. The property includes '+unitMix+' and totals '+(p.sf?p.sf.toLocaleString()+' square feet':'a well-positioned building footprint')+'.\n\nThe financial profile reflects approximately '+fmtFull(p.gross)+' in annual gross income, '+fmtFull(p.expenses)+' in annual expenses, and an estimated NOI of '+fmtFull(p.noi)+'. '+(p.marketCap?'The valuation framework is based on a '+pct(p.marketCap)+' market cap rate assumption.':'')+'\n\nThe offering should emphasize the property\'s income profile, location, and potential value creation through rent growth, expense review, and continued demand for well-located New York City assets.';
+    var d=byId('description'); if(d){ d.disabled=false; d.style.pointerEvents='auto'; d.style.opacity='1'; d.value=text; d.focus(); }
+    hardGenerate(false);
+  }
+  function bind(){
+    window.generate = hardGenerate;
+    window.setTier = hardSetTier;
+    window.generateAIDescription = hardAiDescription;
+    var gen=byId('generateOmBtn'), ref=byId('refreshOmBtn'), free=byId('tierFree'), growth=byId('tierGrowth'), ai=document.querySelector('.ai-description-box button');
+    if(gen){ gen.onclick=null; gen.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); hardGenerate(true); }, true); }
+    if(ref){ ref.onclick=null; ref.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); hardGenerate(true); }, true); }
+    if(free){ free.onclick=null; free.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); hardSetTier('free'); }, true); }
+    if(growth){ growth.onclick=null; growth.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); hardSetTier('growth'); }, true); }
+    if(ai){ ai.onclick=null; ai.addEventListener('click',function(e){ e.preventDefault(); e.stopImmediatePropagation(); hardAiDescription(); }, true); }
+    hardSetTier(getTier());
+  }
+  ready(bind);
+})();
+</script>
+
+</body></html>
