@@ -553,49 +553,110 @@ function importSelectedActivity(){
 }
 function applyImportedData(d,sourceType){
   if(!d) return;
-  const set=(id,val)=>{const el=document.getElementById(id); if(el && val!==undefined && val!==null && val!=='') el.value=val;};
-  set('address',d.address);
-  set('city',d.borough||d.city);
-  const sub=d.submarket||d.neighborhood;
-  if(sub){const key=String(sub).toLowerCase();const sel=document.getElementById('neighborhood');if(sel){const match=[...sel.options].find(o=>o.value===key||o.text.toLowerCase()===key); if(match)sel.value=match.value;}}
-  set('propertyType',d.propertyType);
-  set('yearBuilt',d.yearBuilt);
-  set('sqft',d.buildingSf||d.sqft);
-  set('askingPrice',d.askingPrice||d.price);
-  set('residentialUnitCount',d.residentialUnits||d.residentialUnitCount||d.apartmentCount||d.units);
-  set('retailUnitCount',d.retailUnits||d.retailUnitCount||d.stores||d.commercialSpaces);
-  set('unitMixBreakdown',d.unitMixBreakdown||d.unitMix);
-  set('marketCap',d.marketCap||d.capRate);
-  set('grossIncome',d.grossIncome||d.gross);
-  set('otherIncome',d.otherIncome);
-  set('description',d.description);
-  set('submarketTrend',d.trend||d.submarketTrend);
-  const expenses=d.expenseList||d.expenses;
+
+  const ws=getWorkspace();
+  const linkedProperty=(d.propertyId && (ws.properties||[]).find(p=>p.id===d.propertyId)) ||
+    ((d.address||d.propertyAddress) && (ws.properties||[]).find(p=>String(p.address||'').trim().toLowerCase()===String(d.address||d.propertyAddress).trim().toLowerCase())) || {};
+  const data={...linkedProperty,...d};
+
+  const firstVal=(...vals)=>vals.find(v=>v!==undefined && v!==null && String(v).trim()!=='');
+  const set=(id,val)=>{const el=document.getElementById(id); if(el && val!==undefined && val!==null && String(val).trim()!=='') el.value=val;};
+  const setSelect=(id,val)=>{
+    const el=document.getElementById(id);
+    if(!el || val===undefined || val===null || String(val).trim()==='') return;
+    const raw=String(val).trim();
+    const norm=raw.toLowerCase().replace(/\s+/g,' ');
+    const match=[...el.options].find(o=>
+      String(o.value).trim().toLowerCase().replace(/\s+/g,' ')===norm ||
+      String(o.textContent).trim().toLowerCase().replace(/\s+/g,' ')===norm ||
+      String(o.label||'').trim().toLowerCase().replace(/\s+/g,' ')===norm
+    );
+    if(match) el.value=match.value;
+    else if(id==='neighborhood'){
+      const other=[...el.options].find(o=>String(o.value).toLowerCase()==='default' || String(o.textContent).toLowerCase()==='other');
+      if(other) el.value=other.value;
+    } else {
+      el.value=raw;
+    }
+  };
+
+  const address=firstVal(data.address,data.propertyAddress,data.location,data.fullAddress);
+  const borough=firstVal(data.borough,data.city,data.market,data.propertyBorough);
+  const submarket=firstVal(data.submarket,data.neighborhood,data.subMarket,data.propertySubmarket,data.area);
+  const propertyType=firstVal(data.propertyType,data.assetType,data.type,data.property_class,data.propertyClass);
+  const yearBuilt=firstVal(data.yearBuilt,data.built,data.buildingYearBuilt,data.year_built);
+  const sqft=firstVal(data.buildingSf,data.buildingSF,data.grossSF,data.grossSf,data.sqft,data.squareFeet,data.totalSF,data.totalSqft);
+  const askingPrice=firstVal(data.askingPrice,data.price,data.listPrice,data.valuationPrice,data.targetPrice);
+  const resUnits=firstVal(data.residentialUnits,data.residentialUnitCount,data.apartmentCount,data.apartments,data.aptCount,data.resCount);
+  const retailUnits=firstVal(data.retailUnits,data.retailUnitCount,data.stores,data.storeCount,data.retailCount,data.commercialSpaces,data.commercialUnits);
+  const totalUnits=firstVal(data.totalUnits,data.units,data.unitCount);
+  const marketCap=firstVal(data.marketCap,data.capRate,data.marketCapRate,data.capRateAssumption);
+  const grossIncome=firstVal(data.grossIncome,data.grossRentalIncome,data.gross,data.annualIncome,data.currentGrossIncome);
+  const otherIncome=firstVal(data.otherIncome,data.additionalIncome,data.miscIncome);
+  const description=firstVal(data.description,data.propertyDescription,data.omDescription);
+  const trend=firstVal(data.trend,data.submarketTrend,data.positioning,data.marketTrend);
+  const unitMix=firstVal(data.unitMixBreakdown,data.unitMix,data.unitBreakdown,data.mix);
+
+  set('address',address);
+  setSelect('city',borough);
+  setSelect('neighborhood',submarket);
+  setSelect('propertyType',propertyType);
+  set('yearBuilt',yearBuilt);
+  set('sqft',sqft);
+  set('askingPrice',askingPrice);
+  set('marketCap',marketCap);
+  set('grossIncome',grossIncome);
+  set('otherIncome',otherIncome);
+  set('description',description);
+  setSelect('submarketTrend',trend);
+
+  const expenses=data.expenseList||data.itemizedExpenses||data.expenses;
   if(Array.isArray(expenses)&&expenses.length){
     const rows=document.getElementById('expenseRows'); if(rows) rows.innerHTML='';
-    expenses.forEach(e=>addExpenseRow(e.name||e.label||'Expense',e.amount||e.value||0));
-    const total=Math.round(expenses.reduce((sum,e)=>sum+parseNum(e.amount||e.value),0));
+    expenses.forEach(e=>addExpenseRow(e.name||e.label||e.expenseName||'Expense',firstVal(e.amount,e.value,e.annualAmount,0)));
+    const total=Math.round(expenses.reduce((sum,e)=>sum+parseNum(firstVal(e.amount,e.value,e.annualAmount,0)),0));
     set('totalExpenses',total);
-    toggleExpenseItemization(true);
-  }else if(d.totalExpenses||d.expensesTotal){
-    set('totalExpenses',d.totalExpenses||d.expensesTotal);
+    if(currentTier==='growth') toggleExpenseItemization(true);
+  }else{
+    set('totalExpenses',firstVal(data.totalExpenses,data.expensesTotal,data.totalOperatingExpenses,data.operatingExpenses));
   }
+
   const rr=[];
-  if(Array.isArray(d.rentRoll)){
-    d.rentRoll.forEach((item,idx)=>rr.push({...item,id:Date.now()+idx,type:item.type||'apartment'}));
+  if(Array.isArray(data.rentRoll)){
+    data.rentRoll.forEach((item,idx)=>{
+      const type=item.type || item.useType || item.unitType || (String(item.tenant||'').trim() ? 'retail' : 'apartment');
+      rr.push({...item,id:Date.now()+idx,type:String(type).toLowerCase().includes('retail')||String(type).toLowerCase().includes('commercial')?'retail':'apartment'});
+    });
   }
-  (d.residentialRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+100+idx,order:idx,type:'apartment',unit:item.unit||('Apt '+(idx+1)),unitSqft:item.unitSqft||item.sqft||'',bed:item.bed||item.beds||0,bath:item.bath||item.baths||1,currentRent:item.rent||item.currentRent||0,proformaRent:item.proformaRent||item.marketRent||item.rent||0,proformaAuto:false}));
-  (d.retailRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+200+idx,order:idx,type:'retail',unit:item.unit||item.space||('Retail '+(idx+1)),sqft:item.sqft||'',tenant:item.tenant||'',currentRent:item.rent||item.currentRent||0,frequency:item.frequency||'monthly',expiration:item.expiration||'',increase:item.inc||item.increase||'3.0',proformaRent:item.proformaRent||item.marketRent||item.rent||0,proformaAuto:false}));
+  (data.residentialRentRoll||data.apartmentRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+100+idx,order:idx,type:'apartment',unit:item.unit||item.unitNumber||('Apt '+(idx+1)),unitSqft:firstVal(item.unitSqft,item.sqft,item.squareFeet,''),bed:firstVal(item.bed,item.beds,item.bedrooms,0),bath:firstVal(item.bath,item.baths,item.bathrooms,1),currentRent:firstVal(item.rent,item.currentRent,item.monthlyRent,0),proformaRent:firstVal(item.proformaRent,item.marketRent,item.rent,item.currentRent,0),proformaAuto:false}));
+  (data.retailRentRoll||data.commercialRentRoll||[]).forEach((item,idx)=>rr.push({id:Date.now()+200+idx,order:idx,type:'retail',unit:item.unit||item.space||item.spaceName||('Retail '+(idx+1)),sqft:firstVal(item.sqft,item.squareFeet,''),tenant:item.tenant||'',currentRent:firstVal(item.rent,item.currentRent,item.monthlyRent,0),frequency:item.frequency||'monthly',expiration:item.expiration||item.leaseExpiration||'',increase:item.inc||item.increase||item.annualIncrease||'3.0',proformaRent:firstVal(item.proformaRent,item.marketRent,item.rent,item.currentRent,0),proformaAuto:false}));
+
   if(rr.length){
     rrItems=rr;
-    set('resCount',rr.filter(x=>x.type==='apartment').length);
-    set('retailCount',rr.filter(x=>x.type==='retail').length);
-    set('residentialUnitCount',rr.filter(x=>x.type==='apartment').length);
-    set('retailUnitCount',rr.filter(x=>x.type==='retail').length);
-    toggleRentRoll(true);
-    renderRR();
-    updateSummary();
+    const aptCt=rr.filter(x=>x.type==='apartment').length;
+    const retCt=rr.filter(x=>x.type==='retail').length;
+    set('resCount',aptCt);
+    set('retailCount',retCt);
+    set('residentialUnitCount',aptCt);
+    set('retailUnitCount',retCt);
+    if(!unitMix){
+      set('unitMixBreakdown', aptCt+' apartment'+(aptCt!==1?'s':'')+(retCt?' + '+retCt+' retail/commercial space'+(retCt!==1?'s':''):''));
+    }
+    if(currentTier==='growth'){
+      toggleRentRoll(true);
+      renderRR();
+      updateSummary();
+    }
+  } else {
+    set('residentialUnitCount',resUnits);
+    set('retailUnitCount',retailUnits);
+    if(!resUnits && !retailUnits && totalUnits) set('residentialUnitCount',totalUnits);
   }
+
+  set('unitMixBreakdown',unitMix);
+
+  if(typeof propertyGeo==='object') propertyGeo={query:'',lat:null,lng:null,status:'idle'};
+  if(typeof updateExpenseTotalFromRows==='function') updateExpenseTotalFromRows();
 } 
 function getSelectedNeighborhoodLabel(){const sel=document.getElementById('neighborhood');return sel&&sel.selectedOptions&&sel.selectedOptions[0]?sel.selectedOptions[0].textContent:''}
 function generateAIDescription(){
