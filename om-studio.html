@@ -1838,9 +1838,9 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
           +'<div class="rr-field"><label>Tenant</label><input type="text" value="'+esc(it.tenant||'')+'" oninput="setRRField('+id+',\'tenant\',this.value,this)"></div>'
           +'<div class="rr-field"><label>SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.sqft)+'" oninput="setRRField('+id+',\'sqft\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="retail-cur" type="text" value="'+calcRentPSF(it.currentRent,it.sqft,it.frequency)+'" readonly></div>'
           +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
-          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="retail-cur" type="text" value="'+calcRentPSF(it.currentRent,it.sqft,it.frequency)+'" readonly></div>'
           +'<div class="rr-field"><label>PF $/SF</label><input data-psf="retail-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.sqft,it.frequency)+'" readonly></div>'
           +'</div><div class="rr-grid-ret-second">'
           +'<div class="rr-field"><label>Frequency</label><select onchange="setRRField('+id+',\'frequency\',this.value,this)"><option value="monthly" '+(it.frequency==='monthly'?'selected':'')+'>Monthly</option><option value="annual" '+(it.frequency==='annual'?'selected':'')+'>Annual</option></select></div>'
@@ -1854,9 +1854,9 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
           +'<div class="rr-field"><label>Baths</label><select onchange="setRRField('+id+',\'bath\',this.value,this)">'+[1,1.5,2,2.5,3,3.5,4].map(function(v){return '<option value="'+v+'" '+(Number(it.bath)===v?'selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
           +'<div class="rr-field"><label>Unit SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.unitSqft)+'" oninput="setRRField('+id+',\'unitSqft\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="apt-cur" type="text" value="'+calcRentPSF(it.currentRent,it.unitSqft,'monthly')+'" readonly></div>'
           +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
-          +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="apt-cur" type="text" value="'+calcRentPSF(it.currentRent,it.unitSqft,'monthly')+'" readonly></div>'
           +'<div class="rr-field"><label>PF $/SF</label><input data-psf="apt-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.unitSqft,'monthly')+'" readonly></div>'
           +'</div></div>';
       }
