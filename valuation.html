@@ -483,7 +483,10 @@ function calculate(){
   const highVal=capRate>.01?noi/Math.max(.01,capRate-.0075):baseVal;
   const pricePerUnit=baseVal/units;
   const pricePerSqft=sqft>0?baseVal/sqft:0;
-  renderResults({address,propType,units,sqft,grossIncome,vacancyLoss,effectiveGross,otherIncome,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,capRate,vacancyRate,expenseList,totalSavings})
+  const resultPayload={address,propType,units,sqft,grossIncome,vacancyLoss,effectiveGross,otherIncome,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,capRate,vacancyRate,expenseList,totalSavings};
+  renderResults(resultPayload);
+  // Save automatically when Generate Valuation is clicked so it appears in Dashboard > My Properties.
+  saveCurrentValuation();
 }
 function renderResults(d){
   const panel=document.getElementById('panelRight');
@@ -595,7 +598,7 @@ function saveCurrentValuation(){
   localStorage.setItem('bricValuationTransfer', JSON.stringify(payload));
   const url=new URL(window.location.href); url.searchParams.set('propertyId', property.id); url.searchParams.set('valuationId', valuationId); history.replaceState({},'',url.toString());
   const status=document.getElementById('saveStatus');
-  if(status) status.textContent='Saved to My Properties · '+new Date().toLocaleString();
+  if(status) status.textContent='Saved to Dashboard Properties · '+new Date().toLocaleString();
 }
 function loadSavedValuationIntoForm(payload){
   if(!payload) return;
