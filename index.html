@@ -568,19 +568,187 @@
 .range-marker{left:56%;width:16px;height:16px;background:#00b84a}
 .range-points span:nth-child(2){color:var(--warm)}
 
+
+/* v24 targeted update: Learning Studio, Bed / Bath, mobile menu */
+.nav-toggle-input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+  width:1px;
+  height:1px;
+}
+
+.menu-toggle{
+  display:none;
+  width:42px;
+  height:42px;
+  border:0;
+  background:transparent;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  padding:0;
+  border-radius:999px;
+  z-index:110;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.menu-toggle span{
+  width:22px;
+  height:2px;
+  border-radius:999px;
+  background:rgba(244,243,238,.94);
+  display:block;
+  transition:transform .2s ease, opacity .2s ease;
+}
+
+.nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(2){opacity:0;}
+.nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-menu{
+  display:none;
+  max-width:1360px;
+  margin:0 auto;
+  padding:0 28px 18px;
+  flex-direction:column;
+  gap:10px;
+}
+
+.nav-toggle-input:checked ~ .mobile-menu{
+  display:flex !important;
+}
+
+.mobile-menu a{
+  display:block;
+  padding:14px 16px;
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  color:var(--text);
+  font-weight:700;
+}
+
+.mobile-menu-cta{
+  background:linear-gradient(180deg,#f7f4ed,#ddd1be) !important;
+  color:#09100b !important;
+  border:none !important;
+  text-align:center;
+  font-weight:800 !important;
+}
+
+.bed-bath{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+}
+
+.bed-bath em{
+  font-style:normal;
+  color:rgba(8,16,12,.36);
+  font-weight:800;
+}
+
+.bed-bath-head{
+  white-space:nowrap;
+  letter-spacing:.04em;
+}
+
+.hero-ui-grid .table-head,
+.hero-ui-grid .table-row{
+  grid-template-columns:.72fr .92fr .76fr .82fr;
+}
+
+.module-grid{
+  grid-template-columns:repeat(4,1fr);
+}
+
+.learning-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.learning-card{
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+  transition:.22s ease;
+  min-height:290px;
+}
+
+.learning-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0,184,74,.16), transparent 38%),
+    linear-gradient(90deg, rgba(0,184,74,.10), rgba(0,184,74,.02) 48%, transparent 85%);
+  opacity:0;
+  transition:opacity .22s ease;
+  pointer-events:none;
+}
+
+.learning-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(0,184,74,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.26);
+}
+
+.learning-card:hover::before{opacity:1;}
+.learning-card > *{position:relative;z-index:1;}
+.learning-card h3{font-size:1.48rem;line-height:1.08;letter-spacing:-.02em;font-weight:800;margin-bottom:10px;}
+.learning-card p{font-weight:500;color:var(--muted);line-height:1.6;}
+
+@media(max-width:1100px){
+  .module-grid{grid-template-columns:repeat(2,1fr);}
+  .learning-grid{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:720px){
+  .nav-links{display:none !important;}
+  .menu-toggle{display:flex !important;}
+  .mobile-menu{padding:0 16px 16px;}
+  .module-grid,
+  .learning-grid{grid-template-columns:1fr;}
+  .hero-ui-grid .table-head,
+  .hero-ui-grid .table-row{
+    grid-template-columns:.62fr .95fr .74fr .84fr;
+    gap:7px;
+  }
+}
+
 </style>
 </head>
 <body>
   <nav>
+    <input class="nav-toggle-input" type="checkbox" id="navToggle" aria-hidden="true" />
     <div class="nav-inner">
       <a href="index.html" class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="12" width="10" height="40" rx="4" fill="#EAF7EE"/><rect x="28" y="12" width="10" height="40" rx="4" fill="#D7F2DF"/><path d="M42 12h8c4.418 0 8 3.582 8 8 0 4.144-3.149 7.552-7.181 7.962C55.557 28.956 59 32.819 59 37.5 59 45.508 52.508 52 44.5 52H42V12Zm8 8c0-1.105-.895-2-2-2h-2v8h2c2.209 0 4-1.791 4-4v-2Zm1 18c0-2.761-2.239-5-5-5h-0.0V46h1.5c1.933 0 3.5-1.567 3.5-3.5V38Z" fill="#08100B"/></svg></span><span class="brand-wordmark">BRIC Studios</span></a>
       <div class="nav-links">
         <a href="#platform">Platform</a>
         <a href="#owners">For Owners</a>
+        <a href="#learning">Learning Studio</a>
         <a href="#pricing">Pricing</a>
         <a href="#dashboard">Dashboard</a>
         <a href="#early-access" class="nav-cta">Early Access</a>
       </div>
+      <label class="menu-toggle" for="navToggle" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#platform">Platform</a>
+      <a href="#owners">For Owners</a>
+      <a href="#learning">Learning Studio</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#early-access" class="mobile-menu-cta">Early Access</a>
     </div>
   </nav>
 
@@ -598,6 +766,7 @@
           <span class="signal-pill">Valuation + cap-rate scenarios</span>
           <span class="signal-pill">Expense benchmarking</span>
           <span class="signal-pill">OM generation</span>
+          <span class="signal-pill">Learning Studio</span>
         </div>
 
         <div class="insight-rail">
@@ -666,10 +835,10 @@
                   <div class="screen-section compact">
                     <div class="mini-title">Current rent roll</div>
                     <div class="table-card">
-                      <div class="table-head"><span>Unit</span><span>Beds</span><span>Rent</span><span>PF Rent</span></div>
-                      <div class="table-row"><span>1A</span><span>2</span><span>$2,650</span><span>$2,850</span></div>
-                      <div class="table-row"><span>2A</span><span>2</span><span>$2,700</span><span>$2,900</span></div>
-                      <div class="table-row"><span>3A</span><span>1</span><span>$2,250</span><span>$2,450</span></div>
+                      <div class="table-head"><span>Unit</span><span class="bed-bath-head">Bed / Bath</span><span>Rent</span><span>PF Rent</span></div>
+                      <div class="table-row"><span>1A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,650</span><span>$2,850</span></div>
+                      <div class="table-row"><span>2A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,700</span><span>$2,900</span></div>
+                      <div class="table-row"><span>3A</span><span class="bed-bath">1 <em>/</em> 1</span><span>$2,250</span><span>$2,450</span></div>
                     </div>
                   </div>
                 </div>
@@ -795,6 +964,42 @@
           <div class="module-title">Market Heatmaps</div>
           <div class="module-copy">Track owner intent, buyer activity, financing signals, and neighborhood-level performance to better understand demand and timing.</div>
           <div class="module-link">Explore heatmaps →</div>
+        </a>
+        <a href="learning.html" class="card module-card">
+          <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4M10 17h4M21 13h2"/></svg></div>
+          <div class="module-title">Learning Studio</div>
+          <div class="module-copy">Help owners understand the language behind valuation, rent rolls, cap rates, expenses, zoning, lender metrics, and value-add strategy.</div>
+          <div class="module-link">Open Learning Studio →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" id="learning">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Learning Studio</div>
+          <h2 class="section-title">Real estate language, strategy, and <span class="serif">clarity</span>.</h2>
+        </div>
+        <p class="section-copy">A built-in education layer for owners who want to better understand their asset, the valuation assumptions behind it, and the decisions that can increase value.</p>
+      </div>
+      <div class="learning-grid">
+        <a href="learning.html#dictionary" class="card learning-card">
+          <div class="step">01</div>
+          <h3>Dictionary</h3>
+          <p>Plain-English definitions for NOI, cap rate, GRM, FAR, DSCR, due diligence, rent roll, tax class, and other core investment property terms.</p>
+        </a>
+        <a href="learning.html#guides" class="card learning-card">
+          <div class="step">02</div>
+          <h3>Owner guides</h3>
+          <p>Short explanations of how buyers value properties, what lenders care about, how expenses impact value, and when it may make sense to hold, refinance, improve, or sell.</p>
+        </a>
+        <a href="learning.html#playbooks" class="card learning-card">
+          <div class="step">03</div>
+          <h3>Value-add playbooks</h3>
+          <p>Practical guidance for identifying inefficiencies, reviewing rents and expenses, improving NOI, preparing marketing materials, and understanding market timing.</p>
         </a>
       </div>
     </div>
@@ -935,13 +1140,13 @@
           <div class="kicker">Pricing</div>
           <h2 class="section-title">Start free. Upgrade when you need more <span class="serif">intelligence</span>.</h2>
         </div>
-        <p class="section-copy">Start with one property, then upgrade as you need more assets, deeper intelligence, and more execution support. Growth remains the best fit for most users.</p>
+        <p class="section-copy">Start with one property, then upgrade as you need more assets, deeper intelligence, Learning Studio access, and more execution support. Growth remains the best fit for most users.</p>
       </div>
       <div class="plan-grid">
-        <div class="card plan"><div class="plan-tier">Starter</div><h3>Free</h3><div class="plan-price">$0<span>/forever</span></div><p>Valuation Studio and core benchmark visibility for a single property.</p><div class="plan-note">Need one-off access? 24-hour a la carte access can unlock select premium tools when you need them.</div><div class="plan-btn">Get Started</div></div>
-        <div class="card plan"><div class="plan-tier">Starter+</div><h3>Starter</h3><div class="plan-price">$250<span>/mo</span></div><p>Single-property access with OM Studio and broader platform visibility.</p><div class="plan-btn">Choose Plan</div></div>
-        <div class="card plan featured"><div class="plan-badge">Most Popular</div><div class="plan-tier">Growth</div><h3>Growth</h3><div class="plan-price">$400<span>/mo</span></div><p>Up to 3 properties with access to BRIC’s core valuation, marketing, and intelligence tools.</p><div class="plan-btn">Choose Plan</div></div>
-        <div class="card plan"><div class="plan-tier">Professional</div><h3>Pro</h3><div class="plan-price">$1,000<span>/mo</span></div><p>Unlimited properties, white-label outputs, and deeper workflow and team access.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan"><div class="plan-tier">Starter</div><h3>Free</h3><div class="plan-price">$0<span>/forever</span></div><p>Valuation Studio, Learning Studio basics, and core benchmark visibility for a single property.</p><div class="plan-note">Need one-off access? 24-hour a la carte access can unlock select premium tools when you need them.</div><div class="plan-btn">Get Started</div></div>
+        <div class="card plan"><div class="plan-tier">Starter+</div><h3>Starter</h3><div class="plan-price">$250<span>/mo</span></div><p>Single-property access with OM Studio, Learning Studio guides, and broader platform visibility.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan featured"><div class="plan-badge">Most Popular</div><div class="plan-tier">Growth</div><h3>Growth</h3><div class="plan-price">$400<span>/mo</span></div><p>Up to 3 properties with access to BRIC’s core valuation, marketing, Learning Studio, and intelligence tools.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan"><div class="plan-tier">Professional</div><h3>Pro</h3><div class="plan-price">$1,000<span>/mo</span></div><p>Unlimited properties, white-label outputs, full Learning Studio access, and deeper workflow and team access.</p><div class="plan-btn">Choose Plan</div></div>
       </div>
     </div>
   </section>
@@ -972,12 +1177,14 @@
             <li><a href="valuation.html">Valuation Studio</a></li>
             <li><a href="om-studio.html">OM Studio</a></li>
             <li><a href="heatmap.html">Market Heatmaps</a></li>
+            <li><a href="learning.html">Learning Studio</a></li>
           </ul>
         </div>
         <div>
           <h4>Company</h4>
           <ul>
             <li><a href="#owners">For Owners</a></li>
+            <li><a href="#learning">Learning Studio</a></li>
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#early-access">Early Access</a></li>
           </ul>
@@ -993,5 +1200,17 @@
       <div class="foot-bottom"><span>© 2025 BRIC Studios · All Rights Reserved</span><span>Owner-first property intelligence platform</span></div>
     </div>
   </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const navToggle = document.getElementById('navToggle');
+    document.querySelectorAll('.mobile-menu a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (navToggle) navToggle.checked = false;
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
