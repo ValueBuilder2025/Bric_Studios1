@@ -42,10 +42,16 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   background:#060807;border-right:1px solid var(--border);
   display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
 }
-.sb-header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
-.sb-logo{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.55rem}
-.sb-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;display:inline-block;box-shadow:none}
-.sb-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.4rem;margin-left:1rem}
+.sb-header{padding:1.35rem 1.15rem 1rem;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:var(--sans);font-weight:800;font-size:1.02rem;letter-spacing:-0.02em;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.75rem}
+.sb-brand-mark{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+.sb-brand-mark svg{width:100%;height:100%;display:block}
+.b-logo-bg{fill:#0b1510}
+.b-logo-main{fill:#f4f1e8}
+.b-logo-cut{fill:#143b25}
+.sb-wordmark{display:inline-flex;align-items:baseline;white-space:nowrap}
+.sb-dot{display:none}
+.sb-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.55rem;margin-left:3.25rem}
 
 .sb-section{padding:1rem 0.85rem;flex:1;overflow-y:auto}
 .sb-section::-webkit-scrollbar{width:3px}
@@ -376,6 +382,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ai-btn:hover{background:var(--gold-dim);border-color:var(--gold)}
 
 
+.ai-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem;margin:.15rem 0 .9rem;max-width:760px}
+.ai-metric{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.075);border-radius:4px;padding:.62rem .75rem}
+.ai-metric-k{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.34);margin-bottom:.18rem}
+.ai-metric-v{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--paper);line-height:1.1}
+.ai-btn.is-muted{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.42)}
+.ai-btn.is-muted:hover{color:var(--paper);border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.035)}
+@media(max-width:700px){.ai-metrics{grid-template-columns:1fr}}
+
 /* ═══ SAVED OMS ═══ */
 .om-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--border)}
 .om-card{background:var(--ink-2);padding:1.05rem 1.15rem;min-height:178px;display:flex;flex-direction:column;gap:.75rem}
@@ -462,8 +476,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 body{
   background:
     radial-gradient(circle at 8% 0%, rgba(214,200,180,.075), transparent 25%),
-    radial-gradient(circle at 92% 2%, rgba(0,184,74,.03), transparent 22%),
-    radial-gradient(circle at 65% 42%, rgba(0,184,74,.015), transparent 24%),
+    radial-gradient(circle at 92% 2%, rgba(0,184,74,.055), transparent 24%),
+    radial-gradient(circle at 65% 42%, rgba(0,184,74,.028), transparent 26%),
     linear-gradient(180deg,#0a0d0b 0%,#060807 100%);
 }
 .sidebar{background:linear-gradient(180deg,#070a08 0%,#050706 100%)}
@@ -526,6 +540,10 @@ body{
 <style>
 .network-link-card{display:block;text-decoration:none;color:inherit}
 .network-link-card *{pointer-events:none}
+
+/* Logo sync with index */
+.sb-dot{display:none!important}
+
 </style>
 
 </head>
@@ -536,7 +554,7 @@ body{
   <!-- ═══ SIDEBAR ═══ -->
   <aside class="sidebar">
     <div class="sb-header">
-      <a href="index.html" class="sb-logo"><span class="sb-dot"></span>BRIC Studios</a>
+      <a href="index.html" class="sb-logo"><span class="sb-brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="sb-wordmark">BRIC Studios</span></a>
       <div class="sb-tag">Owner Dashboard</div>
     </div>
 
@@ -599,18 +617,19 @@ body{
       </div>
 
       <!-- AI INSIGHT BANNER -->
-      <div class="ai-banner fade-up">
+      <div class="ai-banner fade-up" id="insightBanner">
         <div class="ai-icon pulse"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5L18.8 12.2L26 15L18.8 17.8L16 25L13.2 17.8L6 15L13.2 12.2Z"></path><path d="M24 5.5L25 8L27.5 9L25 10L24 12.5L23 10L20.5 9L23 8Z"></path></svg></div>
         <div class="ai-content">
-          <div class="ai-label">AI Market Insight · Updated 12m ago</div>
-          <div class="ai-text">
-            <b>142 Bedford Ave</b> is in a submarket with <b>+8.4% YoY rent growth</b>. Based on comparable sales, your property's estimated value has increased approximately <b>$280K</b> since your last valuation. Consider re-running your valuation or exploring refinancing options.
+          <div class="ai-label" id="insightLabel">Next Best Action</div>
+          <div class="ai-text" id="insightText">
+            Review your latest saved property and choose the next step: update the valuation, generate an OM, or check the submarket.
           </div>
+          <div class="ai-metrics" id="insightMetrics"></div>
           <div class="ai-actions">
-            <a href="valuation.html" class="ai-btn">→ Re-run Valuation</a>
-            <a href="heatmap.html" class="ai-btn">→ View Submarket Heatmap</a>
-            <a href="learning.html#guides" class="ai-btn">→ Learn What This Means</a>
-            <a class="ai-btn" style="border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4)">Dismiss</a>
+            <a href="valuation.html" class="ai-btn" id="insightPrimary">→ Run Valuation</a>
+            <a href="om-studio.html" class="ai-btn" id="insightSecondary">→ Generate OM</a>
+            <a href="learning.html#guides" class="ai-btn" id="insightLearn">→ Learn What This Means</a>
+            <button type="button" class="ai-btn is-muted" id="insightDismiss">Dismiss</button>
           </div>
         </div>
       </div>
@@ -1330,9 +1349,106 @@ function deleteSavedOm(omId){
   renderSavedProperties();
 }
 
+function getTodayDismissKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function setInsightButton(id, label, href){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = label;
+  el.href = href;
+}
+
+function renderInsightBanner(){
+  const banner = document.getElementById('insightBanner');
+  if(!banner) return;
+
+  const dismissed = localStorage.getItem('bricDashboardInsightDismissed');
+  if(dismissed === getTodayDismissKey()){
+    banner.style.display = 'none';
+    return;
+  }
+
+  const ws = getWorkspace();
+  const properties = (ws.properties || []).slice().sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  const property = properties[0] || null;
+  const label = document.getElementById('insightLabel');
+  const textEl = document.getElementById('insightText');
+  const metrics = document.getElementById('insightMetrics');
+
+  function renderMetrics(items){
+    if(!metrics) return;
+    metrics.innerHTML = items.map(item => `
+      <div class="ai-metric">
+        <div class="ai-metric-k">${safeText(item.k)}</div>
+        <div class="ai-metric-v">${safeText(item.v)}</div>
+      </div>
+    `).join('');
+  }
+
+  if(!property){
+    if(label) label.textContent = 'Next Best Action · Start Here';
+    if(textEl) textEl.innerHTML = '<b>No properties saved yet.</b> Start with Valuation Studio so the dashboard can track value, NOI, cap rate, expenses, and saved OM drafts in one place.';
+    renderMetrics([
+      {k:'Step 1', v:'Add Property'},
+      {k:'Then', v:'Run Valuation'},
+      {k:'Output', v:'Dashboard + OM'}
+    ]);
+    setInsightButton('insightPrimary','→ Add First Property','valuation.html');
+    setInsightButton('insightSecondary','→ Open Learning Studio','learning.html');
+    setInsightButton('insightLearn','→ Learn Valuation Basics','learning.html#guides');
+    return;
+  }
+
+  const valuation = getPropertyLatestValuation(ws, property) || {};
+  const om = getPropertyLatestOM(ws, property);
+  const address = property.address || 'Saved Property';
+  const propertyId = property.id || '';
+  const valuationId = property.lastValuationId || valuation.id || '';
+  const value = Number(property.lastValuationValue || valuation.baseVal || 0);
+  const noi = Number(property.lastNoi || valuation.noi || 0);
+  const capRaw = Number(valuation.capRate || property.capRate || 0);
+  const cap = capRaw ? (capRaw > 1 ? capRaw : capRaw * 100) : 0;
+  const submarket = property.submarket || valuation.submarket || property.neighborhood || valuation.neighborhood || 'your submarket';
+  const units = Number(property.units || valuation.units || 0);
+
+  const valuationUrl = 'valuation.html?propertyId=' + encodeURIComponent(propertyId) + (valuationId ? '&valuationId=' + encodeURIComponent(valuationId) : '');
+  const omUrl = 'om-studio.html?propertyId=' + encodeURIComponent(propertyId) + (om && om.id ? '&omId=' + encodeURIComponent(om.id) : '');
+
+  if(label) label.textContent = 'Next Best Action · Portfolio Review';
+
+  if(!om){
+    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> has a saved valuation, but no saved OM draft yet. The most useful next step is to turn the valuation inputs into a simple owner/buyer-facing OM so the property is ready for refinancing, pricing conversations, or a sale process.`;
+    setInsightButton('insightPrimary','→ Open Valuation',valuationUrl);
+    setInsightButton('insightSecondary','→ Generate OM',omUrl);
+  }else{
+    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> has both a saved valuation and OM draft. Review the assumptions before using it externally, then check the ${safeText(submarket)} market signals to see whether pricing, rent growth, or buyer activity supports the next move.`;
+    setInsightButton('insightPrimary','→ Review Valuation',valuationUrl);
+    setInsightButton('insightSecondary','→ Open Saved OM',omUrl);
+  }
+
+  setInsightButton('insightLearn','→ Learn The Metrics','learning.html#dictionary');
+  renderMetrics([
+    {k:'Value', v:value ? fmtDashMoney(value) : 'Needs Update'},
+    {k:'NOI', v:noi ? fmtDashMoney(noi) : 'Needs NOI'},
+    {k:'Cap / Units', v:(cap ? fmtDashPct(cap) : '—') + (units ? ' · '+units+' units' : '')}
+  ]);
+}
+
+function dismissInsightBanner(){
+  localStorage.setItem('bricDashboardInsightDismissed', getTodayDismissKey());
+  const banner = document.getElementById('insightBanner');
+  if(banner) banner.style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   renderSavedProperties();
   renderSavedOms();
+  renderInsightBanner();
+  const insightDismiss = document.getElementById('insightDismiss');
+  if(insightDismiss) insightDismiss.addEventListener('click', dismissInsightBanner);
 });
 </script>
 </body>
