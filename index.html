@@ -721,13 +721,153 @@
   }
 }
 
+
+/* v18 clean BRIC bridge logo */
+.brand-mark-clean{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  overflow:hidden;
+  box-shadow:0 12px 24px rgba(0,184,74,.16);
+}
+
+.brand-mark-clean svg,
+.foot-mark-clean svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.logo-bg{
+  fill:#0e1713;
+}
+
+.logo-stone{
+  fill:#c9baa0;
+}
+
+.brand-mark-clean .logo-stone,
+.foot-mark-clean .logo-stone{
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.16));
+}
+
+.foot-brand-lockup{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.foot-mark-clean{
+  width:34px;
+  height:34px;
+  border-radius:11px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  overflow:hidden;
+}
+
+@media(max-width:720px){
+  .brand-mark-clean{
+    width:38px;
+    height:38px;
+    border-radius:13px;
+  }
+}
+
+
+/* Strong B logo update */
+.brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+.brand-mark-b svg,.foot-mark-b svg{width:100%;height:100%;display:block}.b-logo-bg{fill:#0b1510}.b-logo-main{fill:#f4f1e8}.b-logo-cut{fill:#143b25}.foot-brand-lockup{display:flex;align-items:center;gap:12px}.foot-mark-b{width:34px;height:34px;display:inline-flex;border-radius:12px;overflow:hidden;flex:0 0 auto}@media(max-width:720px){.brand-mark-b{width:38px;height:38px;border-radius:14px}}
+
+/* v19 Market Intelligence: cleaner Value Trend chart */
+.value-trend-card{
+  height:176px;
+  padding:12px;
+  background:#f7f8f2;
+}
+
+.value-chart-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 2px 6px;
+  font-size:.68rem;
+  font-weight:800;
+  color:#101713;
+}
+
+.value-chart-top small{
+  font-family:var(--mono);
+  font-size:.48rem;
+  letter-spacing:.04em;
+  color:#98a197;
+  text-transform:uppercase;
+}
+
+.value-trend-chart{
+  position:absolute;
+  inset:34px 10px 8px 10px;
+  width:calc(100% - 20px);
+  height:calc(100% - 42px);
+}
+
+.value-trend-chart .area{
+  fill:url(#marketAreaFill);
+}
+
+.value-trend-chart .line-main{
+  fill:none;
+  stroke:#0aa84a;
+  stroke-width:2.3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:none;
+}
+
+.value-trend-chart .point-small{
+  fill:#101713;
+  stroke:#f7f8f2;
+  stroke-width:2.2;
+}
+
+.value-trend-chart .point-small.active{
+  fill:#00b84a;
+  stroke:#dff7e6;
+  stroke-width:3.2;
+}
+
+.value-trend-chart .axis-label{
+  font-family:var(--mono);
+  font-size:6.3px;
+  letter-spacing:.02em;
+  fill:#879188;
+  text-transform:none;
+}
+
+.value-trend-chart .y-label{
+  fill:#59645d;
+}
+
+.value-trend-chart .gridline{
+  stroke:rgba(8,16,12,.08);
+  stroke-width:1;
+}
+
 </style>
 </head>
 <body>
   <nav>
     <input class="nav-toggle-input" type="checkbox" id="navToggle" aria-hidden="true" />
     <div class="nav-inner">
-      <a href="index.html" class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="12" width="10" height="40" rx="4" fill="#EAF7EE"/><rect x="28" y="12" width="10" height="40" rx="4" fill="#D7F2DF"/><path d="M42 12h8c4.418 0 8 3.582 8 8 0 4.144-3.149 7.552-7.181 7.962C55.557 28.956 59 32.819 59 37.5 59 45.508 52.508 52 44.5 52H42V12Zm8 8c0-1.105-.895-2-2-2h-2v8h2c2.209 0 4-1.791 4-4v-2Zm1 18c0-2.761-2.239-5-5-5h-0.0V46h1.5c1.933 0 3.5-1.567 3.5-3.5V38Z" fill="#08100B"/></svg></span><span class="brand-wordmark">BRIC Studios</span></a>
+      <a href="index.html" class="brand"><span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="brand-wordmark">BRIC Studios</span></a>
       <div class="nav-links">
         <a href="#platform">Platform</a>
         <a href="#owners">For Owners</a>
@@ -849,26 +989,49 @@
                       <strong>Market intelligence</strong>
                       <span>LIVE TREND</span>
                     </div>
-                    <div class="mini-heatmap" aria-label="Robinhood-inspired market trend chart">
-                      <svg class="market-intel-chart" viewBox="0 0 320 112" preserveAspectRatio="none">
-                        <line class="gridline" x1="0" y1="86" x2="320" y2="86"></line>
-                        <line class="gridline" x1="0" y1="56" x2="320" y2="56"></line>
-                        <line class="gridline" x1="0" y1="26" x2="320" y2="26"></line>
+                    <div class="mini-heatmap value-trend-card" aria-label="Market intelligence value trend chart">
+                      <div class="value-chart-top">
+                        <span>Value trend</span>
+                        <small>Last 12 months</small>
+                      </div>
+                      <svg class="market-intel-chart value-trend-chart" viewBox="0 0 360 150" preserveAspectRatio="none">
                         <defs>
                           <linearGradient id="marketAreaFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#1ad760" stop-opacity=".24"/>
-                            <stop offset="100%" stop-color="#1ad760" stop-opacity=".03"/>
+                            <stop offset="0%" stop-color="#1ad760" stop-opacity=".18"/>
+                            <stop offset="100%" stop-color="#1ad760" stop-opacity=".02"/>
                           </linearGradient>
                         </defs>
-                        <path class="area" d="M8,88 L8,84 C38,82 66,78 96,71 C126,64 154,53 183,45 C212,37 238,33 264,28 C286,24 302,21 312,19 L312,88 Z"></path>
-                        <path class="line-soft" d="M8,82 C38,79 66,75 96,68 C126,61 154,52 183,43 C212,35 238,30 264,26 C286,23 302,21 312,20"></path>
-                        <path class="line-main" d="M8,84 C38,82 66,78 96,71 C126,64 154,53 183,45 C212,37 238,33 264,28 C286,24 302,21 312,19"></path>
-                        <circle class="point" cx="264" cy="28" r="5.5"></circle>
-                        <text class="axis-label" x="6" y="104">30D</text>
-                        <text class="axis-label" x="144" y="104">MIDPOINT</text>
-                        <text class="axis-label" x="285" y="104">NOW</text>
+
+                        <line class="gridline" x1="44" y1="30" x2="344" y2="30"></line>
+                        <line class="gridline" x1="44" y1="62" x2="344" y2="62"></line>
+                        <line class="gridline" x1="44" y1="94" x2="344" y2="94"></line>
+                        <line class="gridline" x1="44" y1="126" x2="344" y2="126"></line>
+
+                        <text class="axis-label y-label" x="4" y="34">$140M</text>
+                        <text class="axis-label y-label" x="4" y="66">$120M</text>
+                        <text class="axis-label y-label" x="4" y="98">$100M</text>
+                        <text class="axis-label y-label" x="6" y="130">$80M</text>
+
+                        <path class="area" d="M54,118 L54,105 L84,88 L114,92 L144,79 L174,68 L204,54 L234,57 L264,39 L294,34 L324,26 L324,126 L54,126 Z"></path>
+                        <path class="line-main" d="M54,105 L84,88 L114,92 L144,79 L174,68 L204,54 L234,57 L264,39 L294,34 L324,26"></path>
+
+                        <circle class="point-small" cx="54" cy="105" r="3.2"></circle>
+                        <circle class="point-small" cx="84" cy="88" r="3.2"></circle>
+                        <circle class="point-small" cx="114" cy="92" r="3.2"></circle>
+                        <circle class="point-small" cx="144" cy="79" r="3.2"></circle>
+                        <circle class="point-small" cx="174" cy="68" r="3.2"></circle>
+                        <circle class="point-small" cx="204" cy="54" r="3.2"></circle>
+                        <circle class="point-small" cx="234" cy="57" r="3.2"></circle>
+                        <circle class="point-small active" cx="264" cy="39" r="4.5"></circle>
+                        <circle class="point-small" cx="294" cy="34" r="3.2"></circle>
+                        <circle class="point-small" cx="324" cy="26" r="3.2"></circle>
+
+                        <text class="axis-label x-label" x="48" y="145">May ’23</text>
+                        <text class="axis-label x-label" x="124" y="145">Aug ’23</text>
+                        <text class="axis-label x-label" x="198" y="145">Nov ’23</text>
+                        <text class="axis-label x-label" x="266" y="145">Feb ’24</text>
+                        <text class="axis-label x-label" x="314" y="145">May ’24</text>
                       </svg>
-                      <div class="market-intel-chip"><span class="dot"></span>Bushwick demand pulse ↑</div>
                     </div>
                     <div class="heatmap-stats">
                       <div class="heatmap-stat">
@@ -894,7 +1057,7 @@
                     <div class="feed">
                       <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Water expense is above market benchmark</span><span class="feed-time">NOW</span></div>
                       <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">OM draft ready from valuation inputs</span><span class="feed-time">6M</span></div>
-                      <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Buyer activity increased in submarket</span><span class="feed-time">1H</span></div>
+                      <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Market intent increased in submarket</span><span class="feed-time">1H</span></div>
                     </div>
                   </div>
                 </div>
@@ -931,7 +1094,7 @@
         <div class="card benefit-card">
           <div class="benefit-icon"><svg viewBox="0 0 32 32"><path d="M6 10l7-3 6 3 7-3v15l-7 3-6-3-7 3zM13 7v15M19 10v15"/></svg></div>
           <h3>Move with timing</h3>
-          <p>Track market signals, buyer activity, and neighborhood trends so you can hold, refinance, improve, or sell with more confidence.</p>
+          <p>Track market intent, buyer demand, and neighborhood trends so you can hold, refinance, improve, or sell with more confidence.</p>
         </div>
       </div>
     </div>
@@ -961,9 +1124,9 @@
         </a>
         <a href="heatmap.html" class="card module-card">
           <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M6 10l7-3 6 3 7-3v15l-7 3-6-3-7 3zM13 7v15M19 10v15"/></svg></div>
-          <div class="module-title">Market Heatmaps</div>
-          <div class="module-copy">Track owner intent, buyer activity, financing signals, and neighborhood-level performance to better understand demand and timing.</div>
-          <div class="module-link">Explore heatmaps →</div>
+          <div class="module-title">Market Intent Heatmaps</div>
+          <div class="module-copy">Track market intent, buyer activity, financing signals, and neighborhood-level performance to better understand demand and timing.</div>
+          <div class="module-link">Explore Market Intent →</div>
         </a>
         <a href="learning.html" class="card module-card">
           <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4M10 17h4M21 13h2"/></svg></div>
@@ -1167,7 +1330,7 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="foot-brand">BRIC Studios</div>
+          <div class="foot-brand foot-brand-lockup"><span class="foot-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span> BRIC Studios</div>
           <div class="foot-copy">Building Research & Investment Company. An owner-first property intelligence platform built for investment properties, including multifamily and mixed-use assets.</div>
         </div>
         <div>
@@ -1176,7 +1339,7 @@
             <li><a href="dashboard.html">Dashboard</a></li>
             <li><a href="valuation.html">Valuation Studio</a></li>
             <li><a href="om-studio.html">OM Studio</a></li>
-            <li><a href="heatmap.html">Market Heatmaps</a></li>
+            <li><a href="heatmap.html">Market Intent Heatmaps</a></li>
             <li><a href="learning.html">Learning Studio</a></li>
           </ul>
         </div>
