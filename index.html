@@ -892,6 +892,90 @@
   stroke-width:1;
 }
 
+
+/* v25 hero insight cards cleanup */
+.hero-copy .insight-rail{
+  max-width:790px;
+  margin-top:30px;
+}
+.insight-rail{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.insight-card{
+  min-height:132px;
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  text-decoration:none;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));
+  border:1px solid rgba(255,255,255,.095);
+  border-radius:24px;
+  box-shadow:none;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.insight-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 18% 20%,rgba(0,184,74,.16),transparent 40%),
+    linear-gradient(90deg,rgba(0,184,74,.10),rgba(0,184,74,.025) 52%,transparent 88%);
+  opacity:0;
+  transition:opacity .2s ease;
+  pointer-events:none;
+}
+.insight-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(0,184,74,.22);
+  box-shadow:0 18px 44px rgba(0,0,0,.24);
+}
+.insight-card:hover::before{opacity:1;}
+.insight-card > *{position:relative;z-index:1;}
+.insight-card small{
+  font-size:.63rem;
+  letter-spacing:.12em;
+  margin-bottom:8px;
+  color:rgba(244,243,238,.44);
+}
+.insight-card strong{
+  font-size:1.08rem;
+  line-height:1.15;
+  margin-bottom:6px;
+}
+.insight-card span{
+  font-size:.78rem;
+  line-height:1.4;
+  color:rgba(244,243,238,.66);
+  margin-top:0;
+}
+.insight-card em{
+  margin-top:auto;
+  padding-top:14px;
+  font-style:normal;
+  color:var(--green-tint);
+  font-size:.78rem;
+  font-weight:800;
+}
+.insight-card.warm{
+  background:linear-gradient(180deg,rgba(214,200,180,.09),rgba(255,255,255,.02));
+  border-color:rgba(214,200,180,.18);
+}
+.insight-card.warm:hover{
+  border-color:rgba(214,200,180,.34);
+  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(214,200,180,.04);
+}
+.insight-card.warm em{color:var(--warm);}
+@media(max-width:720px){
+  .hero-copy .insight-rail{margin-top:24px;}
+  .insight-rail{grid-template-columns:1fr;}
+  .insight-card{min-height:0;padding:18px;}
+}
+
 </style>
 </head>
 <body>
@@ -940,27 +1024,31 @@
           <span class="signal-pill">Learning Studio</span>
         </div>
 
-        <div class="insight-rail">
-          <div class="insight-card warm">
+        <div class="insight-rail" aria-label="Quick platform actions">
+          <a class="insight-card warm" href="valuation.html">
             <small>Value creation</small>
-            <strong>+$148K</strong>
-            <span>Estimated upside from NOI lift</span>
-          </div>
-          <div class="insight-card">
+            <strong>+$148K NOI upside</strong>
+            <span>Model cap-rate, rent, and expense scenarios.</span>
+            <em>Open Valuation Studio →</em>
+          </a>
+          <a class="insight-card" href="dashboard.html">
             <small>Portfolio intelligence</small>
             <strong>3 saved assets</strong>
-            <span>Valuation, OM, and buyer signals synced</span>
-          </div>
-          <div class="insight-card">
-            <small>Expense flag</small>
-            <strong>Water + sewer</strong>
-            <span>Running above typical market range</span>
-          </div>
-          <div class="insight-card">
+            <span>Track saved valuations, OMs, and signals.</span>
+            <em>View Dashboard →</em>
+          </a>
+          <a class="insight-card" href="heatmap.html">
+            <small>Market signal</small>
+            <strong>Buyer intent +18%</strong>
+            <span>Read demand, pricing, and timing by submarket.</span>
+            <em>View Market Intent →</em>
+          </a>
+          <a class="insight-card" href="om-studio.html">
             <small>Marketing ready</small>
             <strong>OM draft ready</strong>
-            <span>Build marketing materials directly from valuation inputs</span>
-          </div>
+            <span>Turn valuation inputs into cleaner materials.</span>
+            <em>Open OM Studio →</em>
+          </a>
         </div>
       </div>
 
