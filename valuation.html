@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BRIC Studios — Valuation Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -126,39 +126,265 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
   .toggle-row{align-items:flex-start;gap:.75rem}
   .toggle{margin-top:.2rem}
 }
+
+/* BRIC index / Learning Studio aesthetic refresh */
+:root{--bg:#060807;--bg-2:#0b100d;--panel:#101713;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.12);--text:#f4f3ee;--muted:rgba(244,243,238,.70);--muted-2:rgba(244,243,238,.48);--green:#00b84a;--green-soft:rgba(0,200,5,.13);--green-tint:#8fd9a0;--warm:#d6c8b4;--warm-soft:rgba(214,200,180,.14);--shadow:0 26px 90px rgba(0,0,0,.38);--radius-xl:36px;--radius-lg:30px;--radius-md:22px;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--gold:var(--green);--gold-light:var(--green-tint);--gold-dim:var(--green-soft);--border-gold:rgba(0,184,74,.28)}
+body{font-family:var(--sans);color:var(--text);background:radial-gradient(circle at top left,rgba(214,200,180,.06),transparent 22%),radial-gradient(circle at top right,rgba(0,200,5,.06),transparent 18%),linear-gradient(180deg,#0a0d0b 0%,#060807 100%)!important}body::after{opacity:.18}
+nav{padding:16px 28px!important;background:rgba(6,8,7,.84)!important;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)!important;gap:22px}.bric-logo-lockup{display:flex!important;align-items:center!important;gap:12px!important;font-family:var(--sans)!important;font-weight:800!important;font-size:1.18rem!important;letter-spacing:-.02em!important}.brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}.brand-mark-b svg{width:100%;height:100%;display:block}.b-logo-bg{fill:#0b1510}.b-logo-main{fill:#f4f1e8}.b-logo-cut{fill:#143b25}.brand-wordmark{display:inline-flex;align-items:baseline;gap:2px}.nav-badge{font-family:var(--mono)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.26)!important;background:rgba(0,184,74,.06);border-radius:999px!important;padding:8px 12px!important}.nav-right{gap:10px!important}.nav-back{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;color:var(--muted)!important;transition:.2s ease;border:1px solid transparent;font-weight:700}.nav-back:before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 18% 50%,rgba(0,184,74,.14),transparent 38%),linear-gradient(90deg,rgba(0,184,74,.10),rgba(0,184,74,.02) 55%,transparent 90%);opacity:0;transition:opacity .2s ease;pointer-events:none}.nav-back:hover{color:var(--text)!important;border-color:rgba(0,184,74,.14);transform:translateY(-1px)}.nav-back:hover:before{opacity:1}
+.tier-bar{background:rgba(255,255,255,.018)!important;border-bottom:1px solid var(--line)!important;padding:.85rem 2.25rem!important}.tier-label,.mini-copy{color:var(--muted-2)!important}.tier-wrap{background:rgba(255,255,255,.035)!important;border:1px solid var(--line)!important}.tier-btn{color:var(--muted)!important}.tier-btn.active{background:linear-gradient(180deg,#f7f4ed,#ddd1be)!important;color:#09100b!important}.app{grid-template-columns:minmax(540px,var(--panel-left-width)) 10px minmax(0,1fr);min-height:calc(100vh - 112px)}.panel-left{background:rgba(6,8,7,.18);border-right:1px solid var(--line)!important}.panel-resizer{background:rgba(255,255,255,.02)!important;border-color:var(--line)!important}.panel-resizer:hover,.panel-resizer.dragging{background:rgba(0,184,74,.12)!important}.panel-resizer:before{background:rgba(0,184,74,.55)!important}
+.panel-header{padding:2.2rem 2.1rem 1.4rem!important;border-bottom:1px solid var(--line)!important;background:radial-gradient(circle at top left,rgba(0,184,74,.12),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.012))}.panel-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--muted)!important;font-size:.72rem!important;font-weight:800;letter-spacing:.11em!important}.eyebrow-dot{width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block}.panel-title{font-family:var(--sans)!important;font-size:clamp(2.1rem,4.3vw,4rem)!important;line-height:.95!important;letter-spacing:-.045em!important;font-weight:800!important;color:var(--text)!important;margin-top:18px}.panel-sub{color:var(--muted)!important;font-size:1rem!important;line-height:1.62!important;font-weight:500;max-width:620px;margin-top:16px!important}.form-section{padding:1.45rem 2.1rem!important;border-bottom:1px solid rgba(255,255,255,.055)!important}.form-section-title{color:var(--green-tint)!important;letter-spacing:.14em!important}.form-section-title:after{background:var(--line)!important}label{color:var(--muted)!important;font-weight:700!important}input[type=text],input[type=number],input[type=date],input[type=file],select{background:rgba(255,255,255,.035)!important;border:1px solid var(--line-strong)!important;color:var(--text)!important;border-radius:16px!important;min-height:46px;font-weight:600}input:focus,select:focus{border-color:rgba(0,184,74,.46)!important;background:rgba(0,184,74,.045)!important;box-shadow:0 0 0 4px rgba(0,184,74,.08)}select option{background:#0b100d;color:#f4f3ee}.input-prefix,.input-suffix{color:var(--muted-2)!important}.toggle-main{color:var(--text)!important}.toggle-sub{color:var(--muted-2)!important}.pill-badge{background:rgba(0,184,74,.12)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.22)!important}.toggle.on{background:var(--green)!important}
+.expense-block,.upload-box{background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.014))!important;border:1px solid var(--line)!important;border-radius:18px!important}.expense-block.good{border-color:rgba(0,184,74,.24)!important;background:rgba(0,184,74,.04)!important}.expense-block.over{border-color:rgba(214,200,180,.26)!important;background:rgba(214,200,180,.055)!important}.expense-total-box,.rr-summary{border-radius:18px!important;border:1px solid rgba(0,184,74,.16)!important;background:rgba(0,184,74,.07)!important}.expense-total-value,.rr-summary-val{color:var(--green-tint)!important}.add-btn{border-radius:16px!important;border:1px dashed rgba(0,184,74,.22)!important;color:var(--green-tint)!important}.add-btn:hover{background:rgba(0,184,74,.08)!important;border-color:rgba(0,184,74,.38)!important}.calc-btn{height:54px;border-radius:999px!important;background:linear-gradient(180deg,#f7f4ed,#ddd1be)!important;color:#09100b!important;box-shadow:0 8px 24px rgba(214,200,180,.16);letter-spacing:.08em}.action-row .calc-btn:nth-child(2){background:rgba(255,255,255,.035)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.28)!important;box-shadow:none}.action-row .calc-btn:nth-child(2):hover{background:rgba(0,184,74,.08)!important}.slider-val{background:rgba(0,184,74,.12)!important;color:var(--green-tint)!important;border-color:rgba(0,184,74,.24)!important}input[type=range]::-webkit-slider-thumb{background:var(--green)!important;box-shadow:0 0 0 4px rgba(0,184,74,.16)!important}#capNote{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))!important;border:1px solid var(--line)!important;border-radius:18px!important;color:var(--muted)!important}
+.panel-right{padding:2rem!important;background:radial-gradient(circle at top right,rgba(0,184,74,.06),transparent 28%),radial-gradient(circle at bottom left,rgba(214,200,180,.045),transparent 24%)}.valuation-hero-card{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));border:1px solid var(--line);border-radius:32px;padding:30px;box-shadow:var(--shadow)}.valuation-hero-card:before{content:"";position:absolute;right:-130px;top:-130px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(0,184,74,.16),transparent 68%);filter:blur(12px);pointer-events:none}.valuation-hero-card>*{position:relative;z-index:1}.hero-kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green-tint);font-weight:700;margin-bottom:14px}.valuation-hero-card h1{font-family:var(--sans);font-size:clamp(2.7rem,5vw,5.4rem);line-height:.94;letter-spacing:-.045em;font-weight:800;max-width:830px}.valuation-hero-card h1 span{font-family:var(--serif);font-weight:600;font-style:italic;color:var(--warm)}.valuation-hero-card p{color:var(--muted);max-width:680px;line-height:1.62;margin-top:18px;font-size:1.02rem}.hero-pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.hero-pill-row span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:.77rem;font-weight:800;color:var(--muted)}.empty-state{opacity:1!important;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);margin-top:0}.empty-title{font-family:var(--sans)!important;font-weight:800;letter-spacing:-.03em;color:var(--text)}.empty-sub{color:var(--muted)!important}
+.results{gap:1.4rem!important}.result-header,.value-range-card,.expense-comparison{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018))!important;border:1px solid var(--line)!important;border-radius:30px!important;box-shadow:var(--shadow)}.result-header{padding:1.3rem 1.5rem}.result-address{font-family:var(--sans)!important;font-size:1.72rem!important;letter-spacing:-.035em;font-weight:800!important}.result-meta,.result-timestamp,.scenarios-title,.breakdown-title{color:var(--muted-2)!important}.value-range-card{position:relative;overflow:hidden}.value-range-card:before{content:"";position:absolute;right:-90px;top:-90px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(0,184,74,.15),transparent 68%);filter:blur(10px)}.value-range-card>*{position:relative;z-index:1}.vr-label{color:var(--green-tint)!important}.vr-val{color:var(--green-tint)!important;font-family:var(--sans)!important;font-size:clamp(2.6rem,5.3vw,5.2rem)!important;letter-spacing:-.055em}.vr-sub{color:var(--muted)!important}.vr-cap strong{color:var(--warm)!important}.kpi-grid{border:1px solid var(--line)!important;border-radius:24px!important;overflow:hidden;background:var(--line)!important}.kpi-card{background:rgba(255,255,255,.026)!important}.kpi-label{color:var(--muted-2)!important}.kpi-val{font-family:var(--sans)!important;font-weight:800!important}.positive{color:var(--green-tint)!important}.warning{color:var(--warm)!important}.breakdown-total-val{color:var(--green-tint)!important}.disclaimer{color:var(--muted-2)!important}.pdf-report-btn{margin-top:1rem;height:50px;border-radius:999px;background:rgba(255,255,255,.035);border:1px solid rgba(0,184,74,.28);color:var(--green-tint);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.pdf-report-btn:hover{background:rgba(0,184,74,.08);color:var(--text);transform:translateY(-1px)}
+@media(max-width:900px){nav{padding:14px 16px!important}.nav-badge{width:auto!important;order:initial!important}.app{grid-template-columns:1fr}.panel-right{padding:1rem!important}.valuation-hero-card{padding:22px;border-radius:26px}.valuation-hero-card h1{font-size:3.1rem}}@media(max-width:620px){.nav-right{width:100%;gap:8px}.nav-back{padding:8px 10px;font-size:.76rem}.brand-mark-b{width:38px;height:38px;border-radius:14px}.bric-logo-lockup{font-size:1.05rem!important}.panel-header{padding:1.5rem .95rem 1.1rem!important}.panel-title{font-size:2.45rem!important}.panel-sub{font-size:.92rem!important}.valuation-hero-card h1{font-size:2.55rem}.hero-pill-row{display:grid;grid-template-columns:1fr}}
+
+
+/* Growth Review advisor panel */
+.growth-review-section{
+  border-bottom:1px solid rgba(255,255,255,.055) !important;
+}
+.growth-review-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(214,200,180,.18);
+  border-radius:26px;
+  padding:24px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(214,200,180,.16), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(0,184,74,.10), transparent 32%),
+    linear-gradient(180deg,rgba(255,255,255,.042),rgba(255,255,255,.018));
+  box-shadow:0 22px 70px rgba(0,0,0,.24);
+}
+.growth-review-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg, rgba(214,200,180,.10), rgba(0,184,74,.055), transparent 88%);
+  opacity:.72;
+  pointer-events:none;
+}
+.growth-review-card > *{
+  position:relative;
+  z-index:1;
+}
+.growth-review-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--mono);
+  font-size:.62rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--warm);
+  font-weight:700;
+  margin-bottom:12px;
+}
+.growth-review-kicker::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--warm);
+  box-shadow:0 0 0 5px rgba(214,200,180,.10);
+}
+.growth-review-card h3{
+  font-family:var(--sans);
+  font-size:1.9rem;
+  line-height:1;
+  letter-spacing:-.035em;
+  margin-bottom:10px;
+  color:var(--text);
+}
+.growth-review-card p{
+  color:var(--muted);
+  line-height:1.58;
+  font-size:.92rem;
+  max-width:680px;
+}
+.growth-review-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:18px;
+}
+.growth-review-item{
+  border:1px solid rgba(255,255,255,.075);
+  background:rgba(255,255,255,.032);
+  border-radius:18px;
+  padding:14px;
+}
+.growth-review-item strong{
+  display:block;
+  color:var(--text);
+  font-size:.88rem;
+  letter-spacing:-.01em;
+  margin-bottom:5px;
+}
+.growth-review-item span{
+  display:block;
+  color:var(--muted);
+  font-size:.76rem;
+  line-height:1.45;
+}
+.growth-review-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.growth-review-primary,
+.growth-review-secondary{
+  min-height:46px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 16px;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:.8rem;
+  text-decoration:none;
+  cursor:pointer;
+}
+.growth-review-primary{
+  border:1px solid rgba(255,226,160,.72);
+  background:linear-gradient(135deg,#fff0bd,#e4b854 52%,#b9872d);
+  color:#07100b;
+  box-shadow:0 14px 34px rgba(217,167,66,.20);
+}
+.growth-review-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 18px 42px rgba(217,167,66,.26),0 0 0 3px rgba(217,167,66,.12);
+}
+.growth-review-secondary{
+  border:1px solid rgba(214,200,180,.22);
+  background:rgba(214,200,180,.07);
+  color:var(--warm);
+}
+.growth-review-secondary:hover{
+  background:rgba(214,200,180,.12);
+}
+@media(max-width:620px){
+  .growth-review-card{
+    padding:18px;
+    border-radius:22px;
+  }
+  .growth-review-card h3{
+    font-size:1.55rem;
+  }
+  .growth-review-grid{
+    grid-template-columns:1fr;
+  }
+  .growth-review-primary,
+  .growth-review-secondary{
+    width:100%;
+  }
+}
+
+
+/* Stronger Growth gold CTA treatment */
+.growth-review-primary{
+  background:linear-gradient(135deg,#fff3c4 0%,#e6bd56 48%,#b98224 100%) !important;
+  border:1px solid rgba(255,226,160,.98) !important;
+  color:#07100b !important;
+  box-shadow:
+    0 14px 34px rgba(217,167,66,.30),
+    0 0 0 3px rgba(217,167,66,.10),
+    inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+.growth-review-primary:hover{
+  background:linear-gradient(135deg,#fff6d3 0%,#efc867 48%,#c8912e 100%) !important;
+  border-color:rgba(255,235,185,1) !important;
+  transform:translateY(-2px);
+  box-shadow:
+    0 18px 44px rgba(217,167,66,.38),
+    0 0 0 4px rgba(217,167,66,.16),
+    inset 0 1px 0 rgba(255,255,255,.42) !important;
+}
+.growth-review-secondary{
+  border-color:rgba(217,167,66,.34) !important;
+  background:rgba(217,167,66,.08) !important;
+  color:#e8c76f !important;
+}
+.growth-review-secondary:hover{
+  border-color:rgba(217,167,66,.52) !important;
+  background:rgba(217,167,66,.13) !important;
+  color:#ffe3a1 !important;
+}
+.growth-review-kicker{
+  color:#e8c76f !important;
+}
+.growth-review-kicker::before{
+  background:#e6bd56 !important;
+  box-shadow:0 0 0 5px rgba(217,167,66,.14) !important;
+}
+.growth-review-card{
+  border-color:rgba(217,167,66,.28) !important;
+}
+
+
+/* === Valuation Studio Development / Growth Gate === */
+#tierGrowth{position:relative}
+#tierGrowth:hover{background:rgba(217,167,66,.15);color:#ffe3a1;box-shadow:0 0 0 1px rgba(217,167,66,.18) inset}
+#tierGrowth.active{background:linear-gradient(135deg,#fff3c4 0%,#e6bd56 48%,#b98224 100%) !important;color:#07100b !important;box-shadow:0 14px 34px rgba(217,167,66,.30),0 0 0 3px rgba(217,167,66,.10)}
+.development-panel{display:none;margin-top:1rem;padding:1rem;border:1px solid rgba(217,167,66,.28);background:radial-gradient(circle at 10% 0%, rgba(217,167,66,.16), transparent 34%),radial-gradient(circle at 100% 0%, rgba(0,184,74,.08), transparent 30%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018));border-radius:24px;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.development-panel.visible{display:block}.development-panel.locked{opacity:.72}.development-panel-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:.85rem}
+.development-kicker{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:#e8c76f;font-weight:800;margin-bottom:.35rem}
+.development-panel h3{font-size:1.18rem;line-height:1;letter-spacing:-.03em;margin:0 0 .35rem}.development-panel p{color:var(--muted);line-height:1.45;font-size:.78rem;margin:0}
+.development-growth-badge{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:#07100b;border:1px solid rgba(255,226,160,.98);background:linear-gradient(135deg,#fff3c4 0%,#e6bd56 48%,#b98224 100%);border-radius:999px;padding:.22rem .55rem;white-space:nowrap;box-shadow:0 10px 24px rgba(217,167,66,.18)}
+.development-lock-note{padding:.7rem .85rem;border-radius:16px;border:1px solid rgba(217,167,66,.22);background:rgba(217,167,66,.075);color:rgba(244,243,238,.68);font-size:.74rem;line-height:1.5;margin-bottom:.85rem}
+body.growth-mode .development-lock-note{display:none}body.growth-mode .development-panel{opacity:1;border-color:rgba(255,218,143,.42)}
+.development-zoning-description{min-height:96px}.zoning-auto-note{margin-top:.4rem;font-size:.7rem;color:rgba(244,243,238,.45);line-height:1.45}
+.development-calc-card{margin-top:.75rem;padding:.9rem 1rem;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+.development-calc-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(244,243,238,.44);margin-bottom:.18rem}
+.development-calc-value{font-family:var(--sans);font-weight:800;font-size:1.55rem;color:#ffe3a1;letter-spacing:-.04em}
+.development-calc-note{margin-top:.25rem;font-size:.72rem;color:rgba(244,243,238,.48);line-height:1.45}
+.development-result-card{background:linear-gradient(180deg,rgba(217,167,66,.12),rgba(255,255,255,.02)) !important;border-color:rgba(217,167,66,.28) !important}
+.development-result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-top:1rem}
+.development-result-stat{padding:1rem;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.075)}
+.development-result-stat span{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:rgba(244,243,238,.48);margin-bottom:.28rem}
+.development-result-stat strong{display:block;font-size:1.35rem;letter-spacing:-.035em;color:#ffe3a1}
+.development-zoning-output{margin-top:1rem;padding:1rem;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);color:var(--muted);line-height:1.6}
+@media(max-width:700px){.development-panel-head{flex-direction:column}.development-result-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo"><span class="nav-logo-dot"></span>BRIC Studios</a>
+  <a href="index.html" class="nav-logo bric-logo-lockup">
+    <span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span>
+    <span class="brand-wordmark">BRIC Studios</span>
+  </a>
   <span class="nav-badge">Valuation Studio</span>
   <div class="nav-right">
-    <a href="index.html" class="nav-back">← Home</a>
+    <a href="index.html" class="nav-back">Home</a>
     <a href="dashboard.html" class="nav-back">Dashboard</a>
+    <a href="learning.html" class="nav-back">Learning Studio</a>
   </div>
 </nav>
 <div class="tier-bar">
   <span class="tier-label">Plan</span>
   <div class="tier-wrap">
-    <button class="tier-btn active">Free</button>
-    <button class="tier-btn">Growth</button>
+    <button class="tier-btn active" id="tierFree" type="button" onclick="setValuationTier('free')">Free</button>
+    <button class="tier-btn" id="tierGrowth" type="button" onclick="setValuationTier('growth')">Growth</button>
   </div>
-  <span class="mini-copy">Clean, fast valuation builder with itemized rent roll</span>
+  <span class="mini-copy" id="tierDesc">Free includes itemized rent roll and itemized expenses. Growth unlocks live review and development-site analysis.</span>
 </div>
 <div class="app">
   <div class="panel-left">
     <div class="panel-header">
-      <div class="panel-eyebrow">Property Intelligence</div>
-      <div class="panel-title">Valuation Studio</div>
-      <div class="panel-sub">Use the quick income fields or open a more detailed rent roll. This version keeps the workflow compact and easy to operate.</div>
+      <div class="panel-eyebrow"><span class="eyebrow-dot"></span> Owner-first property intelligence</div>
+      <div class="panel-title">Build a clearer property valuation.</div>
+      <div class="panel-sub">Enter the property, income, expenses, and market cap rate. BRIC will generate a clean value range, NOI snapshot, expense benchmark analysis, and a downloadable PDF report.</div>
     </div>
 
     <div class="form-section">
       <div class="form-section-title">Property Details</div>
-      <div class="field"><label>Property Address</label><input type="text" id="address" value="" placeholder="Enter property address"/></div>
+      <div class="field"><label>Property Address</label><input type="text" id="address" value="" placeholder="Enter property address" oninput="detectBoroughAndSubmarketFromAddress()"/></div>
       <div class="field-row">
-        <div class="field"><label>Property Type</label><select id="propertyType"><option value="" selected disabled>Select property type</option><option value="mixed">Mixed-Use</option><option value="multifamily">Multifamily</option><option value="commercial">Commercial</option></select></div>
-        <div class="field"><label>Borough</label><select id="boroughSelect" onchange="populateSubmarkets();updateMarketBenchmarks()"><option value="" selected disabled>Select borough</option><option value="brooklyn">Brooklyn</option><option value="manhattan">Manhattan</option><option value="queens">Queens</option><option value="bronx">Bronx</option><option value="statenisland">Staten Island</option></select></div>
+        <div class="field"><label>Property Type</label><select id="propertyType" onchange="handlePropertyTypeChange()"><option value="" selected disabled>Select property type</option><option value="mixed">Mixed-Use</option><option value="multifamily">Multifamily</option><option value="condo">Condo</option><option value="singlefamilyrental">Single Family Rental</option><option value="development">Development</option></select></div>
+        <div class="field"><label>Borough</label><select id="boroughSelect" onchange="populateSubmarkets();updateMarketBenchmarks();handlePropertyTypeChange()"><option value="" selected disabled>Select borough</option><option value="brooklyn">Brooklyn</option><option value="manhattan">Manhattan</option><option value="queens">Queens</option><option value="bronx">Bronx</option><option value="statenisland">Staten Island</option></select></div>
       </div>
       <div class="field">
         <label>Submarket</label>
@@ -168,6 +394,62 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
         <div class="field"><label>Number of Units</label><input type="number" id="units" value="" placeholder="Enter total units" min="1" oninput="updateDerivedBenchmarks()"/></div>
         <div class="field"><label>Total Sq. Footage</label><input type="number" id="sqft" value="" placeholder="Enter total SF" min="0" oninput="updateDerivedBenchmarks()"/></div>
       </div>
+
+      <div class="development-panel" id="developmentPanel">
+        <div class="development-panel-head">
+          <div>
+            <div class="development-kicker">Growth Development Analysis</div>
+            <h3>Development site inputs</h3>
+            <p>Available in Growth. Enter lot size and FAR to calculate estimated buildable square footage.</p>
+          </div>
+          <span class="development-growth-badge">Growth</span>
+        </div>
+
+        <div class="development-lock-note" id="developmentLockNote">
+          Development-site analysis is a Growth feature. Free users can still build income-producing property valuations, but FAR, zoning, street width, and buildable SF analysis unlock in Growth.
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Lot Size</label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="developmentLotSize" placeholder="Lot SF" min="0" oninput="calculateDevelopmentBuildableSF()" disabled/>
+              <span class="input-suffix">SF</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>FAR</label>
+            <input type="number" id="developmentFAR" placeholder="Example: 2.43" min="0" step="0.01" oninput="calculateDevelopmentBuildableSF()" disabled/>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Street Width</label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="developmentStreetWidth" placeholder="Example: 60" min="0" oninput="calculateDevelopmentBuildableSF()" disabled/>
+              <span class="input-suffix">FT</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Zoning</label>
+            <input type="text" id="developmentZoning" placeholder="Example: R6, R7A, C4-4D" oninput="autoGenerateZoningDescription();calculateDevelopmentBuildableSF()" disabled/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Zoning Description</label>
+          <textarea id="developmentZoningDescription" class="development-zoning-description" rows="4" placeholder="Auto-generated from zoning; editable by user." oninput="calculateDevelopmentBuildableSF()" disabled></textarea>
+          <div class="zoning-auto-note">Auto-generated zoning language is directional and should be reviewed before being used in a report.</div>
+        </div>
+
+        <div class="development-calc-card">
+          <div class="development-calc-label">Estimated Buildable SF</div>
+          <div class="development-calc-value" id="developmentBuildableDisplay">—</div>
+          <div class="development-calc-note">Calculated as Lot Size × FAR. This is a planning estimate and should be verified against zoning, deductions, overlays, and applicable regulations.</div>
+        </div>
+      </div>
+
     </div>
 
     <div class="form-section">
@@ -179,7 +461,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
 
       <div class="toggle-row" onclick="toggleRentRoll()">
         <div class="toggle-label-wrap">
-          <div class="toggle-main">Itemized Rent Roll <span class="pill-badge">Free Feature</span></div>
+          <div class="toggle-main">Itemized Rent Roll <span class="pill-badge">Included Free</span></div>
           <div class="toggle-sub">Open a compact detailed rent roll only when you need it.</div>
         </div>
         <div class="toggle" id="rentRollToggle"></div>
@@ -233,6 +515,46 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
       <div id="capNote" style="margin-top:.8rem;padding:.8rem .9rem;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.03);font-size:.82rem;color:rgba(255,255,255,.62);line-height:1.55"></div>
     </div>
 
+    
+    <div class="form-section growth-review-section">
+      <div class="growth-review-card">
+        <div class="growth-review-kicker">Growth Review</div>
+        <h3>Need a second set of eyes?</h3>
+        <p>
+          Build your valuation for free. Growth connects you with a BRIC advisor to review the valuation,
+          confirm assumptions, fine-tune the cap rate, and help identify what may be missing before you rely on the output.
+        </p>
+
+        <div class="growth-review-grid">
+          <div class="growth-review-item">
+            <strong>Live valuation review</strong>
+            <span>Have a BRIC advisor review the valuation and suggest adjustments before you use it for a decision.</span>
+          </div>
+
+          <div class="growth-review-item">
+            <strong>Market cap-rate check</strong>
+            <span>Pressure-test the cap rate against submarket, property type, income quality, and buyer demand.</span>
+          </div>
+
+          <div class="growth-review-item">
+            <strong>Rent roll + expense review</strong>
+            <span>Review rents, vacancies, expenses, and benchmark flags to identify NOI improvement opportunities.</span>
+          </div>
+
+          <div class="growth-review-item">
+            <strong>Next-step strategy</strong>
+            <span>Get guidance on whether to hold, refinance, improve, prepare an OM, or explore a sale.</span>
+          </div>
+        </div>
+
+        <div class="growth-review-actions">
+          <button type="button" class="growth-review-primary" onclick="requestGrowthReview()">Request Valuation Review</button>
+          <a href="pricing.html" class="growth-review-secondary">View Growth Plan</a>
+        </div>
+      </div>
+    </div>
+
+
     <div class="form-section" style="border-bottom:none">
       <div class="action-row" style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem"><button class="calc-btn" onclick="calculate()" style="margin-top:0">Generate Valuation</button><button class="calc-btn" onclick="saveCurrentValuation()" style="margin-top:0;background:transparent;color:var(--gold);border:1px solid var(--border-gold)">Save to Dashboard</button></div><div id="saveStatus" style="margin-top:.55rem;font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.04em"></div>
     </div>
@@ -241,19 +563,71 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
   <div class="panel-resizer" id="panelResizer" aria-label="Resize panels" title="Drag to resize"></div>
 
   <div class="panel-right" id="panelRight">
-    <div class="empty-state" id="emptyState"><div class="empty-title">No Valuation Yet</div><div class="empty-sub">Enter your property details on the left, then click Generate Valuation.</div></div>
+    <div class="valuation-hero-card"><div class="hero-kicker">Live valuation workspace</div><h1>Model value, expenses, and NOI with <span>clarity</span>.</h1><p>Generate an owner-friendly valuation output, save it to your Dashboard, and export a PDF your team can review.</p><div class="hero-pill-row"><span>Value range</span><span>Expense benchmarks</span><span>Dashboard save</span><span>PDF export</span></div></div>
+    <div class="empty-state" id="emptyState"><div class="empty-title">No valuation yet</div><div class="empty-sub">Enter your property details on the left, then click Generate Valuation. Your output will appear here and can be saved to the Dashboard.</div></div>
   </div>
 </div>
 <script>
 
+let currentValuationTier='free';
+
+const ADDRESS_SUBMARKET_HINTS=[
+  ["Brooklyn",["brooklyn"," kings county "," bk "],null],["Manhattan",["manhattan"," new york, ny"," nyc "," new york ny"],null],["Queens",["queens"," astoria"," long island city"," flushing"," jamaica"," woodside"," sunnyside"," ridgewood"," forest hills"],null],["Bronx",["bronx"," bx "],null],["Staten Island",["staten island"," staten isl"],null],
+  ["Brooklyn",["williamsburg"],"Williamsburg"],["Brooklyn",["bushwick"],"Bushwick"],["Brooklyn",["bed-stuy","bed stuy","bedford-stuyvesant"],"Bedford-Stuyvesant"],["Brooklyn",["crown heights"],"Crown Heights"],["Brooklyn",["prospect lefferts","lefferts"],"Prospect Lefferts Gardens"],["Brooklyn",["flatbush"],"Flatbush"],["Brooklyn",["east flatbush"],"East Flatbush"],["Brooklyn",["greenpoint"],"Greenpoint"],["Brooklyn",["park slope"],"Park Slope"],["Brooklyn",["prospect heights"],"Prospect Heights"],["Brooklyn",["downtown brooklyn"],"Downtown Brooklyn"],["Brooklyn",["brooklyn heights"],"Brooklyn Heights"],["Brooklyn",["fort greene"],"Fort Greene"],["Brooklyn",["clinton hill"],"Clinton Hill"],["Brooklyn",["gowanus"],"Gowanus"],["Brooklyn",["sunset park"],"Sunset Park"],["Brooklyn",["bay ridge"],"Bay Ridge"],["Brooklyn",["canarsie"],"Canarsie"],["Brooklyn",["east new york"],"East New York"],["Brooklyn",["ocean hill"],"Ocean Hill"],["Brooklyn",["red hook"],"Red Hook"],["Brooklyn",["sheepshead"],"Sheepshead Bay"],["Brooklyn",["coney island"],"Coney Island"],
+  ["Manhattan",["east harlem"],"East Harlem"],["Manhattan",["harlem"],"Harlem"],["Manhattan",["upper east"],"Upper East Side"],["Manhattan",["upper west"],"Upper West Side"],["Manhattan",["midtown"],"Midtown"],["Manhattan",["chelsea"],"Chelsea"],["Manhattan",["tribeca"],"Tribeca"],["Manhattan",["soho"],"SoHo"],["Manhattan",["lower east"],"Lower East Side"],["Manhattan",["east village"],"East Village"],["Manhattan",["west village"],"West Village"],["Manhattan",["financial district"," fidi "],"Financial District"],["Manhattan",["washington heights"],"Washington Heights"],["Manhattan",["inwood"],"Inwood"],
+  ["Queens",["astoria"],"Astoria"],["Queens",["long island city"," lic "],"Long Island City"],["Queens",["flushing"],"Flushing"],["Queens",["forest hills"],"Forest Hills"],["Queens",["jamaica"],"Jamaica"],["Queens",["ridgewood"],"Ridgewood"],["Queens",["sunnyside"],"Sunnyside"],["Queens",["woodside"],"Woodside"],["Queens",["jackson heights"],"Jackson Heights"],
+  ["Bronx",["mott haven"],"Mott Haven"],["Bronx",["riverdale"],"Riverdale"],["Bronx",["fordham"],"Fordham"],["Bronx",["concourse"],"Concourse"],["Bronx",["melrose"],"Melrose"],
+  ["Staten Island",["st. george","saint george"],"St. George"],["Staten Island",["tottenville"],"Tottenville"],["Staten Island",["new dorp"],"New Dorp"]
+];
+
+function boroughDisplayToValue(name){return {"Brooklyn":"brooklyn","Manhattan":"manhattan","Queens":"queens","Bronx":"bronx","Staten Island":"statenisland"}[name]||''}
+function setSelectByTextOrValue(select, raw){if(!select||!raw)return false;const target=String(raw).trim().toLowerCase();for(const opt of Array.from(select.options)){if(String(opt.value).trim().toLowerCase()===target||String(opt.textContent).trim().toLowerCase()===target){select.value=opt.value;return true}}return false}
+function detectBoroughAndSubmarketFromAddress(){
+  const addressEl=document.getElementById('address'), boroughEl=document.getElementById('boroughSelect'), submarketEl=document.getElementById('submarketSelect');
+  if(!addressEl||!boroughEl||!submarketEl)return;
+  const raw=' '+String(addressEl.value||'').toLowerCase().replace(/[,.]/g,' ')+' ';
+  if(!raw.trim())return;
+  let detectedBorough='',detectedSubmarket='';
+  for(const [borough,hints,submarket] of ADDRESS_SUBMARKET_HINTS){if(hints.some(h=>raw.includes(String(h).toLowerCase()))){if(submarket){detectedBorough=borough;detectedSubmarket=submarket;break} if(!detectedBorough)detectedBorough=borough}}
+  const zipMatch=raw.match(/\b(10\d{3}|11\d{3}|112\d{2}|113\d{2}|114\d{2}|116\d{2}|104\d{2}|103\d{2})\b/);
+  if(!detectedBorough&&zipMatch){const zip=zipMatch[1];if(zip.startsWith('112'))detectedBorough='Brooklyn';else if(zip.startsWith('100')||zip.startsWith('101')||zip.startsWith('102'))detectedBorough='Manhattan';else if(zip.startsWith('111')||zip.startsWith('113')||zip.startsWith('114')||zip.startsWith('116'))detectedBorough='Queens';else if(zip.startsWith('104'))detectedBorough='Bronx';else if(zip.startsWith('103'))detectedBorough='Staten Island'}
+  if(detectedBorough){boroughEl.value=boroughDisplayToValue(detectedBorough);populateSubmarkets();if(detectedSubmarket)setSelectByTextOrValue(submarketEl,detectedSubmarket);updateMarketBenchmarks()}
+}
+function setValuationTier(tier){
+  currentValuationTier=tier==='growth'?'growth':'free';
+  const growth=currentValuationTier==='growth';
+  document.body.classList.toggle('growth-mode',growth);
+  document.getElementById('tierFree')?.classList.toggle('active',!growth);
+  document.getElementById('tierGrowth')?.classList.toggle('active',growth);
+  const desc=document.getElementById('tierDesc');
+  if(desc)desc.textContent=growth?'Growth unlocks development-site analysis, buildable SF, zoning inputs, and live valuation review.':'Free includes itemized rent roll and itemized expenses. Growth unlocks development-site analysis and advisor review.';
+  syncGrowthLockedFields();handlePropertyTypeChange();
+}
+function isGrowthUnlocked(){return currentValuationTier==='growth'}
+function getSelectedPropertyType(){const raw=document.getElementById('propertyType')?.value||'';return raw==='commercial'?'development':raw}
+function handlePropertyTypeChange(){
+  const type=getSelectedPropertyType();
+  const panel=document.getElementById('developmentPanel');
+  if(panel){const isDev=type==='development';panel.classList.toggle('visible',isDev);panel.classList.toggle('locked',isDev&&!isGrowthUnlocked())}
+  syncGrowthLockedFields();
+  if(type==='development'){calculateDevelopmentBuildableSF();updateMarketBenchmarks()}
+}
+function syncGrowthLockedFields(){const locked=!isGrowthUnlocked();['developmentLotSize','developmentFAR','developmentStreetWidth','developmentZoning','developmentZoningDescription'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=locked})}
+function parseFlexibleNumber(value){if(value===null||value===undefined)return 0;return parseFloat(String(value).replace(/[$,%\s,]/g,''))||0}
+function getDevelopmentData(){const lotSize=parseFlexibleNumber(document.getElementById('developmentLotSize')?.value), far=parseFlexibleNumber(document.getElementById('developmentFAR')?.value), streetWidth=parseFlexibleNumber(document.getElementById('developmentStreetWidth')?.value), zoning=(document.getElementById('developmentZoning')?.value||'').trim(), zoningDescription=(document.getElementById('developmentZoningDescription')?.value||'').trim(), buildableSF=lotSize&&far?lotSize*far:0;return {lotSize,far,streetWidth,zoning,zoningDescription,buildableSF}}
+function calculateDevelopmentBuildableSF(){const data=getDevelopmentData();const display=document.getElementById('developmentBuildableDisplay');if(display)display.textContent=data.buildableSF?Math.round(data.buildableSF).toLocaleString()+' SF':'—';if(getSelectedPropertyType()==='development'&&isGrowthUnlocked()&&data.buildableSF){const sqft=document.getElementById('sqft');if(sqft&&!sqft.dataset.userEdited)sqft.value=Math.round(data.buildableSF)}if(currentValuationPDFData&&currentValuationPDFData.propType==='development')currentValuationPDFData.development=data;return data.buildableSF}
+function zoningBaseDescription(zoning){const z=String(zoning||'').trim().toUpperCase();if(!z)return '';if(z.includes('R7A'))return 'R7A is a medium-density contextual residential district commonly mapped along wider corridors. It typically supports apartment-building development under Quality Housing regulations, subject to lot size, street width, height, setback, parking, and affordability requirements where applicable.';if(z.includes('R7D'))return 'R7D is a higher-density contextual residential district generally mapped along major corridors. It can support larger residential buildings than lower-density contextual districts, subject to applicable bulk, height, setback, and affordability rules.';if(z.includes('R6'))return 'R6 is a medium-density residential district that can allow a range of multifamily building forms. Development potential depends on whether Height Factor or Quality Housing rules are used, along with lot dimensions, street width, and other zoning constraints.';if(z.includes('C4')||z.includes('C6'))return 'This commercial zoning district can support mixed-use or commercial development depending on district rules, permitted uses, applicable residential equivalents, street width, and any overlays or special district requirements.';if(z.includes('M1'))return 'M1 is a light manufacturing district that may support industrial, commercial, community facility, and certain mixed-use opportunities depending on location, overlays, and applicable special district rules.';return `${zoning} zoning should be reviewed against the NYC Zoning Resolution, lot dimensions, street width, overlays, special districts, and any applicable inclusionary or affordability requirements.`}
+function autoGenerateZoningDescription(){const zoningEl=document.getElementById('developmentZoning'), descEl=document.getElementById('developmentZoningDescription');if(!zoningEl||!descEl)return;const draft=zoningBaseDescription(zoningEl.value);if(draft)descEl.value=draft}
+
+
 const DEFAULT_EXPENSES=[['Property Taxes',15000],['Insurance',5000],['Water & Sewer',''],['Heat',''],['Common Area Electric',''],['Repairs & Maintenance',''],['Super / Payroll',''],['Management Fee','']];
 
 const SUBMARKETS={
-  brooklyn:['Bath Beach','Bay Ridge','Bed-Stuy','Bensonhurst','Bergen Beach','Boerum Hill','Borough Park','Brooklyn Heights','Brownsville','Bushwick','Canarsie','Carroll Gardens','Clinton Hill','Cobble Hill','Columbia Street Waterfront District','Coney Island','Crown Heights','Cypress Hills','Ditmas Park','Dumbo','Downtown Brooklyn','Dyker Heights','East Flatbush','East New York','Flatbush','Flatlands','Fort Greene','Gerritsen Beach','Gowanus','Gravesend','Greenpoint','Greenwood Heights','Kensington','Manhattan Beach','Marine Park','Midwood','Mill Basin','Navy Yard','Ocean Hill','Park Slope','Prospect Heights','Prospect Lefferts Gardens','Red Hook','Sheepshead Bay','South Slope','Starrett City','Sunset Park','Vinegar Hill','Williamsburg','Windsor Terrace'],
-  manhattan:['Harlem','Washington Heights','Inwood','Upper East Side','Upper West Side','Chelsea','East Village','West Village','SoHo','Tribeca','Financial District','Lower East Side'],
-  queens:['Long Island City','Astoria','Sunnyside','Woodside','Jackson Heights','Elmhurst','Forest Hills','Rego Park','Flushing','Bayside','Ridgewood','Jamaica'],
-  bronx:['Mott Haven','Melrose','Kingsbridge','Fordham','Riverdale','Tremont','Parkchester','Soundview'],
-  statenisland:['St. George','Stapleton','New Dorp','Great Kills','Tottenville','Port Richmond']
+  brooklyn:["Bay Ridge","Bedford-Stuyvesant","Bensonhurst","Boerum Hill","Borough Park","Brighton Beach","Brooklyn Heights","Brownsville","Bushwick","Canarsie","Carroll Gardens","Clinton Hill","Cobble Hill","Coney Island","Crown Heights","DUMBO","Downtown Brooklyn","Dyker Heights","East Flatbush","East New York","Flatbush","Flatlands","Fort Greene","Gowanus","Gravesend","Greenpoint","Kensington","Marine Park","Midwood","Mill Basin","Ocean Hill","Park Slope","Prospect Heights","Prospect Lefferts Gardens","Red Hook","Sheepshead Bay","Sunset Park","Williamsburg","Windsor Terrace","Other"],
+  manhattan:["Battery Park City","Chelsea","Chinatown","Civic Center","East Harlem","East Village","Financial District","Flatiron","Gramercy","Greenwich Village","Harlem","Hell's Kitchen","Inwood","Kips Bay","Lenox Hill","Lincoln Square","Lower East Side","Manhattan Valley","Midtown","Morningside Heights","Murray Hill","NoHo","NoLita","Roosevelt Island","SoHo","Tribeca","Upper East Side","Upper West Side","Washington Heights","West Village","Yorkville","Other"],
+  queens:["Astoria","Bayside","Briarwood","Corona","Ditmars-Steinway","Elmhurst","Flushing","Forest Hills","Glendale","Hollis","Howard Beach","Jackson Heights","Jamaica","Kew Gardens","Long Island City","Maspeth","Middle Village","Ozone Park","Queens Village","Rego Park","Richmond Hill","Ridgewood","Rockaway","Sunnyside","Whitestone","Woodhaven","Woodside","Other"],
+  bronx:["Bedford Park","Belmont","Castle Hill","Concourse","Eastchester","Fordham","Highbridge","Hunts Point","Kingsbridge","Melrose","Morrisania","Mott Haven","Norwood","Parkchester","Pelham Bay","Riverdale","Soundview","Throgs Neck","Tremont","University Heights","Wakefield","Williamsbridge","Woodlawn","Other"],
+  statenisland:["Annadale","Arrochar","Bulls Head","Castleton Corners","Dongan Hills","Eltingville","Emerson Hill","Great Kills","Grasmere","Huguenot","New Brighton","New Dorp","Port Richmond","Rosebank","St. George","Stapleton","Todt Hill","Tompkinsville","Tottenville","West Brighton","Westerleigh","Other"]
 };
 const CAP_BENCHMARKS={
   brooklyn:{default:{low:5.85,mid:6.2,high:6.55,note:'Brooklyn mixed-use benchmark based on mocked hyper-local averages.'},'Williamsburg':{low:5.0,mid:5.35,high:5.75,note:'Williamsburg tends to price tighter given stronger demand and deeper buyer pools.'},'Bushwick':{low:5.85,mid:6.15,high:6.5,note:'Bushwick mixed-use benchmark based on recent local pricing patterns.'},'Prospect Lefferts Gardens':{low:5.8,mid:6.1,high:6.4,note:'PLG mixed-use pricing depends heavily on apartment quality and retail stability.'}},
@@ -307,15 +681,20 @@ function getCapBenchmark(){
 }
 function updateMarketBenchmarks(){
   const borough=document.getElementById('boroughSelect').value;
+  const capNote=document.getElementById('capNote');
+  if(getSelectedPropertyType && getSelectedPropertyType()==='development'){
+    if(capNote) capNote.innerHTML=`<b style="color:#ffe3a1">Development Selected:</b> Growth development analysis uses lot size, FAR, zoning, and street width instead of a standard income cap-rate valuation. If the site has existing income, you can still enter income and expenses for reference.`;
+    return;
+  }
   if(!borough){
-    document.getElementById('capNote').innerHTML='<span style="color:rgba(255,255,255,.5)">Select a borough and submarket to load the suggested market cap rate range.</span>';
+    capNote.innerHTML='<span style="color:rgba(255,255,255,.5)">Select a borough and submarket to load the suggested market cap rate range.</span>';
     return;
   }
   const bench=getCapBenchmark();
   if(bench){
     document.getElementById('capRate').value=bench.mid.toFixed(1);
     updateCapDisplay(bench.mid);
-    document.getElementById('capNote').innerHTML=`<b style="color:var(--gold-light)">Suggested Market Cap Rate:</b> ${bench.mid.toFixed(2)}%<br><b style="color:var(--gold-light)">Suggested Range:</b> ${bench.low.toFixed(2)}% – ${bench.high.toFixed(2)}%<br><span style="color:rgba(255,255,255,.5)">${bench.note} Adjust manually if your asset is materially stronger or weaker than average.</span>`;
+    capNote.innerHTML=`<b style="color:var(--gold-light)">Suggested Market Cap Rate:</b> ${bench.mid.toFixed(2)}%<br><b style="color:var(--gold-light)">Suggested Range:</b> ${bench.low.toFixed(2)}% – ${bench.high.toFixed(2)}%<br><span style="color:rgba(255,255,255,.5)">${bench.note} Adjust manually if your asset is materially stronger or weaker than average.</span>`;
   }
 }
 
@@ -455,9 +834,10 @@ function getGrossIncomeValue(){const typed=parseFloat(document.getElementById('g
 function updateExpenseTotalDisplay(){let total=0; document.querySelectorAll('.expense-block .exp-amount').forEach(el=>total+=parseFloat(el.value)||0); const tgt=document.getElementById('expenseTotalDisplay'); if(tgt) tgt.textContent=fmtFull(total);}
 function calculate(){
   const address=document.getElementById('address').value.trim()||'(No Address Entered)';
-  const propType=document.getElementById('propertyType').value;
+  const propType=getSelectedPropertyType();
+  const development=getDevelopmentData();
   const units=parseFloat(document.getElementById('units').value)||1;
-  const sqft=parseFloat(document.getElementById('sqft').value)||0;
+  const sqft=propType==='development' && development.buildableSF ? development.buildableSF : (parseFloat(document.getElementById('sqft').value)||0);
   const grossIncome=getGrossIncomeValue();
   const vacancyRate=parseFloat(document.getElementById('vacancyRate').value)||5;
   const otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
@@ -484,7 +864,7 @@ function calculate(){
   const highVal=capRate>.01?noi/Math.max(.01,capRate-.0075):baseVal;
   const pricePerUnit=baseVal/units;
   const pricePerSqft=sqft>0?baseVal/sqft:0;
-  const resultPayload={address,propType,units,sqft,grossIncome,vacancyLoss,effectiveGross,otherIncome,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,capRate,vacancyRate,expenseList,totalSavings};
+  const resultPayload={address,propType,units,sqft,grossIncome,vacancyLoss,effectiveGross,otherIncome,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,capRate,vacancyRate,expenseList,totalSavings,development,developmentUnlocked:isGrowthUnlocked()};
   renderResults(resultPayload);
   // Save automatically when Generate Valuation is clicked so it appears in Dashboard > My Properties.
   saveCurrentValuation();
@@ -492,7 +872,7 @@ function calculate(){
 function renderResults(d){
   currentValuationPDFData=d;
   const panel=document.getElementById('panelRight');
-  const typeLabels={multifamily:'Multifamily',mixed:'Mixed-Use',commercial:'Commercial'};
+  const typeLabels={multifamily:'Multifamily',mixed:'Mixed-Use',condo:'Condo',singlefamilyrental:'Single Family Rental',development:'Development'};
   const typeLabel=typeLabels[d.propType]||d.propType;
   const expRows=d.expenseList.filter(e=>e.bench).map(e=>{
     const min=e.bench.low*.65,max=e.bench.high*1.35,pct=v=>Math.max(0,Math.min(100,((v-min)/(max-min))*100));
@@ -501,7 +881,21 @@ function renderResults(d){
     return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .5rem 0;font-family:var(--mono);font-size:.62rem;color:#e1a06f">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}`;
   }).join('') || `<div style="font-size:.8rem;color:rgba(255,255,255,.4)">No benchmarked expenses yet.</div>`;
   const expBreakdownHTML=d.expenseList.map(e=>`<div class="breakdown-row"><span class="breakdown-row-name">${e.name}</span><span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span></div>`).join('')||'<div class="breakdown-row"><span class="breakdown-row-name">No expenses entered</span></div>';
-  panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel} · ${d.units} Units ${d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''}</div></div><div class="result-timestamp">Generated</div></div><div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div><button class="pdf-report-btn" onclick="downloadValuationPDF()">Save Valuation as PDF</button><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
+  const developmentHtml=d.propType==='development' ? `<div class="expense-comparison development-result-card">
+    <div class="ec-head"><div class="ec-title">Development Site Analysis</div><div class="ec-save">${d.developmentUnlocked?'Growth unlocked':'Growth required'}</div></div>
+    ${!d.developmentUnlocked?`<div class="development-lock-note" style="margin:0">Development calculations are available in Growth. Switch to Growth to enter lot size, FAR, zoning, street width, and estimated buildable SF.</div>`:`
+      <div class="development-result-grid">
+        <div class="development-result-stat"><span>Lot Size</span><strong>${d.development?.lotSize?Math.round(d.development.lotSize).toLocaleString():'—'}</strong></div>
+        <div class="development-result-stat"><span>FAR</span><strong>${d.development?.far||'—'}</strong></div>
+        <div class="development-result-stat"><span>Buildable SF</span><strong>${d.development?.buildableSF?Math.round(d.development.buildableSF).toLocaleString():'—'}</strong></div>
+        <div class="development-result-stat"><span>Street Width</span><strong>${d.development?.streetWidth?d.development.streetWidth+' ft':'—'}</strong></div>
+        <div class="development-result-stat"><span>Zoning</span><strong>${d.development?.zoning||'—'}</strong></div>
+        <div class="development-result-stat"><span>Primary Formula</span><strong>Lot × FAR</strong></div>
+      </div>
+      <div class="development-zoning-output">${d.development?.zoningDescription || zoningBaseDescription(d.development?.zoning) || 'Enter zoning to generate an editable zoning description.'}</div>
+    `}
+  </div>` : '';
+  panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel} ${d.propType==='development' ? (d.development?.buildableSF?'· '+Math.round(d.development.buildableSF).toLocaleString()+' Buildable SF':'· Growth development analysis') : ('· '+d.units+' Units '+(d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''))}</div></div><div class="result-timestamp">Generated</div></div>${developmentHtml}<div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div><button class="pdf-report-btn" onclick="downloadValuationPDF()">Save Valuation as PDF</button><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>${expRows}</div>
   <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="breakdown-total" style="margin-top:1rem;background:rgba(201,168,76,.08);padding:.85rem 1rem;border:1px solid rgba(201,168,76,.18);border-radius:10px"><span>Net Operating Income</span><span class="breakdown-total-val">${fmtFull(d.noi)}</span></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
 }
@@ -621,6 +1015,20 @@ function buildValuationPDFHtml(d){
     <div class="kpi"><span>NOI</span><strong>${fmtFull(d.noi)}</strong></div>
   </div>
 
+
+  ${d.propType==='development' ? `<div class="section">
+    <h2>Development Site Analysis</h2>
+    <table>
+      <tbody>
+        <tr><td>Lot Size</td><td class="num">${d.development?.lotSize?Math.round(d.development.lotSize).toLocaleString()+' SF':'N/A'}</td></tr>
+        <tr><td>FAR</td><td class="num">${d.development?.far||'N/A'}</td></tr>
+        <tr><td>Estimated Buildable SF</td><td class="num">${d.development?.buildableSF?Math.round(d.development.buildableSF).toLocaleString()+' SF':'N/A'}</td></tr>
+        <tr><td>Street Width</td><td class="num">${d.development?.streetWidth?d.development.streetWidth+' FT':'N/A'}</td></tr>
+        <tr><td>Zoning</td><td class="num">${escapePDFHtml(d.development?.zoning||'N/A')}</td></tr>
+      </tbody>
+    </table>
+    <div class="note">${escapePDFHtml(d.development?.zoningDescription || zoningBaseDescription(d.development?.zoning) || 'Zoning description will appear once zoning is entered.')}</div>
+  </div>` : ''}
   <div class="section">
     <h2>Income & Expense Breakdown</h2>
     <table><tbody>${incomeRows}</tbody></table>
@@ -663,7 +1071,7 @@ function buildValuationPDFHtml(d){
     BRIC Studios Valuation Studio. This report is a directional estimate based on user-entered information and internal prototype benchmark assumptions. It is not an appraisal, broker price opinion, tax advice, legal advice, or financing commitment.
   </div>
 </div>
-<script>window.onload=function(){window.print();};<\/script>
+
 </body>
 </html>`;
 }
@@ -681,6 +1089,11 @@ function downloadValuationPDF(){
   printWindow.document.open();
   printWindow.document.write(reportHtml);
   printWindow.document.close();
+
+  setTimeout(function(){
+    try { printWindow.focus(); printWindow.print(); }
+    catch(error) { console.warn('BRIC PDF print failed:', error); }
+  }, 500);
 }
 
 function getWorkspace(){
@@ -710,6 +1123,8 @@ function upsertPropertyFromValuation(payload, valuationId){
   property.lastNoi=payload.noi||0;
   property.updatedAt=new Date().toISOString();
   property.fileNames=payload.fileNames||property.fileNames||[];
+  property.development=payload.development||property.development||null;
+  property.developmentUnlocked=payload.developmentUnlocked||false;
   return {ws, property};
 }
 function collectRentRollData(){
@@ -728,11 +1143,12 @@ function collectRentRollData(){
 }
 function buildValuationPayload(){
   const address=document.getElementById('address').value.trim()||'(No Address Entered)';
-  const propType=document.getElementById('propertyType').value;
+  const propType=getSelectedPropertyType();
+  const development=getDevelopmentData();
   const borough=document.getElementById('boroughSelect').value;
   const submarket=document.getElementById('submarketSelect').value;
   const units=parseFloat(document.getElementById('units').value)||1;
-  const sqft=parseFloat(document.getElementById('sqft').value)||0;
+  const sqft=propType==='development' && development.buildableSF ? development.buildableSF : (parseFloat(document.getElementById('sqft').value)||0);
   const grossIncome=getGrossIncomeValue();
   const vacancyRate=parseFloat(document.getElementById('vacancyRate').value)||5;
   const otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
@@ -758,7 +1174,7 @@ function buildValuationPayload(){
   const pricePerSqft=sqft>0?baseVal/sqft:0;
   const fileNames=[...((document.getElementById('rentRollUpload')||{}).files||[])].map(f=>f.name);
   const rr=collectRentRollData();
-  return {propertyId:getQueryParam('propertyId')||'',address,propertyType:propType,borough,submarket,units,sqft,grossIncome,vacancyRate,otherIncome,capRate:capRateInput,vacancyLoss,effectiveGross,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,expenseList,totalSavings,fileNames,residentialRentRoll:rr.residential,retailRentRoll:rr.retail,updatedAt:new Date().toISOString()};
+  return {propertyId:getQueryParam('propertyId')||'',address,propertyType:propType,borough,submarket,units,sqft,grossIncome,vacancyRate,otherIncome,capRate:capRateInput,vacancyLoss,effectiveGross,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,expenseList,totalSavings,fileNames,residentialRentRoll:rr.residential,retailRentRoll:rr.retail,development,developmentUnlocked:isGrowthUnlocked(),updatedAt:new Date().toISOString()};
 }
 function saveCurrentValuation(){
   const payload=buildValuationPayload();
@@ -826,9 +1242,78 @@ function tryLoadSavedValuation(){
   if(payload) loadSavedValuationIntoForm(payload);
 }
 
+
+function requestGrowthReview(){
+  const payload=buildValuationPayload();
+
+  if(!payload.address || payload.address==='(No Address Entered)'){
+    alert('Add a property address before requesting a Growth valuation review.');
+    return;
+  }
+
+  try{
+    saveCurrentValuation();
+
+    const ws=getWorkspace();
+    ws.reviewRequests=ws.reviewRequests||[];
+    const request={
+      id:uid('review'),
+      propertyId:payload.propertyId||getQueryParam('propertyId')||'',
+      valuationId:getQueryParam('valuationId')||'',
+      address:payload.address,
+      status:'Requested',
+      type:'Growth Valuation Review',
+      createdAt:new Date().toISOString(),
+      summary:{
+        estimatedValue:payload.baseVal||0,
+        noi:payload.noi||0,
+        capRate:payload.capRate||0,
+        totalExpenses:payload.totalExpenses||0,
+        grossIncome:payload.grossIncome||0
+      }
+    };
+    ws.reviewRequests.unshift(request);
+    ws.activity=ws.activity||[];
+    ws.activity.unshift({
+      type:'growth_review_requested',
+      address:payload.address,
+      time:new Date().toISOString(),
+      detail:'Growth valuation review requested'
+    });
+    ws.activity=ws.activity.slice(0,25);
+    setWorkspace(ws);
+  }catch(error){
+    console.warn('BRIC review request local save failed:', error);
+  }
+
+  const subject='Growth Valuation Review Request - '+payload.address;
+  const body=[
+    'Hi BRIC Studios,',
+    '',
+    'I would like a Growth valuation review for:',
+    payload.address,
+    '',
+    'Estimated Value: '+fmtFull(payload.baseVal||0),
+    'NOI: '+fmtFull(payload.noi||0),
+    'Cap Rate: '+(payload.capRate||0)+'%',
+    'Gross Income: '+fmtFull(payload.grossIncome||0),
+    'Total Expenses: '+fmtFull(payload.totalExpenses||0),
+    '',
+    'Please review the valuation assumptions, cap rate, rent roll, expenses, and potential next steps.',
+    ''
+  ].join('\n');
+
+  const status=document.getElementById('saveStatus');
+  if(status) status.textContent='Growth review request saved · opening email draft';
+
+  window.location.href='mailto:matthew@bricstudios.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+}
+
 DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e[0],e[1],true));
 populateSubmarkets();
 updateMarketBenchmarks();
+setValuationTier('free');
+handlePropertyTypeChange();
 tryLoadSavedValuation();
 
 (function(){
