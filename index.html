@@ -106,6 +106,12 @@
     .btn-primary{background:linear-gradient(180deg,#f7f4ed,#ddd1be);border-color:#ddd1be;color:#09100b;box-shadow:0 8px 24px rgba(214,200,180,.18)}
     .btn-secondary{background:transparent;color:var(--text)}
     .btn-secondary:hover{background:rgba(255,255,255,.04)}
+    .dashboard-cta{position:relative;overflow:hidden}
+    .dashboard-cta::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 18% 50%, rgba(0,184,74,.16), transparent 38%),linear-gradient(90deg, rgba(0,184,74,.12), rgba(0,184,74,.025) 55%, transparent 90%);opacity:0;transition:opacity .2s ease;pointer-events:none}
+    .dashboard-cta:hover{border-color:rgba(0,184,74,.22);box-shadow:0 12px 30px rgba(0,184,74,.10);background:rgba(255,255,255,.025)}
+    .dashboard-cta:hover::before{opacity:1}
+    .dashboard-cta{z-index:1}
+    .dashboard-cta::after{content:"";position:relative;z-index:-1}
 
     .hero{padding:48px 0 28px;position:relative;overflow:hidden}
     .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(214,200,180,.16), transparent 66%);filter:blur(12px)}
@@ -267,6 +273,42 @@
     .portfolio-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(8,16,12,.08);border-radius:18px;padding:12px;font-size:.83rem;font-weight:700}
     .portfolio-row .dot{width:10px;height:10px;border-radius:50%;background:var(--green)}
 
+
+    .dashboard-preview{background:#f5f8f4;color:#08100c;border-radius:30px;padding:18px;border:1px solid rgba(8,16,12,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.65)}
+    .dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .dashboard-title{font-weight:900;letter-spacing:-.02em}
+    .dashboard-sub{font-size:.76rem;color:rgba(8,16,12,.48);font-weight:800;margin-top:2px}
+    .dashboard-pill{font-family:var(--mono);font-size:.62rem;font-weight:800;color:#087a16;background:#e2f8e7;border:1px solid rgba(0,184,74,.10);border-radius:999px;padding:7px 9px;white-space:nowrap}
+    .saved-property{background:#fff;border:1px solid rgba(8,16,12,.08);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 12px 24px rgba(8,16,12,.04)}
+    .saved-property-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+    .saved-property h3{font-size:1rem;line-height:1.1;letter-spacing:-.02em;color:#08100c;margin:0}
+    .saved-property small{display:block;color:rgba(8,16,12,.45);font-weight:800;margin-top:3px}
+    .property-status{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#08100c;background:#f1eadb;border-radius:999px;padding:7px 9px;white-space:nowrap}
+    .dashboard-portfolio-summary{display:grid;grid-template-columns:1.15fr .85fr;gap:10px;margin-bottom:12px}
+    .dashboard-portfolio-value{background:#101713;color:#f4f3ee;border-radius:20px;padding:14px;border:1px solid rgba(8,16,12,.06);position:relative;overflow:hidden}
+    .dashboard-portfolio-value::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 20%, rgba(0,184,74,.16), transparent 38%);pointer-events:none}
+    .dashboard-portfolio-value small,.dashboard-portfolio-count small{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;font-weight:900;margin-bottom:5px}
+    .dashboard-portfolio-value small{color:rgba(244,243,238,.48)}
+    .dashboard-portfolio-value strong{display:block;font-size:1.46rem;letter-spacing:-.04em;position:relative;z-index:1}
+    .dashboard-portfolio-value span{display:block;color:rgba(244,243,238,.62);font-size:.72rem;font-weight:800;margin-top:3px;position:relative;z-index:1}
+    .dashboard-portfolio-count{background:#edf4ea;border:1px solid rgba(8,16,12,.05);border-radius:20px;padding:14px;color:#08100c}
+    .dashboard-portfolio-count small{color:rgba(8,16,12,.42)}
+    .dashboard-portfolio-count strong{display:block;font-size:1.12rem;letter-spacing:-.02em}
+    .dashboard-portfolio-count span{display:block;color:rgba(8,16,12,.48);font-size:.72rem;font-weight:800;margin-top:3px}
+    .dashboard-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .dashboard-metric{background:#edf4ea;border:1px solid rgba(8,16,12,.05);border-radius:16px;padding:11px}
+    .dashboard-metric span{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.07em;text-transform:uppercase;color:rgba(8,16,12,.42);font-weight:900;margin-bottom:4px}
+    .dashboard-metric strong{display:block;font-size:.96rem;letter-spacing:-.02em;color:#08100c}
+    .dashboard-tasks{display:grid;gap:8px}
+    .dashboard-task{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(8,16,12,.08);border-radius:16px;padding:11px;font-size:.78rem;font-weight:800;color:#152018}
+    .dashboard-task .task-dot{width:9px;height:9px;border-radius:50%;background:#00b84a;box-shadow:0 0 0 5px rgba(0,184,74,.10);flex:0 0 auto}
+    .dashboard-task span:last-child{margin-left:auto;color:rgba(8,16,12,.42);font-family:var(--mono);font-size:.62rem;white-space:nowrap}
+    .dashboard-bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .dashboard-action-card{background:#101713;color:#f4f3ee;border-radius:18px;padding:13px;border:1px solid rgba(8,16,12,.06)}
+    .dashboard-action-card small{display:block;font-family:var(--mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(244,243,238,.45);font-weight:900;margin-bottom:5px}
+    .dashboard-action-card strong{display:block;font-size:.9rem;letter-spacing:-.02em}
+    @media(max-width:720px){.dashboard-portfolio-summary,.dashboard-metrics{grid-template-columns:1fr}.dashboard-bottom{grid-template-columns:1fr}.saved-property-head{display:block}.property-status{display:inline-flex;margin-top:10px}}
+
     .step{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--warm-soft);color:var(--warm);font-family:var(--mono);font-weight:800;margin-bottom:22px}
 
     .workflow-card{transition:.22s ease;position:relative;overflow:hidden;display:block}
@@ -275,6 +317,41 @@
     .workflow-card:hover::before{opacity:1}
     .workflow-card > *{position:relative;z-index:1}
     .workflow-link{display:inline-flex;align-items:center;margin-top:18px;color:var(--warm);font-weight:800}
+
+    .support-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .support-card{padding:24px;min-height:238px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.22s ease}
+    .support-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 20%, rgba(0,184,74,.16), transparent 38%),linear-gradient(90deg, rgba(0,184,74,.10), rgba(0,184,74,.02) 48%, transparent 85%);opacity:0;transition:opacity .22s ease;pointer-events:none}
+    .support-card:hover{transform:translateY(-4px);border-color:rgba(0,184,74,.18);box-shadow:0 18px 44px rgba(0,0,0,.26)}
+    .support-card:hover::before{opacity:1}
+    .support-card > *{position:relative;z-index:1}
+    .support-tag{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(0,184,74,.08);border:1px solid rgba(0,184,74,.14);font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--green-tint);font-weight:800;margin-bottom:16px}
+    .support-card h3{font-size:1.26rem;line-height:1.08;letter-spacing:-.02em;font-weight:800;margin-bottom:10px}
+    .support-card p{font-weight:500;color:var(--muted);line-height:1.56;font-size:.96rem}
+    .support-link{margin-top:auto;padding-top:18px;color:var(--green-tint);font-weight:800}
+    .alacarte-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .alacarte-card{padding:24px;min-height:242px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.22s ease}
+    .alacarte-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 20%, rgba(0,184,74,.16), transparent 38%),linear-gradient(90deg, rgba(0,184,74,.10), rgba(0,184,74,.02) 48%, transparent 85%);opacity:0;transition:opacity .22s ease;pointer-events:none}
+    .alacarte-card:hover{transform:translateY(-4px);border-color:rgba(0,184,74,.18);box-shadow:0 18px 44px rgba(0,0,0,.26)}
+    .alacarte-card:hover::before{opacity:1}
+    .alacarte-card > *{position:relative;z-index:1}
+    .alacarte-tag{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(0,184,74,.08);border:1px solid rgba(0,184,74,.14);font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--green-tint);font-weight:800;margin-bottom:16px}
+    .alacarte-card h3{font-size:1.26rem;line-height:1.08;letter-spacing:-.02em;font-weight:800;margin-bottom:10px}
+    .alacarte-card p{font-weight:500;color:var(--muted);line-height:1.56;font-size:.96rem}
+    .alacarte-link{margin-top:auto;padding-top:18px;color:var(--green-tint);font-weight:800}
+    .alacarte-note{margin-top:20px;color:var(--muted-2);font-size:.84rem;line-height:1.55;font-weight:600}
+
+
+    .leverage-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .leverage-card{padding:24px;min-height:218px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.22s ease}
+    .leverage-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 20%, rgba(0,184,74,.14), transparent 38%),linear-gradient(90deg, rgba(0,184,74,.08), rgba(0,184,74,.02) 48%, transparent 85%);opacity:0;transition:opacity .22s ease;pointer-events:none}
+    .leverage-card:hover{transform:translateY(-4px);border-color:rgba(0,184,74,.18);box-shadow:0 18px 44px rgba(0,0,0,.26)}
+    .leverage-card:hover::before{opacity:1}
+    .leverage-card > *{position:relative;z-index:1}
+    .leverage-tag{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(0,184,74,.08);border:1px solid rgba(0,184,74,.14);font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--green-tint);font-weight:800;margin-bottom:16px}
+    .leverage-card h3{font-size:1.26rem;line-height:1.08;letter-spacing:-.02em;font-weight:800;margin-bottom:10px}
+    .leverage-card p{font-weight:500;color:var(--muted);line-height:1.56;font-size:.96rem}
+    .leverage-note{margin-top:22px;padding:18px 20px;border-radius:22px;border:1px solid rgba(0,184,74,.12);background:linear-gradient(180deg,rgba(0,184,74,.055),rgba(255,255,255,.02));color:var(--muted);line-height:1.58;font-weight:600}
+    .leverage-note strong{color:var(--text)}
 
     .plan{position:relative;overflow:hidden;transition:.22s ease}
     .plan::before{content:"";position:absolute;inset:0;background:
@@ -337,7 +414,7 @@
       .hero-visual{grid-template-columns:1fr;padding-top:24px}
       .mockup-shell{margin-left:0}
       .insight-rail{grid-template-columns:1fr 1fr;margin-top:10px}
-      .benefit-grid,.module-grid,.workflow,.plan-grid,.property-grid{grid-template-columns:1fr 1fr}
+      .benefit-grid,.module-grid,.workflow,.plan-grid,.property-grid,.support-grid,.alacarte-grid,.leverage-grid{grid-template-columns:1fr 1fr}
       .portfolio-kpis{grid-template-columns:1fr 1fr}
       .section-head{display:block}.section-copy{margin-top:16px}
       .footer-grid{grid-template-columns:1fr 1fr}
@@ -351,7 +428,7 @@
       .btn{width:100%}
       .signal-pills{display:grid;grid-template-columns:1fr}
       .mockup{border-radius:32px}.screen{border-radius:24px}
-      .insight-rail,.benefit-grid,.module-grid,.workflow,.plan-grid,.property-grid,.footer-grid{grid-template-columns:1fr}
+      .insight-rail,.benefit-grid,.module-grid,.workflow,.plan-grid,.property-grid,.support-grid,.alacarte-grid,.leverage-grid,.footer-grid{grid-template-columns:1fr}
       .section{padding:58px 0}
       .section-title{font-size:2.7rem;letter-spacing:-.02em}
       .portfolio-kpis{grid-template-columns:1fr 1fr}
@@ -1077,8 +1154,6 @@ nav{background:rgba(10,11,13,.86);}
 .module-card,.module-card.primary{background:linear-gradient(180deg,rgba(17,19,23,.94),rgba(10,11,13,.98));}
 .plan.featured{background:linear-gradient(180deg,#171A20,#101216);}
 
-
-
 /* Mobile-specific hero mockup cleanup: keep desktop rich, simplify first mobile view */
 @media(max-width:720px){
   .hero-visual{padding-top:10px;}
@@ -1112,7 +1187,6 @@ nav{background:rgba(10,11,13,.86);}
       <a href="index.html" class="brand"><span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="brand-wordmark">BRIC Studios</span></a>
       <div class="nav-links">
         <a href="#platform">Platform</a>
-        <a href="#owners">For Owners</a>
         <a href="#learning">Learning Studio</a>
         <a href="#pricing">Pricing</a>
         <a href="#dashboard">Dashboard</a>
@@ -1126,7 +1200,6 @@ nav{background:rgba(10,11,13,.86);}
     </div>
     <div class="mobile-menu" id="mobileMenu">
       <a href="#platform">Platform</a>
-      <a href="#owners">For Owners</a>
       <a href="#learning">Learning Studio</a>
       <a href="#pricing">Pricing</a>
       <a href="#dashboard">Dashboard</a>
@@ -1137,9 +1210,9 @@ nav{background:rgba(10,11,13,.86);}
   <header class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <div class="eyebrow"><span class="eyebrow-dot"></span>Property tools for owners</div>
-        <h1>Know your property. Know your <span class="serif">next move</span>.</h1>
-        <p>BRIC helps you estimate value, check expenses, find upside, and build cleaner marketing materials — all in one place.</p>
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Property valuation and planning tools</div>
+        <h1>Understand what your property is worth — and <span class="serif">what to do next</span>.</h1>
+        <p>BRIC helps property owners estimate value, review rents and expenses, uncover opportunities, and build cleaner marketing materials.</p>
         <div class="hero-actions">
           <a href="valuation.html" class="btn btn-primary">Start Valuation</a>
           <a href="#platform" class="btn btn-secondary">See Tools</a>
@@ -1179,7 +1252,7 @@ nav{background:rgba(10,11,13,.86);}
               <div class="screen-top">
                 <div>
                   <div class="screen-title">Valuation Studio</div>
-                  <div class="screen-sub">Brooklyn investment property · 6 units</div>
+                  <div class="screen-sub">Mixed-use property · 5 units + retail</div>
                 </div>
                 <div class="live-badge">LIVE</div>
               </div>
@@ -1255,6 +1328,9 @@ nav{background:rgba(10,11,13,.86);}
                       <div class="table-row"><span>1A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,650</span><span>$2,850</span></div>
                       <div class="table-row"><span>2A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,700</span><span>$2,900</span></div>
                       <div class="table-row"><span>3A</span><span class="bed-bath">1 <em>/</em> 1</span><span>$2,250</span><span>$2,450</span></div>
+                      <div class="table-row"><span>4A</span><span class="bed-bath">1 <em>/</em> 1</span><span>$2,300</span><span>$2,500</span></div>
+                      <div class="table-row"><span>4B</span><span class="bed-bath">Studio</span><span>$1,950</span><span>$2,150</span></div>
+                      <div class="table-row"><span>Retail</span><span class="bed-bath">Storefront</span><span>$4,800</span><span>$5,250</span></div>
                     </div>
                   </div>
                 </div>
@@ -1352,68 +1428,34 @@ nav{background:rgba(10,11,13,.86);}
       <div class="section-head">
         <div>
           <div class="kicker">Platform</div>
-          <h2 class="section-title">Start with your property. We’ll guide the <span class="serif">next step</span>.</h2>
+          <h2 class="section-title">Choose what you want to do <span class="serif">first</span>.</h2>
         </div>
-        <p class="section-copy">Choose what you want to do first: estimate value, build marketing materials, learn the terms, or see what is happening in your market.</p>
+        <p class="section-copy">Start with a valuation, build an OM, check market signals, or learn the terms.</p>
       </div>
       <div class="module-grid">
         <a href="valuation.html" class="card module-card primary">
           <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M5 25h22M9 21v-6M15 21V9M21 21v-9M8 12l6-4 5 4 6-7"/></svg></div>
           <div class="module-title">Valuation Studio</div>
-          <div class="module-copy">Estimate your property value, test assumptions, and see what may be helping or hurting your price.</div>
+          <div class="module-copy">Estimate value, review assumptions, and see what may move pricing.</div>
           <div class="module-link">Launch tool →</div>
         </a>
         <a href="om-studio.html" class="card module-card">
           <div class="module-icon"><svg viewBox="0 0 32 32"><rect x="7" y="5" width="18" height="22" rx="3"/><path d="M11 11h10M11 16h10M11 21h6"/></svg></div>
           <div class="module-title">OM Studio</div>
-          <div class="module-copy">Create a cleaner property presentation using your rent roll, expenses, photos, and highlights.</div>
+          <div class="module-copy">Turn property details into a cleaner offering package.</div>
           <div class="module-link">Open OM Studio →</div>
         </a>
         <a href="heatmap.html" class="card module-card">
           <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M6 10l7-3 6 3 7-3v15l-7 3-6-3-7 3zM13 7v15M19 10v15"/></svg></div>
           <div class="module-title">Market Intent Heatmaps</div>
-          <div class="module-copy">See where buyers are active and which neighborhoods may be gaining attention.</div>
+          <div class="module-copy">See where buyer activity and market signals may be changing.</div>
           <div class="module-link">View Market Signals →</div>
         </a>
         <a href="learning.html" class="card module-card">
           <div class="module-icon"><svg viewBox="0 0 32 32"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4M10 17h4M21 13h2"/></svg></div>
           <div class="module-title">Learning Studio</div>
-          <div class="module-copy">Learn the real estate terms and concepts you’ll see inside the tools.</div>
+          <div class="module-copy">Understand the terms behind valuation, financing, and deal decisions.</div>
           <div class="module-link">Open Learning Studio →</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-
-  
-<section class="section" id="owners">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="kicker">For Owners</div>
-          <h2 class="section-title">Know what your property is worth — and what to do <span class="serif">next</span>.</h2>
-        </div>
-        <p class="section-copy">Use BRIC to estimate value, compare expenses, prepare better materials, and decide whether to hold, improve, refinance, or sell.</p>
-      </div>
-      <div class="benefit-grid">
-        <a href="valuation.html" class="card benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 32 32"><path d="M5 25h22M9 21v-6M15 21V9M21 21v-9M8 12l6-4 5 4 6-7"/></svg></div>
-          <h3>Estimate value</h3>
-          <p>See a value range, key metrics, and the assumptions behind the estimate.</p>
-          <span class="benefit-link">Start Valuation →</span>
-        </a>
-        <a href="om-studio.html" class="card benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 32 32"><rect x="7" y="5" width="18" height="22" rx="3"/><path d="M11 11h10M11 16h10M11 21h6"/></svg></div>
-          <h3>Build better materials</h3>
-          <p>Turn your property information into a cleaner, more professional presentation.</p>
-          <span class="benefit-link">Open OM Studio →</span>
-        </a>
-        <a href="heatmap.html" class="card benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 32 32"><path d="M6 10l7-3 6 3 7-3v15l-7 3-6-3-7 3zM13 7v15M19 10v15"/></svg></div>
-          <h3>Watch the market</h3>
-          <p>See buyer activity and market signals that may affect timing.</p>
-          <span class="benefit-link">View Market Signals →</span>
         </a>
       </div>
     </div>
@@ -1424,25 +1466,25 @@ nav{background:rgba(10,11,13,.86);}
       <div class="section-head">
         <div>
           <div class="kicker">Learning Studio</div>
-          <h2 class="section-title">Learn the terms before you make a <span class="serif">decision</span>.</h2>
+          <h2 class="section-title">Real estate terms, explained <span class="serif">simply</span>.</h2>
         </div>
-        <p class="section-copy">Plain-English explanations for the terms, numbers, and decisions that show up in real estate deals.</p>
+        <p class="section-copy">Look up definitions and playbooks when a number, term, or decision is unclear.</p>
       </div>
       <div class="learning-grid">
         <a href="learning.html#dictionary" class="card learning-card">
           <div class="step">01</div>
           <h3>Dictionary</h3>
-          <p>Simple definitions for the most common real estate terms.</p>
+          <p>Quick definitions for common real estate terms.</p>
         </a>
         <a href="learning.html#guides" class="card learning-card">
           <div class="step">02</div>
           <h3>Owner guides</h3>
-          <p>Short guides that explain how buyers, lenders, and owners think about a property.</p>
+          <p>Short guides for buyers, lenders, owners, and deal decisions.</p>
         </a>
         <a href="learning.html#playbooks" class="card learning-card">
           <div class="step">03</div>
           <h3>Value-add playbooks</h3>
-          <p>Step-by-step guides for selling, refinancing, renovating, holding, and preparing an OM.</p>
+          <p>Simple playbooks for selling, refinancing, improving, holding, and OM prep.</p>
         </a>
       </div>
     </div>
@@ -1452,16 +1494,16 @@ nav{background:rgba(10,11,13,.86);}
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="kicker">Live Intelligence</div>
-          <h2 class="section-title">See what’s happening in your <span class="serif">market</span>.</h2>
+          <div class="kicker">Property Signals</div>
+          <h2 class="section-title">Signals that may affect <span class="serif">value</span>.</h2>
         </div>
-        <p class="section-copy">Use quick signals to understand buyer activity, expense pressure, and possible value changes.</p>
+        <p class="section-copy">Track demand, costs, and value movement in plain English.</p>
       </div>
       <div class="motion-strip">
-  <a class="motion-tile" href="heatmap.html" aria-label="View Market Signals heatmap">
+  <a class="motion-tile" href="heatmap.html" aria-label="View buyer activity and market signals">
     <small>Buyer activity</small>
-    <strong>+18%</strong>
-    <span>Interest compared with the last 30 days</span>
+    <strong>Demand is rising</strong>
+    <span>See when interest may be increasing in your market.</span>
     <div class="micro-chart">
       <div class="bar-chart">
         <div class="bar-col"><div class="bar-fill"></div></div>
@@ -1473,14 +1515,14 @@ nav{background:rgba(10,11,13,.86);}
       </div>
       <div class="bar-labels"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
     </div>
-    <div class="micro-foot"><span>Active buyers: 26</span><span>Lead trend: up</span></div>
-    <div class="motion-cta">View Market Signals →</div>
+    <div class="micro-foot"><span>Interest: +18%</span><span>Trend: up</span></div>
+    <div class="motion-cta">View market signals →</div>
   </a>
 
-  <a class="motion-tile" href="valuation.html" aria-label="Check Expenses in Valuation Studio">
-    <small>Expense check</small>
-    <strong>Water +12%</strong>
-    <span>See if an expense looks high</span>
+  <a class="motion-tile" href="valuation.html" aria-label="Review expense pressure in Valuation Studio">
+    <small>Expense pressure</small>
+    <strong>Costs may be high</strong>
+    <span>Compare major costs against similar properties.</span>
     <div class="micro-chart">
       <div class="benchmark-wrap">
         <div class="benchmark-track">
@@ -1488,76 +1530,30 @@ nav{background:rgba(10,11,13,.86);}
           <div class="benchmark-fill"></div>
           <div class="benchmark-marker"></div>
         </div>
-        <div class="benchmark-scale"><span>Low</span><span>Target range</span><span>High</span></div>
+        <div class="benchmark-scale"><span>Low</span><span>Typical range</span><span>High</span></div>
       </div>
     </div>
-    <div class="micro-foot"><span>Actual: $1,340/unit</span><span>Benchmark: $1,200/unit</span></div>
-    <div class="motion-cta">Check Expenses →</div>
+    <div class="micro-foot"><span>Example: water +12%</span><span>Review needed</span></div>
+    <div class="motion-cta">Review expenses →</div>
   </a>
 
-  <a class="motion-tile" href="valuation.html" aria-label="Open value estimate in Valuation Studio">
-    <small>Value estimate</small>
-    <strong>$1.92M–$2.18M</strong>
-    <span>Estimated range using current inputs</span>
+  <a class="motion-tile" href="valuation.html" aria-label="Open valuation movement in Valuation Studio">
+    <small>Value movement</small>
+    <strong>Value can change</strong>
+    <span>See how income, expenses, and assumptions may shift value.</span>
     <div class="micro-chart">
       <div class="range-wrap">
         <div class="range-track">
           <div class="range-fill"></div>
           <div class="range-marker"></div>
         </div>
-        <div class="range-points"><span>Low</span><span>Midpoint</span><span>High</span></div>
+        <div class="range-points"><span>Current</span><span>Improved</span><span>Stabilized</span></div>
       </div>
     </div>
-    <div class="micro-foot"><span>Cap rate: 6.15%</span><span>NOI: $182K</span></div>
-    <div class="motion-cta">Open Valuation Studio →</div>
+    <div class="micro-foot"><span>Range: $1.92M–$2.18M</span><span>Next step: model it</span></div>
+    <div class="motion-cta">Model your value →</div>
   </a>
 </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Property Types</div>
-          <h2 class="section-title">Works for real investment <span class="serif">properties</span>.</h2>
-        </div>
-        <p class="section-copy">BRIC helps owners understand value, expenses, upside, and next steps across common property types.</p>
-      </div>
-      <div class="property-grid">
-        <div class="card property-card">
-          <div>
-            <div class="property-badge">Multifamily</div>
-            <h3>Apartment buildings</h3>
-            <p>Use BRIC for small apartment buildings, walk-ups, and rent-regulated assets.</p>
-          </div>
-          <div class="property-note">Track rents, expenses, and value.</div>
-        </div>
-        <div class="card property-card">
-          <div>
-            <div class="property-badge">Mixed-Use</div>
-            <h3>Buildings with retail</h3>
-            <p>Understand how store rent and residential income work together in one property.</p>
-          </div>
-          <div class="property-note">Review income by use type.</div>
-        </div>
-        <div class="card property-card">
-          <div>
-            <div class="property-badge">Rental Condos</div>
-            <h3>Individual rental units</h3>
-            <p>Model value, expenses, and returns for condo units held as rental investments.</p>
-          </div>
-          <div class="property-note">Helpful for single-asset owners.</div>
-        </div>
-        <div class="card property-card">
-          <div>
-            <div class="property-badge">Portfolios</div>
-            <h3>Smaller portfolios</h3>
-            <p>Keep multiple properties organized so you can compare performance and plan next steps.</p>
-          </div>
-          <div class="property-note">See your assets in one place.</div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1566,45 +1562,183 @@ nav{background:rgba(10,11,13,.86);}
       <div class="card portfolio-shell">
         <div class="portfolio-copy">
           <div class="kicker">Dashboard</div>
-          <h2>Keep every property in one <span class="serif">clear</span> dashboard.</h2>
-          <p>Save properties, valuations, OMs, key numbers, and recent market signals in one place.</p>
-          <a href="dashboard.html" class="btn btn-secondary">Open Dashboard</a>
+          <h2>Save each property in one <span class="serif">place</span>.</h2>
+          <p>Keep valuations, OM drafts, expense reviews, notes, and next steps together.</p>
+          <a href="dashboard.html" class="btn btn-secondary dashboard-cta">Open Dashboard</a>
         </div>
-        <div class="portfolio-ui">
-          <div class="portfolio-head">
-            <div class="portfolio-title">Portfolio Snapshot</div>
-            <div class="live-badge">3 PROPERTIES</div>
+        <div class="dashboard-preview">
+          <div class="dashboard-top">
+            <div>
+              <div class="dashboard-title">Property Workspace</div>
+              <div class="dashboard-sub">Saved valuation, OM draft, expense review, and notes</div>
+            </div>
+            <div class="dashboard-pill">UPDATED TODAY</div>
           </div>
-          <div class="portfolio-kpis">
-            <div class="portfolio-kpi"><small>Value</small><strong>$7.84M</strong></div>
-            <div class="portfolio-kpi"><small>NOI</small><strong>$412K</strong></div>
-            <div class="portfolio-kpi"><small>Cap</small><strong>5.26%</strong></div>
-            <div class="portfolio-kpi"><small>Occ.</small><strong>100%</strong></div>
+
+          <div class="dashboard-portfolio-summary">
+            <div class="dashboard-portfolio-value">
+              <small>Portfolio value</small>
+              <strong>$7.84M</strong>
+              <span>Across saved properties</span>
+            </div>
+            <div class="dashboard-portfolio-count">
+              <small>Saved properties</small>
+              <strong>3 properties</strong>
+              <span>Add, compare, and track</span>
+            </div>
           </div>
-          <div class="portfolio-list">
-            <div class="portfolio-row"><span class="dot"></span>142 Bedford Ave · Buyer intel updated</div>
-            <div class="portfolio-row"><span class="dot"></span>88 Grand St · NOI improved +4.2%</div>
-            <div class="portfolio-row"><span class="dot"></span>320 Prospect Ave · Submarket alert</div>
+
+          <div class="saved-property">
+            <div class="saved-property-head">
+              <div>
+                <h3>Sample Workspace</h3>
+                <small>Private saved property view</small>
+              </div>
+              <div class="property-status">Next steps</div>
+            </div>
+            <div class="dashboard-metrics">
+              <div class="dashboard-metric"><span>Value range</span><strong>$1.92M–$2.18M</strong></div>
+              <div class="dashboard-metric"><span>Expense review</span><strong>2 flags</strong></div>
+              <div class="dashboard-metric"><span>OM status</span><strong>Draft ready</strong></div>
+            </div>
+            <div class="dashboard-tasks">
+              <div class="dashboard-task"><i class="task-dot"></i>Review expense benchmarks <span>Next</span></div>
+              <div class="dashboard-task"><i class="task-dot"></i>Build OM from valuation <span>Ready</span></div>
+              <div class="dashboard-task"><i class="task-dot"></i>Track value range over time <span>Track</span></div>
+            </div>
+          </div>
+
+          <div class="dashboard-bottom">
+            <div class="dashboard-action-card"><small>Saved work</small><strong>Valuations and OMs</strong></div>
+            <div class="dashboard-action-card"><small>Owner notes</small><strong>Notes and next steps</strong></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="alacarte-help">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="kicker">Workflow</div>
-          <h2 class="section-title">Start with the property. We’ll help with the <span class="serif">next step</span>.</h2>
+          <div class="kicker">À La Carte Help</div>
+          <h2 class="section-title">Need one thing? Buy one <span class="serif">thing</span>.</h2>
         </div>
-        <p class="section-copy">A simple flow for owners: understand value, find possible upside, then decide whether to hold, improve, refinance, or sell.</p>
+        <p class="section-copy">Use one-time reports, tool unlocks, and task-based help when you do not need a full plan.</p>
       </div>
-      <div class="workflow">
-        <a href="valuation.html" class="card workflow-card"><div class="step">01</div><h3>Understand the property</h3><p>Enter the property details and see the first value estimate.</p><div class="workflow-link">Open Valuation Studio →</div></a>
-        <a href="valuation.html" class="card workflow-card"><div class="step">02</div><h3>Find possible upside</h3><p>Spot rent, expense, or renovation opportunities.</p><div class="workflow-link">Find Upside →</div></a>
-        <a href="om-studio.html" class="card workflow-card"><div class="step">03</div><h3>Create the next step</h3><p>Build an OM or use the insights to plan your next move.</p><div class="workflow-link">Open OM Studio →</div></a>
+      <div class="alacarte-grid">
+        <a href="mailto:matthew@bricstudios.com?subject=Valuation%20review%20request" class="card alacarte-card">
+          <div class="alacarte-tag">One-time review</div>
+          <h3>Valuation review</h3>
+          <p>Review pricing assumptions, rents, expenses, and value range.</p>
+          <div class="alacarte-link">Request review →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=OM%20and%20marketing%20package%20request" class="card alacarte-card">
+          <div class="alacarte-tag">Marketing package</div>
+          <h3>OM / property package</h3>
+          <p>Create a cleaner package with highlights, financials, photos, and market context.</p>
+          <div class="alacarte-link">Build package →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Buyer%20review%20request" class="card alacarte-card">
+          <div class="alacarte-tag">Buyer check</div>
+          <h3>Buyer review</h3>
+          <p>Check whether a buyer looks credible, qualified, and likely to close.</p>
+          <div class="alacarte-link">Review buyer →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Due%20diligence%20support%20request" class="card alacarte-card">
+          <div class="alacarte-tag">Process help</div>
+          <h3>Due diligence support</h3>
+          <p>Organize leases, rent rolls, expenses, documents, and next steps.</p>
+          <div class="alacarte-link">Request diligence help →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Tour%20and%20showing%20support%20request" class="card alacarte-card">
+          <div class="alacarte-tag">Licensed support</div>
+          <h3>Tour / showing support</h3>
+          <p>Bring in licensed help for tours, buyer coordination, and property access.</p>
+          <div class="alacarte-link">Request tour support →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Custom%20a%20la%20carte%20support%20request" class="card alacarte-card">
+          <div class="alacarte-tag">Custom task</div>
+          <h3>Custom support</h3>
+          <p>Request help with a defined task instead of a full engagement.</p>
+          <div class="alacarte-link">Ask about support →</div>
+        </a>
       </div>
+      <p class="alacarte-note">Certain services may require a licensed broker, attorney, lender, contractor, or other qualified professional depending on the task and market.</p>
+    </div>
+  </section>
+
+  <section class="section" id="professional-support">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Professional Support</div>
+          <h2 class="section-title">Bring in the right help when you’re <span class="serif">ready</span>.</h2>
+        </div>
+        <p class="section-copy">Understand the property first. Then bring in licensed professionals for the specific help you need.</p>
+      </div>
+      <div class="support-grid">
+        <a href="mailto:matthew@bricstudios.com?subject=Broker%20advisory%20request" class="card support-card">
+          <div class="support-tag">Licensed broker</div>
+          <h3>Broker advisory</h3>
+          <p>Get pricing feedback, buyer guidance, or a second opinion.</p>
+          <div class="support-link">Request advisory →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Transaction%20support%20request" class="card support-card">
+          <div class="support-tag">Deal support</div>
+          <h3>Transaction support</h3>
+          <p>Get help with buyer review, diligence, tours, and process management.</p>
+          <div class="support-link">Request support →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Marketing%20support%20request" class="card support-card">
+          <div class="support-tag">Marketing</div>
+          <h3>Marketing support</h3>
+          <p>Improve photos, OM quality, listing prep, and presentation.</p>
+          <div class="support-link">Improve package →</div>
+        </a>
+        <a href="mailto:matthew@bricstudios.com?subject=Full%20brokerage%20representation" class="card support-card">
+          <div class="support-tag">Full service</div>
+          <h3>Full brokerage</h3>
+          <p>Complete representation from launch through closing.</p>
+          <div class="support-link">Discuss representation →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" id="owner-leverage">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Owner Transparency</div>
+          <h2 class="section-title">More clarity. More leverage for <span class="serif">owners</span>.</h2>
+        </div>
+        <p class="section-copy">Use clearer benchmarks to see where costs may be high, income may lag, or better options may exist.</p>
+      </div>
+      <div class="leverage-grid">
+        <div class="card leverage-card">
+          <div class="leverage-tag">Benchmarks</div>
+          <h3>Expense clarity</h3>
+          <p>Compare insurance, management, utilities, repairs, and other major costs.</p>
+        </div>
+        <div class="card leverage-card">
+          <div class="leverage-tag">Negotiation</div>
+          <h3>Owner leverage</h3>
+          <p>Use better comparisons to push for better pricing, service, or terms.</p>
+        </div>
+        <div class="card leverage-card">
+          <div class="leverage-tag">Competition</div>
+          <h3>Better provider options</h3>
+          <p>Let qualified providers compete when better options may exist.</p>
+        </div>
+        <div class="card leverage-card">
+          <div class="leverage-tag">Next steps</div>
+          <h3>Smarter decisions</h3>
+          <p>Decide whether to hold, refinance, improve, sell, or get support.</p>
+        </div>
+      </div>
+      <div class="leverage-note"><strong>Owner-first by design.</strong> Better information should help owners compare options, question costs, and make confident decisions.</div>
     </div>
   </section>
 
@@ -1613,15 +1747,15 @@ nav{background:rgba(10,11,13,.86);}
       <div class="section-head">
         <div>
           <div class="kicker">Pricing</div>
-          <h2 class="section-title">Start free. Upgrade when you need more <span class="serif">tools</span>.</h2>
+          <h2 class="section-title">Pick the level that fits your <span class="serif">next step</span>.</h2>
         </div>
-        <p class="section-copy">Start with one property. Upgrade when you need more saved properties, deeper tools, and better reports.</p>
+        <p class="section-copy">Start free, buy one-time help, or upgrade when you need deeper tools and more saved properties.</p>
       </div>
       <div class="plan-grid">
-        <div class="card plan"><div class="plan-tier">Starter</div><h3>Free</h3><div class="plan-price">$0<span>/forever</span></div><p>Basic valuation, simple learning tools, and one saved property.</p><div class="plan-note">Need one-off access? 24-hour a la carte access can unlock select premium tools when you need them.</div><div class="plan-btn">Get Started</div></div>
-        <div class="card plan"><div class="plan-tier">Starter+</div><h3>Starter</h3><div class="plan-price">$250<span>/mo</span></div><p>One property with OM tools, guides, and more platform access.</p><div class="plan-btn">Choose Plan</div></div>
-        <div class="card plan featured"><div class="plan-badge">Most Popular</div><div class="plan-tier">Growth</div><h3>Growth</h3><div class="plan-price">$400<span>/mo</span></div><p>Up to 3 properties with valuation, OM, learning, and market signal tools.</p><div class="plan-btn">Choose Plan</div></div>
-        <div class="card plan"><div class="plan-tier">Professional</div><h3>Pro</h3><div class="plan-price">$1,000<span>/mo</span></div><p>Unlimited properties, branded outputs, full learning access, and team workflows.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan"><div class="plan-tier">Starter</div><h3>Free</h3><div class="plan-price">$0<span>/forever</span></div><p>Basic valuation, learning tools, and one saved property.</p><div class="plan-note">Need one-off access? Use à la carte help instead of a monthly plan.</div><div class="plan-btn">Get Started</div></div>
+        <div class="card plan"><div class="plan-tier">Starter+</div><h3>Starter</h3><div class="plan-price">$250<span>/mo</span></div><p>One property with OM tools, guides, and more access.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan featured"><div class="plan-badge">Most Popular</div><div class="plan-tier">Growth</div><h3>Growth</h3><div class="plan-price">$400<span>/mo</span></div><p>Up to 3 properties with valuation, OM, learning, and market signals.</p><div class="plan-btn">Choose Plan</div></div>
+        <div class="card plan"><div class="plan-tier">Professional</div><h3>Pro</h3><div class="plan-price">$1,000<span>/mo</span></div><p>Unlimited properties, branded outputs, full access, and team workflows.</p><div class="plan-btn">Choose Plan</div></div>
       </div>
     </div>
   </section>
@@ -1658,7 +1792,6 @@ nav{background:rgba(10,11,13,.86);}
         <div>
           <h4>Company</h4>
           <ul>
-            <li><a href="#owners">For Owners</a></li>
             <li><a href="#learning">Learning Studio</a></li>
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#early-access">Early Access</a></li>
