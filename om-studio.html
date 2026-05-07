@@ -5433,4 +5433,168 @@ document.addEventListener('input', function(e){
 })();
 </script>
 
+
+
+<script>
+/* --- BRIC OM Studio: investor-grade output fixes 2026-05-07 --- */
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function byId(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function num(v){ var n=parseFloat(String(v||'').replace(/[$,]/g,'')); return Number.isFinite(n)?n:0; }
+  function money(v){ var n=num(v); return n ? '$'+Math.round(n).toLocaleString() : '—'; }
+  function pct(n){ n=Number(n)||0; return n.toFixed(2)+'%'; }
+  function val(id){ var el=byId(id); return el ? el.value : ''; }
+  function setVal(id,v){ var el=byId(id); if(el && v!==undefined && v!==null) el.value=String(v); }
+  function selectedText(id){ var el=byId(id); return el && el.selectedOptions && el.selectedOptions[0] ? el.selectedOptions[0].textContent : val(id); }
+  function isGrowth(){ var g=byId('tierGrowth'); return !!(g && g.classList.contains('active')); }
+  function isGenerated(){ try{return !!(window.__bricOmGenerated || omGenerated);}catch(e){return !!window.__bricOmGenerated;} }
+  function stateCode(){ return String(val('city')||'').toUpperCase(); }
+  function stateLabel(){ var s=stateCode(); try{ return (window.US_STATE_NAMES && US_STATE_NAMES[s]) || s; }catch(e){ return s; } }
+  function cityLabel(){ var t=selectedText('neighborhood'); if(!t || /^select/i.test(t)) return ''; return t; }
+  function zipFromText(s){ var m=String(s||'').match(/\b\d{5}(?:-\d{4})?\b/); return m?m[0].slice(0,5):''; }
+  var ZIP_SUBMARKETS={
+    '11211':'Williamsburg','11249':'Williamsburg','11222':'Greenpoint','11206':'Bushwick / Williamsburg','11237':'Bushwick','11221':'Bushwick / Bedford-Stuyvesant','11207':'East New York / Bushwick','11233':'Bedford-Stuyvesant / Ocean Hill','11216':'Bedford-Stuyvesant / Crown Heights','11238':'Prospect Heights / Crown Heights','11213':'Crown Heights','11225':'Prospect Lefferts Gardens / Crown Heights','11226':'Flatbush','11210':'Flatbush / Midwood','11203':'East Flatbush','11212':'Brownsville','11208':'East New York','11215':'Park Slope / Gowanus','11217':'Boerum Hill / Downtown Brooklyn','11201':'Brooklyn Heights / Downtown Brooklyn','11205':'Clinton Hill / Fort Greene','11231':'Carroll Gardens / Red Hook','11232':'Sunset Park','11220':'Sunset Park','11219':'Borough Park','11218':'Kensington / Windsor Terrace','11230':'Midwood','11235':'Sheepshead Bay / Brighton Beach','11224':'Coney Island','11223':'Gravesend','11214':'Bensonhurst','11209':'Bay Ridge',
+    '10001':'Chelsea / Hudson Yards','10002':'Lower East Side','10003':'East Village / Greenwich Village','10011':'Chelsea / West Village','10012':'SoHo / NoHo','10013':'TriBeCa / SoHo','10014':'West Village','10016':'Murray Hill / NoMad','10019':'Midtown West','10022':'Midtown East','10023':'Upper West Side','10024':'Upper West Side','10025':'Upper West Side / Morningside Heights','10027':'Harlem / Morningside Heights','10029':'East Harlem','10030':'Central Harlem','10031':'Hamilton Heights','10032':'Washington Heights','10033':'Washington Heights','10034':'Inwood','10035':'East Harlem','10036':'Times Square / Hell’s Kitchen','10038':'Financial District / Seaport','10065':'Upper East Side','10075':'Upper East Side','10128':'Upper East Side / Yorkville',
+    '11101':'Long Island City','11102':'Astoria','11103':'Astoria','11104':'Sunnyside','11105':'Astoria / Ditmars','11106':'Astoria / Ravenswood','11354':'Flushing','11355':'Flushing','11368':'Corona','11372':'Jackson Heights','11373':'Elmhurst','11375':'Forest Hills','11377':'Woodside','11385':'Ridgewood / Glendale','11432':'Jamaica','11435':'Jamaica','11691':'Far Rockaway',
+    '10451':'South Bronx / Concourse','10452':'Highbridge / Concourse','10453':'Morris Heights','10454':'Mott Haven','10455':'Mott Haven / Melrose','10456':'Morrisania','10457':'Tremont','10458':'Fordham / Belmont','10459':'Longwood','10460':'West Farms','10461':'Pelham Bay','10462':'Parkchester','10463':'Riverdale / Kingsbridge','10467':'Norwood / Williamsbridge','10468':'Fordham / Kingsbridge','10469':'Baychester','10472':'Soundview','10473':'Throgs Neck / Soundview','10301':'St. George / Stapleton','10304':'Stapleton / Todt Hill','10305':'Rosebank / Arrochar','10306':'New Dorp','10308':'Great Kills','10309':'Tottenville / Prince’s Bay','10310':'West Brighton','10314':'Mid-Island'
+  };
+  function inferredSubmarket(){
+    var zip=zipFromText(val('prCityStateZip')+' '+val('address'));
+    if(stateCode()==='NY' && ZIP_SUBMARKETS[zip]) return ZIP_SUBMARKETS[zip];
+    var manual=val('prSubmarket'); if(manual) return manual;
+    var adr=String(val('address')||'').toLowerCase();
+    var hints=[['Bushwick',['bushwick','wyckoff','knickerbocker','myrtle']],['Williamsburg',['williamsburg','bedford ave','berry st','wythe']],['Greenpoint',['greenpoint','manhattan ave','india st']],['Bedford-Stuyvesant',['bed stuy','bedford-stuyvesant','nostrand ave','tompkins']],['Flatbush',['flatbush','church ave','cortelyou']],['Park Slope',['park slope','5th ave','7th ave','prospect park west']],['Prospect Lefferts Gardens',['prospect lefferts','plg','lefferts']],['Crown Heights',['crown heights','eastern parkway']]];
+    for(var i=0;i<hints.length;i++){ if(hints[i][1].some(function(h){return adr.indexOf(h)>-1;})) return hints[i][0]; }
+    return cityLabel();
+  }
+  function commercialCount(){ return num(val('retailUnitCount')) || num(val('prCommercialUnits')); }
+  function residentialCount(){ return num(val('residentialUnitCount')) || num(val('prResidentialUnits')); }
+  function getRR(){ try{return Array.isArray(rrItems)?rrItems:[]}catch(e){return [];} }
+  function calcRentAnnuals(){
+    var rr=getRR(), cur=0,pf=0;
+    if(rr.length){ rr.forEach(function(it){ var c=num(it.currentRent), p=num(it.proformaRent); cur += (it.type==='retail'&&it.frequency==='annual')?c:c*12; pf += (it.type==='retail'&&it.frequency==='annual')?p:p*12; }); }
+    else { cur=num(val('grossIncome')); pf=cur; }
+    cur += num(val('otherIncome')); pf += num(val('otherIncome'));
+    return {current:cur, proforma:pf};
+  }
+  function expenseLines(){
+    var lines=[];
+    try{ if(typeof collectItemizedExpenses==='function') lines=collectItemizedExpenses(); }catch(e){}
+    lines=(lines||[]).filter(function(e){return e && (String(e.name||'').trim() || num(e.amount));});
+    if(!lines.length && num(val('totalExpenses'))) lines=[{name:'Total Operating Expenses',amount:num(val('totalExpenses'))}];
+    return lines;
+  }
+  function classifyExpense(name){ name=String(name||'').toLowerCase(); if(/tax/.test(name)) return 'taxes'; if(/insurance/.test(name)) return 'insurance'; if(/water|sewer/.test(name)) return 'water'; if(/heat|fuel|gas/.test(name)) return 'heat'; if(/electric|common/.test(name)) return 'electric'; if(/repair|maintenance|r&m/.test(name)) return 'repairs'; if(/management|admin|legal/.test(name)) return 'management'; if(/payroll|super|salary/.test(name)) return 'payroll'; return 'other'; }
+  function benchmarkFor(category,egi){ var units=Math.max(1,residentialCount()+commercialCount()); var sf=Math.max(num(val('sqft')),num(val('prGrossBuildingSf')),1); if(category==='taxes') return null; if(category==='insurance') return Math.max(units*1200,sf*.85); if(category==='water') return units*900; if(category==='heat') return sf*1.15; if(category==='electric') return sf*.22; if(category==='repairs') return Math.max(units*750,sf*.65); if(category==='management') return egi*.03; if(category==='payroll') return units<=10?0:units*900; return null; }
+  function expenseSavings(egi){
+    var lines=expenseLines(), total=0, savings=0, rows=[];
+    lines.forEach(function(e){ var amt=num(e.amount), cat=classifyExpense(e.name), bench=benchmarkFor(cat,egi); var save=bench==null?0:Math.max(0,amt-bench); total+=amt; savings+=save; rows.push({name:e.name,current:amt,benchmark:bench,savings:save}); });
+    return {total:total,savings:savings,rows:rows};
+  }
+  function ensureOutputFixStyles(){
+    if(byId('bricInvestorFixStyles')) return;
+    var st=document.createElement('style'); st.id='bricInvestorFixStyles'; st.textContent=`
+      .valuation-upside-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.valuation-upside-card{background:rgba(255,255,255,.68);border:1px solid rgba(8,16,12,.08);border-radius:20px;padding:16px}.valuation-upside-card .label{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(8,16,12,.48);margin-bottom:6px}.valuation-upside-card .value{font-family:var(--sans);font-weight:900;font-size:1.32rem;color:#173528;letter-spacing:-.035em}.valuation-upside-card.gold .value{color:#8a6d20}.valuation-bars{display:grid;gap:12px;margin-top:14px}.valuation-bar-row{display:grid;grid-template-columns:150px 1fr 112px;gap:12px;align-items:center}.valuation-bar-label{font-weight:800;color:#08100c}.valuation-bar-track{height:16px;background:rgba(8,16,12,.08);border-radius:999px;overflow:hidden}.valuation-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#173528,#8bc7a3)}.valuation-bar-fill.gold{background:linear-gradient(90deg,#9f7b2a,#d6b65c)}.valuation-bar-value{text-align:right;font-family:var(--mono);font-weight:800;color:#173528;font-size:.74rem}.market-intel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.market-intel-card{background:rgba(255,255,255,.62);border:1px solid rgba(8,16,12,.08);border-radius:18px;padding:14px}.market-intel-card .label{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(8,16,12,.45);margin-bottom:5px}.market-intel-card .value{font-weight:900;color:#08100c;line-height:1.2}.market-bullet-box{margin-top:14px;border-radius:20px;background:rgba(111,191,143,.075);border:1px solid rgba(111,191,143,.16);padding:15px 18px}.market-bullet-box ul{margin:0;padding-left:18px;display:grid;gap:8px}.market-bullet-box li{color:#08100c;line-height:1.52}.rr-bedbath-cell{font-family:var(--mono);font-weight:800;color:#173528}.money-input-note{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.28rem;line-height:1.35}@media(max-width:980px){.valuation-upside-grid,.market-intel-grid{grid-template-columns:1fr}.valuation-bar-row{grid-template-columns:1fr}.valuation-bar-value{text-align:left}}`;
+    document.head.appendChild(st);
+  }
+  function formatTaxInput(){ var el=byId('prEstimatedTaxes'); if(!el) return; if(!el.dataset.taxFix){ el.dataset.taxFix='1'; el.addEventListener('blur',function(){ if(num(el.value)) el.value=money(el.value); }); if(!el.parentNode.querySelector('.money-input-note')) el.insertAdjacentHTML('afterend','<div class="money-input-note">Enter numbers only. BRIC formats this as currency in the OM.</div>'); } }
+  function findPage(title){ var doc=document.querySelector('#omPreview .om-doc'); if(!doc) return null; return Array.prototype.slice.call(doc.children).find(function(p){ var h=p.querySelector&&p.querySelector('.om-page-hd-title'); return h && (h.textContent||'').trim()===title; }); }
+  function tableRows(page){ return page ? Array.prototype.slice.call(page.querySelectorAll('table tr')) : []; }
+  function rowLabel(row){ var c=row && row.children && row.children[0]; return c?String(c.textContent||'').trim():''; }
+  function setRowValue(page,label,value){ tableRows(page).some(function(r){ if(rowLabel(r)===label){ if(r.children[1]) r.children[1].textContent=value || '—'; return true; } return false; }); }
+  function removeRow(page,label){ tableRows(page).forEach(function(r){ if(rowLabel(r)===label) r.remove(); }); }
+  function addRowAfter(page,afterLabel,label,value){
+    var exists=tableRows(page).some(function(r){return rowLabel(r)===label;}); if(exists) return;
+    var target=tableRows(page).find(function(r){return rowLabel(r)===afterLabel;}); if(!target) return;
+    var tr=document.createElement('tr'); tr.innerHTML='<td>'+esc(label)+'</td><td>'+esc(value||'—')+'</td>'; target.parentNode.insertBefore(tr,target.nextSibling);
+  }
+  function patchPropertyDescription(){
+    var page=document.querySelector('#omPreview .om-doc .public-record-page'); if(!page) return;
+    var zip=zipFromText(val('prCityStateZip')+' '+val('address'));
+    var city=cityLabel() || val('prNeighborhood') || '';
+    var st=stateCode() || val('prBorough') || '';
+    var sub=inferredSubmarket();
+    if(city) setRowValue(page,'City',city);
+    if(st) setRowValue(page,'State',st);
+    if(sub) { addRowAfter(page,'State','Submarket',sub); setRowValue(page,'Submarket',sub); }
+    if(city || st || zip) setRowValue(page,'City / State / Zip',[city, st+(zip?' '+zip:'')].filter(Boolean).join(', '));
+    setRowValue(page,'Annual Estimated Taxes',money(val('prEstimatedTaxes')));
+    if(!commercialCount()) removeRow(page,'Commercial Units');
+    ['Tax Class','Lot SF','Zoning','Land Use','Building Class'].forEach(function(label){
+      tableRows(page).forEach(function(r){ if(rowLabel(r)===label && r.children[1] && !String(r.children[1].textContent||'').trim()) r.children[1].textContent='—'; });
+    });
+  }
+  function patchRentRollBedBath(){
+    var page=findPage('Rent Roll'); if(!page) return;
+    var table=page.querySelector('.rr-display-table'); if(!table || table.dataset.bedBathPatched==='1') return;
+    var header=table.querySelector('thead tr'); if(header){ var th=document.createElement('th'); th.textContent='Bed / Bath'; header.insertBefore(th, header.children[2] || null); }
+    var rr=getRR();
+    Array.prototype.slice.call(table.querySelectorAll('tbody tr')).forEach(function(tr,idx){
+      if(tr.classList.contains('totals')){ var td=document.createElement('td'); td.textContent='—'; tr.insertBefore(td,tr.children[2]||null); return; }
+      var item=rr[idx]||{}; var text='—';
+      if(item && item.type!=='retail'){
+        var bed=num(item.bed), bath=num(item.bath);
+        text=(bed?bed+' BR':'Studio')+(bath?' / '+bath+' BA':'');
+      }
+      var td=document.createElement('td'); td.className='rr-bedbath-cell'; td.textContent=text; tr.insertBefore(td,tr.children[2]||null);
+    });
+    table.dataset.bedBathPatched='1';
+  }
+  function patchMarketOverview(){
+    var page=findPage('Market Overview'); if(!page || page.querySelector('.market-intel-grid')) return;
+    var city=cityLabel(), st=stateLabel(), sub=inferredSubmarket(), zip=zipFromText(val('prCityStateZip')+' '+val('address'));
+    var latlng=val('prLatLng') || ((window.propertyGeo&&propertyGeo.lat&&propertyGeo.lng)?(propertyGeo.lat.toFixed(5)+', '+propertyGeo.lng.toFixed(5)):'Pending geocode');
+    var units=residentialCount()+commercialCount();
+    var content='<div class="market-intel-grid"><div class="market-intel-card"><div class="label">Geocoded Market</div><div class="value">'+esc([sub||city, city, st].filter(Boolean).join(' · '))+'</div></div><div class="market-intel-card"><div class="label">ZIP / Coordinates</div><div class="value">'+esc([zip||'ZIP pending', latlng].join(' · '))+'</div></div><div class="market-intel-card"><div class="label">Asset Positioning</div><div class="value">'+esc((val('propertyType')||'Property')+' · '+(units||'—')+' unit'+(units===1?'':'s'))+'</div></div></div>';
+    var bullets=[
+      'The market overview is tied to the submitted property address, city, state, ZIP code, and geocoded coordinates, not generic borough language.',
+      'Submarket positioning is inferred from ZIP/address where available and remains editable before export.',
+      'Local demand narrative should be reviewed around transit access, neighborhood amenities, rental demand, and buyer depth for the selected asset type.',
+      'For investor review, BRIC frames the location around what supports income durability, rent growth, and exit liquidity.'
+    ];
+    content+='<div class="market-bullet-box"><ul>'+bullets.map(function(b){return '<li>'+esc(b)+'</li>';}).join('')+'</ul></div>';
+    var desc=page.querySelector('.om-description'); if(desc) desc.insertAdjacentHTML('afterend',content);
+  }
+  function patchContactPage(){
+    var doc=document.querySelector('#omPreview .om-doc'); if(!doc || !isGrowth() || !isGenerated()) return;
+    var has=Array.prototype.slice.call(doc.children).some(function(p){ var h=p.querySelector&&p.querySelector('.om-page-hd-title'); return h && /Contact/i.test(h.textContent||''); });
+    var row=document.querySelector('[data-toggle="toggleContactPage"]'); var on=!row || row.classList.contains('active') || (row.querySelector('.toggle')&&row.querySelector('.toggle').classList.contains('on'));
+    if(has || !on || typeof renderContactPage!=='function') return;
+    var p=typeof collectOmData==='function'?collectOmData():{};
+    var temp=document.createElement('div'); temp.innerHTML=renderContactPage(p); var node=temp.firstElementChild; if(node) doc.appendChild(node);
+  }
+  function patchValuationPage(){
+    var page=findPage('Valuation Analysis'); if(!page || page.dataset.upsideValuationPatched==='1') return;
+    var rents=calcRentAnnuals(); var expenses=expenseSavings(rents.proforma*.96); var currentExpenses=expenses.total || num(val('totalExpenses'));
+    var vacancy=.04, currentNOI=rents.current*(1-vacancy)-currentExpenses, proformaNOI=rents.proforma*(1-vacancy)-currentExpenses;
+    var optimizedNOI=proformaNOI+expenses.savings; var cap=num(val('marketCap'))||6.5; var ask=num(val('askingPrice'));
+    var currentValue=currentNOI/(cap/100), proformaValue=proformaNOI/(cap/100), optimizedValue=optimizedNOI/(cap/100);
+    var max=Math.max(currentValue,proformaValue,optimizedValue,1);
+    var rows=[
+      ['Current income / current expenses',currentNOI,currentValue],
+      ['Pro forma rents / current expenses',proformaNOI,proformaValue],
+      ['Pro forma rents / benchmark expense review',optimizedNOI,optimizedValue]
+    ].map(function(r,i){return '<tr><td>'+esc(r[0])+'</td><td class="num">'+money(r[1])+'</td><td class="num pf-val">'+money(r[2])+'</td></tr>';}).join('');
+    var bars=[['Current Value',currentValue,''],['Rent Upside Value',proformaValue,''],['Rent + Expense Upside',optimizedValue,'gold']].map(function(b){return '<div class="valuation-bar-row"><div class="valuation-bar-label">'+esc(b[0])+'</div><div class="valuation-bar-track"><div class="valuation-bar-fill '+b[2]+'" style="width:'+Math.max(2,(b[1]/max)*100)+'%"></div></div><div class="valuation-bar-value">'+money(b[1])+'</div></div>';}).join('');
+    var section=page.querySelector('.om-section')||page;
+    section.innerHTML='<div class="valuation-upside-grid"><div class="valuation-upside-card"><div class="label">Current NOI</div><div class="value">'+money(currentNOI)+'</div></div><div class="valuation-upside-card"><div class="label">Projected NOI</div><div class="value">'+money(proformaNOI)+'</div></div><div class="valuation-upside-card gold"><div class="label">Projected NOI With Expense Review</div><div class="value">'+money(optimizedNOI)+'</div></div></div><table class="om-table"><thead><tr><th>Scenario</th><th class="num">NOI</th><th class="num">Value @ '+pct(cap)+' Cap</th></tr></thead><tbody>'+rows+'</tbody></table><div class="chart-card span-2" style="margin-top:18px"><div class="chart-card-title">Projected Income & Value Upside</div><div class="valuation-bars">'+bars+'</div></div><div class="disclaimer">This page is intended to show directional upside from rent growth and potential expense optimization. It is not an appraisal. Buyers should verify all rents, expenses, cap rates, and legal ability to achieve pro forma assumptions.</div>';
+    page.dataset.upsideValuationPatched='1';
+  }
+  function postProcess(){
+    ensureOutputFixStyles(); formatTaxInput();
+    if(!isGenerated()) return;
+    patchPropertyDescription(); patchRentRollBedBath(); patchMarketOverview(); patchValuationPage(); patchContactPage();
+    try{ if(typeof applyBricOmFooters==='function') applyBricOmFooters(); }catch(e){}
+  }
+  function wrapGenerate(){ if(window.__bricInvestorFixWrapped) return; window.__bricInvestorFixWrapped=true; var old=window.generate; window.generate=function(){ var r=old && old.apply(this,arguments); setTimeout(postProcess,0); setTimeout(postProcess,100); setTimeout(postProcess,260); return r; }; }
+  ready(function(){
+    ensureOutputFixStyles(); formatTaxInput(); wrapGenerate();
+    document.addEventListener('blur',function(e){ if(e.target && e.target.id==='prEstimatedTaxes' && num(e.target.value)) e.target.value=money(e.target.value); },true);
+    document.addEventListener('input',function(e){ if(e.target && ['prEstimatedTaxes','prCommercialUnits','retailUnitCount','residentialUnitCount','neighborhood','city','address'].includes(e.target.id)) setTimeout(postProcess,0); },true);
+    setTimeout(postProcess,300);
+  });
+})();
+</script>
+
 </body></html>
