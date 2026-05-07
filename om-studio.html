@@ -898,7 +898,7 @@ body.growth-mode .locked-inline-note b{
 <div class="tier-bar"><span class="tier-label">Plan</span><div class="tier-wrap"><button class="tier-btn active" id="tierFree" onclick="setTier('free')">Free</button><button class="tier-btn" id="tierGrowth" onclick="setTier('growth')">Growth</button></div><span id="tierDesc" style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em">Build your OM with live preview and market pro forma</span></div>
 <div class="app"><div class="panel-left"><div class="panel-header"><div class="panel-eyebrow">Investor Document Generator</div><div class="panel-title">Offering Memorandum</div><div class="panel-sub">Start by importing from Valuation Studio, or build a one-page free property details sheet before upgrading to the full Growth OM.</div></div>
 <div class="form-section"><div class="form-section-title">Import From Previous Activity</div><div class="import-note" id="importNote"><b>Growth only:</b> Choose a saved property, valuation, or OM draft from previous activity so you don't have to enter the same information twice.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn" type="button" id="importBtn" onclick="importFromValuation()" style="width:100%">Choose Property / Valuation</button><button class="action-btn" type="button" id="saveBtn" onclick="saveOmDraft()" style="width:100%">Save OM Draft</button></div><div class="import-picker" id="importPicker"><div class="field"><label>Saved Activity</label><select id="valuationImportSelect" onchange="previewImportSelection()"><option value="">Select saved property or valuation</option></select></div><div id="importPickerPreview" class="import-picker-preview">Select a saved item to preview what will be imported.</div><div class="field-row" style="margin-top:0.7rem"><button class="action-btn primary" type="button" onclick="importSelectedActivity()" style="width:100%">Import Selected</button><button class="action-btn" type="button" onclick="closeImportPicker()" style="width:100%">Cancel</button></div></div></div>
-<div class="form-section"><div class="form-section-title">Property Details</div><div class="field"><label>Property Address</label><input type="text" id="address" placeholder="Enter property address"></div><div class="field-row"><div class="field"><label>Borough</label><select id="city" onchange="handleBoroughChange()"><option value="" selected>Select borough</option><option value="Brooklyn">Brooklyn</option><option value="Manhattan">Manhattan</option><option value="Queens">Queens</option><option value="Bronx">Bronx</option><option value="Staten Island">Staten Island</option></select></div><div class="field"><label>Submarket</label><select id="neighborhood"><option value="" selected>Select borough first</option></select><div class="info-note" id="submarketHelp">Choose a borough to load neighborhoods, or enter an address and BRIC will try to detect it.</div></div></div><div class="field-row"><div class="field"><label>Property Type</label><select id="propertyType"><option value="" selected>Select property type</option><option value="Mixed-Use">Mixed-Use</option><option value="Multifamily">Multifamily</option><option value="Retail">Retail</option><option value="Development">Development</option></select></div><div class="field"><label>Year Built</label><input type="number" id="yearBuilt" placeholder="Year built"></div></div>
+<div class="form-section"><div class="form-section-title">Property Details</div><div class="field"><label>Property Address</label><input type="text" id="address" placeholder="Enter property address"></div><div class="field-row"><div class="field"><label>State</label><select id="city" onchange="handleBoroughChange()"><option value="" selected>Select state</option></select></div><div class="field"><label>City</label><select id="neighborhood"><option value="" selected>Select state first</option></select><div class="info-note" id="submarketHelp">Choose a state to load cities, or enter an address and BRIC will try to detect it.</div></div></div><div class="field-row"><div class="field"><label>Property Type</label><select id="propertyType"><option value="" selected>Select property type</option><option value="Mixed-Use">Mixed-Use</option><option value="Multifamily">Multifamily</option><option value="Retail">Retail</option><option value="Development">Development</option></select></div><div class="field"><label>Year Built</label><input type="number" id="yearBuilt" placeholder="Year built"></div></div>
 <div class="development-panel" id="developmentPanel">
   <div class="form-section-title" style="margin-bottom:.65rem">Development Site Inputs</div>
   <div class="field-row">
@@ -919,8 +919,8 @@ body.growth-mode .locked-inline-note b{
 <div class="field-row"><div class="field"><label>Square Feet</label><input type="number" id="sqft" placeholder="Enter total SF"></div><div class="field"><label>Asking Price</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="askingPrice" placeholder="Enter asking price"></div></div></div><div class="field-row"><div class="field"><label>Residential Units</label><input type="number" id="residentialUnitCount" placeholder="Example: 5" min="0"></div><div class="field"><label>Retail / Commercial Spaces</label><input type="number" id="retailUnitCount" placeholder="Example: 1" min="0"></div></div><div class="field"><label>Unit Mix / Breakdown</label><textarea id="unitMixBreakdown" rows="3" placeholder="Free example: 5 apartments + 1 store, or 3 two-bedrooms, 2 one-bedrooms, 1 retail space"></textarea><div class="info-note">Free users can summarize the unit count here. Growth unlocks the full itemized rent roll with unit-by-unit inputs.</div></div></div>
 <div class="form-section"><div class="form-section-title">Income Snapshot</div><div class="field-row"><div class="field"><label>Gross Rental Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="grossIncome" placeholder="Free version uses this unless Growth rent roll is enabled"></div></div><div class="field"><label>Additional Income (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="otherIncome" placeholder="Additional annual income"></div></div></div><div class="toggle-row growth-gated-row" id="rentRollGate" onclick="toggleRentRoll()"><div class="toggle-label-wrap"><div class="toggle-main">Use Itemized Rent Roll <span class="pill-badge growth-badge">Growth</span></div><div class="toggle-sub">Select apartment/store count, then expand rows to input unit-level details like the valuation builder</div></div><div class="toggle" id="rentRollToggle"></div></div><div class="locked-inline-note" id="rentRollLockedNote">Free uses the annual gross rental income box above. Growth unlocks the itemized rent roll dropdown with apartment and retail rows.</div><div class="rr-controls-wrap" id="rentRollControls"><div class="count-grid"><div class="field"><label>Residential Units</label><select id="resCount"></select></div><div class="field"><label>Retail Spaces</label><select id="retailCount"></select></div></div><div class="upload-box"><div class="upload-label">Upload Rent Roll / PDFs / Excel</div><input type="file" id="rentRollUpload" multiple accept=".pdf,.xls,.xlsx,.csv,.png,.jpg,.jpeg"></div><div class="rr-wrap" id="rentRollWrap"></div><div class="rr-summary" id="rrSummary" style="display:none"></div><div class="info-note">Growth rent roll: choose the number of apartments and stores, then each generated row opens below with unit, bed/bath, SF, rent, pro forma, retail tenant, lease expiration, and rent bumps.</div></div></div>
 <div class="form-section"><div class="form-section-title">Expenses</div><div class="field"><label>Total Expenses (Annual)</label><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="totalExpenses" placeholder="Enter total annual expenses"></div><div class="total-expense-note"><b>Free:</b> use the total expense box. <b>Growth:</b> open itemized expenses below if you want a detailed expense schedule.</div></div><div class="toggle-row growth-gated-row" id="expenseGate" onclick="toggleExpenseItemization()"><div class="toggle-label-wrap"><div class="toggle-main">Itemize Expenses <span class="pill-badge growth-badge">Growth</span></div><div class="toggle-sub">Break out taxes, insurance, heat, water, common electric, repairs, management, and custom lines</div></div><div class="toggle" id="expenseItemizedToggle"></div></div><div class="locked-inline-note" id="expenseLockedNote">Free uses the single annual total expense input. Growth unlocks itemized expense rows.</div><div class="expense-itemized-wrap" id="expenseItemizedWrap"><div id="expenseRows"></div><button class="add-btn" type="button" onclick="addExpenseRow()">+ Add Additional Expense</button></div></div>
-<div class="form-section"><div class="form-section-title">Description <span class="pill-badge growth-badge">Growth</span></div><div class="description-growth-wrap" id="descriptionGate"><div class="field"><textarea id="description" rows="5" placeholder="Growth: enter or AI-generate the property description"></textarea><div class="ai-description-box"><div class="ai-description-copy"><b>AI description helper:</b> Builds a polished OM description using the address, borough, submarket, property type, rent roll, expenses, cap rate, trend, and pricing assumptions you submitted.</div><button class="action-btn primary" type="button" onclick="generateAIDescription()">AI Build Description</button></div><details class="customize-panel" id="descriptionCustomizePanel"><summary>Customize Description</summary><div class="customize-body"><div class="field-row" style="margin-top:0.75rem"><div class="field"><label>Tone</label><select id="descTone"><option>Broker-style</option><option>Institutional</option><option>Owner-friendly</option><option>Short & Direct</option><option>Premium / Polished</option></select></div><div class="field"><label>Length</label><select id="descLength"><option>Medium</option><option>Short</option><option>Detailed</option></select></div></div><div class="field"><label>Emphasis</label><select id="descEmphasis"><option>Balanced</option><option>Upside</option><option>Stability</option><option>Location / Transit</option><option>Renovation / Value-Add</option></select></div><div class="field"><label>Custom Notes For AI</label><textarea id="descCustomNotes" rows="3" placeholder="Example: emphasize free-market units, new retail lease, proximity to subway, expense upside, tax class, etc."></textarea></div><div class="mini-custom-note">These settings only affect the description when you click AI Build Description. Manual edits are always respected.</div></div></details></div></div><div class="locked-inline-note" id="descriptionLockedNote">Free generates only the one-page Property Details sheet. Growth unlocks the custom description section and AI description builder.</div></div>
-<div class="form-section"><div class="form-section-title">Market &amp; Valuation Assumptions</div><div class="field-row"><div class="field"><label>Market Cap Rate Assumption</label><div class="input-wrap has-suffix"><input type="number" id="marketCap" placeholder="Example: 6.5" step="0.1"><span class="input-suffix">%</span></div><div class="info-note">Used to calculate the estimated value range and cap-rate analysis.</div></div><div class="field"><label>Submarket Trend / Positioning</label><select id="submarketTrend"><option value="" selected>Select positioning</option><option>Strong Growth</option><option>Stable Growth</option><option>Value-Add Market</option><option>Emerging</option><option>Stabilized Income</option><option>Transit-Oriented</option><option>Development Upside</option></select><div class="info-note">This feeds the AI market overview and investor-facing narrative.</div></div></div></div>
+<div class="form-section"><div class="form-section-title">Description <span class="pill-badge growth-badge">Growth</span></div><div class="description-growth-wrap" id="descriptionGate"><div class="field"><textarea id="description" rows="5" placeholder="Growth: enter or AI-generate the property description"></textarea><div class="ai-description-box"><div class="ai-description-copy"><b>AI description helper:</b> Builds a polished OM description using the address, state, city, property type, rent roll, expenses, cap rate, trend, and pricing assumptions you submitted.</div><button class="action-btn primary" type="button" onclick="generateAIDescription()">AI Build Description</button></div><details class="customize-panel" id="descriptionCustomizePanel"><summary>Customize Description</summary><div class="customize-body"><div class="field-row" style="margin-top:0.75rem"><div class="field"><label>Tone</label><select id="descTone"><option>Broker-style</option><option>Institutional</option><option>Owner-friendly</option><option>Short & Direct</option><option>Premium / Polished</option></select></div><div class="field"><label>Length</label><select id="descLength"><option>Medium</option><option>Short</option><option>Detailed</option></select></div></div><div class="field"><label>Emphasis</label><select id="descEmphasis"><option>Balanced</option><option>Upside</option><option>Stability</option><option>Location / Transit</option><option>Renovation / Value-Add</option></select></div><div class="field"><label>Custom Notes For AI</label><textarea id="descCustomNotes" rows="3" placeholder="Example: emphasize free-market units, new retail lease, proximity to subway, expense upside, tax class, etc."></textarea></div><div class="mini-custom-note">These settings only affect the description when you click AI Build Description. Manual edits are always respected.</div></div></details></div></div><div class="locked-inline-note" id="descriptionLockedNote">Free generates only the one-page Property Details sheet. Growth unlocks the custom description section and AI description builder.</div></div>
+<div class="form-section"><div class="form-section-title">Market &amp; Valuation Assumptions</div><div class="field-row"><div class="field"><label>Market Cap Rate Assumption</label><div class="input-wrap has-suffix"><input type="number" id="marketCap" placeholder="Example: 6.5" step="0.1"><span class="input-suffix">%</span></div><div class="info-note">Used to calculate the estimated value range and cap-rate analysis.</div></div><div class="field"><label>Market Trend / Positioning</label><select id="submarketTrend"><option value="" selected>Select positioning</option><option>Strong Growth</option><option>Stable Growth</option><option>Value-Add Market</option><option>Emerging</option><option>Stabilized Income</option><option>Transit-Oriented</option><option>Development Upside</option></select><div class="info-note">This feeds the AI market overview and investor-facing narrative.</div></div></div></div>
 <div class="form-section"><div class="form-section-title">Property Photos</div><div class="upload-box"><div class="upload-label">Upload Property Photos / Plans</div><input type="file" id="propertyPhotosUpload" multiple accept=".png,.jpg,.jpeg,.webp,.pdf"></div><div class="photo-upload-note">For now this creates the OM photo section placeholder. Next phase can read uploaded image previews directly into the OM export.</div></div>
 
 <div class="form-section"><div class="form-section-title">Sections to Include</div><div class="free-details-page-note"><b>Free:</b> Generate one clean Property Details page. <b>Growth:</b> unlock the full OM sections below, including cover, highlights, rent roll, financials, maps, market overview, and photos.</div><div class="section-toggles">
@@ -939,7 +939,7 @@ body.growth-mode .locked-inline-note b{
 
 <div class="section-toggle locked-growth" data-growth-only="true" data-toggle="toggleTransitMap"><div class="section-toggle-row"><div class="section-toggle-info"><div class="section-toggle-name">Transit Map<span class="lock-badge">Growth</span></div><div class="section-toggle-sub">Nearby subway / transit access</div></div><button class="edit-actions-btn" type="button" onclick="toggleSectionEditor(event,'transitMapEditor')">Edit Actions</button><div class="toggle"></div></div></div><div class="section-editor" id="transitMapEditor"><div class="field-row"><div class="field"><label>Transit Map Zoom</label><select id="transitMapZoom"><option value="14" selected>Wider</option><option value="13">Very Wide</option><option value="15">Medium</option></select></div><div class="field"><label>Transit Lines To Highlight</label><input type="text" id="transitLines" placeholder="Example: 2, 5, B, Q, A, C, L"></div></div><div class="mini-custom-note">Transit map is intentionally zoomed out more than the local map to show train access around the property.</div></div>
 
-<div class="section-toggle locked-growth" data-growth-only="true" data-toggle="toggleMarket"><div class="section-toggle-row"><div class="section-toggle-info"><div class="section-toggle-name">Market Overview<span class="lock-badge">Growth</span></div><div class="section-toggle-sub">Submarket context</div></div><button class="edit-actions-btn" type="button" onclick="toggleSectionEditor(event,'marketEditor')">Edit Actions</button><div class="toggle"></div></div></div><div class="section-editor" id="marketEditor"><div class="mini-custom-note">Market overview currently uses submarket, borough, market trend, and cap-rate assumptions. Manual override can be added next if you want this section to be fully editable.</div></div>
+<div class="section-toggle locked-growth" data-growth-only="true" data-toggle="toggleMarket"><div class="section-toggle-row"><div class="section-toggle-info"><div class="section-toggle-name">Market Overview<span class="lock-badge">Growth</span></div><div class="section-toggle-sub">City / market context</div></div><button class="edit-actions-btn" type="button" onclick="toggleSectionEditor(event,'marketEditor')">Edit Actions</button><div class="toggle"></div></div></div><div class="section-editor" id="marketEditor"><div class="mini-custom-note">Market overview currently uses city, state, market trend, and cap-rate assumptions. Manual override can be added next if you want this section to be fully editable.</div></div>
 
 <div class="section-toggle locked-growth" data-growth-only="true" data-toggle="togglePropertyPhotos"><div class="section-toggle-row"><div class="section-toggle-info"><div class="section-toggle-name">Property Photos<span class="lock-badge">Growth</span></div><div class="section-toggle-sub">Photo gallery / upload placeholder</div></div><button class="edit-actions-btn" type="button" onclick="toggleSectionEditor(event,'photosEditor')">Edit Actions</button><div class="toggle"></div></div></div><div class="section-editor" id="photosEditor"><div class="mini-custom-note">Property photo uploads live in the Property Photos section above. This toggle controls whether the photo gallery section appears in the generated OM.</div></div>
 <div class="section-toggle locked-growth" data-growth-only="true" data-toggle="toggleCustomSections"><div class="section-toggle-row"><div class="section-toggle-info"><div class="section-toggle-name">Custom Sections<span class="lock-badge">Growth</span></div><div class="section-toggle-sub">Add your own OM pages</div></div><button class="edit-actions-btn" type="button" onclick="toggleSectionEditor(event,'customSectionsEditor')">Edit Actions</button><div class="toggle"></div></div></div><div class="section-editor" id="customSectionsEditor"><div class="mini-custom-note">Create custom pages for items like zoning, renovation plan, tax notes, tenancy story, neighborhood thesis, financing assumptions, or seller notes.</div><div class="custom-section-builder" id="customSectionBuilder"></div><button class="add-btn" type="button" onclick="addCustomSection()">+ Add Custom Section</button></div>
@@ -960,7 +960,7 @@ let customSections=[];
 let customContactFieldId=0;
 let customContactFields=[];
 let geocodeTimer=null;
-const HIGHLIGHT_DEFAULTS={asking:{label:'Asking Price',sub:'Price guidance'},units:{label:'Total Units',sub:'Unit mix'},sf:{label:'Gross SF',sub:'Building size'},currentNoi:{label:'Current NOI',sub:'In-place yield'},proformaNoi:{label:'Pro Forma NOI',sub:'Stabilized yield'},upside:{label:'Annual Upside',sub:'NOI growth potential'},marketCap:{label:'Market Cap',sub:'Submarket benchmark'},submarket:{label:'Submarket',sub:'Location'},custom:{label:'Custom Highlight',sub:'Manual note'}};
+const HIGHLIGHT_DEFAULTS={asking:{label:'Asking Price',sub:'Price guidance'},units:{label:'Total Units',sub:'Unit mix'},sf:{label:'Gross SF',sub:'Building size'},currentNoi:{label:'Current NOI',sub:'In-place yield'},proformaNoi:{label:'Pro Forma NOI',sub:'Stabilized yield'},upside:{label:'Annual Upside',sub:'NOI growth potential'},marketCap:{label:'Market Cap',sub:'Market benchmark'},submarket:{label:'City',sub:'Location'},custom:{label:'Custom Highlight',sub:'Manual note'}};
 let highlightOrder=['asking','units','sf','currentNoi','proformaNoi','upside','marketCap','submarket','custom'];
 let highlightOverrides={};
 let selectedHighlightKey='asking';
@@ -969,7 +969,7 @@ let highlightBullets=['','','',''];
 
 
 function getPropertyLocationQuery(p){
-  return [p.address,p.city,'NY'].filter(Boolean).join(', ').replace(/\s+/g,' ').trim();
+  return [p.address,p.neighborhood,p.city].filter(Boolean).join(', ').replace(/\s+/g,' ').trim();
 }
 function getMapQueryFromGeo(p){
   const fallback=getPropertyLocationQuery(p);
@@ -1091,11 +1091,11 @@ function autoPopulateHighlightBullets(){
   const pricePerSF=p.sqft>0&&p.askingPrice>0?(p.askingPrice/p.sqft):0;
   const pricePerUnit=unitCount>0&&p.askingPrice>0?(p.askingPrice/unitCount):0;
   const bullets=[
-    `${p.propertyType||'Property'} located in ${getSelectedNeighborhoodLabel()||'the selected submarket'}, ${p.city||'NYC'}, with ${p.residentialUnits||0} residential unit${parseNum(p.residentialUnits)===1?'':'s'}${parseNum(p.retailUnits)?` and ${p.retailUnits} commercial space${parseNum(p.retailUnits)===1?'':'s'}`:''}.`,
+    `${p.propertyType||'Property'} located in ${getSelectedNeighborhoodLabel()||'the selected city'}, ${p.city||'NYC'}, with ${p.residentialUnits||0} residential unit${parseNum(p.residentialUnits)===1?'':'s'}${parseNum(p.retailUnits)?` and ${p.retailUnits} commercial space${parseNum(p.retailUnits)===1?'':'s'}`:''}.`,
     p.askingPrice?`Asking price of ${fmtPriceFull(p.askingPrice)} implies approximately ${pricePerSF?fmtFull(pricePerSF)+' / SF':''}${pricePerSF&&pricePerUnit?' and ':''}${pricePerUnit?fmtFull(pricePerUnit)+' / unit':''}.`:'Pricing guidance can be added once an asking price is entered.',
     grossCur?`Current annual income is approximately ${fmt(grossCur)}, with upside supported by rent optimization and expense management.`:'Income potential can be summarized after gross income or rent roll inputs are entered.',
     (noiPF&&p.marketCap)?`At a ${fmtPct(p.marketCap)} market cap assumption, the pro forma NOI of ${fmt(noiPF)} supports the OM valuation analysis.`:'Market cap and NOI assumptions can be added once entered.',
-    p.trend?`${p.trend} positioning within the submarket supports the investment story and market overview.`:'Submarket trend can be used to strengthen the market narrative.',
+    p.trend?`${p.trend} positioning within the market supports the investment story and market overview.`:'Market trend can be used to strengthen the market narrative.',
     'All highlighted points remain editable, allowing you to refine the investment story before publishing the OM.'
   ];
   highlightBullets=bullets.slice(0,Math.max(3,Math.min(6,highlightBulletCount)));
@@ -1111,8 +1111,8 @@ function buildHighlightCards(p,metrics){
     currentNoi:{label:'Current NOI',value:fmt(metrics.noiCur),sub:`${fmtPct(metrics.currentCap)} cap rate`},
     proformaNoi:{label:'Pro Forma NOI',value:fmt(metrics.noiPF),sub:`${fmtPct(metrics.proformaCap)} cap rate`},
     upside:{label:'Annual Upside',value:fmt(metrics.noiPF-metrics.noiCur),sub:'NOI growth potential'},
-    marketCap:{label:'Market Cap',value:fmtPct(p.marketCap),sub:'Submarket benchmark'},
-    submarket:{label:'Submarket',value:metrics.neighborhoodLabel,sub:p.city},
+    marketCap:{label:'Market Cap',value:fmtPct(p.marketCap),sub:'Market benchmark'},
+    submarket:{label:'City',value:metrics.neighborhoodLabel,sub:p.city},
     development:{label:'Buildable SF',value:p.developmentBuildableSF?Math.round(p.developmentBuildableSF).toLocaleString():'—',sub:p.developmentLotSize&&p.developmentFAR?`${Math.round(p.developmentLotSize).toLocaleString()} Lot SF × ${p.developmentFAR} FAR`:'Development estimate'},
     zoning:{label:'Zoning',value:p.developmentZoning||'—',sub:p.developmentStreetWidth?`${p.developmentStreetWidth} ft street width`:'Development zoning'},
     custom:{label:'Custom Highlight',value:'Add Value',sub:'Manual note'}
@@ -1541,7 +1541,7 @@ function generateAIDescription(){
   const price=p.askingPrice?' at an asking price of '+fmtFull(p.askingPrice):'';
   const financialLine=grossPF>0?('The pro forma income profile reflects approximately '+fmtFull(grossPF)+' in gross scheduled income and a projected NOI of approximately '+fmtFull(noiPF)+cap+'.'):'The OM should present a clean income and expense story with clear upside assumptions tied to the submitted rent roll and expense inputs.';
   const tone=getElValue('descTone','Broker-style'), length=getElValue('descLength','Medium'), emphasis=getElValue('descEmphasis','Balanced'), customNotes=getElValue('descCustomNotes','');
-  let description=address+' is a '+propertyType.toLowerCase()+' opportunity located in '+(neighborhood||'the selected submarket')+', '+(p.city||'NYC')+'. The property totals approximately '+sf+' and includes '+unitLine+', offering investors a straightforward income profile with clear visibility into current performance and market-based upside.\n\n'+financialLine+' The property is positioned within a '+trend+' environment, supported by local rental demand, commercial corridor activity, and access to surrounding neighborhood amenities and transit.\n\nThe offering is designed to highlight both day-one income and future value creation through rent growth, operating expense review, and continued demand for well-located New York City assets'+price+'.';
+  let description=address+' is a '+propertyType.toLowerCase()+' opportunity located in '+(neighborhood||'the selected city')+', '+(p.city||'NYC')+'. The property totals approximately '+sf+' and includes '+unitLine+', offering investors a straightforward income profile with clear visibility into current performance and market-based upside.\n\n'+financialLine+' The property is positioned within a '+trend+' environment, supported by local rental demand, commercial corridor activity, and access to surrounding neighborhood amenities and transit.\n\nThe offering is designed to highlight both day-one income and future value creation through rent growth, operating expense review, and continued demand for well-located New York City assets'+price+'.';
   if(emphasis==='Upside') description+='\n\nThe primary investment thesis should emphasize rent growth, market repositioning, and the delta between current income and achievable pro forma performance.';
   if(emphasis==='Stability') description+='\n\nThe narrative should emphasize durability of in-place income, predictable operating assumptions, and a clean ownership profile.';
   if(emphasis==='Location / Transit') description+='\n\nThe narrative should emphasize neighborhood connectivity, access to transit, and the strength of the surrounding commercial and residential base.';
@@ -1907,7 +1907,7 @@ function collectContactData(){
 
 
 function buildMarketOverviewDescription(p, metrics){
-  const neighborhoodLabel = getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the submarket');
+  const neighborhoodLabel = getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the city');
   const borough = p.city || 'NYC';
   const trend = p.trend || 'Stable Growth';
   const propertyType = p.propertyType || 'investment property';
@@ -1916,7 +1916,7 @@ function buildMarketOverviewDescription(p, metrics){
   const pricePerSF = metrics && metrics.pricePerSF ? fmtFull(metrics.pricePerSF) : '';
   const noiPF = metrics && metrics.noiPF ? fmt(metrics.noiPF) : '';
   let paragraphs = [];
-  paragraphs.push(`${neighborhoodLabel} in ${borough} continues to demonstrate ${String(trend).toLowerCase()} characteristics for ${propertyType.toLowerCase()} assets. The subject property benefits from its position within an established New York City submarket, where pricing is influenced by rent quality, expense control, unit mix, transit access, lot configuration, and the depth of active buyer demand.`);
+  paragraphs.push(`${neighborhoodLabel} in ${borough} continues to demonstrate ${String(trend).toLowerCase()} characteristics for ${propertyType.toLowerCase()} assets. The subject property benefits from its position within an established local market, where pricing is influenced by rent quality, expense control, unit mix, transit access, lot configuration, and the depth of active buyer demand.`);
   if(p.propertyType === 'Development'){
     const buildable = p.developmentBuildableSF ? Math.round(p.developmentBuildableSF).toLocaleString() + ' buildable SF' : 'future buildable area';
     const zoning = p.developmentZoning || 'applicable zoning';
@@ -1941,7 +1941,7 @@ function buildMarketOverviewDescription(p, metrics){
 
 function buildExecutiveSummaryText(p, metrics){
   if(p.executiveSummaryOverride) return String(p.executiveSummaryOverride).split('\n').filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join('');
-  const neighborhoodLabel=getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the selected submarket');
+  const neighborhoodLabel=getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the selected city');
   const borough=p.city || 'NYC';
   const propertyType=p.propertyType || 'investment property';
   const units=p.units || (parseNum(p.residentialUnits)+parseNum(p.retailUnits)) || 0;
@@ -1962,9 +1962,9 @@ function buildExecutiveSummaryText(p, metrics){
 }
 function buildInvestmentThesisBullets(p, metrics){
   if(p.investmentThesisOverride){return String(p.investmentThesisOverride).split('\n').map(x=>x.replace(/^[-•]\s*/,'').trim()).filter(Boolean);}
-  const neighborhoodLabel=getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the submarket');
+  const neighborhoodLabel=getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : (p.neighborhood || 'the city');
   const bullets=[];
-  bullets.push(`Located in ${neighborhoodLabel}, ${p.city||'NYC'}, with a clear submarket narrative for buyers and capital partners.`);
+  bullets.push(`Located in ${neighborhoodLabel}, ${p.city||'NYC'}, with a clear market narrative for buyers and capital partners.`);
   if(p.propertyType==='Development'){
     bullets.push(`Development-oriented profile with lot size, FAR, buildable SF, zoning, and street width summarized for faster review.`);
     if(p.developmentBuildableSF) bullets.push(`Estimated buildable area of approximately ${Math.round(p.developmentBuildableSF).toLocaleString()} SF based on Lot Size × FAR.`);
@@ -1986,7 +1986,7 @@ function renderExecutiveSummaryPage(p, metrics){
   const units=p.units || (parseNum(p.residentialUnits)+parseNum(p.retailUnits)) || 0;
   const pricePerSF=metrics.pricePerSF ? fmtFull(metrics.pricePerSF) : '—';
   const pricePerUnit=metrics.pricePerUnit ? fmtFull(metrics.pricePerUnit) : '—';
-  return `<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Executive Summary</div><div class="om-page-hd-brand">${esc(p.address||'BRIC Studios')}</div></div><div class="om-section"><div class="om-section-eyebrow">Investment Overview</div><div class="om-section-heading">${esc(p.address||'Property Opportunity')}</div><div class="exec-summary-layout"><div class="exec-narrative-card"><div class="om-description">${buildExecutiveSummaryText(p,metrics)}</div></div><div class="exec-metrics-card"><div class="exec-metrics-title">Key Metrics</div><div class="exec-metrics-grid"><div class="exec-metric"><div class="exec-metric-label">Asking Price</div><div class="exec-metric-value gold">${p.askingPrice?fmtPriceFull(p.askingPrice):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Units</div><div class="exec-metric-value">${units||'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Gross SF</div><div class="exec-metric-value">${p.sqft?Number(p.sqft).toLocaleString():'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Pro Forma NOI</div><div class="exec-metric-value">${metrics.noiPF?fmtPriceFull(metrics.noiPF):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Cap at Ask</div><div class="exec-metric-value">${metrics.proformaCap?fmtPct(metrics.proformaCap):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Price / SF</div><div class="exec-metric-value">${pricePerSF}</div></div><div class="exec-metric"><div class="exec-metric-label">Price / Unit</div><div class="exec-metric-value">${pricePerUnit}</div></div><div class="exec-metric"><div class="exec-metric-label">Submarket</div><div class="exec-metric-value" style="font-size:.82rem">${esc(getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : p.neighborhood)}</div></div></div></div></div><div class="exec-thesis-section"><div class="exec-thesis-card"><div class="exec-thesis-title">Investment Thesis</div><ul class="exec-thesis-list">${bullets}</ul></div><div class="exec-takeaway-card"><div class="exec-takeaway-label">Investor Takeaway</div><div class="exec-takeaway-copy">${buildInvestorTakeaway(p,metrics)}</div></div></div></div></div>`;
+  return `<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Executive Summary</div><div class="om-page-hd-brand">${esc(p.address||'BRIC Studios')}</div></div><div class="om-section"><div class="om-section-eyebrow">Investment Overview</div><div class="om-section-heading">${esc(p.address||'Property Opportunity')}</div><div class="exec-summary-layout"><div class="exec-narrative-card"><div class="om-description">${buildExecutiveSummaryText(p,metrics)}</div></div><div class="exec-metrics-card"><div class="exec-metrics-title">Key Metrics</div><div class="exec-metrics-grid"><div class="exec-metric"><div class="exec-metric-label">Asking Price</div><div class="exec-metric-value gold">${p.askingPrice?fmtPriceFull(p.askingPrice):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Units</div><div class="exec-metric-value">${units||'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Gross SF</div><div class="exec-metric-value">${p.sqft?Number(p.sqft).toLocaleString():'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Pro Forma NOI</div><div class="exec-metric-value">${metrics.noiPF?fmtPriceFull(metrics.noiPF):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Cap at Ask</div><div class="exec-metric-value">${metrics.proformaCap?fmtPct(metrics.proformaCap):'—'}</div></div><div class="exec-metric"><div class="exec-metric-label">Price / SF</div><div class="exec-metric-value">${pricePerSF}</div></div><div class="exec-metric"><div class="exec-metric-label">Price / Unit</div><div class="exec-metric-value">${pricePerUnit}</div></div><div class="exec-metric"><div class="exec-metric-label">City</div><div class="exec-metric-value" style="font-size:.82rem">${esc(getSelectedNeighborhoodLabel ? getSelectedNeighborhoodLabel() : p.neighborhood)}</div></div></div></div></div><div class="exec-thesis-section"><div class="exec-thesis-card"><div class="exec-thesis-title">Investment Thesis</div><ul class="exec-thesis-list">${bullets}</ul></div><div class="exec-takeaway-card"><div class="exec-takeaway-label">Investor Takeaway</div><div class="exec-takeaway-copy">${buildInvestorTakeaway(p,metrics)}</div></div></div></div></div>`;
 }
 
 function renderDevelopmentAnalysisPage(p){
@@ -2009,167 +2009,1109 @@ function renderContactPage(p){
 }
 
 
-const NYC_SUBMARKETS = {
-  "Brooklyn": [
-    "Bay Ridge","Bedford-Stuyvesant","Bensonhurst","Boerum Hill","Borough Park","Brighton Beach","Brooklyn Heights","Brownsville","Bushwick","Canarsie","Carroll Gardens","Clinton Hill","Cobble Hill","Coney Island","Crown Heights","DUMBO","Downtown Brooklyn","Dyker Heights","East Flatbush","East New York","Flatbush","Flatlands","Fort Greene","Gowanus","Gravesend","Greenpoint","Kensington","Marine Park","Midwood","Mill Basin","Park Slope","Prospect Heights","Prospect Lefferts Gardens","Red Hook","Sheepshead Bay","Sunset Park","Williamsburg","Windsor Terrace","Other"
+const US_STATE_NAMES = {"AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "District of Columbia", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"};
+const US_STATE_CITIES = {
+  "AL": [
+    "Birmingham",
+    "Montgomery",
+    "Mobile",
+    "Huntsville",
+    "Tuscaloosa",
+    "Hoover",
+    "Dothan",
+    "Auburn",
+    "Decatur",
+    "Madison",
+    "Florence",
+    "Gadsden",
+    "Prattville",
+    "Phenix City",
+    "Vestavia Hills",
+    "Other"
   ],
-  "Manhattan": [
-    "Battery Park City","Chelsea","Chinatown","Civic Center","East Harlem","East Village","Financial District","Flatiron","Gramercy","Greenwich Village","Harlem","Hell's Kitchen","Inwood","Kips Bay","Lenox Hill","Lincoln Square","Lower East Side","Manhattan Valley","Midtown","Morningside Heights","Murray Hill","NoHo","NoLita","Roosevelt Island","SoHo","Tribeca","Upper East Side","Upper West Side","Washington Heights","West Village","Yorkville","Other"
+  "AK": [
+    "Anchorage",
+    "Fairbanks",
+    "Juneau",
+    "Wasilla",
+    "Sitka",
+    "Ketchikan",
+    "Kenai",
+    "Kodiak",
+    "Bethel",
+    "Palmer",
+    "Homer",
+    "Soldotna",
+    "Nome",
+    "Other"
   ],
-  "Queens": [
-    "Astoria","Bayside","Briarwood","Corona","Ditmars-Steinway","Elmhurst","Flushing","Forest Hills","Glendale","Hollis","Howard Beach","Jackson Heights","Jamaica","Kew Gardens","Long Island City","Maspeth","Middle Village","Ozone Park","Queens Village","Rego Park","Richmond Hill","Ridgewood","Rockaway","Sunnyside","Whitestone","Woodhaven","Woodside","Other"
+  "AZ": [
+    "Phoenix",
+    "Tucson",
+    "Mesa",
+    "Chandler",
+    "Scottsdale",
+    "Glendale",
+    "Gilbert",
+    "Tempe",
+    "Peoria",
+    "Surprise",
+    "Yuma",
+    "Avondale",
+    "Flagstaff",
+    "Goodyear",
+    "Lake Havasu City",
+    "Buckeye",
+    "Casa Grande",
+    "Other"
   ],
-  "Bronx": [
-    "Bedford Park","Belmont","Castle Hill","Concourse","Eastchester","Fordham","Highbridge","Hunts Point","Kingsbridge","Melrose","Morrisania","Mott Haven","Norwood","Parkchester","Pelham Bay","Riverdale","Soundview","Throgs Neck","Tremont","University Heights","Wakefield","Williamsbridge","Woodlawn","Other"
+  "AR": [
+    "Little Rock",
+    "Fort Smith",
+    "Fayetteville",
+    "Springdale",
+    "Jonesboro",
+    "North Little Rock",
+    "Conway",
+    "Rogers",
+    "Pine Bluff",
+    "Bentonville",
+    "Hot Springs",
+    "Benton",
+    "Texarkana",
+    "Other"
   ],
-  "Staten Island": [
-    "Annadale","Arrochar","Bulls Head","Castleton Corners","Dongan Hills","Eltingville","Emerson Hill","Great Kills","Grasmere","Huguenot","New Brighton","New Dorp","Port Richmond","Rosebank","St. George","Stapleton","Todt Hill","Tompkinsville","Tottenville","West Brighton","Westerleigh","Other"
+  "CA": [
+    "Los Angeles",
+    "San Diego",
+    "San Jose",
+    "San Francisco",
+    "Fresno",
+    "Sacramento",
+    "Long Beach",
+    "Oakland",
+    "Bakersfield",
+    "Anaheim",
+    "Santa Ana",
+    "Riverside",
+    "Stockton",
+    "Irvine",
+    "Chula Vista",
+    "Fremont",
+    "San Bernardino",
+    "Modesto",
+    "Fontana",
+    "Oxnard",
+    "Moreno Valley",
+    "Huntington Beach",
+    "Glendale",
+    "Santa Clarita",
+    "Garden Grove",
+    "Oceanside",
+    "Rancho Cucamonga",
+    "Santa Rosa",
+    "Ontario",
+    "Lancaster",
+    "Elk Grove",
+    "Corona",
+    "Palmdale",
+    "Salinas",
+    "Pomona",
+    "Torrance",
+    "Hayward",
+    "Escondido",
+    "Sunnyvale",
+    "Orange",
+    "Fullerton",
+    "Pasadena",
+    "Thousand Oaks",
+    "Visalia",
+    "Simi Valley",
+    "Concord",
+    "Roseville",
+    "Santa Clara",
+    "Vallejo",
+    "Berkeley",
+    "Other"
+  ],
+  "CO": [
+    "Denver",
+    "Colorado Springs",
+    "Aurora",
+    "Fort Collins",
+    "Lakewood",
+    "Thornton",
+    "Arvada",
+    "Westminster",
+    "Pueblo",
+    "Greeley",
+    "Centennial",
+    "Boulder",
+    "Longmont",
+    "Loveland",
+    "Grand Junction",
+    "Broomfield",
+    "Castle Rock",
+    "Commerce City",
+    "Parker",
+    "Other"
+  ],
+  "CT": [
+    "Bridgeport",
+    "New Haven",
+    "Stamford",
+    "Hartford",
+    "Waterbury",
+    "Norwalk",
+    "Danbury",
+    "New Britain",
+    "West Hartford",
+    "Greenwich",
+    "Bristol",
+    "Meriden",
+    "Milford",
+    "Middletown",
+    "Shelton",
+    "Norwich",
+    "Torrington",
+    "Other"
+  ],
+  "DE": [
+    "Wilmington",
+    "Dover",
+    "Newark",
+    "Middletown",
+    "Smyrna",
+    "Milford",
+    "Seaford",
+    "Georgetown",
+    "Elsmere",
+    "New Castle",
+    "Other"
+  ],
+  "DC": [
+    "Washington",
+    "Other"
+  ],
+  "FL": [
+    "Jacksonville",
+    "Miami",
+    "Tampa",
+    "Orlando",
+    "St. Petersburg",
+    "Hialeah",
+    "Port St. Lucie",
+    "Tallahassee",
+    "Cape Coral",
+    "Fort Lauderdale",
+    "Pembroke Pines",
+    "Hollywood",
+    "Gainesville",
+    "Miramar",
+    "Coral Springs",
+    "Clearwater",
+    "Palm Bay",
+    "Pompano Beach",
+    "West Palm Beach",
+    "Lakeland",
+    "Davie",
+    "Miami Gardens",
+    "Boca Raton",
+    "Deltona",
+    "Plantation",
+    "Sunrise",
+    "Fort Myers",
+    "Melbourne",
+    "Palm Coast",
+    "Largo",
+    "Deerfield Beach",
+    "Boynton Beach",
+    "Kissimmee",
+    "Delray Beach",
+    "Other"
+  ],
+  "GA": [
+    "Atlanta",
+    "Augusta",
+    "Columbus",
+    "Macon",
+    "Savannah",
+    "Athens",
+    "Sandy Springs",
+    "Roswell",
+    "Johns Creek",
+    "Warner Robins",
+    "Alpharetta",
+    "Marietta",
+    "Valdosta",
+    "Smyrna",
+    "Brookhaven",
+    "Dunwoody",
+    "Peachtree Corners",
+    "Gainesville",
+    "Other"
+  ],
+  "HI": [
+    "Honolulu",
+    "East Honolulu",
+    "Pearl City",
+    "Hilo",
+    "Kailua",
+    "Waipahu",
+    "Kaneohe",
+    "Mililani Town",
+    "Kahului",
+    "Ewa Gentry",
+    "Kihei",
+    "Kapolei",
+    "Other"
+  ],
+  "ID": [
+    "Boise",
+    "Meridian",
+    "Nampa",
+    "Idaho Falls",
+    "Caldwell",
+    "Pocatello",
+    "Coeur d'Alene",
+    "Twin Falls",
+    "Lewiston",
+    "Post Falls",
+    "Rexburg",
+    "Moscow",
+    "Eagle",
+    "Other"
+  ],
+  "IL": [
+    "Chicago",
+    "Aurora",
+    "Naperville",
+    "Joliet",
+    "Rockford",
+    "Springfield",
+    "Elgin",
+    "Peoria",
+    "Champaign",
+    "Waukegan",
+    "Cicero",
+    "Bloomington",
+    "Arlington Heights",
+    "Evanston",
+    "Schaumburg",
+    "Bolingbrook",
+    "Palatine",
+    "Skokie",
+    "Des Plaines",
+    "Orland Park",
+    "Tinley Park",
+    "Oak Lawn",
+    "Berwyn",
+    "Mount Prospect",
+    "Other"
+  ],
+  "IN": [
+    "Indianapolis",
+    "Fort Wayne",
+    "Evansville",
+    "South Bend",
+    "Carmel",
+    "Fishers",
+    "Bloomington",
+    "Hammond",
+    "Gary",
+    "Lafayette",
+    "Muncie",
+    "Noblesville",
+    "Terre Haute",
+    "Kokomo",
+    "Anderson",
+    "Greenwood",
+    "Elkhart",
+    "Mishawaka",
+    "Other"
+  ],
+  "IA": [
+    "Des Moines",
+    "Cedar Rapids",
+    "Davenport",
+    "Sioux City",
+    "Iowa City",
+    "Waterloo",
+    "Ames",
+    "West Des Moines",
+    "Council Bluffs",
+    "Ankeny",
+    "Dubuque",
+    "Urbandale",
+    "Cedar Falls",
+    "Marion",
+    "Other"
+  ],
+  "KS": [
+    "Wichita",
+    "Overland Park",
+    "Kansas City",
+    "Olathe",
+    "Topeka",
+    "Lawrence",
+    "Shawnee",
+    "Manhattan",
+    "Lenexa",
+    "Salina",
+    "Hutchinson",
+    "Leavenworth",
+    "Leawood",
+    "Dodge City",
+    "Other"
+  ],
+  "KY": [
+    "Louisville",
+    "Lexington",
+    "Bowling Green",
+    "Owensboro",
+    "Covington",
+    "Richmond",
+    "Georgetown",
+    "Florence",
+    "Hopkinsville",
+    "Nicholasville",
+    "Elizabethtown",
+    "Henderson",
+    "Frankfort",
+    "Other"
+  ],
+  "LA": [
+    "New Orleans",
+    "Baton Rouge",
+    "Shreveport",
+    "Lafayette",
+    "Lake Charles",
+    "Kenner",
+    "Bossier City",
+    "Monroe",
+    "Alexandria",
+    "Houma",
+    "Slidell",
+    "Hammond",
+    "Ruston",
+    "Other"
+  ],
+  "ME": [
+    "Portland",
+    "Lewiston",
+    "Bangor",
+    "South Portland",
+    "Auburn",
+    "Biddeford",
+    "Sanford",
+    "Saco",
+    "Augusta",
+    "Westbrook",
+    "Waterville",
+    "Presque Isle",
+    "Other"
+  ],
+  "MD": [
+    "Baltimore",
+    "Frederick",
+    "Rockville",
+    "Gaithersburg",
+    "Bowie",
+    "Hagerstown",
+    "Annapolis",
+    "College Park",
+    "Salisbury",
+    "Laurel",
+    "Greenbelt",
+    "Cumberland",
+    "Westminster",
+    "Other"
+  ],
+  "MA": [
+    "Boston",
+    "Worcester",
+    "Springfield",
+    "Cambridge",
+    "Lowell",
+    "Brockton",
+    "Quincy",
+    "Lynn",
+    "New Bedford",
+    "Fall River",
+    "Newton",
+    "Somerville",
+    "Lawrence",
+    "Framingham",
+    "Haverhill",
+    "Waltham",
+    "Malden",
+    "Medford",
+    "Taunton",
+    "Chicopee",
+    "Revere",
+    "Peabody",
+    "Salem",
+    "Other"
+  ],
+  "MI": [
+    "Detroit",
+    "Grand Rapids",
+    "Warren",
+    "Sterling Heights",
+    "Ann Arbor",
+    "Lansing",
+    "Flint",
+    "Dearborn",
+    "Livonia",
+    "Troy",
+    "Westland",
+    "Farmington Hills",
+    "Kalamazoo",
+    "Wyoming",
+    "Southfield",
+    "Rochester Hills",
+    "Taylor",
+    "Pontiac",
+    "Other"
+  ],
+  "MN": [
+    "Minneapolis",
+    "St. Paul",
+    "Rochester",
+    "Duluth",
+    "Bloomington",
+    "Brooklyn Park",
+    "Plymouth",
+    "Woodbury",
+    "Lakeville",
+    "Maple Grove",
+    "Blaine",
+    "Eagan",
+    "Eden Prairie",
+    "Coon Rapids",
+    "Burnsville",
+    "Apple Valley",
+    "Minnetonka",
+    "Other"
+  ],
+  "MS": [
+    "Jackson",
+    "Gulfport",
+    "Southaven",
+    "Hattiesburg",
+    "Biloxi",
+    "Meridian",
+    "Tupelo",
+    "Olive Branch",
+    "Greenville",
+    "Horn Lake",
+    "Pearl",
+    "Madison",
+    "Clinton",
+    "Other"
+  ],
+  "MO": [
+    "Kansas City",
+    "St. Louis",
+    "Springfield",
+    "Columbia",
+    "Independence",
+    "Lee's Summit",
+    "O'Fallon",
+    "St. Joseph",
+    "St. Charles",
+    "Blue Springs",
+    "St. Peters",
+    "Florissant",
+    "Joplin",
+    "Chesterfield",
+    "Jefferson City",
+    "Other"
+  ],
+  "MT": [
+    "Billings",
+    "Missoula",
+    "Great Falls",
+    "Bozeman",
+    "Butte",
+    "Helena",
+    "Kalispell",
+    "Havre",
+    "Anaconda",
+    "Miles City",
+    "Belgrade",
+    "Other"
+  ],
+  "NE": [
+    "Omaha",
+    "Lincoln",
+    "Bellevue",
+    "Grand Island",
+    "Kearney",
+    "Fremont",
+    "Hastings",
+    "Norfolk",
+    "North Platte",
+    "Columbus",
+    "Papillion",
+    "La Vista",
+    "Other"
+  ],
+  "NV": [
+    "Las Vegas",
+    "Henderson",
+    "Reno",
+    "North Las Vegas",
+    "Sparks",
+    "Carson City",
+    "Fernley",
+    "Elko",
+    "Mesquite",
+    "Boulder City",
+    "Fallon",
+    "Other"
+  ],
+  "NH": [
+    "Manchester",
+    "Nashua",
+    "Concord",
+    "Derry",
+    "Dover",
+    "Rochester",
+    "Salem",
+    "Merrimack",
+    "Hudson",
+    "Londonderry",
+    "Keene",
+    "Portsmouth",
+    "Other"
+  ],
+  "NJ": [
+    "Newark",
+    "Jersey City",
+    "Paterson",
+    "Elizabeth",
+    "Edison",
+    "Woodbridge",
+    "Lakewood",
+    "Toms River",
+    "Hamilton",
+    "Trenton",
+    "Clifton",
+    "Camden",
+    "Brick",
+    "Cherry Hill",
+    "Passaic",
+    "Union City",
+    "Bayonne",
+    "East Orange",
+    "Vineland",
+    "Hoboken",
+    "New Brunswick",
+    "Perth Amboy",
+    "West New York",
+    "Plainfield",
+    "Hackensack",
+    "Montclair",
+    "Summit",
+    "Other"
+  ],
+  "NM": [
+    "Albuquerque",
+    "Las Cruces",
+    "Rio Rancho",
+    "Santa Fe",
+    "Roswell",
+    "Farmington",
+    "Clovis",
+    "Hobbs",
+    "Alamogordo",
+    "Carlsbad",
+    "Gallup",
+    "Los Lunas",
+    "Other"
+  ],
+  "NY": [
+    "New York City",
+    "Manhattan",
+    "Brooklyn",
+    "Queens",
+    "Bronx",
+    "Staten Island",
+    "Buffalo",
+    "Rochester",
+    "Yonkers",
+    "Syracuse",
+    "Albany",
+    "New Rochelle",
+    "Mount Vernon",
+    "Schenectady",
+    "Utica",
+    "White Plains",
+    "Hempstead",
+    "Troy",
+    "Niagara Falls",
+    "Binghamton",
+    "Freeport",
+    "Valley Stream",
+    "Long Beach",
+    "Poughkeepsie",
+    "Ithaca",
+    "Kingston",
+    "Newburgh",
+    "Middletown",
+    "Rome",
+    "Other"
+  ],
+  "NC": [
+    "Charlotte",
+    "Raleigh",
+    "Greensboro",
+    "Durham",
+    "Winston-Salem",
+    "Fayetteville",
+    "Cary",
+    "Wilmington",
+    "High Point",
+    "Concord",
+    "Asheville",
+    "Greenville",
+    "Gastonia",
+    "Jacksonville",
+    "Chapel Hill",
+    "Rocky Mount",
+    "Burlington",
+    "Other"
+  ],
+  "ND": [
+    "Fargo",
+    "Bismarck",
+    "Grand Forks",
+    "Minot",
+    "West Fargo",
+    "Williston",
+    "Dickinson",
+    "Mandan",
+    "Jamestown",
+    "Wahpeton",
+    "Other"
+  ],
+  "OH": [
+    "Columbus",
+    "Cleveland",
+    "Cincinnati",
+    "Toledo",
+    "Akron",
+    "Dayton",
+    "Parma",
+    "Canton",
+    "Youngstown",
+    "Lorain",
+    "Hamilton",
+    "Springfield",
+    "Kettering",
+    "Elyria",
+    "Lakewood",
+    "Cuyahoga Falls",
+    "Middletown",
+    "Euclid",
+    "Newark",
+    "Other"
+  ],
+  "OK": [
+    "Oklahoma City",
+    "Tulsa",
+    "Norman",
+    "Broken Arrow",
+    "Lawton",
+    "Edmond",
+    "Moore",
+    "Midwest City",
+    "Enid",
+    "Stillwater",
+    "Muskogee",
+    "Bartlesville",
+    "Owasso",
+    "Shawnee",
+    "Other"
+  ],
+  "OR": [
+    "Portland",
+    "Eugene",
+    "Salem",
+    "Gresham",
+    "Hillsboro",
+    "Bend",
+    "Beaverton",
+    "Medford",
+    "Springfield",
+    "Corvallis",
+    "Albany",
+    "Tigard",
+    "Lake Oswego",
+    "Keizer",
+    "Grants Pass",
+    "Oregon City",
+    "Other"
+  ],
+  "PA": [
+    "Philadelphia",
+    "Pittsburgh",
+    "Allentown",
+    "Erie",
+    "Reading",
+    "Scranton",
+    "Bethlehem",
+    "Lancaster",
+    "Harrisburg",
+    "Altoona",
+    "York",
+    "State College",
+    "Wilkes-Barre",
+    "Chester",
+    "Williamsport",
+    "Norristown",
+    "Other"
+  ],
+  "RI": [
+    "Providence",
+    "Warwick",
+    "Cranston",
+    "Pawtucket",
+    "East Providence",
+    "Woonsocket",
+    "Newport",
+    "Central Falls",
+    "Westerly",
+    "North Providence",
+    "Other"
+  ],
+  "SC": [
+    "Charleston",
+    "Columbia",
+    "North Charleston",
+    "Mount Pleasant",
+    "Rock Hill",
+    "Greenville",
+    "Summerville",
+    "Sumter",
+    "Hilton Head Island",
+    "Florence",
+    "Spartanburg",
+    "Goose Creek",
+    "Aiken",
+    "Myrtle Beach",
+    "Other"
+  ],
+  "SD": [
+    "Sioux Falls",
+    "Rapid City",
+    "Aberdeen",
+    "Brookings",
+    "Watertown",
+    "Mitchell",
+    "Yankton",
+    "Pierre",
+    "Huron",
+    "Vermillion",
+    "Other"
+  ],
+  "TN": [
+    "Nashville",
+    "Memphis",
+    "Knoxville",
+    "Chattanooga",
+    "Clarksville",
+    "Murfreesboro",
+    "Franklin",
+    "Jackson",
+    "Johnson City",
+    "Bartlett",
+    "Hendersonville",
+    "Kingsport",
+    "Collierville",
+    "Cleveland",
+    "Other"
+  ],
+  "TX": [
+    "Houston",
+    "San Antonio",
+    "Dallas",
+    "Austin",
+    "Fort Worth",
+    "El Paso",
+    "Arlington",
+    "Corpus Christi",
+    "Plano",
+    "Lubbock",
+    "Laredo",
+    "Irving",
+    "Garland",
+    "Frisco",
+    "McKinney",
+    "Amarillo",
+    "Grand Prairie",
+    "Brownsville",
+    "Killeen",
+    "Pasadena",
+    "Mesquite",
+    "McAllen",
+    "Denton",
+    "Waco",
+    "Carrollton",
+    "Midland",
+    "Abilene",
+    "Beaumont",
+    "Round Rock",
+    "Odessa",
+    "Richardson",
+    "Other"
+  ],
+  "UT": [
+    "Salt Lake City",
+    "West Valley City",
+    "West Jordan",
+    "Provo",
+    "Orem",
+    "Sandy",
+    "Ogden",
+    "St. George",
+    "Layton",
+    "South Jordan",
+    "Lehi",
+    "Millcreek",
+    "Taylorsville",
+    "Logan",
+    "Murray",
+    "Draper",
+    "Other"
+  ],
+  "VT": [
+    "Burlington",
+    "South Burlington",
+    "Rutland",
+    "Barre",
+    "Montpelier",
+    "Winooski",
+    "St. Albans",
+    "Newport",
+    "Vergennes",
+    "Essex Junction",
+    "Other"
+  ],
+  "VA": [
+    "Virginia Beach",
+    "Chesapeake",
+    "Norfolk",
+    "Arlington",
+    "Richmond",
+    "Newport News",
+    "Alexandria",
+    "Hampton",
+    "Roanoke",
+    "Portsmouth",
+    "Suffolk",
+    "Lynchburg",
+    "Harrisonburg",
+    "Leesburg",
+    "Charlottesville",
+    "Danville",
+    "Blacksburg",
+    "Other"
+  ],
+  "WA": [
+    "Seattle",
+    "Spokane",
+    "Tacoma",
+    "Vancouver",
+    "Bellevue",
+    "Kent",
+    "Everett",
+    "Renton",
+    "Spokane Valley",
+    "Federal Way",
+    "Yakima",
+    "Kirkland",
+    "Bellingham",
+    "Kennewick",
+    "Auburn",
+    "Pasco",
+    "Redmond",
+    "Sammamish",
+    "Lakewood",
+    "Other"
+  ],
+  "WV": [
+    "Charleston",
+    "Huntington",
+    "Morgantown",
+    "Parkersburg",
+    "Wheeling",
+    "Weirton",
+    "Fairmont",
+    "Martinsburg",
+    "Beckley",
+    "Clarksburg",
+    "South Charleston",
+    "Other"
+  ],
+  "WI": [
+    "Milwaukee",
+    "Madison",
+    "Green Bay",
+    "Kenosha",
+    "Racine",
+    "Appleton",
+    "Waukesha",
+    "Eau Claire",
+    "Oshkosh",
+    "Janesville",
+    "West Allis",
+    "La Crosse",
+    "Sheboygan",
+    "Wauwatosa",
+    "Fond du Lac",
+    "Brookfield",
+    "Other"
+  ],
+  "WY": [
+    "Cheyenne",
+    "Casper",
+    "Laramie",
+    "Gillette",
+    "Rock Springs",
+    "Sheridan",
+    "Green River",
+    "Evanston",
+    "Riverton",
+    "Jackson",
+    "Cody",
+    "Other"
   ]
 };
 
 const ADDRESS_SUBMARKET_HINTS = [
-  ["Brooklyn",["brooklyn"," kings county "," bk "],null],
-  ["Manhattan",["manhattan"," new york, ny"," nyc "," new york ny"],null],
-  ["Queens",["queens"," astoria"," long island city"," flushing"," jamaica"," woodside"," sunnyside"," ridgewood"," forest hills"],null],
-  ["Bronx",["bronx"," bx "],null],
-  ["Staten Island",["staten island"," staten isl"],null],
-
-  ["Brooklyn",["williamsburg"],"Williamsburg"],
-  ["Brooklyn",["bushwick"],"Bushwick"],
-  ["Brooklyn",["bed-stuy","bed stuy","bedford-stuyvesant"],"Bedford-Stuyvesant"],
-  ["Brooklyn",["crown heights"],"Crown Heights"],
-  ["Brooklyn",["prospect lefferts","lefferts"],"Prospect Lefferts Gardens"],
-  ["Brooklyn",["flatbush"],"Flatbush"],
-  ["Brooklyn",["east flatbush"],"East Flatbush"],
-  ["Brooklyn",["greenpoint"],"Greenpoint"],
-  ["Brooklyn",["park slope"],"Park Slope"],
-  ["Brooklyn",["prospect heights"],"Prospect Heights"],
-  ["Brooklyn",["downtown brooklyn"],"Downtown Brooklyn"],
-  ["Brooklyn",["brooklyn heights"],"Brooklyn Heights"],
-  ["Brooklyn",["fort greene"],"Fort Greene"],
-  ["Brooklyn",["clinton hill"],"Clinton Hill"],
-  ["Brooklyn",["gowanus"],"Gowanus"],
-  ["Brooklyn",["sunset park"],"Sunset Park"],
-  ["Brooklyn",["bay ridge"],"Bay Ridge"],
-  ["Brooklyn",["canarsie"],"Canarsie"],
-  ["Brooklyn",["east new york"],"East New York"],
-  ["Brooklyn",["red hook"],"Red Hook"],
-  ["Brooklyn",["sheepshead"],"Sheepshead Bay"],
-  ["Brooklyn",["coney island"],"Coney Island"],
-
-  ["Manhattan",["harlem"],"Harlem"],
-  ["Manhattan",["east harlem"],"East Harlem"],
-  ["Manhattan",["upper east"],"Upper East Side"],
-  ["Manhattan",["upper west"],"Upper West Side"],
-  ["Manhattan",["midtown"],"Midtown"],
-  ["Manhattan",["chelsea"],"Chelsea"],
-  ["Manhattan",["tribeca"],"Tribeca"],
-  ["Manhattan",["soho"],"SoHo"],
-  ["Manhattan",["lower east"],"Lower East Side"],
-  ["Manhattan",["east village"],"East Village"],
-  ["Manhattan",["west village"],"West Village"],
-  ["Manhattan",["financial district"," fidi "],"Financial District"],
-  ["Manhattan",["washington heights"],"Washington Heights"],
-  ["Manhattan",["inwood"],"Inwood"],
-
-  ["Queens",["astoria"],"Astoria"],
-  ["Queens",["long island city"," lic "],"Long Island City"],
-  ["Queens",["flushing"],"Flushing"],
-  ["Queens",["forest hills"],"Forest Hills"],
-  ["Queens",["jamaica"],"Jamaica"],
-  ["Queens",["ridgewood"],"Ridgewood"],
-  ["Queens",["sunnyside"],"Sunnyside"],
-  ["Queens",["woodside"],"Woodside"],
-  ["Queens",["jackson heights"],"Jackson Heights"],
-
-  ["Bronx",["mott haven"],"Mott Haven"],
-  ["Bronx",["riverdale"],"Riverdale"],
-  ["Bronx",["fordham"],"Fordham"],
-  ["Bronx",["concourse"],"Concourse"],
-  ["Bronx",["melrose"],"Melrose"],
-
-  ["Staten Island",["st. george","saint george"],"St. George"],
-  ["Staten Island",["tottenville"],"Tottenville"],
-  ["Staten Island",["new dorp"],"New Dorp"]
+  ["NY",["new york"," ny ","brooklyn","manhattan","queens","bronx","staten island","buffalo","rochester","syracuse","albany"],null],
+  ["NJ",["new jersey"," nj ","newark","jersey city","hoboken","montclair","summit","paterson","elizabeth"],null],
+  ["CT",["connecticut"," ct ","stamford","bridgeport","new haven","hartford"],null],
+  ["PA",["pennsylvania"," pa ","philadelphia","pittsburgh","allentown"],null],
+  ["MA",["massachusetts"," ma ","boston","cambridge","worcester"],null],
+  ["FL",["florida"," fl ","miami","tampa","orlando","jacksonville"],null],
+  ["TX",["texas"," tx ","houston","dallas","austin","san antonio","fort worth"],null],
+  ["CA",["california"," ca ","los angeles","san francisco","san diego","san jose"],null],
+  ["IL",["illinois"," il ","chicago"],null],
+  ["GA",["georgia"," ga ","atlanta","savannah"],null],
+  ["NC",["north carolina"," nc ","charlotte","raleigh","durham"],null],
+  ["VA",["virginia"," va ","virginia beach","richmond","arlington","alexandria"],null],
+  ["MD",["maryland"," md ","baltimore","bethesda","rockville","annapolis"],null],
+  ["DC",["washington dc","washington, dc","district of columbia"],"Washington"]
 ];
 
+
+
+
 function slugifySubmarket(name){
-  return String(name||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,'-');
+  return String(name||'').trim();
 }
-function populateSubmarketsForBorough(borough, selected){
+function normalizeStateValue(raw){
+  const value=String(raw||'').trim();
+  if(!value) return '';
+  const upper=value.toUpperCase();
+  if(US_STATE_CITIES[upper]) return upper;
+  const found=Object.entries(US_STATE_NAMES).find(([abbr,name]) => name.toLowerCase()===value.toLowerCase());
+  return found ? found[0] : value;
+}
+
+function normalizeImportedState(raw){
+  const value=String(raw||'').trim();
+  if(!value) return '';
+  const nyc=['brooklyn','manhattan','queens','bronx','staten island','new york city','nyc'];
+  if(nyc.includes(value.toLowerCase())) return 'NY';
+  return normalizeStateValue(value);
+}
+
+function populateStateOptions(selected){
+  const sel=document.getElementById('city');
+  if(!sel) return;
+  const previous=normalizeStateValue(selected || sel.value || '');
+  sel.innerHTML='<option value="">Select state</option>' + Object.entries(US_STATE_NAMES).map(([abbr,name])=>`<option value="${abbr}">${name}</option>`).join('');
+  if(previous && US_STATE_CITIES[previous]) sel.value=previous;
+}
+function populateSubmarketsForBorough(state, selected){
   const sel=document.getElementById('neighborhood');
   if(!sel) return;
-  const list=NYC_SUBMARKETS[borough] || ["Other"];
-  const previous=selected || sel.value || "";
-  sel.innerHTML='<option value="">Select submarket</option>' + list.map(n=>`<option value="${slugifySubmarket(n)}">${n}</option>`).join('');
+  const st=normalizeStateValue(state);
+  const list=US_STATE_CITIES[st] || [];
+  const previous=selected || sel.value || '';
+  sel.innerHTML='<option value="">'+(st?'Select city':'Select state first')+'</option>' + list.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
   setSelectByValueOrText(sel, previous);
-  if(!sel.value && selected) setSelectByValueOrText(sel, selected);
 }
 function setSelectByValueOrText(select, raw){
   if(!select || !raw) return false;
-  raw = normalizePropertyTypeValue(raw);
   const target=String(raw).trim().toLowerCase();
-  const slug=slugifySubmarket(raw);
   for(const opt of Array.from(select.options)){
-    if(String(opt.value).toLowerCase()===target || String(opt.value).toLowerCase()===slug || String(opt.textContent).trim().toLowerCase()===target){
+    if(String(opt.value).trim().toLowerCase()===target || String(opt.textContent).trim().toLowerCase()===target){
       select.value=opt.value;
       return true;
     }
   }
+  const other=Array.from(select.options).find(o=>String(o.value).toLowerCase()==='other');
+  if(other){select.value='Other'; return false;}
   return false;
 }
 function detectBoroughAndSubmarketFromAddress(){
   const addressEl=document.getElementById('address');
-  const boroughEl=document.getElementById('city');
-  const submarketEl=document.getElementById('neighborhood');
-  if(!addressEl || !boroughEl || !submarketEl) return;
+  const stateEl=document.getElementById('city');
+  const cityEl=document.getElementById('neighborhood');
+  if(!addressEl || !stateEl || !cityEl) return;
   const raw=' ' + String(addressEl.value||'').toLowerCase().replace(/[,.]/g,' ') + ' ';
   if(!raw.trim()) return;
-
-  let detectedBorough='';
-  let detectedSubmarket='';
-  for(const [borough, hints, submarket] of ADDRESS_SUBMARKET_HINTS){
-    if(hints.some(h=>raw.includes(String(h).toLowerCase()))){
-      if(submarket){
-        detectedBorough=borough;
-        detectedSubmarket=submarket;
-        break;
-      }
-      if(!detectedBorough) detectedBorough=borough;
+  let detectedState='';
+  let detectedCity='';
+  for(const [abbr,name] of Object.entries(US_STATE_NAMES)){
+    const nm=name.toLowerCase();
+    if(raw.includes(' '+abbr.toLowerCase()+' ') || raw.includes(' '+nm+' ')){
+      detectedState=abbr;
+      break;
     }
   }
-
-  // ZIP-based borough fallback for NYC.
-  const zipMatch=raw.match(/\b(10\d{3}|11\d{3}|112\d{2}|113\d{2}|114\d{2}|116\d{2}|104\d{2}|103\d{2})\b/);
-  if(!detectedBorough && zipMatch){
-    const zip=zipMatch[1];
-    if(zip.startsWith('112')) detectedBorough='Brooklyn';
-    else if(zip.startsWith('100') || zip.startsWith('101') || zip.startsWith('102')) detectedBorough='Manhattan';
-    else if(zip.startsWith('111') || zip.startsWith('113') || zip.startsWith('114') || zip.startsWith('116')) detectedBorough='Queens';
-    else if(zip.startsWith('104')) detectedBorough='Bronx';
-    else if(zip.startsWith('103')) detectedBorough='Staten Island';
+  if(!detectedState){
+    for(const [state,hints,city] of ADDRESS_SUBMARKET_HINTS){
+      if(hints.some(h=>raw.includes(String(h).toLowerCase()))){
+        detectedState=state;
+        if(city) detectedCity=city;
+        break;
+      }
+    }
   }
-
-  if(detectedBorough){
-    boroughEl.value=detectedBorough;
-    populateSubmarketsForBorough(detectedBorough, detectedSubmarket || submarketEl.value);
+  if(detectedState){
+    stateEl.value=detectedState;
+    populateSubmarketsForBorough(detectedState, detectedCity || cityEl.value);
+    const cities=US_STATE_CITIES[detectedState] || [];
+    if(!detectedCity){
+      detectedCity = cities.find(c=>c !== 'Other' && raw.includes(' '+String(c).toLowerCase()+' ')) || '';
+      if(detectedCity) setSelectByValueOrText(cityEl, detectedCity);
+    }
     const help=document.getElementById('submarketHelp');
     if(help){
-      help.innerHTML = detectedSubmarket
-        ? `Detected <b>${detectedBorough}</b> · <b>${detectedSubmarket}</b> from the address. Please verify before publishing.`
-        : `Detected <b>${detectedBorough}</b> from the address. Select the submarket if needed.`;
+      const stateName=US_STATE_NAMES[detectedState] || detectedState;
+      help.innerHTML = detectedCity
+        ? `Detected <b>${stateName}</b> · <b>${detectedCity}</b> from the address. Please verify before publishing.`
+        : `Detected <b>${stateName}</b> from the address. Select the city if needed.`;
       help.classList.add('address-detect-note');
     }
   }
 }
 function handleBoroughChange(){
-  const borough=document.getElementById('city')?.value || '';
-  populateSubmarketsForBorough(borough,'');
+  const state=document.getElementById('city')?.value || '';
+  populateSubmarketsForBorough(state,'');
   const help=document.getElementById('submarketHelp');
   if(help){
-    help.innerHTML='Neighborhood list updated for the selected borough.';
+    const stateName=US_STATE_NAMES[state] || state || 'selected state';
+    help.innerHTML='City list updated for '+stateName+'.';
     help.classList.add('address-detect-note');
   }
+  propertyGeo={query:'',lat:null,lng:null,status:'idle'};
   generate();
 }
 
@@ -2307,8 +3249,8 @@ function renderFreePropertyDetailsPage(p,metrics){
   return `<div class="om-doc"><div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Details</div><div class="om-page-hd-brand">Free OM Builder</div></div><div class="om-section"><div class="om-section-eyebrow">Property Snapshot</div><div class="om-section-heading">${esc(p.address||'Property Address')}</div><div class="highlights-grid"><div class="highlight-card"><div class="highlight-label">Property Type</div><div class="highlight-val" style="font-size:1rem">${esc(p.propertyType||'—')}</div><div class="highlight-sub">${esc(neighborhoodLabel)} · ${esc(p.city||'')}</div></div><div class="highlight-card"><div class="highlight-label">Asking Price</div><div class="highlight-val">${fmtPriceFull(p.askingPrice)}</div><div class="highlight-sub">${metrics.pricePerSF?fmtFull(metrics.pricePerSF)+' / SF':'Pricing input'}</div></div><div class="highlight-card"><div class="highlight-label">Size</div><div class="highlight-val">${p.sqft?Number(p.sqft).toLocaleString():'—'}</div><div class="highlight-sub">Gross square feet</div></div>${p.propertyType==='Development'?`<div class="highlight-card"><div class="highlight-label">Buildable SF</div><div class="highlight-val">${p.developmentBuildableSF?Math.round(p.developmentBuildableSF).toLocaleString():'—'}</div><div class="highlight-sub">${p.developmentLotSize?Math.round(p.developmentLotSize).toLocaleString()+' Lot SF':'Lot size'} × ${p.developmentFAR||'FAR'}</div></div>`:'' }<div class="highlight-card"><div class="highlight-label">Units</div><div class="highlight-val">${p.units||'—'}</div><div class="highlight-sub">${aptCount} Apt · ${retCount} Retail</div></div><div class="highlight-card"><div class="highlight-label">Gross Income</div><div class="highlight-val">${fmt(metrics.grossPF)}</div><div class="highlight-sub">Submitted / rent-roll based</div></div><div class="highlight-card"><div class="highlight-label">Market Cap</div><div class="highlight-val">${fmtPct(p.marketCap||0)}</div><div class="highlight-sub">Owner assumption</div></div></div></div><div class="om-section"><div class="om-section-eyebrow">Unit Breakdown</div><div class="om-description"><p><b>Residential Units:</b> ${aptCount||0} · <b>Retail / Commercial Spaces:</b> ${retCount||0}</p>${p.unitMixBreakdown?`<p>${esc(p.unitMixBreakdown)}</p>`:`<p>No detailed unit mix was provided. Growth unlocks unit-by-unit rent roll inputs.</p>`}</div></div><div class="om-section"><div class="om-section-eyebrow">Description</div><div class="om-description">${String(desc).split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div><div class="om-section"><div class="om-section-eyebrow">Free Version</div><div class="om-description"><p>This free output is limited to a one-page Property Details sheet. Upgrade to Growth to unlock the complete OM package, including cover page, investment highlights, rent roll, financial summary, valuation, local map, transit map, market overview, and property photos.</p></div></div><div class="disclaimer">FREE PROPERTY DETAILS SHEET · Prepared by BRIC Studios from owner-entered data. Full OM sections are available in Growth. © ${new Date().getFullYear()} BRIC Studios.</div></div></div>`;
 }
 
-function generate(userRequested=false){if(userRequested) omGenerated=true;const preview=document.getElementById('omPreview');if(!omGenerated){preview.innerHTML='<div class="preview-locked"><div class="empty-icon">◊</div><div class="empty-title">OM Preview Locked</div><div class="empty-sub">Enter your property information, then click Generate OM. After that, edits update the preview live.</div></div>';return;}const p=collectOmData();p.units=rrItems.length ? rrItems.length : (parseNum(p.residentialUnits)+parseNum(p.retailUnits));let grossCur=0,grossPF=0;rrItems.forEach(it=>{const cur=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent):parseNum(it.currentRent)*12;const pf=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent):parseNum(it.proformaRent)*12;grossCur+=cur;grossPF+=pf});if(!rrItems.length){grossCur=p.grossIncome;grossPF=p.grossIncome}grossCur+=p.otherIncome;grossPF+=p.otherIncome;const vacancy=.04,expenseTotal=p.expenses.reduce((s,e)=>s+parseNum(e.amount),0),egiCur=grossCur*(1-vacancy),egiPF=grossPF*(1-vacancy),noiCur=egiCur-expenseTotal,noiPF=egiPF-expenseTotal,currentCap=p.askingPrice>0?(noiCur/p.askingPrice)*100:0,proformaCap=p.askingPrice>0?(noiPF/p.askingPrice)*100:0,valLow=noiPF/((p.marketCap+.75)/100),valBase=noiPF/(p.marketCap/100),valHigh=p.marketCap>1?noiPF/((p.marketCap-.75)/100):valBase,pricePerUnit=p.units>0?p.askingPrice/p.units:0,pricePerSF=p.sqft>0?p.askingPrice/p.sqft:0;if(currentTier!=='growth'){preview.innerHTML=renderFreePropertyDetailsPage(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,grossCur,grossPF});applyBricOmFooters();return;}const neighborhoodLabel=getSelectedNeighborhoodLabel();geocodeSubmittedProperty(p);const localMapTarget=getMapQueryFromGeo(p);const transitMapTarget=getTransitQueryFromGeo(p);const mapQuery=encodeURIComponent(localMapTarget);const transitQuery=encodeURIComponent(transitMapTarget);const mapMeta=mapStatusText();if(!p.askingPrice&&!p.address){preview.innerHTML='<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add property details and rent roll to begin.</div></div>';return}let html='<div class="om-doc">';if(sectionsActive.toggleCover){const coverTitle=p.coverTitleOverride||p.address||'Property Address';const autoSubtitle=`${p.propertyType||'Property'} · ${p.units} Unit${p.units!==1?'s':''} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')} SF${p.yearBuilt?` · Built ${p.yearBuilt}`:''}`;const coverSubtitle=p.coverSubtitleOverride||autoSubtitle;const coverStats=[];if(p.coverShowPrice)coverStats.push(`<div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">${fmtPriceFull(p.askingPrice)}</div></div>`);if(p.coverShowCap)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">${fmtPct(proformaCap)}</div></div>`);if(p.coverShowNOI)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">${fmt(noiPF)}</div></div>`);if(p.coverShowUnitsSF)coverStats.push(`<div><div class="om-cover-stat-label">Units / SF</div><div class="om-cover-stat-val">${p.units} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')}</div></div>`);const hasCoverPhoto=!!p.coverPhotoData;html+=`<div class="om-cover${hasCoverPhoto?' has-photo':''}"><div class="om-cover-main"><div style="position:relative;z-index:2"><div class="om-cover-brand">${bricCoverLogo()}BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">${esc(coverTitle)}<em>${esc(neighborhoodLabel)} · ${esc(p.city)}</em></div><div class="om-cover-subtitle">${esc(coverSubtitle)}</div></div><div class="om-cover-bottom">${coverStats.join('')}<div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'})}</span></div></div></div>${hasCoverPhoto?`<div class="om-cover-photo-wrap"><img src="${escAttr(p.coverPhotoData)}" alt="Cover property photo"><div class="om-cover-photo-label">Property Photo</div></div>`:''}</div>`}const aptCount=rrItems.filter(x=>x.type==='apartment').length,retCount=rrItems.filter(x=>x.type==='retail').length;let highlightCards=buildHighlightCards(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,aptCount,retCount,neighborhoodLabel});if(sectionsActive.toggleHighlights){const bulletItems=(p.highlightBullets||[]).filter(Boolean).map(item=>`<li>${esc(item)}</li>`).join('');html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="highlights-grid">${highlightCards.join('')}</div>${bulletItems?`<div class="highlight-bullet-heading">Key Highlight Points</div><ul class="highlight-bullet-list">${bulletItems}</ul>`:''}</div><div class="om-section om-highlight-description-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">${p.description.split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div></div>`}if(sectionsActive.toggleRentRoll&&rrItems.length>0){let curTotalMo=0,pfTotalMo=0,totalSF=0;rrItems.forEach(it=>{curTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent);totalSF+=parseNum(it.type==='apartment'?it.unitSqft:it.sqft)});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><table class="rr-display-table"><thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>`;rrItems.forEach(it=>{const isR=it.type==='retail',displaySqft=isR?parseNum(it.sqft):parseNum(it.unitSqft),curMonthly=isR&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent),pfMonthly=isR&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent),curSF=displaySqft>0&&curMonthly>0?((curMonthly*12)/displaySqft).toFixed(2):'—',pfSF=displaySqft>0&&pfMonthly>0?((pfMonthly*12)/displaySqft).toFixed(2):'—',desc=isR?[it.tenant||'Retail',it.expiration?`Exp. ${it.expiration}`:'',it.increase?`${it.increase}% bumps`:'' ].filter(Boolean).join(' · '):`${parseNum(it.bed)}BR / ${parseNum(it.bath)}BA`;const bedroomBadge=!isR?renderBedroomBadge(it):'';html+=`<tr class="${isR?'retail-row':''}"><td><span class="unit-label">${esc(it.unit)}</span>${isR?'<span class="retail-tag">RETAIL</span>':''}</td><td>${bedroomBadge}${esc(desc)}</td><td>${displaySqft?displaySqft.toLocaleString():'—'}</td><td>${curMonthly?fmtFull(curMonthly):'—'}</td><td>${curSF!=='—'?'$'+curSF:'—'}</td><td class="pf-val">${pfMonthly?fmtFull(pfMonthly):'—'}</td><td class="pf-val">${pfSF!=='—'?'$'+pfSF:'—'}</td></tr>`});html+=`<tr class="totals"><td colspan="2">Monthly Total</td><td>${totalSF.toLocaleString()}</td><td>${fmtFull(curTotalMo)}</td><td>—</td><td class="pf-val">${fmtFull(pfTotalMo)}</td><td>—</td></tr><tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">${fmtFull(curTotalMo*12)}</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">${fmtFull(pfTotalMo*12)}</td><td style="color:var(--paper)">—</td></tr></tbody></table>${pfTotalMo>curTotalMo?`<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem"><span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span><span style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:#8a6d20">+${fmtFull((pfTotalMo-curTotalMo)*12)}/yr</span></div>`:''}${renderRentRollInsights(rrItems,curTotalMo*12,pfTotalMo*12)}</div></div>`}if(sectionsActive.toggleFinancial){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossCur)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossCur*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiCur)}</span></div>${p.expenses.map(e=>`<div class="fin-row"><span class="fin-row-name">${esc(e.name)}</span><span class="fin-row-val">(${fmtFull(e.amount)})</span></div>`).join('')}<div class="fin-total"><span>Net Operating Income</span><span>${fmtFull(noiCur)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">${fmtPct(currentCap)}</span></div></div><div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossPF)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossPF*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiPF)}</span></div><div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(${fmtFull(expenseTotal)})</span></div><div class="fin-total gold"><span>Net Operating Income</span><span>${fmtFull(noiPF)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">${fmtPct(proformaCap)}</span></div></div></div></div></div>`}if(sectionsActive.toggleValuation){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="val-card"><div class="val-label">Pro Forma Valuation Range · ${fmtPct(p.marketCap)} Market Cap</div><div class="val-range">${fmtPriceFull(valLow)} — ${fmtPriceFull(valHigh)}</div><div class="val-detail"><div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">${fmtPriceFull(valBase)}</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">${fmtFull(pricePerUnit)}</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">${fmtFull(pricePerSF)}</div></div><div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">${valBase?((p.askingPrice>=valBase?'+':'')+fmtPct(((p.askingPrice-valBase)/valBase)*100)):'—'}</div></div></div></div></div></div>`}if(p.propertyType==='Development'){html+=renderDevelopmentAnalysisPage(p);}if(sectionsActive.toggleLocalMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Local Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Location Overview</div><div class="om-section-heading">${esc(neighborhoodLabel)} · ${esc(p.city)}</div><div class="map-card">${mapQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${mapQuery}&z=${p.localMapZoom||16}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the local map</div>`}</div><div class="disclaimer">${esc(mapMeta)}</div></div></div>`}if(sectionsActive.toggleTransitMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Transit Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Transit Access</div><div class="om-section-heading">Nearby Subway / Transit Connectivity</div><div class="map-helper-bar">${buildTransitLinePills()}</div>${renderTransitDistanceList()}<div class="map-card">${transitQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${transitQuery}&z=${p.transitMapZoom||14}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the transit map</div>`}</div><div class="map-note">Highlighted train lines are based on the submitted customization field. The embedded transit search is centered from the same property geolocation and zoomed wider to show surrounding train access.</div></div></div>`}if(sectionsActive.toggleMarket){const marketDescription=buildMarketOverviewDescription(p,{pricePerUnit,pricePerSF,noiPF,noiCur,currentCap,proformaCap});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">${esc(getSelectedNeighborhoodLabel())} · ${esc(p.city)}</div></div><div class="om-section"><div class="om-section-eyebrow">Submarket: ${esc(getSelectedNeighborhoodLabel())}</div><div class="om-section-heading">${esc(p.trend||'Market Positioning')}</div><div class="om-description">${marketDescription}</div></div><div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ${new Date().getFullYear()} BRIC Studios.</div></div>`}if(sectionsActive.togglePropertyPhotos){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Photo Gallery</div><div class="om-section-heading">Exterior, Interior & Building Detail</div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div><div class="disclaimer">Photo placeholders are shown until uploaded images are connected to the OM export workflow.</div></div></div>`}if(sectionsActive.toggleCustomSections && p.customSections && p.customSections.length){p.customSections.filter(s=>s.include!==false).forEach(s=>{html+=renderCustomSectionPage(s,p);});}if(sectionsActive.toggleContactPage){html+=renderContactPage(p);}html+='</div>';preview.innerHTML=html;applyBricOmFooters()}
-function loadSample(){document.getElementById('address').value='1782 Nostrand Avenue';document.getElementById('city').value='Brooklyn';document.getElementById('neighborhood').value='flatbush';document.getElementById('propertyType').value='Mixed-Use';document.getElementById('yearBuilt').value='1936';document.getElementById('sqft').value='3984';document.getElementById('askingPrice').value='1550000';document.getElementById('residentialUnitCount').value='5';document.getElementById('retailUnitCount').value='1';document.getElementById('unitMixBreakdown').value='5 free-market 2-bedroom apartments plus 1 ground-floor retail space.';document.getElementById('marketCap').value='6.5';document.getElementById('submarketTrend').value='Value-Add Market';document.getElementById('description').value='Mixed-use, cash-flowing asset on Nostrand Avenue in the heart of Flatbush, Brooklyn. The property features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.\n\nSituated within NYC Tax Class 2A, the property offers strong day-one cash flow with meaningful upside through rent repositioning.';document.getElementById('grossIncome').value='192960';document.getElementById('otherIncome').value='0';document.getElementById('resCount').value='5';document.getElementById('retailCount').value='1';toggleRentRoll(true);rebuildRowsFromCounts();rrItems.forEach((item,idx)=>{if(item.type==='retail'){item.unit='Ground FL';item.tenant='Cricket Wireless';item.currentRent=3350;item.proformaRent=3450;item.frequency='monthly';item.increase='3.0';item.proformaAuto=false}else{const seed=[{u:'1R',b:2,ba:1,r:3400},{u:'2F',b:2,ba:1,r:2475},{u:'2R',b:2,ba:1,r:2500},{u:'3F',b:2,ba:1,r:2100},{u:'3R',b:2,ba:1,r:2255}][idx];if(seed){item.unit=seed.u;item.bed=seed.b;item.bath=seed.ba;item.currentRent=seed.r;item.proformaRent=autoProformaResidential(seed.b)}}});renderRR();updateSummary();document.getElementById('totalExpenses').value='0';document.getElementById('expenseRows').innerHTML='';DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));updateExpenseTotalFromRows();generate()}
+function generate(userRequested=false){if(userRequested) omGenerated=true;const preview=document.getElementById('omPreview');if(!omGenerated){preview.innerHTML='<div class="preview-locked"><div class="empty-icon">◊</div><div class="empty-title">OM Preview Locked</div><div class="empty-sub">Enter your property information, then click Generate OM. After that, edits update the preview live.</div></div>';return;}const p=collectOmData();p.units=rrItems.length ? rrItems.length : (parseNum(p.residentialUnits)+parseNum(p.retailUnits));let grossCur=0,grossPF=0;rrItems.forEach(it=>{const cur=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent):parseNum(it.currentRent)*12;const pf=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent):parseNum(it.proformaRent)*12;grossCur+=cur;grossPF+=pf});if(!rrItems.length){grossCur=p.grossIncome;grossPF=p.grossIncome}grossCur+=p.otherIncome;grossPF+=p.otherIncome;const vacancy=.04,expenseTotal=p.expenses.reduce((s,e)=>s+parseNum(e.amount),0),egiCur=grossCur*(1-vacancy),egiPF=grossPF*(1-vacancy),noiCur=egiCur-expenseTotal,noiPF=egiPF-expenseTotal,currentCap=p.askingPrice>0?(noiCur/p.askingPrice)*100:0,proformaCap=p.askingPrice>0?(noiPF/p.askingPrice)*100:0,valLow=noiPF/((p.marketCap+.75)/100),valBase=noiPF/(p.marketCap/100),valHigh=p.marketCap>1?noiPF/((p.marketCap-.75)/100):valBase,pricePerUnit=p.units>0?p.askingPrice/p.units:0,pricePerSF=p.sqft>0?p.askingPrice/p.sqft:0;if(currentTier!=='growth'){preview.innerHTML=renderFreePropertyDetailsPage(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,grossCur,grossPF});applyBricOmFooters();return;}const neighborhoodLabel=getSelectedNeighborhoodLabel();geocodeSubmittedProperty(p);const localMapTarget=getMapQueryFromGeo(p);const transitMapTarget=getTransitQueryFromGeo(p);const mapQuery=encodeURIComponent(localMapTarget);const transitQuery=encodeURIComponent(transitMapTarget);const mapMeta=mapStatusText();if(!p.askingPrice&&!p.address){preview.innerHTML='<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add property details and rent roll to begin.</div></div>';return}let html='<div class="om-doc">';if(sectionsActive.toggleCover){const coverTitle=p.coverTitleOverride||p.address||'Property Address';const autoSubtitle=`${p.propertyType||'Property'} · ${p.units} Unit${p.units!==1?'s':''} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')} SF${p.yearBuilt?` · Built ${p.yearBuilt}`:''}`;const coverSubtitle=p.coverSubtitleOverride||autoSubtitle;const coverStats=[];if(p.coverShowPrice)coverStats.push(`<div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">${fmtPriceFull(p.askingPrice)}</div></div>`);if(p.coverShowCap)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">${fmtPct(proformaCap)}</div></div>`);if(p.coverShowNOI)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">${fmt(noiPF)}</div></div>`);if(p.coverShowUnitsSF)coverStats.push(`<div><div class="om-cover-stat-label">Units / SF</div><div class="om-cover-stat-val">${p.units} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')}</div></div>`);const hasCoverPhoto=!!p.coverPhotoData;html+=`<div class="om-cover${hasCoverPhoto?' has-photo':''}"><div class="om-cover-main"><div style="position:relative;z-index:2"><div class="om-cover-brand">${bricCoverLogo()}BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">${esc(coverTitle)}<em>${esc(neighborhoodLabel)} · ${esc(p.city)}</em></div><div class="om-cover-subtitle">${esc(coverSubtitle)}</div></div><div class="om-cover-bottom">${coverStats.join('')}<div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'})}</span></div></div></div>${hasCoverPhoto?`<div class="om-cover-photo-wrap"><img src="${escAttr(p.coverPhotoData)}" alt="Cover property photo"><div class="om-cover-photo-label">Property Photo</div></div>`:''}</div>`}const aptCount=rrItems.filter(x=>x.type==='apartment').length,retCount=rrItems.filter(x=>x.type==='retail').length;let highlightCards=buildHighlightCards(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,aptCount,retCount,neighborhoodLabel});if(sectionsActive.toggleHighlights){const bulletItems=(p.highlightBullets||[]).filter(Boolean).map(item=>`<li>${esc(item)}</li>`).join('');html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="highlights-grid">${highlightCards.join('')}</div>${bulletItems?`<div class="highlight-bullet-heading">Key Highlight Points</div><ul class="highlight-bullet-list">${bulletItems}</ul>`:''}</div><div class="om-section om-highlight-description-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">${p.description.split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div></div>`}if(sectionsActive.toggleRentRoll&&rrItems.length>0){let curTotalMo=0,pfTotalMo=0,totalSF=0;rrItems.forEach(it=>{curTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent);totalSF+=parseNum(it.type==='apartment'?it.unitSqft:it.sqft)});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><table class="rr-display-table"><thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>`;rrItems.forEach(it=>{const isR=it.type==='retail',displaySqft=isR?parseNum(it.sqft):parseNum(it.unitSqft),curMonthly=isR&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent),pfMonthly=isR&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent),curSF=displaySqft>0&&curMonthly>0?((curMonthly*12)/displaySqft).toFixed(2):'—',pfSF=displaySqft>0&&pfMonthly>0?((pfMonthly*12)/displaySqft).toFixed(2):'—',desc=isR?[it.tenant||'Retail',it.expiration?`Exp. ${it.expiration}`:'',it.increase?`${it.increase}% bumps`:'' ].filter(Boolean).join(' · '):`${parseNum(it.bed)}BR / ${parseNum(it.bath)}BA`;const bedroomBadge=!isR?renderBedroomBadge(it):'';html+=`<tr class="${isR?'retail-row':''}"><td><span class="unit-label">${esc(it.unit)}</span>${isR?'<span class="retail-tag">RETAIL</span>':''}</td><td>${bedroomBadge}${esc(desc)}</td><td>${displaySqft?displaySqft.toLocaleString():'—'}</td><td>${curMonthly?fmtFull(curMonthly):'—'}</td><td>${curSF!=='—'?'$'+curSF:'—'}</td><td class="pf-val">${pfMonthly?fmtFull(pfMonthly):'—'}</td><td class="pf-val">${pfSF!=='—'?'$'+pfSF:'—'}</td></tr>`});html+=`<tr class="totals"><td colspan="2">Monthly Total</td><td>${totalSF.toLocaleString()}</td><td>${fmtFull(curTotalMo)}</td><td>—</td><td class="pf-val">${fmtFull(pfTotalMo)}</td><td>—</td></tr><tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">${fmtFull(curTotalMo*12)}</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">${fmtFull(pfTotalMo*12)}</td><td style="color:var(--paper)">—</td></tr></tbody></table>${pfTotalMo>curTotalMo?`<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem"><span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span><span style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:#8a6d20">+${fmtFull((pfTotalMo-curTotalMo)*12)}/yr</span></div>`:''}${renderRentRollInsights(rrItems,curTotalMo*12,pfTotalMo*12)}</div></div>`}if(sectionsActive.toggleFinancial){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossCur)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossCur*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiCur)}</span></div>${p.expenses.map(e=>`<div class="fin-row"><span class="fin-row-name">${esc(e.name)}</span><span class="fin-row-val">(${fmtFull(e.amount)})</span></div>`).join('')}<div class="fin-total"><span>Net Operating Income</span><span>${fmtFull(noiCur)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">${fmtPct(currentCap)}</span></div></div><div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossPF)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossPF*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiPF)}</span></div><div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(${fmtFull(expenseTotal)})</span></div><div class="fin-total gold"><span>Net Operating Income</span><span>${fmtFull(noiPF)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">${fmtPct(proformaCap)}</span></div></div></div></div></div>`}if(sectionsActive.toggleValuation){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="val-card"><div class="val-label">Pro Forma Valuation Range · ${fmtPct(p.marketCap)} Market Cap</div><div class="val-range">${fmtPriceFull(valLow)} — ${fmtPriceFull(valHigh)}</div><div class="val-detail"><div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">${fmtPriceFull(valBase)}</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">${fmtFull(pricePerUnit)}</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">${fmtFull(pricePerSF)}</div></div><div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">${valBase?((p.askingPrice>=valBase?'+':'')+fmtPct(((p.askingPrice-valBase)/valBase)*100)):'—'}</div></div></div></div></div></div>`}if(p.propertyType==='Development'){html+=renderDevelopmentAnalysisPage(p);}if(sectionsActive.toggleLocalMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Local Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Location Overview</div><div class="om-section-heading">${esc(neighborhoodLabel)} · ${esc(p.city)}</div><div class="map-card">${mapQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${mapQuery}&z=${p.localMapZoom||16}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the local map</div>`}</div><div class="disclaimer">${esc(mapMeta)}</div></div></div>`}if(sectionsActive.toggleTransitMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Transit Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Transit Access</div><div class="om-section-heading">Nearby Subway / Transit Connectivity</div><div class="map-helper-bar">${buildTransitLinePills()}</div>${renderTransitDistanceList()}<div class="map-card">${transitQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${transitQuery}&z=${p.transitMapZoom||14}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the transit map</div>`}</div><div class="map-note">Highlighted train lines are based on the submitted customization field. The embedded transit search is centered from the same property geolocation and zoomed wider to show surrounding train access.</div></div></div>`}if(sectionsActive.toggleMarket){const marketDescription=buildMarketOverviewDescription(p,{pricePerUnit,pricePerSF,noiPF,noiCur,currentCap,proformaCap});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">${esc(getSelectedNeighborhoodLabel())} · ${esc(p.city)}</div></div><div class="om-section"><div class="om-section-eyebrow">City: ${esc(getSelectedNeighborhoodLabel())}</div><div class="om-section-heading">${esc(p.trend||'Market Positioning')}</div><div class="om-description">${marketDescription}</div></div><div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ${new Date().getFullYear()} BRIC Studios.</div></div>`}if(sectionsActive.togglePropertyPhotos){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Photo Gallery</div><div class="om-section-heading">Exterior, Interior & Building Detail</div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div><div class="disclaimer">Photo placeholders are shown until uploaded images are connected to the OM export workflow.</div></div></div>`}if(sectionsActive.toggleCustomSections && p.customSections && p.customSections.length){p.customSections.filter(s=>s.include!==false).forEach(s=>{html+=renderCustomSectionPage(s,p);});}if(sectionsActive.toggleContactPage){html+=renderContactPage(p);}html+='</div>';preview.innerHTML=html;applyBricOmFooters()}
+function loadSample(){document.getElementById('address').value='Property Address Withheld';document.getElementById('city').value='NY';populateSubmarketsForBorough('NY','Brooklyn');document.getElementById('neighborhood').value='Brooklyn';document.getElementById('propertyType').value='Mixed-Use';document.getElementById('yearBuilt').value='1936';document.getElementById('sqft').value='3984';document.getElementById('askingPrice').value='1550000';document.getElementById('residentialUnitCount').value='5';document.getElementById('retailUnitCount').value='1';document.getElementById('unitMixBreakdown').value='5 free-market 2-bedroom apartments plus 1 ground-floor retail space.';document.getElementById('marketCap').value='6.5';document.getElementById('submarketTrend').value='Value-Add Market';document.getElementById('description').value='Mixed-use, cash-flowing asset in a high-density New York City neighborhood. The property features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.\n\nSituated within NYC Tax Class 2A, the property offers strong day-one cash flow with meaningful upside through rent repositioning.';document.getElementById('grossIncome').value='192960';document.getElementById('otherIncome').value='0';document.getElementById('resCount').value='5';document.getElementById('retailCount').value='1';toggleRentRoll(true);rebuildRowsFromCounts();rrItems.forEach((item,idx)=>{if(item.type==='retail'){item.unit='Ground FL';item.tenant='Cricket Wireless';item.currentRent=3350;item.proformaRent=3450;item.frequency='monthly';item.increase='3.0';item.proformaAuto=false}else{const seed=[{u:'1R',b:2,ba:1,r:3400},{u:'2F',b:2,ba:1,r:2475},{u:'2R',b:2,ba:1,r:2500},{u:'3F',b:2,ba:1,r:2100},{u:'3R',b:2,ba:1,r:2255}][idx];if(seed){item.unit=seed.u;item.bed=seed.b;item.bath=seed.ba;item.currentRent=seed.r;item.proformaRent=autoProformaResidential(seed.b)}}});renderRR();updateSummary();document.getElementById('totalExpenses').value='0';document.getElementById('expenseRows').innerHTML='';DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));updateExpenseTotalFromRows();generate()}
 document.addEventListener('input',e=>{if(['address','city','yearBuilt','developmentLotSize','developmentFAR','developmentStreetWidth','developmentZoning','developmentZoningDescription','sqft','askingPrice','residentialUnitCount','retailUnitCount','unitMixBreakdown','grossIncome','otherIncome','totalExpenses','marketCap','description'].includes(e.target.id)){ if(['address','city'].includes(e.target.id)){ propertyGeo={query:'',lat:null,lng:null,status:'idle'}; } if(e.target.id==='address'){ clearTimeout(window.__bricAddressDetectTimer); window.__bricAddressDetectTimer=setTimeout(()=>{detectBoroughAndSubmarketFromAddress();
   handlePropertyTypeChange(); generate();},350); } generate(); }})
 document.getElementById('neighborhood').addEventListener('change',()=>{autoGenAll();generate()});document.getElementById('city').addEventListener('change',handleBoroughChange);document.getElementById('propertyType').addEventListener('change',handlePropertyTypeChange);document.getElementById('submarketTrend').addEventListener('change',generate);document.getElementById('resCount').addEventListener('change',()=>{if(currentTier!=='growth')return;rentRollActive=true;document.getElementById('rentRollToggle').classList.add('on');document.getElementById('rentRollControls').classList.add('visible');document.getElementById('rentRollWrap').classList.add('visible');rebuildRowsFromCounts()});document.getElementById('retailCount').addEventListener('change',()=>{if(currentTier!=='growth')return;rentRollActive=true;document.getElementById('rentRollToggle').classList.add('on');document.getElementById('rentRollControls').classList.add('visible');document.getElementById('rentRollWrap').classList.add('visible');rebuildRowsFromCounts()})
@@ -2359,7 +3301,7 @@ function initExpandableSections(){
 }
 
 window.addEventListener('load', initExpandableSections);
-fillCountOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));const totalExpenseInput=document.getElementById('totalExpenses');if(totalExpenseInput&&!totalExpenseInput.value)totalExpenseInput.value='';setTier('free');renderHighlightEditor();
+fillCountOptions(); populateStateOptions();DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));const totalExpenseInput=document.getElementById('totalExpenses');if(totalExpenseInput&&!totalExpenseInput.value)totalExpenseInput.value='';setTier('free');renderHighlightEditor();
 (function(){
   const ws=getWorkspace();
   const omId=getQueryParam('omId');
@@ -2506,7 +3448,7 @@ setupPanelResizer();
     }
     var address = safeVal('address','The subject property') || 'The subject property';
     var city = safeVal('city','New York City') || 'New York City';
-    var neighborhood = (typeof getSelectedNeighborhoodLabel === 'function') ? getSelectedNeighborhoodLabel() : safeVal('neighborhood','the selected submarket');
+    var neighborhood = (typeof getSelectedNeighborhoodLabel === 'function') ? getSelectedNeighborhoodLabel() : safeVal('neighborhood','the selected city');
     var propertyType = safeVal('propertyType','investment property') || 'investment property';
     var sf = safeNum('sqft');
     var asking = safeNum('askingPrice');
@@ -2650,7 +3592,7 @@ setupPanelResizer();
       card('Estimated NOI', fmtShort(p.noi), p.capAtAsk ? pct(p.capAtAsk)+' at ask' : 'After 4% vacancy')+
       '</div></div>'+
       '<div class="om-section"><div class="om-section-heading">Basic Details</div><table class="om-table"><tbody>'+
-      row('Address', p.address)+row('Borough', p.city)+row('Submarket', p.neighborhood)+row('Property Type', p.propertyType)+row('Year Built', p.yearBuilt||'—')+row('Unit Mix / Breakdown', p.unitMix||((p.residentialUnits||0)+' apartments + '+(p.retailUnits||0)+' retail/commercial spaces'))+
+      row('Address', p.address)+row('State', p.city)+row('City', p.neighborhood)+row('Property Type', p.propertyType)+row('Year Built', p.yearBuilt||'—')+row('Unit Mix / Breakdown', p.unitMix||((p.residentialUnits||0)+' apartments + '+(p.retailUnits||0)+' retail/commercial spaces'))+
       '</tbody></table></div><div class="disclaimer">Free version output. Growth unlocks the full OM, AI description, rent roll, maps, photos, valuation, and financial summary pages.</div></div></div>';
   }
   function card(label,value,sub){ return '<div class="highlight-card"><div class="highlight-label">'+esc(label)+'</div><div class="highlight-val">'+esc(value)+'</div><div class="highlight-sub">'+esc(sub||'')+'</div></div>'; }
@@ -2687,7 +3629,7 @@ setupPanelResizer();
     return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="val-card"><div class="val-label">Market Cap Rate Assumption · '+pct(p.marketCap)+'</div><div class="val-range">'+fmtPriceFull(base)+'</div><div class="val-detail"><div><div class="val-detail-label">Cap at Ask</div><div class="val-detail-val">'+pct(p.capAtAsk)+'</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">'+fmtFull(p.pricePerUnit)+'</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">'+fmtFull(p.pricePerSF)+'</div></div></div></div></div>';
   }
   function renderMarketPage(p){
-    return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">'+esc(p.neighborhood)+' · '+esc(p.city)+'</div></div><div class="om-description"><p>'+esc(p.neighborhood||'The selected submarket')+' is positioned as '+esc((p.trend||'a stable market').toLowerCase())+'. This section can be expanded with comparable sales, rent trends, buyer activity, and submarket demand drivers.</p></div></div>';
+    return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">'+esc(p.neighborhood)+' · '+esc(p.city)+'</div></div><div class="om-description"><p>'+esc(p.neighborhood||'The selected submarket')+' is positioned as '+esc((p.trend||'a stable market').toLowerCase())+'. This section can be expanded with comparable sales, rent trends, buyer activity, and market demand drivers.</p></div></div>';
   }
   function renderPhotosPage(p){
     return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div></div>';
@@ -2719,7 +3661,7 @@ setupPanelResizer();
     });
     return html+'</div>';
   }
-  function mapPage(title,p,type){ var q=encodeURIComponent([p.address,p.city,'NY', type==='transit'?'subway station transit':''].filter(Boolean).join(' ')); return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">'+title+'</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="map-card"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z='+(type==='transit'?13:16)+'&output=embed"></iframe></div></div>'; }
+  function mapPage(title,p,type){ var q=encodeURIComponent([p.address,p.neighborhood,p.city, type==='transit'?'transit stations':''].filter(Boolean).join(' ')); return '<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">'+title+'</div><div class="om-page-hd-brand">'+esc(p.address)+'</div></div><div class="map-card"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z='+(type==='transit'?13:16)+'&output=embed"></iframe></div></div>'; }
   function hardGenerate(userRequested){
     if(userRequested){ window.__bricOmGenerated=true; try{ omGenerated=true; }catch(e){} }
     var generated = window.__bricOmGenerated; try{ generated = generated || omGenerated; }catch(e){}
@@ -2751,7 +3693,7 @@ setupPanelResizer();
     if(getTier()!=='growth'){ alert('AI-generated descriptions are a Growth feature.'); return; }
     var p=collect();
     var unitMix = p.unitMix || ((p.residentialUnits||0)+' residential units'+(p.retailUnits?(' and '+p.retailUnits+' retail/commercial spaces'):''));
-    var text = p.address+' is a '+(p.propertyType||'property').toLowerCase()+' opportunity located in '+(p.neighborhood||'the selected submarket')+', '+(p.city||'New York')+'. The property includes '+unitMix+' and totals '+(p.sf?p.sf.toLocaleString()+' square feet':'a well-positioned building footprint')+'.\n\nThe financial profile reflects approximately '+fmtFull(p.gross)+' in annual gross income, '+fmtFull(p.expenses)+' in annual expenses, and an estimated NOI of '+fmtFull(p.noi)+'. '+(p.marketCap?'The valuation framework is based on a '+pct(p.marketCap)+' market cap rate assumption.':'')+'\n\nThe offering should emphasize the property\'s income profile, location, and potential value creation through rent growth, expense review, and continued demand for well-located New York City assets.';
+    var text = p.address+' is a '+(p.propertyType||'property').toLowerCase()+' opportunity located in '+(p.neighborhood||'the selected city')+', '+(p.city||'New York')+'. The property includes '+unitMix+' and totals '+(p.sf?p.sf.toLocaleString()+' square feet':'a well-positioned building footprint')+'.\n\nThe financial profile reflects approximately '+fmtFull(p.gross)+' in annual gross income, '+fmtFull(p.expenses)+' in annual expenses, and an estimated NOI of '+fmtFull(p.noi)+'. '+(p.marketCap?'The valuation framework is based on a '+pct(p.marketCap)+' market cap rate assumption.':'')+'\n\nThe offering should emphasize the property\'s income profile, location, and potential value creation through rent growth, expense review, and continued demand for well-located New York City assets.';
     var d=byId('description'); if(d){ d.disabled=false; d.style.pointerEvents='auto'; d.style.opacity='1'; d.value=text; d.focus(); }
     hardGenerate(false);
   }
@@ -2835,7 +3777,7 @@ setupPanelResizer();
   function setVal(id,val){ var el=byId(id); if(el && isNonEmpty(val)){ el.value=val; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); } }
   function setSelect(id,val){
     var el=byId(id); if(!el || !isNonEmpty(val)) return;
-    var raw=String(val).trim(); var n=norm(raw);
+    var raw=String(val).trim(); if(id==='city'){ raw=normalizeImportedState(raw); populateStateOptions(raw); } var n=norm(raw);
     var match=Array.prototype.slice.call(el.options).find(function(o){ return norm(o.value)===n || norm(o.textContent)===n || norm(o.label)===n; });
     if(!match){
       // Do not silently fall back to Other. Add the saved value so imported submarkets/property types visibly carry over.
@@ -2998,8 +3940,10 @@ setupPanelResizer();
   function setVal(id,v){ var el=byId(id); if(el && v!==undefined && v!==null && String(v)!=='') el.value=v; }
   function setSelect(id,v){
     var el=byId(id); if(!el || v===undefined || v===null || String(v).trim()==='') return;
+    if(id==='city'){ v=normalizeImportedState(v); populateStateOptions(v); }
     var target=norm(v), matched=false;
     Array.prototype.slice.call(el.options).forEach(function(o){ if(norm(o.value)===target || norm(o.textContent)===target){ el.value=o.value; matched=true; } });
+    if(!matched && id==='city') return;
     if(!matched && id==='neighborhood'){
       var opt=document.createElement('option'); opt.value=String(v).trim().toLowerCase(); opt.textContent=String(v).trim(); el.appendChild(opt); el.value=opt.value;
     }
@@ -3130,9 +4074,10 @@ setupPanelResizer();
   function setVal(id,v){ var el=byId(id); if(el && isSet(v)){ el.value=v; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); } }
   function setSelect(id,v){
     var el=byId(id); if(!el || !isSet(v)) return;
+    if(id==='city'){ v=normalizeImportedState(v); populateStateOptions(v); }
     var target=norm(v), match=null;
     Array.prototype.slice.call(el.options).some(function(o){ if(norm(o.value)===target || norm(o.textContent)===target || norm(o.label)===target){ match=o; return true; } return false; });
-    if(!match){ match=document.createElement('option'); match.value=id==='neighborhood'?String(v).trim().toLowerCase():String(v).trim(); match.textContent=String(v).trim(); el.appendChild(match); }
+    if(!match){ if(id==='city') return; match=document.createElement('option'); match.value=id==='neighborhood'?String(v).trim().toLowerCase():String(v).trim(); match.textContent=String(v).trim(); el.appendChild(match); }
     el.value=match.value; el.dispatchEvent(new Event('change',{bubbles:true}));
   }
   function get(obj, keys){ if(!obj) return ''; for(var i=0;i<keys.length;i++){ var v=obj[keys[i]]; if(isSet(v)) return v; } return ''; }
@@ -3354,7 +4299,7 @@ function first(){for(var i=0;i<arguments.length;i++){if(ok(arguments[i]))return 
 function norm(v){return String(v||'').trim().toLowerCase()}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function setVal(id,v){var el=byId(id);if(el&&ok(v))el.value=v}
-function setSel(id,v){var el=byId(id);if(!el||!ok(v))return;var vn=norm(v),m=[].slice.call(el.options).find(function(o){return norm(o.value)===vn||norm(o.textContent)===vn});if(!m){m=document.createElement('option');m.value=v;m.textContent=v;el.appendChild(m)}el.value=m.value}
+function setSel(id,v){var el=byId(id);if(!el||!ok(v))return;if(id==='city'){v=normalizeImportedState(v);populateStateOptions(v);}var vn=norm(v),m=[].slice.call(el.options).find(function(o){return norm(o.value)===vn||norm(o.textContent)===vn});if(!m){if(id==='city')return;m=document.createElement('option');m.value=v;m.textContent=v;el.appendChild(m)}el.value=m.value}
 window.calcRentPSF=function(r,s,f){r=n(r);s=n(s);if(!r||!s)return '—';return '$'+(((f==='annual')?r:r*12)/s).toFixed(2)};
 function ws(){try{return JSON.parse(localStorage.getItem('bricWorkspaceV1'))||{properties:[],valuations:[],oms:[]}}catch(e){return{properties:[],valuations:[],oms:[]}}}
 function flat(o){var out={};function add(x){if(!x||typeof x!=='object'||Array.isArray(x))return;Object.keys(x).forEach(function(k){var v=x[k];if(Array.isArray(v)){if(v.length&&!out[k])out[k]=v}else if(ok(v)&&!ok(out[k]))out[k]=v})}['property','propertyData','propertyDetails','details','inputs','formData','valuation','valuationData','om','omData','draft','data','payload'].forEach(function(k){add(o&&o[k])});add(o);return out}
@@ -3644,7 +4589,7 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
           <div class="public-record-form-grid">
             <div class="field"><label>City / State / Zip</label><input type="text" id="prCityStateZip" placeholder="Brooklyn, NY 11221"></div>
             <div class="field"><label>Neighborhood</label><input type="text" id="prNeighborhood" placeholder="Bushwick"></div>
-            <div class="field"><label>Borough</label><input type="text" id="prBorough" placeholder="Brooklyn"></div>
+            <div class="field"><label>State</label><input type="text" id="prBorough" placeholder="NY"></div>
             <div class="field"><label>Block & Lot</label><input type="text" id="prBlockLot" placeholder="Block 03215 / Lot 0029"></div>
             <div class="field"><label>Tax Class</label><input type="text" id="prTaxClass" placeholder="1 / 2A / 2B / 2C / 4"></div>
             <div class="field"><label>Annual Estimated Taxes</label><input type="text" id="prEstimatedTaxes" placeholder="$29,935"></div>
@@ -3771,7 +4716,7 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
         var neighborhood=p.neighborhood || p.neighbourhood || selectedText('neighborhood') || '';
         var bbl=p.bbl || (p.addendum && p.addendum.pad && p.addendum.pad.bbl) || '';
         var coords=f && f.geometry && Array.isArray(f.geometry.coordinates) ? f.geometry.coordinates : null;
-        if(borough || zip) setField('prCityStateZip', (borough||selectedText('city')||'New York')+', NY'+(zip?' '+zip:''), true);
+        if(borough || zip) setField('prCityStateZip', (selectedText('neighborhood')||'City')+', '+(selectedText('city')||'State')+(zip?' '+zip:''), true);
         if(borough) setField('prBorough', borough, true);
         if(neighborhood) setField('prNeighborhood', neighborhood, true);
         if(bbl) {
@@ -3816,7 +4761,7 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
     var d=publicRecordData();
     var mapTarget=d.latLng || [d.address, d.cityStateZip].filter(Boolean).join(' ');
     var q=encodeURIComponent(mapTarget);
-    return '<div class="om-page public-record-page" data-section-key="togglePublicRecordPage"><div class="om-page-hd"><div class="om-page-hd-title">Property Description | '+esc(String(d.address).toUpperCase())+'</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="public-record-grid"><table class="public-record-table"><tbody>'+recordRow('City / State / Zip',d.cityStateZip)+recordRow('Neighborhood',d.neighborhood)+recordRow('Borough',d.borough)+recordRow('Block & Lot',d.blockLot)+recordRow('Tax Class',d.taxClass)+recordRow('Annual Estimated Taxes',d.estimatedTaxes)+recordRow('Year Built',d.yearBuilt)+recordRow('Residential Units',d.residentialUnits)+recordRow('Commercial Units',d.commercialUnits)+recordRow('Total Units',d.totalUnits)+recordRow('Gross Building SF',d.grossSf)+recordRow('Lot SF',d.lotSf)+recordRow('Zoning',d.zoning)+recordRow('Land Use',d.landUse)+recordRow('Building Class',d.buildingClass)+recordRow('Latitude / Longitude',d.latLng)+recordRow('Approximate Map Location',mapTarget)+'</tbody></table><div class="public-record-media public-record-map-only"><div class="record-map-slot"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z=17&output=embed"></iframe></div></div></div><div class="public-record-source">Public-record style page · Estimated taxes and public data should be verified before distribution</div></div>';
+    return '<div class="om-page public-record-page" data-section-key="togglePublicRecordPage"><div class="om-page-hd"><div class="om-page-hd-title">Property Description | '+esc(String(d.address).toUpperCase())+'</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="public-record-grid"><table class="public-record-table"><tbody>'+recordRow('City / State / Zip',d.cityStateZip)+recordRow('City',d.neighborhood)+recordRow('State',d.borough)+recordRow('Block & Lot',d.blockLot)+recordRow('Tax Class',d.taxClass)+recordRow('Annual Estimated Taxes',d.estimatedTaxes)+recordRow('Year Built',d.yearBuilt)+recordRow('Residential Units',d.residentialUnits)+recordRow('Commercial Units',d.commercialUnits)+recordRow('Total Units',d.totalUnits)+recordRow('Gross Building SF',d.grossSf)+recordRow('Lot SF',d.lotSf)+recordRow('Zoning',d.zoning)+recordRow('Land Use',d.landUse)+recordRow('Building Class',d.buildingClass)+recordRow('Latitude / Longitude',d.latLng)+recordRow('Approximate Map Location',mapTarget)+'</tbody></table><div class="public-record-media public-record-map-only"><div class="record-map-slot"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z=17&output=embed"></iframe></div></div></div><div class="public-record-source">Public-record style page · Estimated taxes and public data should be verified before distribution</div></div>';
   }
 
   function pageNodeForKey(doc,key){
