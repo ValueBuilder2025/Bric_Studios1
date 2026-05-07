@@ -5241,4 +5241,196 @@ document.addEventListener('input', function(e){
 
 </script>
 
+
+<script>
+/* --- BRIC final patch: public records, state/city/submarket, upside visuals, expense benchmark --- */
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function byId(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function escAttr(s){ return esc(s).replace(/`/g,'&#96;'); }
+  function num(v){ var n=parseFloat(String(v||'').replace(/[$,%\s,]/g,'')); return Number.isFinite(n)?n:0; }
+  function val(id){ var el=byId(id); return el ? el.value : ''; }
+  function fmtFull(n){ n=num(n); return n ? '$'+Math.round(n).toLocaleString() : '$0'; }
+  function money(n){ n=num(n); return n ? '$'+Math.round(n).toLocaleString() : '—'; }
+  function pct(n){ n=Number(n)||0; return n.toFixed(2)+'%'; }
+  function selectedText(id){ var el=byId(id); return el && el.selectedOptions && el.selectedOptions[0] ? el.selectedOptions[0].textContent : val(id); }
+  function isGrowth(){ var g=byId('tierGrowth'); return !!(g && g.classList.contains('active')); }
+  function isGenerated(){ try{ return !!(window.__bricOmGenerated || omGenerated); }catch(e){ return !!window.__bricOmGenerated; } }
+  function currentState(){ return val('city') || ''; }
+  function currentStateLabel(){ var st=currentState(); try{ return (window.US_STATE_NAMES && US_STATE_NAMES[st]) || st; }catch(e){ return st; } }
+  function currentCity(){ var t=selectedText('neighborhood'); return (t && !/^select/i.test(t)) ? t : ''; }
+  function setField(id,value,force){ var el=byId(id); if(!el) return; if(force || !String(el.value||'').trim()) el.value=value||''; }
+  function zipFromText(s){ var m=String(s||'').match(/\b\d{5}(?:-\d{4})?\b/); return m?m[0].slice(0,5):''; }
+  var NYC_ZIP_SUBMARKETS={
+    '11211':'Williamsburg','11249':'Williamsburg','11222':'Greenpoint','11206':'Bushwick / Williamsburg','11237':'Bushwick','11221':'Bushwick / Bedford-Stuyvesant','11207':'East New York / Bushwick','11233':'Bedford-Stuyvesant / Ocean Hill','11216':'Bedford-Stuyvesant / Crown Heights','11238':'Prospect Heights / Crown Heights','11213':'Crown Heights','11225':'Prospect Lefferts Gardens / Crown Heights','11226':'Flatbush','11210':'Flatbush / Midwood','11203':'East Flatbush','11212':'Brownsville','11208':'East New York','11215':'Park Slope / Gowanus','11217':'Boerum Hill / Downtown Brooklyn','11201':'Brooklyn Heights / Downtown Brooklyn','11205':'Clinton Hill / Fort Greene','11231':'Carroll Gardens / Red Hook','11232':'Sunset Park','11220':'Sunset Park','11219':'Borough Park','11218':'Kensington / Windsor Terrace','11230':'Midwood','11235':'Sheepshead Bay / Brighton Beach','11224':'Coney Island','11223':'Gravesend','11214':'Bensonhurst','11209':'Bay Ridge',
+    '10001':'Chelsea / Hudson Yards','10002':'Lower East Side','10003':'East Village / Greenwich Village','10011':'Chelsea / West Village','10012':'SoHo / NoHo','10013':'TriBeCa / SoHo','10014':'West Village','10016':'Murray Hill / NoMad','10019':'Midtown West','10022':'Midtown East','10023':'Upper West Side','10024':'Upper West Side','10025':'Upper West Side / Morningside Heights','10027':'Harlem / Morningside Heights','10029':'East Harlem','10030':'Central Harlem','10031':'Hamilton Heights','10032':'Washington Heights','10033':'Washington Heights','10034':'Inwood','10035':'East Harlem','10036':'Times Square / Hell’s Kitchen','10038':'Financial District / Seaport','10065':'Upper East Side','10075':'Upper East Side','10128':'Upper East Side / Yorkville',
+    '11101':'Long Island City','11102':'Astoria','11103':'Astoria','11104':'Sunnyside','11105':'Astoria / Ditmars','11106':'Astoria / Ravenswood','11354':'Flushing','11355':'Flushing','11368':'Corona','11372':'Jackson Heights','11373':'Elmhurst','11375':'Forest Hills','11377':'Woodside','11385':'Ridgewood / Glendale','11432':'Jamaica','11435':'Jamaica','11691':'Far Rockaway',
+    '10451':'South Bronx / Concourse','10452':'Highbridge / Concourse','10453':'Morris Heights','10454':'Mott Haven','10455':'Mott Haven / Melrose','10456':'Morrisania','10457':'Tremont','10458':'Fordham / Belmont','10459':'Longwood','10460':'West Farms','10461':'Pelham Bay','10462':'Parkchester','10463':'Riverdale / Kingsbridge','10467':'Norwood / Williamsbridge','10468':'Fordham / Kingsbridge','10469':'Baychester','10472':'Soundview','10473':'Throgs Neck / Soundview',
+    '10301':'St. George / Stapleton','10304':'Stapleton / Todt Hill','10305':'Rosebank / Arrochar','10306':'New Dorp','10308':'Great Kills','10309':'Tottenville / Prince’s Bay','10310':'West Brighton','10314':'Mid-Island'
+  };
+  function inferSubmarket(zip,address,city,state){
+    zip=String(zip||'').slice(0,5); state=String(state||currentState()).toUpperCase(); city=String(city||currentCity()); address=String(address||val('address')).toLowerCase();
+    if(state==='NY' && NYC_ZIP_SUBMARKETS[zip]) return NYC_ZIP_SUBMARKETS[zip];
+    var hints=[['Bushwick',['bushwick','wyckoff','knickerbocker','myrtle']],['Williamsburg',['williamsburg','bedford ave','berry st','wythe']],['Greenpoint',['greenpoint','manhattan ave','india st']],['Bedford-Stuyvesant',['bed stuy','bedford-stuyvesant','nostrand ave','tompkins']],['Flatbush',['flatbush','church ave','cortelyou']],['Park Slope',['park slope','5th ave','7th ave','prospect park west']],['Prospect Lefferts Gardens',['prospect lefferts','plg','lefferts']],['Crown Heights',['crown heights','eastern parkway']]];
+    for(var i=0;i<hints.length;i++){ if(hints[i][1].some(function(h){return address.indexOf(h)>-1;})) return hints[i][0]; }
+    return city || '';
+  }
+  function ensurePublicRecordFields(){
+    var wrap=byId('publicRecordFieldsWrap'); if(!wrap) return;
+    var grid=wrap.querySelector('.public-record-form-grid'); if(!grid) return;
+    function labelFor(id,text){ var el=byId(id); if(el){ var lab=el.closest('.field') && el.closest('.field').querySelector('label'); if(lab) lab.textContent=text; }}
+    labelFor('prNeighborhood','City'); labelFor('prBorough','State');
+    if(!byId('prSubmarket')){
+      var div=document.createElement('div'); div.className='field'; div.innerHTML='<label>Submarket</label><input type="text" id="prSubmarket" placeholder="Auto-filled from ZIP when available">';
+      var after=byId('prNeighborhood') && byId('prNeighborhood').closest('.field');
+      if(after && after.nextSibling) grid.insertBefore(div, after.nextSibling); else grid.appendChild(div);
+      div.querySelector('input').addEventListener('input',function(){ if(isGenerated()) window.generate(false); });
+    }
+  }
+  function deriveStarterRecords(){
+    ensurePublicRecordFields();
+    var state=currentState(); var stateLabel=currentStateLabel(); var city=currentCity(); var zip=zipFromText(val('address')) || zipFromText(val('prCityStateZip'));
+    if(city || state) setField('prCityStateZip',[city || 'City', state || stateLabel].filter(Boolean).join(', ')+(zip?' '+zip:''), false);
+    setField('prNeighborhood',city,false);
+    setField('prBorough',state,false);
+    setField('prSubmarket',inferSubmarket(zip,val('address'),city,state),false);
+    setField('prYearBuilt',val('yearBuilt'),false);
+    setField('prResidentialUnits',val('residentialUnitCount'),false);
+    setField('prCommercialUnits',val('retailUnitCount'),false);
+    var total=num(val('residentialUnitCount'))+num(val('retailUnitCount')); if(total) setField('prTotalUnits',String(total),false);
+    var sf=num(val('sqft')); if(sf) setField('prGrossBuildingSf','Approx. '+sf.toLocaleString(),false);
+  }
+  function landUseLabel(v){
+    var map={'01':'One & Two Family Buildings','02':'Multi-Family Walk-Up Buildings','03':'Multi-Family Elevator Buildings','04':'Mixed Residential & Commercial Buildings','05':'Commercial & Office Buildings','06':'Industrial & Manufacturing','07':'Transportation & Utility','08':'Public Facilities & Institutions','09':'Open Space & Outdoor Recreation','10':'Parking Facilities','11':'Vacant Land'};
+    var key=String(v||'').padStart(2,'0'); return map[key] || String(v||'');
+  }
+  async function fetchJson(url){ var r=await fetch(url,{headers:{'Accept':'application/json'}}); if(!r.ok) throw new Error('Fetch failed'); return await r.json(); }
+  async function fetchPluto(bbl){
+    if(!bbl) return null;
+    var b=String(bbl).replace(/\D/g,''); if(!b) return null;
+    var sql="SELECT bbl, borough, zipcode, address, lotarea, bldgarea, unitsres, unitstotal, yearbuilt, zonedist1, zonedist2, overlay1, overlay2, landuse, bldgclass, taxclass FROM mappluto WHERE bbl = "+b+" LIMIT 1";
+    var urls=['https://planninglabs.carto.com/api/v2/sql?q='+encodeURIComponent(sql),'https://planninglabs.carto.com/api/v2/sql?q='+encodeURIComponent(sql.replace('mappluto','pluto_latest'))];
+    for(var i=0;i<urls.length;i++){ try{ var j=await fetchJson(urls[i]); if(j && j.rows && j.rows[0]) return j.rows[0]; }catch(e){} }
+    return null;
+  }
+  async function fetchPublicRecordsFinal(e){
+    if(e){ e.preventDefault(); e.stopImmediatePropagation(); }
+    ensurePublicRecordFields(); deriveStarterRecords();
+    var status=byId('publicRecordStatus'); var address=val('address'); if(!address){ if(status) status.textContent='Enter a property address first.'; return; }
+    if(status) status.textContent='Looking up address and public-record data…';
+    var state=currentState(); var city=currentCity(); var zip=''; var bbl='';
+    try{
+      var q=[address,city,state].filter(Boolean).join(' ');
+      var geo=await fetchJson('https://geosearch.planninglabs.nyc/v2/search?text='+encodeURIComponent(q));
+      var f=geo && geo.features && geo.features[0]; var p=(f && f.properties)||{};
+      zip=p.postalcode || p.zipcode || p.zip || zipFromText(p.label||'') || zipFromText(address);
+      bbl=p.bbl || (p.addendum && p.addendum.pad && p.addendum.pad.bbl) || '';
+      var coords=f && f.geometry && Array.isArray(f.geometry.coordinates) ? f.geometry.coordinates : null;
+      if(coords) setField('prLatLng',Number(coords[1]).toFixed(6)+', '+Number(coords[0]).toFixed(6),true);
+      if(bbl){ var b=String(bbl).replace(/\D/g,''); var block=b.length>=6?b.slice(1,6):b; var lot=b.length>=10?b.slice(6,10):''; setField('prBlockLot',lot?('Block '+block+' / Lot '+lot):b,true); }
+      var inferredBorough=p.borough || city; if(inferredBorough) city=inferredBorough;
+      if(city){
+        var sel=byId('neighborhood'); if(sel && !Array.prototype.slice.call(sel.options).some(function(o){return String(o.textContent).toLowerCase()===String(city).toLowerCase();})){ var opt=document.createElement('option'); opt.value=city; opt.textContent=city; sel.appendChild(opt); }
+        if(sel) sel.value=Array.prototype.slice.call(sel.options).find(function(o){return String(o.textContent).toLowerCase()===String(city).toLowerCase();})?.value || sel.value;
+      }
+      setField('prNeighborhood',city,true);
+      setField('prBorough',state || 'NY',true);
+      setField('prCityStateZip',[city || 'City', state || 'NY'].join(', ')+(zip?' '+zip:''),true);
+      setField('prSubmarket',inferSubmarket(zip,address,city,state||'NY'),true);
+      var pluto=(state==='NY' || !state) ? await fetchPluto(bbl) : null;
+      if(pluto){
+        if(pluto.taxclass) setField('prTaxClass',pluto.taxclass,true);
+        if(pluto.lotarea) setField('prLotSf',Number(pluto.lotarea).toLocaleString(),true);
+        if(pluto.bldgarea) setField('prGrossBuildingSf','Approx. '+Number(pluto.bldgarea).toLocaleString(),true);
+        if(pluto.zonedist1 || pluto.zonedist2 || pluto.overlay1 || pluto.overlay2) setField('prZoning',[pluto.zonedist1,pluto.zonedist2,pluto.overlay1,pluto.overlay2].filter(Boolean).join(' / '),true);
+        if(pluto.landuse) setField('prLandUse',landUseLabel(pluto.landuse),true);
+        if(pluto.bldgclass) setField('prBuildingClass',pluto.bldgclass,true);
+        if(pluto.yearbuilt) setField('prYearBuilt',pluto.yearbuilt,true);
+        if(pluto.unitsres!==undefined && pluto.unitsres!==null) setField('prResidentialUnits',pluto.unitsres,true);
+        if(pluto.unitstotal!==undefined && pluto.unitstotal!==null) setField('prTotalUnits',pluto.unitstotal,true);
+        if(pluto.unitstotal!==undefined && pluto.unitsres!==undefined) setField('prCommercialUnits',Math.max(0,Number(pluto.unitstotal||0)-Number(pluto.unitsres||0)),true);
+        if(status) status.textContent='Address resolved and NYC public-record fields filled. Review/edit before publishing.';
+      }else if(status){ status.textContent='Address resolved. Limited public records were available, so remaining fields can be edited manually.'; }
+      try{ if(typeof syncDevelopmentLotFromPublicRecords==='function') syncDevelopmentLotFromPublicRecords(); if(typeof syncDevelopmentZoningFromPublicRecords==='function') syncDevelopmentZoningFromPublicRecords(); if(typeof calculateDevelopmentBuildableSF==='function') calculateDevelopmentBuildableSF(); }catch(err){}
+    }catch(err){ if(status) status.textContent='Public-record lookup unavailable or limited for this address. Starter fields were filled from submitted inputs; review/edit manually.'; }
+    if(isGenerated() && typeof window.generate==='function') window.generate(false);
+  }
+  window.fetchPublicRecords=fetchPublicRecordsFinal;
+  function publicData(){
+    deriveStarterRecords();
+    var csz=val('prCityStateZip'); var zip=zipFromText(csz)||zipFromText(val('address'));
+    return {address:val('address')||'Property Address',city:val('prNeighborhood')||currentCity(),state:val('prBorough')||currentState(),zip:zip,submarket:val('prSubmarket')||inferSubmarket(zip,val('address'),currentCity(),currentState()),cityStateZip:csz,blockLot:val('prBlockLot'),taxClass:val('prTaxClass'),estimatedTaxes:val('prEstimatedTaxes'),yearBuilt:val('prYearBuilt')||val('yearBuilt'),residentialUnits:val('prResidentialUnits')||val('residentialUnitCount'),commercialUnits:val('prCommercialUnits')||val('retailUnitCount'),totalUnits:val('prTotalUnits'),grossSf:val('prGrossBuildingSf'),lotSf:val('prLotSf'),zoning:val('prZoning'),landUse:val('prLandUse'),buildingClass:val('prBuildingClass'),latLng:val('prLatLng')};
+  }
+  function recordRow(a,b){ return '<tr><td>'+esc(a)+'</td><td>'+esc(b||'—')+'</td></tr>'; }
+  function publicRecordPageFinal(){
+    var d=publicData(); var mapTarget=d.latLng || [d.address,d.city,d.state,d.zip].filter(Boolean).join(' '); var q=encodeURIComponent(mapTarget);
+    return '<div class="om-page public-record-page" data-section-key="togglePublicRecordPage"><div class="om-page-hd"><div class="om-page-hd-title">Property Description | '+esc(String(d.address).toUpperCase())+'</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="public-record-grid"><table class="public-record-table"><tbody>'+recordRow('City / State / Zip',d.cityStateZip || [d.city,d.state,d.zip].filter(Boolean).join(', '))+recordRow('City',d.city)+recordRow('State',d.state)+recordRow('Submarket',d.submarket)+recordRow('Block & Lot',d.blockLot)+recordRow('Tax Class',d.taxClass)+recordRow('Annual Estimated Taxes',d.estimatedTaxes)+recordRow('Year Built',d.yearBuilt)+recordRow('Residential Units',d.residentialUnits)+recordRow('Commercial Units',d.commercialUnits)+recordRow('Total Units',d.totalUnits)+recordRow('Gross Building SF',d.grossSf)+recordRow('Lot SF',d.lotSf)+recordRow('Zoning',d.zoning)+recordRow('Land Use',d.landUse)+recordRow('Building Class',d.buildingClass)+recordRow('Latitude / Longitude',d.latLng)+'</tbody></table><div class="public-record-media public-record-map-only"><div class="record-map-slot"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z=17&output=embed"></iframe></div></div></div><div class="public-record-source">Public-record style page · Tax class, zoning, lot size, land use, and building class should be verified before distribution</div></div>';
+  }
+  function classifyExpense(name){ name=String(name||'').toLowerCase(); if(/tax/.test(name)) return 'taxes'; if(/insurance/.test(name)) return 'insurance'; if(/water|sewer/.test(name)) return 'water'; if(/heat|fuel|gas/.test(name)) return 'heat'; if(/electric|common/.test(name)) return 'electric'; if(/repair|maintenance|r&m/.test(name)) return 'repairs'; if(/management|admin|legal/.test(name)) return 'management'; if(/payroll|super|salary/.test(name)) return 'payroll'; return 'other'; }
+  function benchmarkFor(category,p,egi){ var units=Math.max(1,num(val('residentialUnitCount'))+num(val('retailUnitCount'))); var sf=Math.max(num(val('sqft')),num(val('prGrossBuildingSf')),1); if(category==='taxes') return null; if(category==='insurance') return Math.max(units*1200,sf*.85); if(category==='water') return units*900; if(category==='heat') return sf*1.15; if(category==='electric') return sf*.22; if(category==='repairs') return Math.max(units*750,sf*.65); if(category==='management') return egi*.03; if(category==='payroll') return units<=10?0:units*900; return null; }
+  function collectExpenseLines(){
+    var lines=[]; try{ if(typeof collectItemizedExpenses==='function' && window.expenseItemizedActive!==false){ lines=collectItemizedExpenses(); } }catch(e){}
+    lines=(lines||[]).filter(function(e){return e && (String(e.name||'').trim() || num(e.amount));});
+    if(!lines.length && num(val('totalExpenses'))) lines=[{name:'Total Operating Expenses',amount:num(val('totalExpenses'))}];
+    return lines;
+  }
+  function expenseBenchmarkPage(){
+    var gross=num(val('grossIncome'))+num(val('otherIncome')); var egi=gross*.96; var lines=collectExpenseLines(); var rows=[], totalCurrent=0,totalBench=0,totalSavings=0;
+    lines.forEach(function(e){ var amt=num(e.amount); if(!amt) return; var cat=classifyExpense(e.name); var bench=benchmarkFor(cat,null,egi); var savings=bench==null?0:Math.max(0,amt-bench); totalCurrent+=amt; if(bench!=null) totalBench+=bench; totalSavings+=savings; rows.push({name:e.name,cat:cat,current:amt,bench:bench,savings:savings}); });
+    if(!rows.length) return '';
+    var max=Math.max.apply(null,rows.map(function(r){return Math.max(r.current,r.bench||0);}).concat([1]));
+    var rowHtml=rows.map(function(r){ var benchTxt=r.bench==null?'Verify / actual':money(r.bench); return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.cat)+'</td><td class="num">'+money(r.current)+'</td><td class="num pf-val">'+benchTxt+'</td><td class="num '+(r.savings>0?'pf-val':'')+'">'+(r.savings>0?money(r.savings):'—')+'</td></tr>'; }).join('');
+    var bars=rows.map(function(r){ var wCur=(r.current/max)*100, wBen=((r.bench||0)/max)*100; return '<div class="expense-benchmark-bar-row"><div class="expense-benchmark-name">'+esc(r.name)+'</div><div class="expense-benchmark-bars"><div class="expense-bar current" style="width:'+wCur+'%"></div><div class="expense-bar benchmark" style="width:'+wBen+'%"></div></div><div class="expense-benchmark-value">'+(r.savings>0?money(r.savings):'—')+'</div></div>'; }).join('');
+    return '<div class="om-page expense-benchmark-page" data-section-key="expenseBenchmark"><div class="om-page-hd"><div class="om-page-hd-title">Expense Benchmark & Reduction Review</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="om-section"><div class="upside-summary"><div class="upside-chip"><div class="upside-chip-label">Current Expenses</div><div class="upside-chip-value">'+money(totalCurrent)+'</div></div><div class="upside-chip"><div class="upside-chip-label">Benchmark Total</div><div class="upside-chip-value">'+(totalBench?money(totalBench):'Review')+'</div></div><div class="upside-chip"><div class="upside-chip-label">Potential Reduction</div><div class="upside-chip-value">'+(totalSavings?money(totalSavings):'—')+'</div></div></div><table class="om-table"><thead><tr><th>Expense</th><th>Category</th><th class="num">Current</th><th class="num">Benchmark</th><th class="num">Potential Reduction</th></tr></thead><tbody>'+rowHtml+'</tbody></table><div class="chart-card span-2" style="margin-top:18px"><div class="chart-card-title">Expense Reduction Visual</div><div class="expense-benchmark-legend"><span><i class="legend-dot" style="background:#173528"></i>Current</span><span><i class="legend-dot" style="background:#8bc7a3"></i>Benchmark</span><span><i class="legend-dot" style="background:#d6b65c"></i>Potential Reduction</span></div><div class="expense-benchmark-bars-wrap">'+bars+'</div></div><div class="disclaimer">Benchmarks are directional based on submitted units, SF, income, and common operating ranges. They identify diligence items and potential savings opportunities, not guaranteed reductions.</div></div></div>';
+  }
+  function addExpenseBenchmarkStyles(){ if(byId('expenseBenchmarkStyles')) return; var st=document.createElement('style'); st.id='expenseBenchmarkStyles'; st.textContent='.expense-benchmark-legend{display:flex;gap:18px;align-items:center;font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(8,16,12,.55);margin-bottom:14px}.expense-benchmark-bars-wrap{display:grid;gap:12px}.expense-benchmark-bar-row{display:grid;grid-template-columns:170px 1fr 90px;gap:14px;align-items:center}.expense-benchmark-name{font-size:.78rem;font-weight:800;color:#08100c}.expense-benchmark-bars{height:22px;border-radius:999px;background:rgba(8,16,12,.08);position:relative;overflow:hidden}.expense-bar{height:10px;border-radius:999px;position:absolute;left:0}.expense-bar.current{top:2px;background:#173528}.expense-bar.benchmark{bottom:2px;background:#8bc7a3}.expense-benchmark-value{font-family:var(--mono);font-size:.72rem;color:#8a6d20;text-align:right;font-weight:800}@media(max-width:980px){.expense-benchmark-bar-row{grid-template-columns:1fr}.expense-benchmark-value{text-align:left}}'; document.head.appendChild(st); }
+  function sectionToggleOn(key){ var row=document.querySelector('[data-toggle="'+key+'"]'); var t=row && row.querySelector('.toggle'); if(t && t.classList.contains('on')) return true; try{ return !!sectionsActive[key]; }catch(e){ return false; } }
+  function insertAfterTitle(doc,title,pageHtml){ var pages=Array.prototype.slice.call(doc.children); var target=pages.find(function(p){ var h=p.querySelector&&p.querySelector('.om-page-hd-title'); return h && (h.textContent||'').trim()===title; }); var temp=document.createElement('div'); temp.innerHTML=pageHtml; var node=temp.firstElementChild; if(!node) return; if(target && target.nextSibling) doc.insertBefore(node,target.nextSibling); else doc.appendChild(node); }
+  function postProcessOm(){
+    addExpenseBenchmarkStyles(); ensurePublicRecordFields();
+    var doc=document.querySelector('#omPreview .om-doc'); if(!doc || !isGrowth() || !isGenerated()) return;
+    doc.querySelectorAll('.expense-benchmark-page,.public-record-page').forEach(function(n){n.remove();});
+    var exp=expenseBenchmarkPage(); if(exp && sectionToggleOn('toggleFinancial')) insertAfterTitle(doc,'Financial Summary',exp);
+    if(sectionToggleOn('togglePublicRecordPage')) insertAfterTitle(doc,'Investment Highlights',publicRecordPageFinal());
+    try{ if(typeof applyBricOmFooters==='function') applyBricOmFooters(); }catch(e){}
+  }
+  function wrapGenerate(){ if(window.__bricFinalWrappedGenerate) return; window.__bricFinalWrappedGenerate=true; var old=window.generate; window.generate=function(){ var r=old && old.apply(this,arguments); setTimeout(postProcessOm,0); setTimeout(postProcessOm,80); return r; }; }
+  ready(function(){
+    addExpenseBenchmarkStyles(); ensurePublicRecordFields(); wrapGenerate();
+    var btn=byId('fetchPublicRecordsBtn'); if(btn){ btn.onclick=null; btn.addEventListener('click',fetchPublicRecordsFinal,true); }
+    document.addEventListener('click',function(e){ if(e.target && e.target.id==='fetchPublicRecordsBtn') fetchPublicRecordsFinal(e); },true);
+    ['address','city','neighborhood','sqft','residentialUnitCount','retailUnitCount','totalExpenses'].forEach(function(id){ var el=byId(id); if(el) el.addEventListener('change',function(){deriveStarterRecords(); setTimeout(postProcessOm,0);}); });
+    setTimeout(function(){ ensurePublicRecordFields(); deriveStarterRecords(); postProcessOm(); },250);
+  });
+})();
+</script>
+
+<script>
+/* --- BRIC final patch: re-add rent roll upside visual graphs to the hard-reset OM output --- */
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function getRR(){ try{return Array.isArray(rrItems)?rrItems:[]}catch(e){return []} }
+  function money(n){ n=Number(n)||0; return '$'+Math.round(n).toLocaleString(); }
+  function appendRentRollUpsideGraphs(){
+    var doc=document.querySelector('#omPreview .om-doc'); if(!doc) return;
+    var rentPage=Array.prototype.slice.call(doc.children).find(function(p){ var h=p.querySelector&&p.querySelector('.om-page-hd-title'); return h && (h.textContent||'').trim()==='Rent Roll'; });
+    if(!rentPage || rentPage.querySelector('.rentroll-insights-grid,.bric-rent-upside-visuals')) return;
+    var rr=getRR(); if(!rr.length) return;
+    var curMo=0,pfMo=0;
+    rr.forEach(function(it){ var cur=Number(it.currentRent)||0, pf=Number(it.proformaRent)||0; curMo += (it.type==='retail' && it.frequency==='annual') ? cur/12 : cur; pfMo += (it.type==='retail' && it.frequency==='annual') ? pf/12 : pf; });
+    var html='';
+    try{ if(typeof renderRentRollInsights==='function') html=renderRentRollInsights(rr,curMo*12,pfMo*12); }catch(e){}
+    if(!html){
+      var upside=(pfMo-curMo)*12;
+      html='<div class="bric-rent-upside-visuals chart-card" style="margin-top:18px"><div class="chart-card-title">Rent Roll Upside Visual</div><div class="upside-summary"><div class="upside-chip"><div class="upside-chip-label">Current Annual</div><div class="upside-chip-value">'+money(curMo*12)+'</div></div><div class="upside-chip"><div class="upside-chip-label">Pro Forma Annual</div><div class="upside-chip-value">'+money(pfMo*12)+'</div></div><div class="upside-chip"><div class="upside-chip-label">Annual Upside</div><div class="upside-chip-value">'+(upside>=0?'+':'')+money(upside)+'</div></div></div></div>';
+    }
+    var footer=rentPage.querySelector('.om-page-footer');
+    if(footer) footer.insertAdjacentHTML('beforebegin', html); else rentPage.insertAdjacentHTML('beforeend', html);
+  }
+  function wrap(){ if(window.__bricRentGraphWrapped) return; window.__bricRentGraphWrapped=true; var old=window.generate; window.generate=function(){ var r=old&&old.apply(this,arguments); setTimeout(appendRentRollUpsideGraphs,0); setTimeout(appendRentRollUpsideGraphs,120); return r; }; }
+  ready(function(){ wrap(); setTimeout(appendRentRollUpsideGraphs,300); });
+})();
+</script>
+
 </body></html>
