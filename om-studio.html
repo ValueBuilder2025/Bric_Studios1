@@ -892,6 +892,398 @@ body.growth-mode .locked-inline-note b{
 /* === EXECUTIVE SUMMARY PAGE === */
 .exec-summary-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:1.4rem;align-items:stretch;margin-top:.5rem}.exec-narrative-card{border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.76),rgba(255,255,255,.48));border:1px solid rgba(8,16,12,.08);box-shadow:0 14px 38px rgba(8,16,12,.055);padding:1.45rem}.exec-narrative-card .om-description{font-size:.95rem}.exec-metrics-card{border-radius:28px;background:linear-gradient(135deg,#0f1f18,#09110d);color:#f8f5ee;padding:1.35rem;position:relative;overflow:hidden}.exec-metrics-card::before{content:"";position:absolute;right:-90px;top:-90px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(111,191,143,.18),transparent 70%)}.exec-metrics-card>*{position:relative;z-index:1}.exec-metrics-title{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(248,245,238,.48);margin-bottom:.85rem}.exec-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.exec-metric{padding:.7rem .75rem;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}.exec-metric-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,245,238,.42);margin-bottom:.25rem}.exec-metric-value{font-family:var(--sans);font-size:1rem;font-weight:800;letter-spacing:-.025em;color:#f8f5ee}.exec-metric-value.gold{color:#d6b65c}.exec-thesis-section{margin-top:1.35rem;display:grid;grid-template-columns:.95fr 1.05fr;gap:1.1rem}.exec-thesis-card{border-radius:24px;padding:1.15rem 1.2rem;background:rgba(111,191,143,.075);border:1px solid rgba(111,191,143,.16)}.exec-thesis-title{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:#4f9d72;margin-bottom:.65rem;font-weight:800}.exec-thesis-list{margin:0;padding-left:1.1rem;display:grid;gap:.55rem}.exec-thesis-list li{color:#08100c;line-height:1.55;font-size:.88rem}.exec-takeaway-card{border-radius:24px;padding:1.15rem 1.2rem;background:linear-gradient(135deg,rgba(214,182,92,.14),rgba(255,255,255,.44));border:1px solid rgba(214,182,92,.22)}.exec-takeaway-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:#8a6d20;font-weight:800;margin-bottom:.55rem}.exec-takeaway-copy{color:#08100c;font-size:.9rem;line-height:1.62}@media(max-width:980px){.exec-summary-layout,.exec-thesis-section,.exec-metrics-grid{grid-template-columns:1fr}}
 
+
+
+/* === BRIC GROWTH OM OUTPUT — BRIGHT INVESTOR DECK DIRECTION ===
+   Applied only to the generated OM preview/export, not the builder UI. */
+:root{
+  --deck-cream:#fbf7ee;
+  --deck-paper:#f6efe2;
+  --deck-ink:#07110c;
+  --deck-ink-2:#10231a;
+  --deck-muted:#607066;
+  --deck-line:rgba(7,17,12,.12);
+  --deck-green:#4f9d72;
+  --deck-green-soft:rgba(79,157,114,.11);
+  --deck-gold:#c8a247;
+  --deck-gold-soft:rgba(200,162,71,.14);
+}
+.om-doc{
+  max-width:1180px !important;
+  background:var(--deck-cream) !important;
+  color:var(--deck-ink) !important;
+  border-radius:28px !important;
+  overflow:hidden !important;
+  box-shadow:0 34px 100px rgba(0,0,0,.38) !important;
+}
+.om-page,.om-cover{
+  min-height:665px !important;
+  padding:2.05rem 2.35rem 3.35rem !important;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(79,157,114,.09), transparent 27%),
+    radial-gradient(circle at 4% 100%, rgba(200,162,71,.10), transparent 25%),
+    linear-gradient(135deg,#fffaf0 0%,#f6efe2 56%,#f3eadb 100%) !important;
+  color:var(--deck-ink) !important;
+  border-top:1px solid rgba(7,17,12,.08) !important;
+}
+.om-page::before,.om-cover::before{
+  background-image:
+    linear-gradient(rgba(7,17,12,.025) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(7,17,12,.018) 1px, transparent 1px) !important;
+  background-size:8px 8px !important;
+  opacity:.55 !important;
+  inset:0 !important;
+  width:auto !important;
+  height:auto !important;
+  border-radius:0 !important;
+}
+.om-page::after,.om-cover::after{
+  content:"";
+  position:absolute;
+  left:2.35rem;
+  right:2.35rem;
+  bottom:2.5rem;
+  height:2px;
+  background:linear-gradient(90deg,var(--deck-green),rgba(79,157,114,.55) 54%,transparent 54%,transparent 82%,var(--deck-gold) 82%,var(--deck-gold));
+  opacity:.72;
+  z-index:4;
+}
+.om-cover{
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+}
+.om-cover.has-photo{
+  display:grid !important;
+  grid-template-columns:minmax(0,1.02fr) minmax(360px,.98fr) !important;
+  gap:1.45rem !important;
+  align-items:stretch !important;
+}
+.om-cover-main{position:relative;z-index:2;min-height:100%}
+.om-cover-brand,
+.om-cover-tagline,
+.om-cover-eyebrow,
+.om-cover-title,
+.om-cover-subtitle,
+.om-cover-bottom,
+.om-cover-presenter{position:relative;z-index:3;color:var(--deck-ink) !important}
+.om-cover-brand{
+  font-family:var(--sans) !important;
+  font-size:1.05rem !important;
+  font-weight:900 !important;
+  letter-spacing:-.035em !important;
+}
+.om-cover-brand-b,
+.om-footer-logo,
+.contact-logo-large{
+  box-shadow:0 12px 28px rgba(79,157,114,.18) !important;
+}
+.om-cover-tagline{
+  color:rgba(7,17,12,.48) !important;
+  font-weight:800 !important;
+}
+.om-cover-eyebrow{
+  color:var(--deck-green) !important;
+  font-weight:900 !important;
+}
+.om-cover-eyebrow::before{background:var(--deck-green) !important}
+.om-cover-title{
+  font-family:var(--sans) !important;
+  font-size:3.18rem !important;
+  line-height:.93 !important;
+  letter-spacing:-.065em !important;
+  color:var(--deck-ink) !important;
+  max-width:620px !important;
+}
+.om-cover-title em{
+  display:block !important;
+  margin-top:.42rem !important;
+  font-family:var(--serif) !important;
+  font-size:1.55rem !important;
+  line-height:1.05 !important;
+  letter-spacing:-.02em !important;
+  color:var(--deck-green) !important;
+  font-style:italic !important;
+}
+.om-cover-subtitle{
+  color:var(--deck-muted) !important;
+  font-family:var(--sans) !important;
+  font-style:normal !important;
+  font-size:1rem !important;
+  line-height:1.45 !important;
+  max-width:560px !important;
+}
+.om-cover-bottom{
+  margin-top:1.2rem !important;
+  padding:1rem !important;
+  border:1px solid var(--deck-line) !important;
+  background:rgba(255,255,255,.55) !important;
+  border-radius:22px !important;
+  box-shadow:0 18px 40px rgba(7,17,12,.06) !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) 1.35fr !important;
+  align-items:start !important;
+  gap:.85rem !important;
+}
+.om-cover-stat-label{
+  color:rgba(7,17,12,.48) !important;
+  font-weight:900 !important;
+  letter-spacing:.12em !important;
+}
+.om-cover-stat-val{
+  font-family:var(--sans) !important;
+  font-size:1.2rem !important;
+  font-weight:900 !important;
+  color:var(--deck-ink) !important;
+  letter-spacing:-.035em !important;
+}
+.om-cover-presenter{
+  color:var(--deck-muted) !important;
+  text-align:right !important;
+}
+.om-cover-presenter b{color:var(--deck-ink) !important}
+.om-cover-photo-wrap{
+  min-height:520px !important;
+  border-radius:28px !important;
+  border:1px solid rgba(7,17,12,.10) !important;
+  background:
+    radial-gradient(circle at 62% 30%,rgba(79,157,114,.16),transparent 42%),
+    linear-gradient(135deg,#dfe9dd,#f9f4eb) !important;
+  box-shadow:0 24px 60px rgba(7,17,12,.13) !important;
+}
+.om-cover-photo-label{
+  background:rgba(255,250,240,.82) !important;
+  color:var(--deck-ink) !important;
+  border-color:rgba(7,17,12,.10) !important;
+  font-weight:900 !important;
+}
+.om-cover-footer{
+  left:2.35rem !important;
+  right:2.35rem !important;
+  bottom:.92rem !important;
+  color:rgba(7,17,12,.52) !important;
+  border-top:0 !important;
+}
+.om-page-hd{
+  border-bottom:0 !important;
+  padding-bottom:.7rem !important;
+  margin-bottom:1.15rem !important;
+  position:relative !important;
+  z-index:3 !important;
+}
+.om-page-hd::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:4.6rem;
+  height:3px;
+  background:linear-gradient(90deg,var(--deck-green),var(--deck-gold));
+  border-radius:99px;
+}
+.om-page-hd-title{
+  font-family:var(--sans) !important;
+  font-size:1.65rem !important;
+  line-height:.95 !important;
+  font-weight:900 !important;
+  letter-spacing:-.055em !important;
+  color:var(--deck-ink) !important;
+}
+.om-page-hd-brand{
+  color:rgba(7,17,12,.42) !important;
+  font-weight:900 !important;
+}
+.om-section-eyebrow{
+  color:var(--deck-green) !important;
+  font-weight:900 !important;
+}
+.om-section-heading{
+  border-bottom:0 !important;
+  font-family:var(--sans) !important;
+  font-size:1.1rem !important;
+  color:var(--deck-ink) !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+}
+.om-description{
+  color:var(--deck-ink) !important;
+  font-size:.86rem !important;
+  line-height:1.65 !important;
+  text-align:left !important;
+}
+.highlights-grid{
+  grid-template-columns:repeat(3,1fr) !important;
+  gap:.8rem !important;
+}
+.highlight-card,
+.chart-card,
+.summary-card,
+.exec-narrative-card,
+.exec-thesis-card,
+.exec-takeaway-card,
+.contact-detail-item,
+.custom-section-callout{
+  background:rgba(255,255,255,.68) !important;
+  border:1px solid var(--deck-line) !important;
+  border-radius:20px !important;
+  box-shadow:0 14px 34px rgba(7,17,12,.055) !important;
+  color:var(--deck-ink) !important;
+}
+.highlight-card::before{background:radial-gradient(circle at top right,rgba(79,157,114,.10),transparent 48%) !important}
+.highlight-label,
+.chart-card-title,
+.upside-chip-label,
+.comparison-bar-name,
+.exec-metric-label,
+.exec-metrics-title,
+.contact-detail-label{
+  color:rgba(7,17,12,.48) !important;
+  font-weight:900 !important;
+}
+.highlight-val,
+.val-range,
+.val-detail-val,
+.upside-chip-value,
+.contact-name,
+.contact-detail-value{
+  color:var(--deck-ink) !important;
+  font-family:var(--sans) !important;
+  font-weight:900 !important;
+  letter-spacing:-.035em !important;
+}
+.highlight-sub,
+.legend-meta,
+.map-note,
+.rentroll-empty-note{color:var(--deck-muted) !important}
+.highlight-bullet-heading{
+  color:var(--deck-green) !important;
+  font-weight:900 !important;
+}
+.highlight-bullet-list{
+  background:rgba(255,255,255,.62) !important;
+  border:1px solid var(--deck-line) !important;
+  border-radius:18px !important;
+}
+.highlight-bullet-list li,.custom-bullet-list li,.exec-thesis-list li{color:var(--deck-ink) !important}
+.rr-display-table,.om-table{
+  border:1px solid var(--deck-line) !important;
+  border-radius:18px !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.60) !important;
+}
+.rr-display-table th,.om-table th{
+  background:linear-gradient(90deg,var(--deck-ink-2),#234432) !important;
+  color:#fffaf0 !important;
+}
+.rr-display-table td,.om-table td{
+  color:var(--deck-ink) !important;
+  border-bottom:1px solid rgba(7,17,12,.08) !important;
+}
+.rr-display-table tr.totals,
+.donut-legend-item,
+.comparison-row,
+.upside-chip,
+.contact-page-note{
+  background:rgba(255,255,255,.68) !important;
+  border-color:var(--deck-line) !important;
+}
+.rr-display-table tr[style*="background:var(--ink)"]{
+  background:var(--deck-ink-2) !important;
+}
+.rr-display-table .pf-val,
+.pf-val,
+.upside-callout-strong{
+  color:var(--deck-green) !important;
+}
+.financial-grid{
+  gap:1rem !important;
+}
+.fin-col-title{
+  border-bottom:2px solid var(--deck-ink) !important;
+  color:var(--deck-ink) !important;
+  font-family:var(--sans) !important;
+  font-weight:900 !important;
+}
+.fin-row{
+  color:var(--deck-ink) !important;
+  border-bottom:1px solid rgba(7,17,12,.08) !important;
+}
+.fin-row-name{color:var(--deck-muted) !important}
+.fin-row-val{color:var(--deck-ink) !important;font-weight:800 !important}
+.fin-total{
+  background:var(--deck-ink-2) !important;
+  color:#fffaf0 !important;
+  border-radius:16px !important;
+}
+.fin-total.gold{
+  background:linear-gradient(135deg,#e7c971,#c8a247) !important;
+  color:var(--deck-ink) !important;
+}
+.val-card{
+  background:linear-gradient(135deg,#fff7e5,#ead38b 52%,#c8a247) !important;
+  border:1px solid rgba(7,17,12,.10) !important;
+  border-radius:24px !important;
+  box-shadow:0 18px 48px rgba(200,162,71,.18) !important;
+}
+.val-label,
+.val-detail-label{color:rgba(7,17,12,.56) !important;font-weight:900 !important}
+.map-card{
+  border:1px solid var(--deck-line) !important;
+  border-radius:22px !important;
+  background:#eee7d8 !important;
+  overflow:hidden !important;
+  box-shadow:0 16px 40px rgba(7,17,12,.06) !important;
+}
+.map-placeholder,.photo-placeholder{
+  background:linear-gradient(135deg,rgba(79,157,114,.10),rgba(255,255,255,.52)) !important;
+  color:rgba(7,17,12,.52) !important;
+  border-color:rgba(7,17,12,.16) !important;
+  border-radius:20px !important;
+  font-weight:900 !important;
+}
+.exec-metrics-card,.contact-profile-card{
+  background:linear-gradient(135deg,#ffffff,#eef6ed 56%,#f4ead4) !important;
+  color:var(--deck-ink) !important;
+  border:1px solid var(--deck-line) !important;
+  box-shadow:0 18px 42px rgba(7,17,12,.08) !important;
+}
+.exec-metrics-card::before,.contact-profile-card::before{background:radial-gradient(circle,rgba(79,157,114,.14),transparent 70%) !important}
+.exec-metric{
+  background:rgba(255,255,255,.72) !important;
+  border:1px solid var(--deck-line) !important;
+}
+.exec-metric-value,.exec-metric-value.gold,.contact-title,.contact-brand-line{color:var(--deck-ink) !important}
+.exec-takeaway-label{color:#8a6d20 !important}
+.exec-takeaway-copy{color:var(--deck-ink) !important}
+.contact-page-note{color:var(--deck-ink) !important}
+.disclaimer{
+  color:rgba(7,17,12,.50) !important;
+  border-top:1px solid var(--deck-line) !important;
+}
+.om-page-footer{
+  left:2.35rem !important;
+  right:2.35rem !important;
+  bottom:.92rem !important;
+  color:rgba(7,17,12,.46) !important;
+  border-top:0 !important;
+}
+.om-footer-brand{color:var(--deck-ink) !important}
+.om-footer-page{color:rgba(7,17,12,.46) !important}
+@media(max-width:980px){
+  .om-doc{max-width:100% !important}
+  .om-page,.om-cover{min-height:auto !important;padding:1.5rem 1.15rem 3rem !important}
+  .om-cover.has-photo{grid-template-columns:1fr !important}
+  .om-cover-bottom{grid-template-columns:1fr 1fr !important}
+  .om-cover-title{font-size:2.2rem !important}
+  .om-page::after,.om-cover::after{left:1.15rem;right:1.15rem;bottom:2.25rem}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  .om-doc{max-width:none !important;width:13.333in !important;border-radius:0 !important;box-shadow:none !important}
+  .om-page,.om-cover{width:13.333in !important;height:7.5in !important;min-height:7.5in !important;page-break-after:always !important;break-after:page !important;padding:.48in .56in .62in !important;overflow:hidden !important}
+  .om-page::after,.om-cover::after{left:.56in;right:.56in;bottom:.43in}
+  .om-page-footer,.om-cover-footer{left:.56in !important;right:.56in !important;bottom:.18in !important}
+}
 </style></head>
 <body>
 <nav><a href="index.html" class="nav-logo"><span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="brand-wordmark">BRIC Studios</span></a><span class="nav-badge">OM Studio</span><div class="nav-right"><a href="index.html" class="nav-back">← Home</a><a href="dashboard.html" class="nav-back">Dashboard</a></div></nav>
