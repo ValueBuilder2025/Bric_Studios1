@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop | BRIC Studios</title>
+  <meta name="description" content="BRIC Field Goods — books, owner tools, and premium essentials for real estate owners, investors, and advisors." />
+  <style>
+    :root {
+      --bg: #050807;
+      --bg-soft: #0a100d;
+      --card: #101713;
+      --card-2: #131b17;
+      --line: rgba(255,255,255,0.10);
+      --line-strong: rgba(255,255,255,0.18);
+      --text: #f5f3ee;
+      --muted: rgba(245,243,238,0.66);
+      --muted-2: rgba(245,243,238,0.44);
+      --green: #1f8f5f;
+      --green-soft: rgba(31,143,95,0.17);
+      --green-line: rgba(31,143,95,0.45);
+      --gold: #b99b5f;
+      --gold-soft: rgba(185,155,95,0.15);
+      --white-card: #ebe8df;
+      --black: #030403;
+      --shadow: 0 24px 80px rgba(0,0,0,0.48);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1180px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(31,143,95,0.16), transparent 30%),
+        radial-gradient(circle at 78% 8%, rgba(185,155,95,0.10), transparent 28%),
+        linear-gradient(180deg, #050807 0%, #070b09 36%, #040605 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, svg { max-width: 100%; display: block; }
+    button, select, input { font: inherit; }
+    .page-shell { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(18px); background: rgba(5,8,7,0.76); border-bottom: 1px solid var(--line); }
+    .nav { width: min(1280px, calc(100% - 40px)); margin: 0 auto; min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; min-width: 160px; }
+    .brand-mark { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(145deg, #101713, #040605); border: 1px solid rgba(255,255,255,0.10); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 10px 28px rgba(0,0,0,0.32); position: relative; display: grid; place-items: center; overflow: hidden; }
+    .brand-mark::after { content: ""; position: absolute; left: 0; bottom: 0; width: 46%; height: 46%; background: linear-gradient(135deg, #17784d, #25a067); clip-path: polygon(0 100%, 100% 100%, 0 0); opacity: .95; }
+    .brand-mark span { position: relative; z-index: 2; font-weight: 900; font-size: 25px; letter-spacing: -0.06em; color: #fff; line-height: 1; transform: translateY(1px); }
+    .brand-word { letter-spacing: .34em; font-size: 13px; font-weight: 800; }
+    .nav-links { display: flex; align-items: center; justify-content: center; gap: 26px; color: rgba(245,243,238,.68); font-size: 12px; text-transform: uppercase; letter-spacing: .16em; }
+    .nav-links a { transition: color .22s var(--ease); }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; min-width: 160px; justify-content: flex-end; }
+    .cart-chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 999px; color: rgba(245,243,238,.78); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; background: rgba(255,255,255,0.03); }
+    .cart-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--green); box-shadow: 0 0 18px rgba(31,143,95,.8); }
+    .mobile-toggle { display: none; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.03); color: var(--text); cursor: pointer; }
+    .mobile-toggle span { width: 16px; height: 1px; background: var(--text); display: block; margin: 5px auto; }
+    .mobile-menu { display: none; width: min(1280px, calc(100% - 40px)); margin: 0 auto 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(10,16,13,.96); padding: 10px; }
+    .mobile-menu.open { display: grid; }
+    .mobile-menu a { padding: 13px 14px; color: rgba(245,243,238,.74); border-radius: 12px; text-transform: uppercase; letter-spacing: .14em; font-size: 12px; }
+    .mobile-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .hero { padding: 82px 0 38px; position: relative; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 14px; color: #9bd0b3; font-size: 12px; font-weight: 800; letter-spacing: .28em; text-transform: uppercase; margin-bottom: 26px; }
+    .eyebrow::after { content: ""; width: 54px; height: 1px; background: var(--green-line); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); gap: 38px; align-items: end; }
+    .hero h1 { margin: 0; font-size: clamp(52px, 8vw, 112px); line-height: .92; letter-spacing: -0.075em; font-weight: 650; }
+    .hero h1 span { display: block; color: rgba(245,243,238,.56); font-weight: 450; }
+    .hero-copy { max-width: 470px; color: rgba(245,243,238,.70); font-size: 18px; line-height: 1.55; margin: 0 0 26px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--text); background: rgba(255,255,255,.035); cursor: pointer; transition: transform .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease), color .22s var(--ease); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; }
+    .btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.075); }
+    .btn.primary { background: linear-gradient(135deg, #0f6d44, #1d8b5a); border-color: rgba(72,190,132,.42); box-shadow: 0 18px 46px rgba(31,143,95,.20); }
+    .rule { height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); margin: 42px 0 0; }
+    .hero-showcase { margin-top: 44px; display: grid; grid-template-columns: 1.35fr .65fr; gap: 16px; }
+    .showcase-card { min-height: 420px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: radial-gradient(circle at 28% 15%, rgba(255,255,255,.08), transparent 35%), linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015)); box-shadow: var(--shadow); overflow: hidden; position: relative; isolation: isolate; }
+    .book-hero { padding: 34px; display: grid; grid-template-columns: minmax(0, .85fr) minmax(240px, 1fr); gap: 28px; align-items: center; }
+    .book-cover { width: min(290px, 100%); aspect-ratio: 7 / 9.3; border-radius: 18px; background: linear-gradient(160deg, rgba(255,255,255,.08), transparent 28%), linear-gradient(180deg, #111815, #050706); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 34px 90px rgba(0,0,0,.58), inset 0 0 0 1px rgba(255,255,255,.035); padding: 28px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+    .book-cover::before { content: ""; position: absolute; inset: auto -20% 0 -20%; height: 38%; background: radial-gradient(circle at 25% 100%, rgba(31,143,95,.42), transparent 58%); opacity: .85; }
+    .book-cover-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: start; gap: 16px; color: rgba(245,243,238,.62); text-transform: uppercase; letter-spacing: .22em; font-size: 9px; font-weight: 800; }
+    .book-title { position: relative; z-index: 2; }
+    .book-title strong { display: block; font-size: clamp(30px, 4vw, 48px); line-height: .93; letter-spacing: -0.055em; font-weight: 650; margin-bottom: 12px; }
+    .book-title span { display: block; color: rgba(245,243,238,.58); font-size: 12px; line-height: 1.45; }
+    .book-meta { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 14px; color: rgba(245,243,238,.70); font-size: 10px; text-transform: uppercase; letter-spacing: .18em; }
+    .book-details h2 { margin: 0 0 16px; font-size: clamp(32px, 4vw, 56px); line-height: .98; letter-spacing: -0.055em; font-weight: 620; }
+    .book-details p { margin: 0 0 20px; color: var(--muted); line-height: 1.6; font-size: 16px; max-width: 540px; }
+    .book-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 22px 0 0; }
+    .mini-point { border: 1px solid var(--line); background: rgba(255,255,255,.035); border-radius: 14px; padding: 13px; min-height: 76px; }
+    .mini-point b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 6px; }
+    .mini-point span { display: block; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .side-stack { display: grid; gap: 16px; }
+    .side-card { border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.018)); min-height: 202px; padding: 24px; position: relative; overflow: hidden; }
+    .side-card::after { content: ""; position: absolute; right: -20%; bottom: -30%; width: 220px; height: 220px; border-radius: 999px; background: rgba(31,143,95,.13); filter: blur(4px); }
+    .side-card h3 { margin: 0 0 10px; font-size: 24px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 620; position: relative; z-index: 2; }
+    .side-card p { margin: 0; color: var(--muted); line-height: 1.55; position: relative; z-index: 2; }
+    .section { padding: 78px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 26px; }
+    .section-kicker { color: #9bd0b3; font-size: 11px; letter-spacing: .26em; text-transform: uppercase; font-weight: 850; margin-bottom: 12px; }
+    .section h2 { margin: 0; font-size: clamp(34px, 5vw, 64px); line-height: .96; letter-spacing: -0.06em; font-weight: 620; }
+    .section-head p { margin: 0; color: var(--muted); line-height: 1.55; max-width: 450px; }
+    .filter-bar { position: sticky; top: 78px; z-index: 35; padding: 14px 0; background: linear-gradient(180deg, rgba(5,8,7,.96), rgba(5,8,7,.72)); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .filter-row { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-btn { white-space: nowrap; display: inline-flex; align-items: center; gap: 9px; padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.035); color: rgba(245,243,238,.74); cursor: pointer; transition: all .22s var(--ease); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--green-line); color: var(--text); background: var(--green-soft); }
+    .dot { width: 7px; height: 7px; border-radius: 999px; background: currentColor; opacity: .85; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .product-card { border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.018)); overflow: hidden; box-shadow: 0 22px 60px rgba(0,0,0,.24); transition: transform .24s var(--ease), border-color .24s var(--ease), background .24s var(--ease); min-height: 100%; display: flex; flex-direction: column; }
+    .product-card:hover { transform: translateY(-4px); border-color: rgba(31,143,95,.42); background: linear-gradient(145deg, rgba(31,143,95,.08), rgba(255,255,255,.018)); }
+    .product-media { aspect-ratio: 1.12 / .86; background: radial-gradient(circle at 45% 28%, rgba(255,255,255,.10), transparent 30%), linear-gradient(145deg, #101713, #050706); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; display: grid; place-items: center; padding: 24px; }
+    .product-media.light { background: radial-gradient(circle at 35% 20%, rgba(255,255,255,.72), transparent 22%), linear-gradient(145deg, #f1eee5, #d8d4ca); }
+    .media-book { width: 46%; aspect-ratio: 7 / 9.2; border-radius: 11px; background: linear-gradient(160deg, #19231e, #050706); border: 1px solid rgba(255,255,255,.20); box-shadow: 0 24px 50px rgba(0,0,0,.42); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transform: rotate(-4deg); }
+    .media-book.alt { background: linear-gradient(160deg, #e8e2d2, #a99c7c); color: #111; border-color: rgba(0,0,0,.10); }
+    .media-book strong { font-size: 18px; line-height: .95; letter-spacing: -0.05em; }
+    .media-book span { font-size: 8px; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+    .tee-mock { width: 62%; max-width: 250px; aspect-ratio: 1 / 1.05; position: relative; filter: drop-shadow(0 26px 38px rgba(0,0,0,.42)); }
+    .tee-mock::before { content: ""; position: absolute; inset: 19% 9% 0; background: #050606; border-radius: 8px 8px 3px 3px; border: 1px solid rgba(255,255,255,.05); }
+    .tee-sleeve-left, .tee-sleeve-right { position: absolute; top: 21%; width: 29%; height: 27%; background: #050606; border: 1px solid rgba(255,255,255,.05); }
+    .tee-sleeve-left { left: -5%; transform: rotate(18deg); border-radius: 7px 3px 4px 10px; }
+    .tee-sleeve-right { right: -5%; transform: rotate(-18deg); border-radius: 3px 7px 10px 4px; }
+    .tee-neck { position: absolute; top: 19%; left: 50%; transform: translateX(-50%); width: 28%; height: 14%; border-radius: 0 0 999px 999px; background: #111; border-bottom: 2px solid rgba(255,255,255,.04); z-index: 3; }
+    .tee-label { position: absolute; top: 34%; left: 50%; transform: translateX(-50%); z-index: 4; text-align: center; font-size: 7px; letter-spacing: .48em; color: rgba(255,255,255,.68); text-indent: .48em; }
+    .cap-mock { width: 72%; max-width: 280px; aspect-ratio: 1.55 / 1; position: relative; filter: drop-shadow(0 26px 42px rgba(0,0,0,.45)); }
+    .cap-mock::before { content: ""; position: absolute; left: 16%; top: 18%; width: 68%; height: 52%; background: #050606; border-radius: 999px 999px 24px 24px; border: 1px solid rgba(255,255,255,.07); }
+    .cap-mock::after { content: ""; position: absolute; left: 7%; right: 4%; bottom: 12%; height: 30%; background: #030303; border-radius: 50% 50% 12px 12px; transform: skewX(-9deg); border: 1px solid rgba(255,255,255,.05); }
+    .cap-logo { position: absolute; top: 38%; left: 50%; transform: translateX(-50%); z-index: 4; text-align: center; font-size: 8px; letter-spacing: .35em; text-indent: .35em; color: rgba(255,255,255,.72); }
+    .folder-mock { width: 70%; aspect-ratio: 1.35 / 1; border-radius: 12px; background: linear-gradient(145deg, #e8e2d2, #bfb69e); color: #111; border: 1px solid rgba(0,0,0,.08); box-shadow: 0 22px 52px rgba(0,0,0,.32); display: grid; place-items: center; text-transform: uppercase; letter-spacing: .26em; font-size: 12px; font-weight: 850; transform: rotate(2deg); }
+    .product-body { padding: 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .product-topline { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .pill { display: inline-flex; align-items: center; width: fit-content; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line); color: rgba(245,243,238,.70); font-size: 10px; text-transform: uppercase; letter-spacing: .16em; font-weight: 850; background: rgba(255,255,255,.032); }
+    .pill.green { border-color: var(--green-line); color: #a9d7bf; background: var(--green-soft); }
+    .pill.gold { border-color: rgba(185,155,95,.38); color: #e1cca0; background: var(--gold-soft); }
+    .product-body h3 { margin: 0; font-size: 26px; line-height: 1.05; letter-spacing: -0.04em; font-weight: 620; }
+    .product-body p { margin: 0; color: var(--muted); line-height: 1.55; font-size: 14px; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 10px; }
+    .price { color: var(--text); font-size: 15px; font-weight: 800; letter-spacing: .02em; }
+    .status { color: rgba(245,243,238,.58); font-size: 11px; text-transform: uppercase; letter-spacing: .15em; font-weight: 850; }
+    .wide-feature { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
+    .book-feature-panel { border: 1px solid var(--line); border-radius: var(--radius-xl); background: radial-gradient(circle at 18% 20%, rgba(31,143,95,.16), transparent 28%), linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.018)); padding: 30px; min-height: 100%; box-shadow: var(--shadow); }
+    .book-feature-panel h3 { margin: 0 0 14px; font-size: clamp(32px, 4vw, 56px); line-height: .96; letter-spacing: -0.055em; font-weight: 620; }
+    .book-feature-panel p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .check-list { display: grid; gap: 11px; margin: 0 0 24px; padding: 0; list-style: none; }
+    .check-list li { display: flex; gap: 10px; align-items: start; color: rgba(245,243,238,.78); font-size: 14px; line-height: 1.45; }
+    .check-list li::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--green); margin-top: 6px; flex: 0 0 auto; box-shadow: 0 0 18px rgba(31,143,95,.65); }
+    .book-preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .preview-card { min-height: 180px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: rgba(255,255,255,.035); padding: 22px; position: relative; overflow: hidden; }
+    .preview-card::after { content: ""; position: absolute; right: -60px; bottom: -80px; width: 180px; height: 180px; border-radius: 50%; background: rgba(31,143,95,.12); }
+    .preview-card b { display: block; margin-bottom: 9px; font-size: 12px; text-transform: uppercase; letter-spacing: .18em; color: #9bd0b3; }
+    .preview-card span { display: block; font-size: 22px; line-height: 1.12; letter-spacing: -0.035em; margin-bottom: 12px; }
+    .preview-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.48; }
+    .city-configurator { border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.015)); overflow: hidden; box-shadow: var(--shadow); }
+    .city-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); min-height: 460px; }
+    .city-copy { padding: 30px; border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 28px; }
+    .city-copy h3 { margin: 0 0 14px; font-size: clamp(34px, 4.5vw, 66px); line-height: .94; letter-spacing: -0.06em; font-weight: 620; }
+    .city-copy p { margin: 0; color: var(--muted); line-height: 1.6; max-width: 420px; }
+    .city-select-wrap { display: grid; gap: 12px; margin-top: 24px; }
+    .city-select-wrap label { font-size: 11px; text-transform: uppercase; letter-spacing: .18em; font-weight: 850; color: rgba(245,243,238,.72); }
+    .city-select { width: 100%; min-height: 50px; border-radius: 14px; border: 1px solid var(--line-strong); background: rgba(0,0,0,.32); color: var(--text); padding: 0 14px; outline: none; }
+    .city-proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .city-proof div { border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: rgba(255,255,255,.032); }
+    .city-proof b { display: block; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 7px; }
+    .city-proof span { display: block; color: var(--muted); font-size: 13px; line-height: 1.38; }
+    .city-visual { background: radial-gradient(circle at 50% 18%, rgba(255,255,255,.09), transparent 24%), linear-gradient(145deg, #111713, #050706); padding: 30px; display: grid; align-content: center; gap: 18px; }
+    .mock-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .mock-tile { border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.035); min-height: 240px; display: grid; place-items: center; position: relative; overflow: hidden; padding: 22px; }
+    .city-mark { text-align: center; position: relative; z-index: 5; color: rgba(245,243,238,.76); }
+    .city-mark .bric-small { font-size: 11px; letter-spacing: .45em; text-indent: .45em; margin-bottom: 7px; }
+    .skyline { width: 86px; height: 28px; margin: 0 auto 7px; opacity: .70; }
+    .city-name { font-size: 9px; letter-spacing: .36em; text-indent: .36em; text-transform: uppercase; }
+    .city-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .city-tab { border: 1px solid var(--line); border-radius: 999px; padding: 10px 13px; background: rgba(255,255,255,.03); color: rgba(245,243,238,.68); text-transform: uppercase; letter-spacing: .13em; font-size: 11px; font-weight: 850; cursor: pointer; transition: all .22s var(--ease); }
+    .city-tab.active, .city-tab:hover { color: var(--text); border-color: var(--green-line); background: var(--green-soft); }
+    .kit-band { border: 1px solid var(--line); border-radius: var(--radius-xl); background: radial-gradient(circle at 86% 20%, rgba(185,155,95,.16), transparent 26%), linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.018)); padding: 30px; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 28px; align-items: center; box-shadow: var(--shadow); }
+    .kit-band h3 { margin: 0 0 12px; font-size: clamp(32px, 4vw, 58px); line-height: .96; letter-spacing: -0.055em; font-weight: 620; }
+    .kit-band p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .kit-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .kit-item { border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: rgba(0,0,0,.18); }
+    .kit-item b { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+    .kit-item span { display: block; color: var(--muted); font-size: 13px; line-height: 1.42; }
+    .request-panel { border: 1px solid var(--line); border-radius: var(--radius-xl); background: radial-gradient(circle at 20% 20%, rgba(31,143,95,.17), transparent 28%), linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.018)); padding: 38px; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 28px; box-shadow: var(--shadow); align-items: center; }
+    .request-panel h2 { font-size: clamp(34px, 5vw, 64px); }
+    .request-panel p { margin: 18px 0 0; color: var(--muted); line-height: 1.6; }
+    .request-form { display: grid; gap: 12px; }
+    .form-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .field { display: grid; gap: 8px; }
+    .field label { color: rgba(245,243,238,.68); font-size: 11px; text-transform: uppercase; letter-spacing: .16em; font-weight: 850; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); background: rgba(0,0,0,.26); color: var(--text); border-radius: 14px; min-height: 48px; padding: 12px 14px; outline: none; transition: border-color .22s var(--ease), background .22s var(--ease); }
+    .field textarea { resize: vertical; min-height: 112px; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--green-line); background: rgba(31,143,95,.055); }
+    .footer { border-top: 1px solid var(--line); padding: 44px 0 54px; color: rgba(245,243,238,.58); }
+    .footer-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 30px; align-items: start; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px 24px; justify-content: flex-end; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; }
+    .footer p { margin: 18px 0 0; max-width: 460px; line-height: 1.55; }
+    .hidden { display: none !important; }
+    @media (max-width: 980px) { .nav-links, .nav-actions { display: none; } .mobile-toggle { display: inline-block; } .nav { min-height: 68px; } .hero { padding-top: 58px; } .hero-grid, .hero-showcase, .wide-feature, .city-grid, .kit-band, .request-panel, .footer-grid { grid-template-columns: 1fr; } .city-copy { border-right: 0; border-bottom: 1px solid var(--line); } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .section-head { align-items: start; flex-direction: column; } .filter-bar { top: 68px; } .book-hero { grid-template-columns: 1fr; } .book-cover { margin: 0 auto; } .footer-links { justify-content: flex-start; } }
+    @media (max-width: 640px) { .page-shell, .nav, .filter-row, .mobile-menu { width: min(100% - 28px, var(--max)); } .brand-word { display: none; } .hero h1 { font-size: clamp(48px, 18vw, 78px); } .hero-copy { font-size: 16px; } .hero-showcase { margin-top: 30px; } .showcase-card { min-height: auto; } .book-hero, .book-feature-panel, .city-copy, .city-visual, .kit-band, .request-panel { padding: 22px; } .book-points, .book-preview-grid, .product-grid, .mock-row, .city-proof, .kit-items, .form-row { grid-template-columns: 1fr; } .section { padding: 54px 0; } .product-card { border-radius: 22px; } .filter-row { padding-bottom: 2px; } }
+
+
+    /* Hover hue system — added for BRIC premium interaction cues */
+    .brand,
+    .brand-mark,
+    .cart-chip,
+    .showcase-card,
+    .side-card,
+    .mini-point,
+    .preview-card,
+    .book-feature-panel,
+    .city-configurator,
+    .kit-band,
+    .request-panel,
+    .mock-tile,
+    .city-proof div,
+    .kit-item {
+      transition: transform .24s var(--ease), border-color .24s var(--ease), background .24s var(--ease), box-shadow .24s var(--ease), color .24s var(--ease), opacity .24s var(--ease);
+    }
+
+    .brand:hover .brand-mark {
+      border-color: var(--green-line);
+      box-shadow: 0 0 0 1px rgba(31,143,95,.16), 0 18px 42px rgba(31,143,95,.20), inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0;
+      transform: scaleX(.35);
+      transition: opacity .22s var(--ease), transform .22s var(--ease);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      opacity: .95;
+      transform: scaleX(1);
+    }
+
+    .cart-chip:hover,
+    .mobile-toggle:hover {
+      border-color: var(--green-line);
+      background: var(--green-soft);
+      color: var(--text);
+      box-shadow: 0 16px 42px rgba(31,143,95,.14);
+    }
+
+    .mobile-menu a:hover {
+      background: var(--green-soft);
+      color: var(--text);
+    }
+
+    .btn:hover {
+      border-color: var(--green-line);
+      background: var(--green-soft);
+      box-shadow: 0 16px 46px rgba(31,143,95,.14);
+    }
+
+    .btn.primary:hover {
+      border-color: rgba(112,230,160,.58);
+      box-shadow: 0 22px 60px rgba(31,143,95,.26);
+      filter: saturate(1.08);
+    }
+
+    .showcase-card:hover,
+    .book-feature-panel:hover,
+    .request-panel:hover {
+      border-color: rgba(31,143,95,.38);
+      box-shadow: 0 28px 90px rgba(31,143,95,.10), var(--shadow);
+    }
+
+    .side-card:hover,
+    .mini-point:hover,
+    .preview-card:hover,
+    .city-proof div:hover,
+    .kit-item:hover,
+    .mock-tile:hover {
+      transform: translateY(-3px);
+      border-color: rgba(31,143,95,.38);
+      background: linear-gradient(145deg, rgba(31,143,95,.085), rgba(255,255,255,.018));
+      box-shadow: 0 18px 54px rgba(31,143,95,.10);
+    }
+
+    .side-card:first-child:hover,
+    .product-card[data-category*="apparel"]:hover,
+    .city-configurator:hover {
+      border-color: rgba(185,155,95,.48);
+      background: linear-gradient(145deg, rgba(185,155,95,.105), rgba(255,255,255,.018));
+      box-shadow: 0 24px 70px rgba(185,155,95,.12);
+    }
+
+    .product-card:hover .product-media {
+      border-bottom-color: rgba(31,143,95,.36);
+      box-shadow: inset 0 0 60px rgba(31,143,95,.045);
+    }
+
+    .product-card[data-category*="apparel"]:hover .product-media,
+    .product-card[data-category*="guides"]:hover .product-media.light,
+    .product-card[data-category*="office"]:hover .product-media.light {
+      border-bottom-color: rgba(185,155,95,.42);
+      box-shadow: inset 0 0 70px rgba(185,155,95,.08);
+    }
+
+    .product-card:hover .pill.green,
+    .filter-btn:hover .dot,
+    .filter-btn.active .dot {
+      box-shadow: 0 0 22px rgba(31,143,95,.55);
+    }
+
+    .product-card[data-category*="apparel"]:hover .pill.gold,
+    .product-card[data-category*="guides"]:hover .pill.gold {
+      box-shadow: 0 0 22px rgba(185,155,95,.34);
+    }
+
+    .product-card:hover h3,
+    .preview-card:hover span,
+    .side-card:hover h3,
+    .kit-item:hover b {
+      color: #ffffff;
+    }
+
+    .product-card:hover .price {
+      color: #a9d7bf;
+    }
+
+    .product-card[data-category*="apparel"]:hover .price,
+    .product-card[data-category*="guides"]:hover .price {
+      color: #e1cca0;
+    }
+
+    .filter-btn[data-filter="apparel"]:hover,
+    .filter-btn[data-filter="apparel"].active,
+    .filter-btn[data-filter="guides"]:hover,
+    .filter-btn[data-filter="guides"].active,
+    .filter-btn[data-filter="office"]:hover,
+    .filter-btn[data-filter="office"].active {
+      border-color: rgba(185,155,95,.48);
+      background: var(--gold-soft);
+    }
+
+    .city-tab:hover,
+    .city-tab.active {
+      box-shadow: 0 12px 34px rgba(31,143,95,.12);
+    }
+
+    .city-tab:nth-child(3):hover,
+    .city-tab:nth-child(4):hover {
+      border-color: rgba(185,155,95,.48);
+      background: var(--gold-soft);
+    }
+
+    .kit-band:hover {
+      border-color: rgba(185,155,95,.44);
+      box-shadow: 0 28px 90px rgba(185,155,95,.10), var(--shadow);
+    }
+
+    .field input:hover,
+    .field textarea:hover,
+    .field select:hover,
+    .city-select:hover {
+      border-color: rgba(31,143,95,.32);
+      background: rgba(31,143,95,.04);
+    }
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="BRIC Studios home"><div class="brand-mark" aria-hidden="true"><span>B</span></div><div class="brand-word">BRIC</div></a>
+      <div class="nav-links"><a href="index.html">Platform</a><a href="valuation.html">Valuation</a><a href="om.html">OM Studio</a><a href="learning.html">Learning</a><a href="shop.html" class="active">Shop</a></div>
+      <div class="nav-actions"><a class="cart-chip" href="#request"><span class="cart-dot"></span> Coming Soon</a></div>
+      <button class="mobile-toggle" type="button" aria-label="Open menu" id="mobileToggle"><span></span><span></span></button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu"><a href="index.html">Platform</a><a href="valuation.html">Valuation</a><a href="om.html">OM Studio</a><a href="learning.html">Learning</a><a href="shop.html">Shop</a><a href="#request">Request Product</a></div>
+  </header>
+  <main>
+    <section class="hero"><div class="page-shell"><div class="eyebrow">BRIC Studios</div><div class="hero-grid"><div><h1>BRIC Field Goods <span>for real estate operators.</span></h1></div><div><p class="hero-copy">Books, owner tools, apparel, and branded essentials designed around the real workflow of property ownership — expenses, renovations, diligence, meetings, and property walks.</p><div class="hero-actions"><a class="btn primary" href="#book">View the Book</a><a class="btn" href="#products">Shop Concepts</a></div></div></div><div class="rule"></div><div class="hero-showcase"><article class="showcase-card book-hero" id="book"><div class="book-cover" aria-label="BRIC real estate book cover mockup"><div class="book-cover-top"><span>BRIC Studios</span><span>01</span></div><div class="book-title"><strong>Real Estate<br />Owner’s<br />Field Book</strong><span>A practical workbook for understanding value, expenses, renovation planning, and sale preparation.</span></div><div class="book-meta"><span>Owner Guide</span><span>Workbook</span></div></div><div class="book-details"><span class="pill green">Featured Release</span><h2>The book belongs here.</h2><p>This shop should not just be merchandise. It should become the home for the BRIC book, workbook tools, owner checklists, and future physical products that support the platform.</p><div class="book-points"><div class="mini-point"><b>Learn</b><span>Plain-English real estate concepts for owners and investors.</span></div><div class="mini-point"><b>Track</b><span>Expense, renovation, and property planning sections.</span></div><div class="mini-point"><b>Prepare</b><span>Sale readiness, diligence, and buyer-review checklists.</span></div><div class="mini-point"><b>Operate</b><span>Practical tools for cleaner property decisions.</span></div></div></div></article><aside class="side-stack"><div class="side-card"><span class="pill gold">Future Drop</span><h3>City Edition Apparel</h3><p>Placeholder concept for customizable city tees and hats with subtle skyline marks.</p></div><div class="side-card"><span class="pill green">Owner Tools</span><h3>Trackers & Ledgers</h3><p>Expense, renovation, rent roll, and property walk books built for real-world owner workflows.</p></div></aside></div></div></section>
+    <div class="filter-bar" id="products"><div class="filter-row" role="list" aria-label="Product filters"><button class="filter-btn active" type="button" data-filter="all"><span class="dot"></span> All</button><button class="filter-btn" type="button" data-filter="book">Book</button><button class="filter-btn" type="button" data-filter="owner-tools">Owner Tools</button><button class="filter-btn" type="button" data-filter="guides">Guides</button><button class="filter-btn" type="button" data-filter="apparel">Apparel</button><button class="filter-btn" type="button" data-filter="office">Office</button><button class="filter-btn" type="button" data-filter="kits">Kits</button></div></div>
+    <section class="section"><div class="page-shell"><div class="section-head"><div><div class="section-kicker">Featured</div><h2>Books first. Merch second.</h2></div><p>The shop should feel useful before it feels branded. The strongest products are the book, workbook, expense tools, renovation trackers, and owner kits.</p></div><div class="wide-feature product-item" data-category="book guides owner-tools"><div class="book-feature-panel"><span class="pill green">Primary Product</span><h3>Real Estate Owner’s Field Book</h3><p>A practical book and workbook for owners who want to understand value, expenses, renovations, market preparation, and what buyers actually review.</p><ul class="check-list"><li>Clear explanations of NOI, cap rate, rent roll, expenses, zoning, and buyer diligence.</li><li>Workbook sections for property notes, repair items, renovation budgets, and annual expenses.</li><li>Checklists for preparing a property before refinancing, selling, renovating, or holding.</li><li>Designed to connect naturally with the Learning Studio and Valuation Studio.</li></ul><a class="btn primary" href="#request">Request Early Access</a></div><div class="book-preview-grid"><div class="preview-card"><b>Chapter Preview</b><span>Understanding property value</span><p>How income, expenses, cap rates, rent upside, physical condition, and buyer confidence shape value.</p></div><div class="preview-card"><b>Workbook</b><span>Expense review pages</span><p>Organize insurance, repairs, utilities, management, payroll, taxes, and recurring vendor costs.</p></div><div class="preview-card"><b>Checklist</b><span>Pre-sale property prep</span><p>Rent roll cleanup, document collection, repair notes, photos, leases, expenses, and buyer questions.</p></div><div class="preview-card"><b>Owner Tool</b><span>Renovation control</span><p>Track scopes, bids, deposits, draws, timelines, change orders, and completion notes.</p></div></div></div><div class="product-grid"><article class="product-card product-item" data-category="owner-tools book"><div class="product-media"><div class="media-book"><span>BRIC Studios</span><strong>Expense<br />Ledger</strong><span>Owner Tool</span></div></div><div class="product-body"><div class="product-topline"><span class="pill green">Owner Tools</span><span class="status">Coming Soon</span></div><h3>BRIC Expense Ledger</h3><p>Track recurring costs, repairs, vendor pricing, insurance, utilities, management, payroll, and annual property expenses.</p><div class="product-footer"><span class="price">$42</span><span class="status">Workbook</span></div></div></article><article class="product-card product-item" data-category="owner-tools book"><div class="product-media"><div class="media-book alt"><span>BRIC Studios</span><strong>Renovation<br />Ledger</strong><span>Project Tool</span></div></div><div class="product-body"><div class="product-topline"><span class="pill green">Owner Tools</span><span class="status">Coming Soon</span></div><h3>BRIC Renovation Ledger</h3><p>Plan scopes, contractor bids, deposits, draws, change orders, material selections, and project timelines.</p><div class="product-footer"><span class="price">$46</span><span class="status">Workbook</span></div></div></article><article class="product-card product-item" data-category="book guides"><div class="product-media"><div class="media-book"><span>BRIC Studios</span><strong>Pre-Sale<br />Checklist</strong><span>Guide</span></div></div><div class="product-body"><div class="product-topline"><span class="pill gold">Guide</span><span class="status">Coming Soon</span></div><h3>Pre-Sale Property Checklist</h3><p>A practical guide for preparing rent rolls, expenses, photos, leases, repairs, diligence, and buyer-facing materials.</p><div class="product-footer"><span class="price">$28</span><span class="status">Guide</span></div></div></article><article class="product-card product-item" data-category="owner-tools office"><div class="product-media light"><div class="folder-mock">Due Diligence</div></div><div class="product-body"><div class="product-topline"><span class="pill">Office</span><span class="status">Coming Soon</span></div><h3>Due Diligence Folder Set</h3><p>Branded folders for leases, tax bills, expenses, surveys, violations, inspection notes, and contracts.</p><div class="product-footer"><span class="price">$36</span><span class="status">Set</span></div></div></article><article class="product-card product-item" data-category="apparel"><div class="product-media"><div class="tee-mock"><span class="tee-sleeve-left"></span><span class="tee-sleeve-right"></span><span class="tee-neck"></span><span class="tee-label">BRIC</span></div></div><div class="product-body"><div class="product-topline"><span class="pill gold">Placeholder</span><span class="status">Future</span></div><h3>BRIC City Tee</h3><p>A minimal city edition tee with a small BRIC mark, subtle skyline, and customizable city label.</p><div class="product-footer"><span class="price">$38</span><span class="status">Apparel</span></div></div></article><article class="product-card product-item" data-category="apparel"><div class="product-media"><div class="cap-mock"><div class="cap-logo">BRIC</div></div></div><div class="product-body"><div class="product-topline"><span class="pill gold">Placeholder</span><span class="status">Future</span></div><h3>BRIC Skyline Cap</h3><p>Structured black cap with a subtle city skyline mark and small BRIC app-style logo on the back.</p><div class="product-footer"><span class="price">$38</span><span class="status">Apparel</span></div></div></article></div></div></section>
+    <section class="section"><div class="page-shell"><div class="section-head"><div><div class="section-kicker">City Collection</div><h2>Custom city goods.</h2></div><p>This can stay as a future placeholder for now. The important thing is that it feels quiet, city-specific, and premium — not tourist merch.</p></div><div class="city-configurator product-item" data-category="apparel"><div class="city-grid"><div class="city-copy"><div><span class="pill gold">Future Growth</span><h3>Your city. Your BRIC.</h3><p>Select a city to update the subtle skyline mark across the tee, hat, and future branded goods. The skyline should remain small, centered, and understated.</p><div class="city-select-wrap"><label for="citySelect">Choose your city</label><select class="city-select" id="citySelect"><option value="new york">New York</option><option value="brooklyn">Brooklyn</option><option value="miami">Miami</option><option value="chicago">Chicago</option><option value="los angeles">Los Angeles</option><option value="austin">Austin</option><option value="nashville">Nashville</option><option value="dallas">Dallas</option><option value="atlanta">Atlanta</option><option value="boston">Boston</option></select></div><div class="city-tabs" id="cityTabs" aria-label="City options"><button class="city-tab active" type="button" data-city="new york">New York</button><button class="city-tab" type="button" data-city="brooklyn">Brooklyn</button><button class="city-tab" type="button" data-city="miami">Miami</button><button class="city-tab" type="button" data-city="chicago">Chicago</button></div></div><div class="city-proof"><div><b>Subtle</b><span>Small chest mark under the collar.</span></div><div><b>Custom</b><span>City name and skyline can update.</span></div><div><b>Premium</b><span>Quiet branding, not loud merchandise.</span></div></div></div><div class="city-visual"><div class="mock-row"><div class="mock-tile"><div class="tee-mock"><span class="tee-sleeve-left"></span><span class="tee-sleeve-right"></span><span class="tee-neck"></span></div><div class="city-mark" style="position:absolute; top:35%; left:50%; transform:translateX(-50%);"><div class="bric-small">BRIC</div><svg class="skyline" viewBox="0 0 120 36" aria-hidden="true"><path id="teeSkyline" d="M4 30 H20 V24 H25 V16 H31 V30 H38 V20 H44 V12 H51 V30 H58 V6 H64 V30 H72 V18 H78 V30 H86 V22 H92 V30 H116" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><div class="city-name" id="teeCityName">New York</div></div></div><div class="mock-tile"><div class="cap-mock"></div><div class="city-mark" style="position:absolute; top:39%; left:50%; transform:translateX(-50%);"><div class="bric-small">BRIC</div><svg class="skyline" viewBox="0 0 120 36" aria-hidden="true"><path id="capSkyline" d="M4 30 H20 V24 H25 V16 H31 V30 H38 V20 H44 V12 H51 V30 H58 V6 H64 V30 H72 V18 H78 V30 H86 V22 H92 V30 H116" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><div class="city-name" id="capCityName">New York</div></div></div></div><div class="mock-row"><div class="mock-tile"><div class="brand-mark" style="width:42px;height:42px;"><span>B</span></div><span class="status" style="position:absolute;bottom:18px;left:22px;">Back collar logo</span></div><div class="mock-tile"><div class="city-mark"><div class="bric-small">BRIC</div><svg class="skyline" viewBox="0 0 120 36" aria-hidden="true"><path id="detailSkyline" d="M4 30 H20 V24 H25 V16 H31 V30 H38 V20 H44 V12 H51 V30 H58 V6 H64 V30 H72 V18 H78 V30 H86 V22 H92 V30 H116" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><div class="city-name" id="detailCityName">New York</div></div><span class="status" style="position:absolute;bottom:18px;left:22px;">Front detail</span></div></div></div></div></div></div></section>
+    <section class="section"><div class="page-shell"><div class="section-head"><div><div class="section-kicker">Bundles</div><h2>Operator kits.</h2></div><p>These are more convincing than apparel because they make BRIC feel like an operating system for property ownership.</p></div><div class="kit-band product-item" data-category="kits owner-tools office book"><div><span class="pill green">Best Future Bundle</span><h3>Owner Control Kit</h3><p>A complete starter kit for owners who want cleaner records, better expense visibility, and stronger preparation before a sale, refinance, or renovation.</p><a class="btn" href="#request">Request this kit</a></div><div class="kit-items"><div class="kit-item"><b>Property Notebook</b><span>Walkthroughs, inspection notes, tenant items, and repair tracking.</span></div><div class="kit-item"><b>Expense Ledger</b><span>Annual operating cost tracking and vendor pricing review.</span></div><div class="kit-item"><b>Renovation Ledger</b><span>Scopes, bids, deposits, draws, timelines, and change orders.</span></div><div class="kit-item"><b>Diligence Folders</b><span>Clean organization for leases, taxes, expenses, contracts, and reports.</span></div></div></div></div></section>
+    <section class="section" id="request"><div class="page-shell"><div class="request-panel"><div><div class="section-kicker">Early Access</div><h2>Request the book or a future product.</h2><p>This can eventually connect to a waitlist, Shopify, Stripe, Formspree, Airtable, or your own backend. For now, it is clean front-end structure ready for GitHub.</p></div><form class="request-form" id="requestForm"><div class="form-row"><div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Your name" /></div><div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@email.com" /></div></div><div class="form-row"><div class="field"><label for="interest">Interested In</label><select id="interest" name="interest"><option>Real Estate Owner’s Field Book</option><option>Expense Ledger</option><option>Renovation Ledger</option><option>Owner Control Kit</option><option>City Apparel</option><option>Other</option></select></div><div class="field"><label for="cityInterest">City</label><input id="cityInterest" name="city" type="text" placeholder="Optional" /></div></div><div class="field"><label for="message">Notes</label><textarea id="message" name="message" placeholder="Tell us what you want BRIC to build next."></textarea></div><button class="btn primary" type="submit">Submit Request</button><p id="formNote" style="display:none; margin:0; color:#9bd0b3; font-size:14px;">Request captured on-page. Connect this form to your backend when ready.</p></form></div></div></section>
+  </main>
+  <footer class="footer"><div class="page-shell footer-grid"><div><a class="brand" href="index.html"><div class="brand-mark" aria-hidden="true"><span>B</span></div><div class="brand-word">BRIC</div></a><p>BRIC Field Goods is the future home for the BRIC book, owner workbooks, property tools, and limited city edition goods.</p></div><div class="footer-links"><a href="index.html">Platform</a><a href="valuation.html">Valuation</a><a href="om.html">OM Studio</a><a href="learning.html">Learning</a><a href="#book">Book</a><a href="#request">Request</a></div></div></footer>
+  <script>
+    const mobileToggle = document.getElementById('mobileToggle'); const mobileMenu = document.getElementById('mobileMenu'); mobileToggle?.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    const filterButtons = document.querySelectorAll('.filter-btn'); const productItems = document.querySelectorAll('.product-item');
+    filterButtons.forEach((button) => { button.addEventListener('click', () => { const filter = button.dataset.filter; filterButtons.forEach((btn) => btn.classList.remove('active')); button.classList.add('active'); productItems.forEach((item) => { const categories = item.dataset.category || ''; const shouldShow = filter === 'all' || categories.includes(filter); item.classList.toggle('hidden', !shouldShow); }); }); });
+    const cityPaths = { 'new york': 'M4 30 H16 V26 H22 V18 H28 V30 H36 V20 H42 V12 H50 V30 H58 V5 H64 V30 H72 V17 H78 V30 H86 V22 H92 V30 H116', 'brooklyn': 'M4 30 H17 V25 H23 V20 H30 V30 H38 V18 H47 V30 H56 V16 H66 V30 H76 V22 H84 V30 H96 V24 H116', 'miami': 'M5 30 H20 V26 H24 V18 H29 V30 H42 V27 H48 V12 H54 V30 H70 V24 H76 V30 H90 V20 H96 V30 H116', 'chicago': 'M4 30 H18 V18 H25 V30 H35 V14 H42 V30 H55 V8 H62 V30 H76 V21 H83 V30 H94 V15 H101 V30 H116', 'los angeles': 'M4 30 H20 V24 H26 V30 H36 V18 H43 V30 H56 V14 H63 V30 H74 V22 H80 V30 H93 V19 H100 V30 H116', 'austin': 'M4 30 H18 V26 H24 V20 H31 V30 H44 V17 H51 V30 H62 V9 H69 V30 H80 V22 H88 V30 H100 V25 H116', 'nashville': 'M4 30 H18 V25 H24 V19 H30 V30 H41 V15 H48 V30 H61 V18 H68 V30 H79 V12 H86 V30 H98 V24 H116', 'dallas': 'M4 30 H16 V26 H24 V21 H31 V30 H43 V16 H49 V30 H58 V10 H64 V30 H74 V18 H82 V30 H94 V22 H116', 'atlanta': 'M4 30 H17 V25 H24 V17 H30 V30 H42 V21 H48 V30 H59 V8 H65 V30 H78 V19 H86 V30 H99 V24 H116', 'boston': 'M4 30 H18 V23 H25 V30 H36 V20 H43 V30 H54 V12 H60 V30 H72 V17 H79 V30 H91 V22 H98 V30 H116' };
+    const citySelect = document.getElementById('citySelect'); const cityTabs = document.querySelectorAll('.city-tab'); const skylinePaths = [document.getElementById('teeSkyline'), document.getElementById('capSkyline'), document.getElementById('detailSkyline')]; const cityNameEls = [document.getElementById('teeCityName'), document.getElementById('capCityName'), document.getElementById('detailCityName')];
+    function titleCaseCity(value) { return value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); }
+    function updateCity(value) { const city = value.toLowerCase(); const path = cityPaths[city] || cityPaths['new york']; skylinePaths.forEach(el => el?.setAttribute('d', path)); cityNameEls.forEach(el => { if (el) el.textContent = titleCaseCity(city); }); if (citySelect) citySelect.value = city; cityTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.city === city)); }
+    citySelect?.addEventListener('change', (event) => updateCity(event.target.value)); cityTabs.forEach(tab => tab.addEventListener('click', () => updateCity(tab.dataset.city)));
+    const requestForm = document.getElementById('requestForm'); const formNote = document.getElementById('formNote'); requestForm?.addEventListener('submit', (event) => { event.preventDefault(); formNote.style.display = 'block'; requestForm.reset(); });
+  </script>
+</body>
+</html>
