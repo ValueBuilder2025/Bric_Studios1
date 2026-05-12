@@ -5624,9 +5624,24 @@ document.addEventListener('input', function(e){
   function money(v){ var n=num(v); return n ? '$'+Math.round(n).toLocaleString() : '—'; }
   function fmtDate(v){ if(!v) return ''; var d=new Date(v); if(isNaN(d.getTime())) return String(v); return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
   function setStatus(msg, kind){
-    var el=byId('publicRecordStatus'); if(!el) return;
-    el.textContent=msg||'';
-    el.style.color = kind==='error' ? '#d46a55' : (kind==='success' ? '#c9a84c' : '');
+    var el=byId('publicRecordStatus'); if(el){
+      el.textContent=msg||'';
+      el.style.color = kind==='error' ? '#d46a55' : (kind==='success' ? '#c9a84c' : '');
+    }
+    // Also surface a tiny inline badge under the address input so the user
+    // sees feedback even when the Public Records section is collapsed.
+    var addrEl = byId('address');
+    if(!addrEl) return;
+    var pill = byId('addressInlineStatus');
+    if(!pill){
+      pill = document.createElement('div');
+      pill.id = 'addressInlineStatus';
+      pill.style.cssText = 'font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.35rem;color:var(--gold);min-height:.85rem;line-height:1';
+      addrEl.insertAdjacentElement('afterend', pill);
+    }
+    var prefix = kind==='error' ? '⚠ ' : (kind==='success' ? '✓ ' : '◌ ');
+    pill.textContent = msg ? prefix + msg : '';
+    pill.style.color = kind==='error' ? '#d46a55' : (kind==='success' ? '#c9a84c' : 'rgba(201,168,76,0.7)');
   }
 
   // ---------- Field marking ----------
@@ -5656,6 +5671,28 @@ document.addEventListener('input', function(e){
     // Fire change so any onchange handlers run (e.g. populateSubmarkets)
     try{ el.dispatchEvent(new Event('change',{bubbles:true})); }catch(e){}
     try{ el.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){}
+    return true;
+  }
+
+  // Programmatically turn on an OM section toggle (like clicking it).
+  // Used to auto-enable the Property Description page after records are fetched
+  // so the user sees results without manually flipping a toggle.
+  function enableSectionToggle(key){
+    var row = document.querySelector('[data-toggle="'+key+'"]');
+    if(!row) return false;
+    var toggle = row.querySelector('.toggle');
+    if(!toggle) return false;
+    if(toggle.classList.contains('on')) return true; // already on
+    toggle.classList.add('on');
+    row.classList.add('active');
+    try{
+      if(typeof sectionsActive === 'object' && sectionsActive){
+        sectionsActive[key] = true;
+      } else {
+        window.sectionsActive = window.sectionsActive || {};
+        window.sectionsActive[key] = true;
+      }
+    }catch(e){}
     return true;
   }
   function injectStyles(){
@@ -5936,6 +5973,11 @@ document.addEventListener('input', function(e){
       }
       if(pluto.bldgclass){ fillField('prBuildingClass', pluto.bldgclass, {force:true}); }
       if(pluto.landuse){ fillField('prLandUse', landUseLabel(pluto.landuse), {force:true}); }
+      // Tax class from PLUTO (primary). PLUTO uses 'taxclass' (single char or 1A/2A/2B etc.).
+      if(pluto.taxclass){
+        fillField('prTaxClass', String(pluto.taxclass), {force:true});
+        summary.push(['Tax Class', pluto.taxclass]);
+      }
       // Auto-suggest property type based on units
       var resU=num(pluto.unitsres), comU=num(pluto.unitstotal)-resU;
       var propTypeEl=byId('propertyType');
@@ -5951,27 +5993,31 @@ document.addEventListener('input', function(e){
       }
     }
 
-    // DOF → taxes, assessed value, tax class
+    // DOF → taxes, assessed value, tax class (fallback / refinement)
     if(dof){
-      if(dof.taxclass){
-        fillField('prTaxClass', dof.taxclass, {force:true});
-        summary.push(['Tax Class', dof.taxclass]);
-      } else if(pluto && pluto.taxclass){
-        fillField('prTaxClass', pluto.taxclass, {force:true});
+      // DOF tax class may be in 'curtaxclass' (current) or 'taxclass'.
+      // Only override if PLUTO didn't provide one.
+      var dofTaxClass = dof.curtaxclass || dof.taxclass || '';
+      if(dofTaxClass && !val('prTaxClass')){
+        fillField('prTaxClass', String(dofTaxClass), {force:true});
+        summary.push(['Tax Class', dofTaxClass]);
       }
-      // taxes_each_year or "fullval" — DOF Property Valuation & Assessment Data
-      // Most reliable: try `fullval`, `taxes_each_year`, or compute from `assesstot` * tax rate
-      var taxes = dof.taxes_each_year || dof.total_property_taxes || '';
-      if(!taxes && dof.assesstot){
-        // Rough estimate: tax class 1 ~ 20.31%, class 2 ~ 12.5% of AV (varies)
-        // Better: use billable AV * rate. For now we only fill if explicit field exists.
-      }
-      if(taxes){
-        var t = num(taxes);
-        if(t>0){
-          fillField('prEstimatedTaxes', '$'+Math.round(t).toLocaleString(), {force:true});
-          summary.push(['Annual Taxes', '$'+Math.round(t).toLocaleString()]);
+      // Annual taxes: DOF doesn't directly expose paid taxes, but exposes
+      // assessed values. Compute estimated taxes from assessed value × class rate.
+      // FY2025 rates (approximate): Class 1 ~ 20.31%, Class 2 ~ 12.50%, Class 4 ~ 10.65%.
+      var avBillable = num(dof.avtot) || num(dof.avtot2) || num(dof.assesstot);
+      var taxClassForRate = String(pluto && pluto.taxclass || dofTaxClass || '').charAt(0);
+      var rate = ({'1':0.2031, '2':0.1250, '3':0.1259, '4':0.1065})[taxClassForRate];
+      if(avBillable && rate){
+        var estTaxes = avBillable * rate;
+        if(estTaxes > 100){
+          fillField('prEstimatedTaxes', '$'+Math.round(estTaxes).toLocaleString()+' (est.)', {force:true});
+          summary.push(['Est. Annual Taxes', '$'+Math.round(estTaxes).toLocaleString()]);
         }
+      }
+      // Also surface assessed value as a record-only field (not in form)
+      if(avBillable && avBillable>0){
+        summary.push(['Assessed Value (DOF)', '$'+Math.round(avBillable).toLocaleString()]);
       }
     }
 
@@ -5998,6 +6044,11 @@ document.addEventListener('input', function(e){
 
     renderSummary(summary, {nyc:true});
     setStatus('Records loaded from NYC Open Data. Review fields below; edits override.', 'success');
+
+    // Auto-enable the Property Description section toggle so the page actually shows up
+    // in the generated OM (the previous build defaulted it OFF, which is why users
+    // didn't see records in the output).
+    enableSectionToggle('togglePublicRecordPage');
 
     // Trigger generate if already generated, else just leave fields filled
     try{
@@ -6094,21 +6145,52 @@ document.addEventListener('input', function(e){
     });
   }
 
-  // Optional: auto-fetch on address blur (debounced) so people don't have to click
-  var blurTimer=null;
+  // Auto-fetch as the user types the address (debounced).
+  // Fires when the address looks "complete enough" — i.e., contains a number
+  // followed by street-name characters, with at least 10 characters total.
+  // Also fires on blur as a fallback.
+  var inputTimer = null;
+  function addressLooksComplete(v){
+    v = String(v||'').trim();
+    if(v.length < 10) return false;
+    // Must contain a leading street number and a street word
+    return /^\s*\d+\s+\S+/.test(v);
+  }
   function wireAddressAutoFetch(){
-    var addrEl=byId('address');
+    var addrEl = byId('address');
     if(!addrEl) return;
+
+    function triggerAuto(reason){
+      var v = (addrEl.value||'').trim();
+      if(!v) return;
+      if(addrEl.dataset.lastAutoFetch === v) return; // already fetched this exact string
+      if(!addressLooksComplete(v)) return;
+      addrEl.dataset.lastAutoFetch = v;
+      doFetch();
+    }
+
+    // Debounced input: 900ms after the user stops typing
+    addrEl.addEventListener('input', function(){
+      clearTimeout(inputTimer);
+      // Reset the "last fetched" guard when value changes meaningfully
+      addrEl.dataset.lastAutoFetch = '';
+      inputTimer = setTimeout(function(){ triggerAuto('input'); }, 900);
+    });
+
+    // Blur fallback (for paste-and-tab patterns)
     addrEl.addEventListener('blur', function(){
-      clearTimeout(blurTimer);
-      var v=(addrEl.value||'').trim();
-      if(v.length < 8) return;
-      // Only auto-fetch if no records have been pulled yet for this address
-      if(addrEl.dataset.lastAutoFetch === v) return;
-      blurTimer = setTimeout(function(){
-        addrEl.dataset.lastAutoFetch = v;
-        doFetch();
-      }, 400);
+      clearTimeout(inputTimer);
+      setTimeout(function(){ triggerAuto('blur'); }, 100);
+    });
+
+    // Enter key triggers immediate fetch
+    addrEl.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        clearTimeout(inputTimer);
+        addrEl.dataset.lastAutoFetch = ''; // force re-fetch
+        triggerAuto('enter');
+      }
     });
   }
 
