@@ -3641,7 +3641,7 @@ function renderFreePropertyDetailsPage(p,metrics){
   return `<div class="om-doc"><div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Details</div><div class="om-page-hd-brand">Free OM Builder</div></div><div class="om-section"><div class="om-section-eyebrow">Property Snapshot</div><div class="om-section-heading">${esc(p.address||'Property Address')}</div><div class="highlights-grid"><div class="highlight-card"><div class="highlight-label">Property Type</div><div class="highlight-val" style="font-size:1rem">${esc(p.propertyType||'—')}</div><div class="highlight-sub">${esc(neighborhoodLabel)} · ${esc(p.city||'')}</div></div><div class="highlight-card"><div class="highlight-label">Asking Price</div><div class="highlight-val">${fmtPriceFull(p.askingPrice)}</div><div class="highlight-sub">${metrics.pricePerSF?fmtFull(metrics.pricePerSF)+' / SF':'Pricing input'}</div></div><div class="highlight-card"><div class="highlight-label">Size</div><div class="highlight-val">${p.sqft?Number(p.sqft).toLocaleString():'—'}</div><div class="highlight-sub">Gross square feet</div></div>${p.propertyType==='Development'?`<div class="highlight-card"><div class="highlight-label">Buildable SF</div><div class="highlight-val">${p.developmentBuildableSF?Math.round(p.developmentBuildableSF).toLocaleString():'—'}</div><div class="highlight-sub">${p.developmentLotSize?Math.round(p.developmentLotSize).toLocaleString()+' Lot SF':'Lot size'} × ${p.developmentFAR||'FAR'}</div></div>`:'' }<div class="highlight-card"><div class="highlight-label">Units</div><div class="highlight-val">${p.units||'—'}</div><div class="highlight-sub">${aptCount} Apt · ${retCount} Retail</div></div><div class="highlight-card"><div class="highlight-label">Gross Income</div><div class="highlight-val">${fmt(metrics.grossPF)}</div><div class="highlight-sub">Submitted / rent-roll based</div></div><div class="highlight-card"><div class="highlight-label">Market Cap</div><div class="highlight-val">${fmtPct(p.marketCap||0)}</div><div class="highlight-sub">Owner assumption</div></div></div></div><div class="om-section"><div class="om-section-eyebrow">Unit Breakdown</div><div class="om-description"><p><b>Residential Units:</b> ${aptCount||0} · <b>Retail / Commercial Spaces:</b> ${retCount||0}</p>${p.unitMixBreakdown?`<p>${esc(p.unitMixBreakdown)}</p>`:`<p>No detailed unit mix was provided. Growth unlocks unit-by-unit rent roll inputs.</p>`}</div></div><div class="om-section"><div class="om-section-eyebrow">Description</div><div class="om-description">${String(desc).split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div><div class="om-section"><div class="om-section-eyebrow">Free Version</div><div class="om-description"><p>This free output is limited to a one-page Property Details sheet. Upgrade to Growth to unlock the complete OM package, including cover page, investment highlights, rent roll, financial summary, valuation, local map, transit map, market overview, and property photos.</p></div></div><div class="disclaimer">FREE PROPERTY DETAILS SHEET · Prepared by BRIC Studios from owner-entered data. Full OM sections are available in Growth. © ${new Date().getFullYear()} BRIC Studios.</div></div></div>`;
 }
 
-function generate(userRequested=false){if(userRequested) omGenerated=true;const preview=document.getElementById('omPreview');if(!omGenerated){preview.innerHTML='<div class="preview-locked"><div class="empty-icon">◊</div><div class="empty-title">OM Preview Locked</div><div class="empty-sub">Enter your property information, then click Generate OM. After that, edits update the preview live.</div></div>';return;}const p=collectOmData();p.units=rrItems.length ? rrItems.length : (parseNum(p.residentialUnits)+parseNum(p.retailUnits));let grossCur=0,grossPF=0;rrItems.forEach(it=>{const cur=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent):parseNum(it.currentRent)*12;const pf=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent):parseNum(it.proformaRent)*12;grossCur+=cur;grossPF+=pf});if(!rrItems.length){grossCur=p.grossIncome;grossPF=p.grossIncome}grossCur+=p.otherIncome;grossPF+=p.otherIncome;const vacancy=.04,expenseTotal=p.expenses.reduce((s,e)=>s+parseNum(e.amount),0),egiCur=grossCur*(1-vacancy),egiPF=grossPF*(1-vacancy),noiCur=egiCur-expenseTotal,noiPF=egiPF-expenseTotal,currentCap=p.askingPrice>0?(noiCur/p.askingPrice)*100:0,proformaCap=p.askingPrice>0?(noiPF/p.askingPrice)*100:0,valLow=noiPF/((p.marketCap+.75)/100),valBase=noiPF/(p.marketCap/100),valHigh=p.marketCap>1?noiPF/((p.marketCap-.75)/100):valBase,pricePerUnit=p.units>0?p.askingPrice/p.units:0,pricePerSF=p.sqft>0?p.askingPrice/p.sqft:0;if(currentTier!=='growth'){preview.innerHTML=renderFreePropertyDetailsPage(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,grossCur,grossPF});applyBricOmFooters();return;}const neighborhoodLabel=getSelectedNeighborhoodLabel();geocodeSubmittedProperty(p);const localMapTarget=getMapQueryFromGeo(p);const transitMapTarget=getTransitQueryFromGeo(p);const mapQuery=encodeURIComponent(localMapTarget);const transitQuery=encodeURIComponent(transitMapTarget);const mapMeta=mapStatusText();if(!p.askingPrice&&!p.address){preview.innerHTML='<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add property details and rent roll to begin.</div></div>';return}let html='<div class="om-doc">';if(sectionsActive.toggleCover){const coverTitle=p.coverTitleOverride||p.address||'Property Address';const autoSubtitle=`${p.propertyType||'Property'} · ${p.units} Unit${p.units!==1?'s':''} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')} SF${p.yearBuilt?` · Built ${p.yearBuilt}`:''}`;const coverSubtitle=p.coverSubtitleOverride||autoSubtitle;const coverStats=[];if(p.coverShowPrice)coverStats.push(`<div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">${fmtPriceFull(p.askingPrice)}</div></div>`);if(p.coverShowCap)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">${fmtPct(proformaCap)}</div></div>`);if(p.coverShowNOI)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">${fmt(noiPF)}</div></div>`);if(p.coverShowUnitsSF)coverStats.push(`<div><div class="om-cover-stat-label">Units / SF</div><div class="om-cover-stat-val">${p.units} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')}</div></div>`);const hasCoverPhoto=!!p.coverPhotoData;html+=`<div class="om-cover${hasCoverPhoto?' has-photo':''}"><div class="om-cover-main"><div style="position:relative;z-index:2"><div class="om-cover-brand">${bricCoverLogo()}BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">${esc(coverTitle)}<em>${esc(neighborhoodLabel)} · ${esc(p.city)}</em></div><div class="om-cover-subtitle">${esc(coverSubtitle)}</div></div><div class="om-cover-bottom">${coverStats.join('')}<div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'})}</span></div></div></div>${hasCoverPhoto?`<div class="om-cover-photo-wrap"><img src="${escAttr(p.coverPhotoData)}" alt="Cover property photo"><div class="om-cover-photo-label">Property Photo</div></div>`:''}</div>`}const aptCount=rrItems.filter(x=>x.type==='apartment').length,retCount=rrItems.filter(x=>x.type==='retail').length;let highlightCards=buildHighlightCards(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,aptCount,retCount,neighborhoodLabel});if(sectionsActive.toggleHighlights){const bulletItems=(p.highlightBullets||[]).filter(Boolean).map(item=>`<li>${esc(item)}</li>`).join('');html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="highlights-grid">${highlightCards.join('')}</div>${bulletItems?`<div class="highlight-bullet-heading">Key Highlight Points</div><ul class="highlight-bullet-list">${bulletItems}</ul>`:''}</div><div class="om-section om-highlight-description-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">${p.description.split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div></div>`}if(sectionsActive.toggleRentRoll&&rrItems.length>0){let curTotalMo=0,pfTotalMo=0,totalSF=0;rrItems.forEach(it=>{curTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent);totalSF+=parseNum(it.type==='apartment'?it.unitSqft:it.sqft)});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><table class="rr-display-table"><thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>`;rrItems.forEach(it=>{const isR=it.type==='retail',displaySqft=isR?parseNum(it.sqft):parseNum(it.unitSqft),curMonthly=isR&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent),pfMonthly=isR&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent),curSF=displaySqft>0&&curMonthly>0?((curMonthly*12)/displaySqft).toFixed(2):'—',pfSF=displaySqft>0&&pfMonthly>0?((pfMonthly*12)/displaySqft).toFixed(2):'—',desc=isR?[it.tenant||'Retail',it.expiration?`Exp. ${it.expiration}`:'',it.increase?`${it.increase}% bumps`:'' ].filter(Boolean).join(' · '):`${parseNum(it.bed)}BR / ${parseNum(it.bath)}BA`;const bedroomBadge=!isR?renderBedroomBadge(it):'';html+=`<tr class="${isR?'retail-row':''}"><td><span class="unit-label">${esc(it.unit)}</span>${isR?'<span class="retail-tag">RETAIL</span>':''}</td><td>${bedroomBadge}${esc(desc)}</td><td>${displaySqft?displaySqft.toLocaleString():'—'}</td><td>${curMonthly?fmtFull(curMonthly):'—'}</td><td>${curSF!=='—'?'$'+curSF:'—'}</td><td class="pf-val">${pfMonthly?fmtFull(pfMonthly):'—'}</td><td class="pf-val">${pfSF!=='—'?'$'+pfSF:'—'}</td></tr>`});html+=`<tr class="totals"><td colspan="2">Monthly Total</td><td>${totalSF.toLocaleString()}</td><td>${fmtFull(curTotalMo)}</td><td>—</td><td class="pf-val">${fmtFull(pfTotalMo)}</td><td>—</td></tr><tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">${fmtFull(curTotalMo*12)}</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">${fmtFull(pfTotalMo*12)}</td><td style="color:var(--paper)">—</td></tr></tbody></table>${pfTotalMo>curTotalMo?`<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem"><span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span><span style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:#8a6d20">+${fmtFull((pfTotalMo-curTotalMo)*12)}/yr</span></div>`:''}${renderRentRollInsights(rrItems,curTotalMo*12,pfTotalMo*12)}</div></div>`}if(sectionsActive.toggleFinancial){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossCur)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossCur*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiCur)}</span></div>${p.expenses.map(e=>`<div class="fin-row"><span class="fin-row-name">${esc(e.name)}</span><span class="fin-row-val">(${fmtFull(e.amount)})</span></div>`).join('')}<div class="fin-total"><span>Net Operating Income</span><span>${fmtFull(noiCur)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">${fmtPct(currentCap)}</span></div></div><div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossPF)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossPF*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiPF)}</span></div><div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(${fmtFull(expenseTotal)})</span></div><div class="fin-total gold"><span>Net Operating Income</span><span>${fmtFull(noiPF)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">${fmtPct(proformaCap)}</span></div></div></div></div></div>`}if(sectionsActive.toggleValuation){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="val-card"><div class="val-label">Pro Forma Valuation Range · ${fmtPct(p.marketCap)} Market Cap</div><div class="val-range">${fmtPriceFull(valLow)} — ${fmtPriceFull(valHigh)}</div><div class="val-detail"><div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">${fmtPriceFull(valBase)}</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">${fmtFull(pricePerUnit)}</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">${fmtFull(pricePerSF)}</div></div><div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">${valBase?((p.askingPrice>=valBase?'+':'')+fmtPct(((p.askingPrice-valBase)/valBase)*100)):'—'}</div></div></div></div></div></div>`}if(p.propertyType==='Development'){html+=renderDevelopmentAnalysisPage(p);}if(sectionsActive.toggleLocalMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Local Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Location Overview</div><div class="om-section-heading">${esc(neighborhoodLabel)} · ${esc(p.city)}</div><div class="map-card">${mapQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${mapQuery}&z=${p.localMapZoom||16}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the local map</div>`}</div><div class="disclaimer">${esc(mapMeta)}</div></div></div>`}if(sectionsActive.toggleTransitMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Transit Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Transit Access</div><div class="om-section-heading">Nearby Subway / Transit Connectivity</div><div class="map-helper-bar">${buildTransitLinePills()}</div>${renderTransitDistanceList()}<div class="map-card">${transitQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${transitQuery}&z=${p.transitMapZoom||14}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the transit map</div>`}</div><div class="map-note">Highlighted train lines are based on the submitted customization field. The embedded transit search is centered from the same property geolocation and zoomed wider to show surrounding train access.</div></div></div>`}if(sectionsActive.toggleMarket){const marketDescription=buildMarketOverviewDescription(p,{pricePerUnit,pricePerSF,noiPF,noiCur,currentCap,proformaCap});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">${esc(getSelectedNeighborhoodLabel())} · ${esc(p.city)}</div></div><div class="om-section"><div class="om-section-eyebrow">City: ${esc(getSelectedNeighborhoodLabel())}</div><div class="om-section-heading">${esc(p.trend||'Market Positioning')}</div><div class="om-description">${marketDescription}</div></div><div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ${new Date().getFullYear()} BRIC Studios.</div></div>`}if(sectionsActive.togglePropertyPhotos){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Photo Gallery</div><div class="om-section-heading">Exterior, Interior & Building Detail</div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div><div class="disclaimer">Photo placeholders are shown until uploaded images are connected to the OM export workflow.</div></div></div>`}if(sectionsActive.toggleCustomSections && p.customSections && p.customSections.length){p.customSections.filter(s=>s.include!==false).forEach(s=>{html+=renderCustomSectionPage(s,p);});}if(sectionsActive.toggleContactPage){html+=renderContactPage(p);}html+='</div>';preview.innerHTML=html;applyBricOmFooters()}
+function generate(userRequested=false){if(userRequested) omGenerated=true;const preview=document.getElementById('omPreview');if(!omGenerated){preview.innerHTML='<div class="preview-locked"><div class="empty-icon">◊</div><div class="empty-title">OM Preview Locked</div><div class="empty-sub">Enter your property information, then click Generate OM. After that, edits update the preview live.</div></div>';return;}const p=collectOmData();p.units=rrItems.length ? rrItems.length : (parseNum(p.residentialUnits)+parseNum(p.retailUnits));let grossCur=0,grossPF=0;rrItems.forEach(it=>{const cur=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent):parseNum(it.currentRent)*12;const pf=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent):parseNum(it.proformaRent)*12;grossCur+=cur;grossPF+=pf});if(!rrItems.length){grossCur=p.grossIncome;grossPF=p.grossIncome}grossCur+=p.otherIncome;grossPF+=p.otherIncome;const vacancy=.04,expenseTotal=p.expenses.reduce((s,e)=>s+parseNum(e.amount),0),egiCur=grossCur*(1-vacancy),egiPF=grossPF*(1-vacancy),noiCur=egiCur-expenseTotal,noiPF=egiPF-expenseTotal,currentCap=p.askingPrice>0?(noiCur/p.askingPrice)*100:0,proformaCap=p.askingPrice>0?(noiPF/p.askingPrice)*100:0,valLow=noiPF/((p.marketCap+.75)/100),valBase=noiPF/(p.marketCap/100),valHigh=p.marketCap>1?noiPF/((p.marketCap-.75)/100):valBase,pricePerUnit=p.units>0?p.askingPrice/p.units:0,pricePerSF=p.sqft>0?p.askingPrice/p.sqft:0;if(currentTier!=='growth'){preview.innerHTML=renderFreePropertyDetailsPage(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,grossCur,grossPF});applyBricOmFooters();return;}const neighborhoodLabel=getSelectedNeighborhoodLabel();geocodeSubmittedProperty(p);const localMapTarget=getMapQueryFromGeo(p);const transitMapTarget=getTransitQueryFromGeo(p);const mapQuery=encodeURIComponent(localMapTarget);const transitQuery=encodeURIComponent(transitMapTarget);const mapMeta=mapStatusText();if(!p.askingPrice&&!p.address){preview.innerHTML='<div class="empty-preview"><div class="empty-icon">◊</div><div class="empty-title">OM Preview</div><div class="empty-sub">Add property details and rent roll to begin.</div></div>';return}let html='<div class="om-doc">';if(sectionsActive.toggleCover){const coverTitle=p.coverTitleOverride||p.address||'Property Address';const autoSubtitle=`${p.propertyType||'Property'} · ${p.units} Unit${p.units!==1?'s':''} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')} SF${p.yearBuilt?` · Built ${p.yearBuilt}`:''}`;const coverSubtitle=p.coverSubtitleOverride||autoSubtitle;const coverStats=[];if(p.coverShowPrice)coverStats.push(`<div><div class="om-cover-stat-label">Asking Price</div><div class="om-cover-stat-val">${fmtPriceFull(p.askingPrice)}</div></div>`);if(p.coverShowCap)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma Cap</div><div class="om-cover-stat-val">${fmtPct(proformaCap)}</div></div>`);if(p.coverShowNOI)coverStats.push(`<div><div class="om-cover-stat-label">Pro Forma NOI</div><div class="om-cover-stat-val">${fmt(noiPF)}</div></div>`);if(p.coverShowUnitsSF)coverStats.push(`<div><div class="om-cover-stat-label">Units / SF</div><div class="om-cover-stat-val">${p.units} · ${(p.sqft?Number(p.sqft).toLocaleString():'—')}</div></div>`);const hasCoverPhoto=!!p.coverPhotoData;html+=`<div class="om-cover${hasCoverPhoto?' has-photo':''}"><div class="om-cover-main"><div style="position:relative;z-index:2"><div class="om-cover-brand">${bricCoverLogo()}BRIC Studios</div><div class="om-cover-tagline">Book of Value · Investor Brief</div></div><div class="om-cover-mid"><div class="om-cover-eyebrow">Exclusive Offering</div><div class="om-cover-title">${esc(coverTitle)}<em>${esc(neighborhoodLabel)} · ${esc(p.city)}</em></div><div class="om-cover-subtitle">${esc(coverSubtitle)}</div></div><div class="om-cover-bottom">${coverStats.join('')}<div class="om-cover-presenter"><b>Presented to:</b><br>Qualified Investors<br><span style="color:rgba(255,255,255,0.3);font-size:0.68rem">BRIC Studios · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'})}</span></div></div></div>${hasCoverPhoto?`<div class="om-cover-photo-wrap"><img src="${escAttr(p.coverPhotoData)}" alt="Cover property photo"><div class="om-cover-photo-label">Property Photo</div></div>`:''}</div>`}const aptCount=rrItems.filter(x=>x.type==='apartment').length,retCount=rrItems.filter(x=>x.type==='retail').length;let highlightCards=buildHighlightCards(p,{pricePerUnit,pricePerSF,noiCur,noiPF,currentCap,proformaCap,aptCount,retCount,neighborhoodLabel});if(sectionsActive.toggleHighlights){const bulletItems=(p.highlightBullets||[]).filter(Boolean).map(item=>`<li>${esc(item)}</li>`).join('');html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Investment Highlights</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="highlights-grid">${highlightCards.join('')}</div>${bulletItems?`<div class="highlight-bullet-heading">Key Highlight Points</div><ul class="highlight-bullet-list">${bulletItems}</ul>`:''}</div><div class="om-section om-highlight-description-section"><div class="om-section-eyebrow">Property Description</div><div class="om-description">${p.description.split('\n').filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join('')}</div></div></div>`}if(sectionsActive.toggleRentRoll&&rrItems.length>0){let curTotalMo=0,pfTotalMo=0,totalSF=0;rrItems.forEach(it=>{curTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent);pfTotalMo+=it.type==='retail'&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent);totalSF+=parseNum(it.type==='apartment'?it.unitSqft:it.sqft)});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Rent Roll</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><table class="rr-display-table"><thead><tr><th>Unit</th><th>Description</th><th>SF</th><th>Current</th><th>$/SF</th><th>Pro Forma</th><th>$/SF</th></tr></thead><tbody>`;rrItems.forEach(it=>{const isR=it.type==='retail',displaySqft=isR?parseNum(it.sqft):parseNum(it.unitSqft),curMonthly=isR&&it.frequency==='annual'?parseNum(it.currentRent)/12:parseNum(it.currentRent),pfMonthly=isR&&it.frequency==='annual'?parseNum(it.proformaRent)/12:parseNum(it.proformaRent),curSF=displaySqft>0&&curMonthly>0?((curMonthly*12)/displaySqft).toFixed(2):'—',pfSF=displaySqft>0&&pfMonthly>0?((pfMonthly*12)/displaySqft).toFixed(2):'—',desc=isR?[it.tenant||'Retail',it.expiration?`Exp. ${it.expiration}`:'',it.increase?`${it.increase}% bumps`:'' ].filter(Boolean).join(' · '):`[${esc(it.status||'FM')}] ${parseNum(it.bed)}BR / ${parseNum(it.bath)}BA`;const bedroomBadge=!isR?renderBedroomBadge(it):'';html+=`<tr class="${isR?'retail-row':''}"><td><span class="unit-label">${esc(it.unit)}</span>${isR?'<span class="retail-tag">RETAIL</span>':''}</td><td>${bedroomBadge}${esc(desc)}</td><td>${displaySqft?displaySqft.toLocaleString():'—'}</td><td>${curMonthly?fmtFull(curMonthly):'—'}</td><td>${curSF!=='—'?'$'+curSF:'—'}</td><td class="pf-val">${pfMonthly?fmtFull(pfMonthly):'—'}</td><td class="pf-val">${pfSF!=='—'?'$'+pfSF:'—'}</td></tr>`});html+=`<tr class="totals"><td colspan="2">Monthly Total</td><td>${totalSF.toLocaleString()}</td><td>${fmtFull(curTotalMo)}</td><td>—</td><td class="pf-val">${fmtFull(pfTotalMo)}</td><td>—</td></tr><tr class="totals" style="background:var(--ink);color:var(--paper)"><td colspan="3" style="color:var(--paper)">Annual Total</td><td style="color:var(--paper)">${fmtFull(curTotalMo*12)}</td><td style="color:var(--paper)">—</td><td style="color:var(--gold-light)">${fmtFull(pfTotalMo*12)}</td><td style="color:var(--paper)">—</td></tr></tbody></table>${pfTotalMo>curTotalMo?`<div style="margin-top:1rem;padding:0.85rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem"><span style="font-size:0.82rem;color:var(--ink)">Annual rental upside to market pro forma</span><span style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:#8a6d20">+${fmtFull((pfTotalMo-curTotalMo)*12)}/yr</span></div>`:''}${renderRentRollInsights(rrItems,curTotalMo*12,pfTotalMo*12)}</div></div>`}if(sectionsActive.toggleFinancial){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Financial Summary</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="financial-grid"><div><div class="fin-col-title">Current</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossCur)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossCur*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiCur)}</span></div>${p.expenses.map(e=>`<div class="fin-row"><span class="fin-row-name">${esc(e.name)}</span><span class="fin-row-val">(${fmtFull(e.amount)})</span></div>`).join('')}<div class="fin-total"><span>Net Operating Income</span><span>${fmtFull(noiCur)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Current Cap Rate</span><span class="fin-row-val">${fmtPct(currentCap)}</span></div></div><div><div class="fin-col-title" style="color:#8a6d20;border-bottom-color:var(--gold)">Pro Forma</div><div class="fin-row"><span class="fin-row-name">Gross Scheduled Rent</span><span class="fin-row-val">${fmtFull(grossPF)}</span></div><div class="fin-row"><span class="fin-row-name">Vacancy (4%)</span><span class="fin-row-val">(${fmtFull(grossPF*vacancy)})</span></div><div class="fin-row"><span class="fin-row-name">Effective Gross Income</span><span class="fin-row-val">${fmtFull(egiPF)}</span></div><div class="fin-row"><span class="fin-row-name">Operating Expenses</span><span class="fin-row-val">(${fmtFull(expenseTotal)})</span></div><div class="fin-total gold"><span>Net Operating Income</span><span>${fmtFull(noiPF)}</span></div><div class="fin-row" style="margin-top:0.45rem"><span class="fin-row-name">Pro Forma Cap Rate</span><span class="fin-row-val" style="color:#8a6d20;font-weight:700">${fmtPct(proformaCap)}</span></div></div></div></div></div>`}if(sectionsActive.toggleValuation){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Valuation Analysis</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="val-card"><div class="val-label">Pro Forma Valuation Range · ${fmtPct(p.marketCap)} Market Cap</div><div class="val-range">${fmtPriceFull(valLow)} — ${fmtPriceFull(valHigh)}</div><div class="val-detail"><div><div class="val-detail-label">Base (At Market)</div><div class="val-detail-val">${fmtPriceFull(valBase)}</div></div><div><div class="val-detail-label">Price / Unit</div><div class="val-detail-val">${fmtFull(pricePerUnit)}</div></div><div><div class="val-detail-label">Price / SF</div><div class="val-detail-val">${fmtFull(pricePerSF)}</div></div><div><div class="val-detail-label">Ask vs. Base</div><div class="val-detail-val">${valBase?((p.askingPrice>=valBase?'+':'')+fmtPct(((p.askingPrice-valBase)/valBase)*100)):'—'}</div></div></div></div></div></div>`}if(p.propertyType==='Development'){html+=renderDevelopmentAnalysisPage(p);}if(sectionsActive.toggleLocalMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Local Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Location Overview</div><div class="om-section-heading">${esc(neighborhoodLabel)} · ${esc(p.city)}</div><div class="map-card">${mapQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${mapQuery}&z=${p.localMapZoom||16}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the local map</div>`}</div><div class="disclaimer">${esc(mapMeta)}</div></div></div>`}if(sectionsActive.toggleTransitMap){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Transit Map</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Transit Access</div><div class="om-section-heading">Nearby Subway / Transit Connectivity</div><div class="map-helper-bar">${buildTransitLinePills()}</div>${renderTransitDistanceList()}<div class="map-card">${transitQuery?`<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${transitQuery}&z=${p.transitMapZoom||14}&output=embed"></iframe>`:`<div class="map-placeholder">Enter an address to generate the transit map</div>`}</div><div class="map-note">Highlighted train lines are based on the submitted customization field. The embedded transit search is centered from the same property geolocation and zoomed wider to show surrounding train access.</div></div></div>`}if(sectionsActive.toggleMarket){const marketDescription=buildMarketOverviewDescription(p,{pricePerUnit,pricePerSF,noiPF,noiCur,currentCap,proformaCap});html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Market Overview</div><div class="om-page-hd-brand">${esc(getSelectedNeighborhoodLabel())} · ${esc(p.city)}</div></div><div class="om-section"><div class="om-section-eyebrow">City: ${esc(getSelectedNeighborhoodLabel())}</div><div class="om-section-heading">${esc(p.trend||'Market Positioning')}</div><div class="om-description">${marketDescription}</div></div><div class="disclaimer">CONFIDENTIAL OFFERING MEMORANDUM · Prepared by BRIC Studios for qualified investors. All financial figures derived from owner-entered data and market assumptions. Pro forma projections are directional and not guaranteed. © ${new Date().getFullYear()} BRIC Studios.</div></div>`}if(sectionsActive.togglePropertyPhotos){html+=`<div class="om-page"><div class="om-page-hd"><div class="om-page-hd-title">Property Photos</div><div class="om-page-hd-brand">${esc(p.address)}</div></div><div class="om-section"><div class="om-section-eyebrow">Photo Gallery</div><div class="om-section-heading">Exterior, Interior & Building Detail</div><div class="photo-grid"><div class="photo-placeholder">Exterior / Frontage Photo</div><div class="photo-placeholder">Retail / Lobby Photo</div><div class="photo-placeholder">Residential Unit Photo</div><div class="photo-placeholder">Additional Property Photo</div></div><div class="disclaimer">Photo placeholders are shown until uploaded images are connected to the OM export workflow.</div></div></div>`}if(sectionsActive.toggleCustomSections && p.customSections && p.customSections.length){p.customSections.filter(s=>s.include!==false).forEach(s=>{html+=renderCustomSectionPage(s,p);});}if(sectionsActive.toggleContactPage){html+=renderContactPage(p);}html+='</div>';preview.innerHTML=html;applyBricOmFooters()}
 function loadSample(){document.getElementById('address').value='Property Address Withheld';document.getElementById('city').value='NY';populateSubmarketsForBorough('NY','Brooklyn');document.getElementById('neighborhood').value='Brooklyn';document.getElementById('propertyType').value='Mixed-Use';document.getElementById('yearBuilt').value='1936';document.getElementById('sqft').value='3984';document.getElementById('askingPrice').value='1550000';document.getElementById('residentialUnitCount').value='5';document.getElementById('retailUnitCount').value='1';document.getElementById('unitMixBreakdown').value='5 free-market 2-bedroom apartments plus 1 ground-floor retail space.';document.getElementById('marketCap').value='6.5';document.getElementById('submarketTrend').value='Value-Add Market';document.getElementById('description').value='Mixed-use, cash-flowing asset in a high-density New York City neighborhood. The property features five free-market 2-bedroom apartments plus ground-floor retail anchored by a brand-new 10-year lease with Cricket Wireless.\n\nSituated within NYC Tax Class 2A, the property offers strong day-one cash flow with meaningful upside through rent repositioning.';document.getElementById('grossIncome').value='192960';document.getElementById('otherIncome').value='0';document.getElementById('resCount').value='5';document.getElementById('retailCount').value='1';toggleRentRoll(true);rebuildRowsFromCounts();rrItems.forEach((item,idx)=>{if(item.type==='retail'){item.unit='Ground FL';item.tenant='Cricket Wireless';item.currentRent=3350;item.proformaRent=3450;item.frequency='monthly';item.increase='3.0';item.proformaAuto=false}else{const seed=[{u:'1R',b:2,ba:1,r:3400},{u:'2F',b:2,ba:1,r:2475},{u:'2R',b:2,ba:1,r:2500},{u:'3F',b:2,ba:1,r:2100},{u:'3R',b:2,ba:1,r:2255}][idx];if(seed){item.unit=seed.u;item.bed=seed.b;item.bath=seed.ba;item.currentRent=seed.r;item.proformaRent=autoProformaResidential(seed.b)}}});renderRR();updateSummary();document.getElementById('totalExpenses').value='0';document.getElementById('expenseRows').innerHTML='';DEFAULT_EXPENSES.forEach(e=>addExpenseRow(e.name,e.amount));updateExpenseTotalFromRows();generate()}
 document.addEventListener('input',e=>{if(['address','city','yearBuilt','developmentLotSize','developmentFAR','developmentStreetWidth','developmentZoning','developmentZoningDescription','sqft','askingPrice','residentialUnitCount','retailUnitCount','unitMixBreakdown','grossIncome','otherIncome','totalExpenses','marketCap','description'].includes(e.target.id)){ if(['address','city'].includes(e.target.id)){ propertyGeo={query:'',lat:null,lng:null,status:'idle'}; } if(e.target.id==='address'){ clearTimeout(window.__bricAddressDetectTimer); window.__bricAddressDetectTimer=setTimeout(()=>{detectBoroughAndSubmarketFromAddress();
   handlePropertyTypeChange(); generate();},350); } generate(); }})
@@ -4709,9 +4709,11 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
 
 
 <script>
-/* PATCH: keep cursor focus while editing OM inputs.
-   Previous rent-roll editing re-rendered the entire dropdown on every keystroke.
-   This version updates the underlying data and PSF fields in place, then refreshes the OM preview only when needed. */
+/* PATCH v2: clean rent roll UI.
+   - Removes the redundant "Market Rent" column (Pro Forma is the only target)
+   - Pro Forma auto = Current × 1.03 (3% lift) unless the user overrides it
+   - Adds Status selector: FM (Free Market) / RS (Rent Stabilized) / RC (Rent Control) / P (Program)
+   - Preserves the cursor-stable input pattern (no re-render on each keystroke) */
 (function(){
   function byId(id){ return document.getElementById(id); }
   function n(v){ var x=parseFloat(String(v == null ? '' : v).replace(/[$,]/g,'')); return Number.isFinite(x) ? x : 0; }
@@ -4726,6 +4728,19 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
     clearTimeout(generateTimer);
     generateTimer=setTimeout(function(){ try{ generate(false); }catch(e){ console.warn('generate skipped', e); } }, 180);
   }
+  function calcProformaFromCurrent(current){
+    var c=n(current); if(!c) return 0;
+    return Math.round(c * 1.03);
+  }
+  var STATUSES = [
+    {code:'FM', label:'Free Market'},
+    {code:'RS', label:'Rent Stabilized'},
+    {code:'RC', label:'Rent Control'},
+    {code:'P',  label:'Program'}
+  ];
+  function statusLabel(code){ var s=STATUSES.find(function(x){return x.code===code;}); return s ? s.label : ''; }
+  window.statusLabel = statusLabel;
+
   function updateRowPsf(inputEl, item){
     var row=inputEl && inputEl.closest ? inputEl.closest('.rr-item') : null;
     if(!row || !item) return;
@@ -4740,20 +4755,59 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
       if(curA) curA.value=calcRentPSF(item.currentRent,item.unitSqft,'monthly');
       if(pfA) pfA.value=calcRentPSF(item.proformaRent,item.unitSqft,'monthly');
     }
+    var pfInput=row.querySelector('[data-pf-input="1"]');
+    if(pfInput && item.proformaAuto){
+      // Update pro forma display when current rent changes in auto mode,
+      // but don't clobber the field while user is actively in it
+      if(document.activeElement !== pfInput){
+        pfInput.value = moneyInput(item.proformaRent);
+      }
+    }
   }
 
   window.setRRField = function(id, field, value, inputEl){
     var list=items();
     var it=list.find(function(x){ return String(x.id)===String(id); });
     if(!it) return;
-    var numeric=['sqft','unitSqft','currentRent','marketRent','proformaRent','bed','bath'];
+    var numeric=['sqft','unitSqft','currentRent','proformaRent','bed','bath'];
     it[field]=numeric.indexOf(field)>=0 ? n(value) : value;
-    if(field==='marketRent' && (!it.proformaRent || it.proformaAuto)) it.proformaRent=n(value);
-    if(field==='proformaRent' || field==='marketRent') it.proformaAuto=false;
+    if(field==='proformaRent') it.proformaAuto=false;
+    if(field==='currentRent' && it.proformaAuto !== false){
+      it.proformaAuto = true;
+      it.proformaRent = calcProformaFromCurrent(it.currentRent);
+    }
     updateRowPsf(inputEl, it);
     if(typeof updateSummary==='function') updateSummary();
     softGenerate();
   };
+
+  window.toggleAuto = function(id){
+    var list=items(), it=list.find(function(x){ return String(x.id)===String(id); });
+    if(!it) return;
+    it.proformaAuto = !it.proformaAuto;
+    if(it.proformaAuto) it.proformaRent = calcProformaFromCurrent(it.currentRent);
+    renderRR();
+    if(typeof updateSummary==='function') updateSummary();
+    softGenerate();
+  };
+
+  window.autoGenAll = function(){
+    items().forEach(function(it){
+      it.proformaAuto = true;
+      it.proformaRent = calcProformaFromCurrent(it.currentRent);
+    });
+    renderRR();
+    if(typeof updateSummary==='function') updateSummary();
+    softGenerate();
+  };
+
+  function statusSelectHtml(id, current){
+    return '<select onchange="setRRField('+id+',\'status\',this.value,this)">' +
+      STATUSES.map(function(s){
+        return '<option value="'+s.code+'" '+(current===s.code?'selected':'')+'>'+s.code+' — '+s.label+'</option>';
+      }).join('') +
+      '</select>';
+  }
 
   window.renderRR = function(){
     var wrap=byId('rentRollWrap'), list=items();
@@ -4764,17 +4818,23 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
     }
     var html='';
     list.forEach(function(it){
+      if(it.type!=='retail' && !it.status) it.status='FM';
+      if(typeof it.proformaAuto === 'undefined') it.proformaAuto = !it.proformaRent;
+      if(it.proformaAuto) it.proformaRent = calcProformaFromCurrent(it.currentRent);
+
       var id=it.id, ret=it.type==='retail';
-      html+='<div class="rr-item '+(ret?'retail':'')+'"><div class="rr-item-hd"><span class="rr-unit-badge">'+(ret?'RETAIL':'APT')+'</span><span class="info-note" style="margin:0">All fields are editable.</span><button class="rr-remove" type="button" onclick="clearRRRow('+id+')">×</button></div>';
+      html+='<div class="rr-item '+(ret?'retail':'')+'"><div class="rr-item-hd"><span class="rr-unit-badge">'+(ret?'RETAIL':'APT')+'</span>'
+        + (ret ? '' : '<span class="rr-status-chip rr-status-'+esc(it.status||'FM')+'" title="'+esc(statusLabel(it.status||'FM'))+'">'+esc(it.status||'FM')+'</span>')
+        + '<span class="info-note" style="margin:0">Pro Forma auto-set to Current × 1.03 — override anytime.</span>'
+        + '<button class="rr-remove" type="button" onclick="clearRRRow('+id+')">×</button></div>';
       if(ret){
-        html+='<div class="rr-scroll"><div class="rr-grid-ret" style="grid-template-columns:90px 130px 90px 110px 110px 110px 90px 90px;min-width:960px">'
+        html+='<div class="rr-scroll"><div class="rr-grid-ret" style="grid-template-columns:90px 130px 90px 110px 90px 110px 90px;min-width:820px">'
           +'<div class="rr-field"><label>Space</label><input type="text" value="'+esc(it.unit)+'" oninput="setRRField('+id+',\'unit\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Tenant</label><input type="text" value="'+esc(it.tenant||'')+'" oninput="setRRField('+id+',\'tenant\',this.value,this)"></div>'
           +'<div class="rr-field"><label>SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.sqft)+'" oninput="setRRField('+id+',\'sqft\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="retail-cur" type="text" value="'+calcRentPSF(it.currentRent,it.sqft,it.frequency)+'" readonly></div>'
-          +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
-          +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Pro Forma <button type="button" class="section-action rr-auto-btn" onclick="toggleAuto('+id+')">'+(it.proformaAuto?'AUTO':'MANUAL')+'</button></label><input data-pf-input="1" type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>PF $/SF</label><input data-psf="retail-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.sqft,it.frequency)+'" readonly></div>'
           +'</div><div class="rr-grid-ret-second">'
           +'<div class="rr-field"><label>Frequency</label><select onchange="setRRField('+id+',\'frequency\',this.value,this)"><option value="monthly" '+(it.frequency==='monthly'?'selected':'')+'>Monthly</option><option value="annual" '+(it.frequency==='annual'?'selected':'')+'>Annual</option></select></div>'
@@ -4782,15 +4842,15 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
           +'<div class="rr-field"><label>Annual Inc. %</label><input type="text" inputmode="decimal" value="'+moneyInput(it.increase||'')+'" oninput="setRRField('+id+',\'increase\',this.value,this)"></div>'
           +'</div></div>';
       }else{
-        html+='<div class="rr-scroll"><div class="rr-grid-res" style="grid-template-columns:80px 85px 85px 95px 110px 110px 110px 90px 90px;min-width:930px">'
+        html+='<div class="rr-scroll"><div class="rr-grid-res" style="grid-template-columns:80px 130px 70px 70px 90px 110px 90px 110px 90px;min-width:920px">'
           +'<div class="rr-field"><label>Unit</label><input type="text" value="'+esc(it.unit)+'" oninput="setRRField('+id+',\'unit\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Status</label>'+statusSelectHtml(id, it.status||'FM')+'</div>'
           +'<div class="rr-field"><label>Beds</label><select onchange="setRRField('+id+',\'bed\',this.value,this)">'+[0,1,2,3,4].map(function(v){return '<option value="'+v+'" '+(Number(it.bed)===v?'selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
           +'<div class="rr-field"><label>Baths</label><select onchange="setRRField('+id+',\'bath\',this.value,this)">'+[1,1.5,2,2.5,3,3.5,4].map(function(v){return '<option value="'+v+'" '+(Number(it.bath)===v?'selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
           +'<div class="rr-field"><label>Unit SF</label><input type="text" inputmode="decimal" value="'+moneyInput(it.unitSqft)+'" oninput="setRRField('+id+',\'unitSqft\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Current Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.currentRent)+'" oninput="setRRField('+id+',\'currentRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>Curr $/SF</label><input data-psf="apt-cur" type="text" value="'+calcRentPSF(it.currentRent,it.unitSqft,'monthly')+'" readonly></div>'
-          +'<div class="rr-field"><label>Market Rent</label><input type="text" inputmode="decimal" value="'+moneyInput(it.marketRent)+'" oninput="setRRField('+id+',\'marketRent\',this.value,this)"></div>'
-          +'<div class="rr-field"><label>Pro Forma</label><input type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
+          +'<div class="rr-field"><label>Pro Forma <button type="button" class="section-action rr-auto-btn" onclick="toggleAuto('+id+')">'+(it.proformaAuto?'AUTO':'MANUAL')+'</button></label><input data-pf-input="1" type="text" inputmode="decimal" value="'+moneyInput(it.proformaRent)+'" oninput="setRRField('+id+',\'proformaRent\',this.value,this)"></div>'
           +'<div class="rr-field"><label>PF $/SF</label><input data-psf="apt-pf" type="text" value="'+calcRentPSF(it.proformaRent,it.unitSqft,'monthly')+'" readonly></div>'
           +'</div></div>';
       }
@@ -4799,7 +4859,6 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
     wrap.innerHTML=html;
   };
 
-  // Expense rows should also not create any rerender/focus jump. Keep them simple and debounce the preview update.
   window.addExpenseRow = function(name, amount){
     name=name||''; amount=amount||'';
     if(typeof expenseId==='undefined') window.expenseId=0; else expenseId++;
@@ -4816,6 +4875,24 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
   if(typeof oldUpdateExpenseTotal==='function'){
     window.updateExpenseTotalFromRows=function(){ oldUpdateExpenseTotal(); softGenerate(); };
   }
+
+  function injectStyles(){
+    if(byId('rrStatusChipStyles')) return;
+    var s=document.createElement('style');
+    s.id='rrStatusChipStyles';
+    s.textContent = ''
+      + '.rr-status-chip{display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.54rem;letter-spacing:.08em;font-weight:700;padding:.18rem .5rem;border-radius:5px;text-transform:uppercase;line-height:1;border:1px solid rgba(255,255,255,.12);margin-right:.4rem}'
+      + '.rr-status-FM{background:rgba(201,168,76,.15);color:#c9a84c;border-color:rgba(201,168,76,.35)}'
+      + '.rr-status-RS{background:rgba(120,160,210,.16);color:#a8c4e0;border-color:rgba(120,160,210,.4)}'
+      + '.rr-status-RC{background:rgba(210,130,130,.16);color:#e0a8a8;border-color:rgba(210,130,130,.4)}'
+      + '.rr-status-P{background:rgba(140,200,160,.16);color:#a8e0bc;border-color:rgba(140,200,160,.4)}'
+      + '.rr-auto-btn{padding:.05rem .35rem!important;font-size:.48rem!important;float:right;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:#c9a84c;border-radius:3px;cursor:pointer}'
+      + '.rr-auto-btn:hover{background:rgba(201,168,76,.2)}'
+      + '.rr-display-table td.status-cell{font-family:var(--mono);font-size:.65rem;letter-spacing:.05em;font-weight:700}';
+    document.head.appendChild(s);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',injectStyles);
+  else injectStyles();
 })();
 </script>
 
@@ -6253,6 +6330,740 @@ document.addEventListener('input', function(e){
     // Let other scripts finish wiring, then debounce
     setTimeout(debouncePostProcessors, 500);
   });
+})();
+
+</script>
+
+
+
+<script>
+/* =========================================================================
+   BRIC OM Studio — Phase 1: Beginner-friendliness pass (2026-05-12)
+   Adds (all additive, no existing UI removed):
+   - Glossary tooltips on jargon-heavy field labels (? icon, hover/tap reveals)
+   - Progress checklist pinned at top of left panel
+   - Smart defaults that fire after public records load
+   - Sanity-check warnings (yellow notes) for off-pattern inputs
+   ========================================================================= */
+(function(){
+  'use strict';
+  function byId(id){ return document.getElementById(id); }
+  function num(v){ var n=parseFloat(String(v==null?'':v).replace(/[$,%\s,]/g,'')); return Number.isFinite(n)?n:0; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+
+  // =====================================================================
+  // GLOSSARY — short label + medium explanation for each term
+  // =====================================================================
+  // Keyed by the EXACT label text (case-insensitive trim match) so we don't
+  // have to modify the existing form structure. The tooltip injector scans
+  // <label> elements and attaches a ? icon where the label text matches.
+  var GLOSSARY = {
+    'property address': {
+      title: 'Property Address',
+      body: 'The street address of the building. For NYC properties, we use this to auto-pull public records (PLUTO, ACRIS, DOF, HPD). For other markets, we use it for geocoding the map.'
+    },
+    'property type': {
+      title: 'Property Type',
+      body: 'Mixed-Use = residential apartments plus ground-floor retail or commercial. Multifamily = 2+ residential units. Single Family Rental = one home rented to a tenant. Development = a vacant lot or teardown site valued for what could be built on it.'
+    },
+    'year built': {
+      title: 'Year Built',
+      body: 'When the building was originally constructed. For NYC, this drives whether units may be rent-stabilized (typically pre-1974 buildings of 6+ units). Auto-fills from PLUTO when address is recognized.'
+    },
+    'asking price': {
+      title: 'Asking Price',
+      body: 'The price the seller is offering the property at. The cap rate, price-per-unit, and price-per-SF on the OM are all derived from this number.'
+    },
+    'market cap rate': {
+      title: 'Market Cap Rate',
+      body: 'Net Operating Income (NOI) ÷ price, expressed as a percentage. A 6% cap means the property earns 6% of its price annually, before financing. Higher = riskier or higher-yielding asset class; lower = safer or pricier. Use the prevailing cap rate for your submarket and property type.'
+    },
+    'cap rate': {
+      title: 'Cap Rate',
+      body: 'Net Operating Income ÷ price, expressed as a percentage. The annual unlevered yield on the property.'
+    },
+    'gross rental income (annual)': {
+      title: 'Gross Rental Income',
+      body: 'Total annual rent collected from all units before any expenses or vacancy. For accuracy, switch to the itemized rent roll so this auto-calculates.'
+    },
+    'additional income (annual)': {
+      title: 'Additional Income',
+      body: 'Non-rent income like laundry, parking, storage, late fees, or pet rent. Annual figure. Leave at 0 if none.'
+    },
+    'total expenses (annual)': {
+      title: 'Total Expenses',
+      body: 'All operating expenses for one year: real-estate taxes, insurance, water/sewer, heat, common electric, repairs, management. Excludes mortgage payments and depreciation.'
+    },
+    'pro forma': {
+      title: 'Pro Forma',
+      body: 'Projected income after the rent roll stabilizes — what the property could earn at market rents. We default to Current Rent × 1.03 (a conservative 3% lift). Edit any unit to set a custom target.'
+    },
+    'current rent': {
+      title: 'Current Rent',
+      body: 'In-place rent on the lease today. Use the actual monthly rent the tenant pays, not market rate.'
+    },
+    'market rent': {
+      title: 'Market Rent',
+      body: 'What the unit could rent for if leased today at market rate. We use this as the basis for Pro Forma.'
+    },
+    'status': {
+      title: 'Unit Status',
+      body: 'FM = Free Market (lease terms unrestricted). RS = Rent Stabilized (NYC regulation, tightly capped increases). RC = Rent Control (pre-1947 occupants, very limited turnover). P = Program (Section 8, HPD, NYCHA, or other subsidy). The mix dramatically affects valuation.'
+    },
+    'beds': {
+      title: 'Bedrooms',
+      body: 'Number of bedrooms. Used to estimate Pro Forma rent if you choose AUTO mode and to render the unit-mix donut on the OM.'
+    },
+    'baths': {
+      title: 'Bathrooms',
+      body: 'Number of bathrooms. Half-baths count as 0.5.'
+    },
+    'unit sf': {
+      title: 'Unit SF',
+      body: 'Square footage of this individual unit. Used to compute $/SF on the rent roll. If unknown, leave blank — Gross Building SF still works at the building level.'
+    },
+    'curr $/sf': {
+      title: 'Current $/SF',
+      body: 'Annualized current rent ÷ Unit SF. Lets you compare rent productivity across different unit sizes. Auto-calculated.'
+    },
+    'pf $/sf': {
+      title: 'Pro Forma $/SF',
+      body: 'Annualized pro-forma rent ÷ Unit SF. Auto-calculated.'
+    },
+    'annual inc. %': {
+      title: 'Annual Increase %',
+      body: 'Built-in annual rent escalation in the retail lease (e.g., 3% bumps). Shows on the rent roll page so buyers see the lease grows year over year.'
+    },
+    'lease exp.': {
+      title: 'Lease Expiration',
+      body: 'When the retail tenant\'s current lease ends. Important for buyers: a long remaining term means stable income; a short term means lease-up risk or repositioning opportunity.'
+    },
+    'tax class': {
+      title: 'Tax Class (NYC)',
+      body: 'NYC property tax category. Class 1 = 1–3 unit homes (~20% rate). Class 2 = 4+ unit residential (~12.5%). Class 2A/2B/2C = smaller residentials with special caps. Class 4 = commercial (~10.65%). Determines how taxes are calculated.'
+    },
+    'block & lot': {
+      title: 'Block & Lot (NYC)',
+      body: 'NYC tax-lot identifier used in PLUTO, ACRIS, and DOF databases. Auto-filled from the address. The full BBL is borough+block+lot, used internally to fetch records.'
+    },
+    'annual estimated taxes': {
+      title: 'Annual Estimated Taxes',
+      body: 'Estimated annual property tax bill. We compute this from the DOF assessed value × the tax-class rate. Marked "(est.)" because the actual bill depends on exemptions, abatements (J-51, 421a), and the specific assessment year.'
+    },
+    'gross building sf': {
+      title: 'Gross Building SF',
+      body: 'Above-ground square footage of the building as recorded by PLUTO. Used in price-per-SF and rent-per-SF metrics. Always verify against measured floor plans for diligence.'
+    },
+    'lot sf': {
+      title: 'Lot SF',
+      body: 'Land area of the tax lot in square feet. Critical for development sites; informational for stabilized buildings.'
+    },
+    'zoning': {
+      title: 'Zoning',
+      body: 'NYC zoning designation (e.g., R6, C2-3) that controls what can be built and how. Auto-filled from PLUTO. For development sites, combine with FAR to compute buildable SF.'
+    },
+    'land use': {
+      title: 'Land Use',
+      body: 'PLUTO category describing how the lot is currently used (residential walk-up, mixed-use, commercial, etc.). Different from zoning, which controls what\'s allowed.'
+    },
+    'building class': {
+      title: 'Building Class',
+      body: 'DOF property classification code (e.g., C1 = walk-up apartments, S9 = mixed-use, K4 = retail). Used by the city for valuation buckets and bond underwriting.'
+    },
+    'last sale (acris)': {
+      title: 'Last Sale (ACRIS)',
+      body: 'Most recent recorded deed transfer per ACRIS — the NYC deed registry. Note: $0 or $10 transfers are often intra-family or entity transfers, not arm\'s-length sales.'
+    },
+    'current owner (acris)': {
+      title: 'Current Owner (ACRIS)',
+      body: 'Name on the most recent deed. Often an LLC for investment properties — the true beneficial owner may not be public.'
+    },
+    'transit lines to highlight': {
+      title: 'Transit Lines To Highlight',
+      body: 'Subway / train letters or numbers nearby (e.g., L, M, J, Z). Shown on the Transit Map page and used in the auto-generated description. Mention only lines truly within walking distance.'
+    },
+    'submarket': {
+      title: 'Submarket',
+      body: 'Sub-neighborhood designation finer than borough or city (e.g., "Bushwick" within Brooklyn). Used in market positioning copy and shown on the cover.'
+    }
+  };
+
+  function injectStyles(){
+    if(byId('p1-glossary-styles')) return;
+    var s = document.createElement('style');
+    s.id = 'p1-glossary-styles';
+    s.textContent = ''
+      // -- Tooltips ----------------------------------------------------
+      + '.p1-help{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;'
+      +   'background:rgba(201,168,76,.12);color:#c9a84c;font-family:var(--mono);font-size:9px;font-weight:700;'
+      +   'margin-left:.35rem;cursor:help;border:1px solid rgba(201,168,76,.3);vertical-align:middle;'
+      +   'transition:background .15s,transform .15s;position:relative;line-height:1;user-select:none}'
+      + '.p1-help:hover{background:rgba(201,168,76,.25);transform:scale(1.1)}'
+      + '.p1-tip{position:fixed;background:#181b1a;color:var(--paper);border:1px solid rgba(201,168,76,.35);'
+      +   'border-radius:8px;padding:.75rem .9rem;font-family:var(--sans);font-size:.78rem;line-height:1.5;'
+      +   'max-width:280px;z-index:10000;box-shadow:0 12px 32px rgba(0,0,0,.5);pointer-events:none;opacity:0;'
+      +   'transition:opacity .15s;letter-spacing:0;text-transform:none;font-weight:400}'
+      + '.p1-tip.visible{opacity:1}'
+      + '.p1-tip-title{font-family:var(--serif);font-size:.88rem;font-weight:700;color:#e8d08a;'
+      +   'margin-bottom:.35rem;letter-spacing:0;text-transform:none}'
+      + '.p1-tip-body{color:rgba(255,255,255,.78);font-weight:400}'
+      // -- Progress checklist ------------------------------------------
+      + '.p1-checklist{margin:0 0 1rem;padding:.85rem 1rem;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(201,168,76,.02));'
+      +   'border:1px solid rgba(201,168,76,.22);border-radius:10px;font-family:var(--sans);font-size:.74rem}'
+      + '.p1-checklist-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}'
+      + '.p1-checklist-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;'
+      +   'color:#e8d08a;font-weight:700}'
+      + '.p1-checklist-progress{font-family:var(--mono);font-size:.68rem;color:rgba(255,255,255,.55)}'
+      + '.p1-checklist-progress b{color:#c9a84c;font-weight:700}'
+      + '.p1-checklist-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-bottom:.7rem;overflow:hidden}'
+      + '.p1-checklist-bar-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8d08a);transition:width .3s ease;border-radius:2px}'
+      + '.p1-checklist-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:.18rem .8rem}'
+      + '.p1-checklist-item{display:flex;align-items:center;gap:.4rem;padding:.15rem 0;color:rgba(255,255,255,.5);'
+      +   'cursor:pointer;transition:color .15s;font-size:.72rem;line-height:1.3}'
+      + '.p1-checklist-item:hover{color:var(--paper)}'
+      + '.p1-checklist-item.done{color:rgba(255,255,255,.78)}'
+      + '.p1-check-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;'
+      +   'border-radius:50%;font-size:9px;flex-shrink:0;line-height:1}'
+      + '.p1-check-icon.todo{background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.12)}'
+      + '.p1-check-icon.done{background:rgba(201,168,76,.22);color:#c9a84c;border:1px solid rgba(201,168,76,.4)}'
+      + '.p1-check-icon.partial{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.3)}'
+      // -- Required marker ---------------------------------------------
+      + '.p1-required::after{content:" *";color:#c9a84c;font-weight:700}'
+      // -- Sanity warnings ---------------------------------------------
+      + '.p1-warn-banner{margin:.5rem 0;padding:.5rem .75rem;background:rgba(212,165,93,.08);'
+      +   'border:1px solid rgba(212,165,93,.28);border-left:3px solid #d4a55d;border-radius:6px;'
+      +   'font-size:.72rem;color:rgba(255,255,255,.7);line-height:1.5;display:flex;gap:.5rem;align-items:flex-start}'
+      + '.p1-warn-banner b{color:#e8d08a;font-weight:600}'
+      + '.p1-warn-icon{flex-shrink:0;font-family:var(--mono);font-size:.85rem;color:#d4a55d}'
+      // -- Smart defaults badge ----------------------------------------
+      + '.p1-suggested-pill{display:inline-block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;'
+      +   'text-transform:uppercase;padding:.1rem .35rem;border-radius:3px;background:rgba(120,170,140,.16);'
+      +   'color:#a8d8b8;border:1px solid rgba(120,170,140,.35);margin-left:.4rem;vertical-align:middle}';
+    document.head.appendChild(s);
+  }
+
+  // =====================================================================
+  // TOOLTIP injector — attaches ? icons next to labels matching glossary
+  // =====================================================================
+  var tipEl = null;
+  function ensureTipEl(){
+    if(tipEl) return tipEl;
+    tipEl = document.createElement('div');
+    tipEl.className = 'p1-tip';
+    document.body.appendChild(tipEl);
+    return tipEl;
+  }
+  function showTip(target, key){
+    var g = GLOSSARY[key];
+    if(!g) return;
+    var tip = ensureTipEl();
+    tip.innerHTML = '<div class="p1-tip-title">'+esc(g.title)+'</div><div class="p1-tip-body">'+esc(g.body)+'</div>';
+    // Position near the target, but constrain to viewport
+    var r = target.getBoundingClientRect();
+    var tipW = 280, gap = 8;
+    var left = r.left + r.width + gap;
+    var top = r.top - 4;
+    // If overflows right edge, flip to left of target
+    if(left + tipW > window.innerWidth - 16){
+      left = r.left - tipW - gap;
+    }
+    // Constrain vertical
+    if(top + 200 > window.innerHeight) top = window.innerHeight - 220;
+    if(top < 8) top = 8;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    requestAnimationFrame(function(){ tip.classList.add('visible'); });
+  }
+  function hideTip(){ if(tipEl) tipEl.classList.remove('visible'); }
+
+  function attachTooltipIcons(scope){
+    scope = scope || document;
+    var labels = scope.querySelectorAll('label');
+    labels.forEach(function(label){
+      if(label.dataset.p1Wired) return;
+      // Get the text content excluding any nested elements
+      var rawText = '';
+      label.childNodes.forEach(function(n){
+        if(n.nodeType === 3) rawText += n.textContent;
+      });
+      var key = rawText.trim().toLowerCase().replace(/\s+/g,' ');
+      // Also strip trailing colons
+      key = key.replace(/:$/,'').trim();
+      if(!GLOSSARY[key]) return;
+      label.dataset.p1Wired = '1';
+      var icon = document.createElement('span');
+      icon.className = 'p1-help';
+      icon.textContent = '?';
+      icon.setAttribute('aria-label', 'Help: ' + GLOSSARY[key].title);
+      icon.setAttribute('tabindex', '0');
+      icon.addEventListener('mouseenter', function(){ showTip(icon, key); });
+      icon.addEventListener('mouseleave', hideTip);
+      icon.addEventListener('focus', function(){ showTip(icon, key); });
+      icon.addEventListener('blur', hideTip);
+      icon.addEventListener('click', function(e){ e.preventDefault(); showTip(icon, key); setTimeout(hideTip, 4000); });
+      label.appendChild(icon);
+    });
+  }
+
+  // Watch for dynamically rendered labels (e.g., rent roll rows re-render)
+  function startTooltipObserver(){
+    attachTooltipIcons(document);
+    var obs = new MutationObserver(function(mutations){
+      var needsScan = false;
+      mutations.forEach(function(m){
+        m.addedNodes.forEach(function(n){
+          if(n.nodeType === 1 && (n.querySelectorAll && n.querySelectorAll('label').length)) needsScan = true;
+        });
+      });
+      if(needsScan){
+        // Debounce
+        clearTimeout(startTooltipObserver._t);
+        startTooltipObserver._t = setTimeout(function(){ attachTooltipIcons(document); }, 80);
+      }
+    });
+    obs.observe(document.body, {childList:true, subtree:true});
+  }
+
+  // =====================================================================
+  // PROGRESS CHECKLIST
+  // =====================================================================
+  // Each item: { id, label, sectionTarget, check: () => {status} }
+  // status = 'done' | 'partial' | 'todo'
+  var checklistItems = [
+    { id:'address', label:'Address',
+      target:'address',
+      check:function(){ return (val('address').trim().length >= 6) ? 'done' : 'todo'; } },
+    { id:'records', label:'Records pulled',
+      target:'fetchPublicRecordsBtn',
+      check:function(){
+        // Done if any of the PR fields are filled
+        var any = ['prYearBuilt','prGrossBuildingSf','prResidentialUnits','prTaxClass','prBlockLot']
+          .some(function(id){ return val(id).trim() !== ''; });
+        return any ? 'done' : 'todo';
+      } },
+    { id:'type', label:'Property type',
+      target:'propertyType',
+      check:function(){ return val('propertyType') ? 'done' : 'todo'; } },
+    { id:'price', label:'Asking price',
+      target:'askingPrice',
+      check:function(){ return num(val('askingPrice')) > 0 ? 'done' : 'todo'; } },
+    { id:'cap', label:'Market cap rate',
+      target:'marketCap',
+      check:function(){ return num(val('marketCap')) > 0 ? 'done' : 'todo'; } },
+    { id:'rentroll', label:'Rent roll',
+      target:'resCount',
+      check:function(){
+        var items = (typeof rrItems !== 'undefined') ? rrItems : (window.rrItems || []);
+        if(!items.length){
+          // Fall back to single gross income field
+          return num(val('grossIncome')) > 0 ? 'done' : 'todo';
+        }
+        var filled = items.filter(function(it){ return num(it.currentRent) > 0; }).length;
+        if(filled === items.length) return 'done';
+        if(filled > 0) return 'partial';
+        return 'todo';
+      },
+      detail:function(){
+        var items = (typeof rrItems !== 'undefined') ? rrItems : (window.rrItems || []);
+        if(!items.length) return '';
+        var filled = items.filter(function(it){ return num(it.currentRent) > 0; }).length;
+        return filled + '/' + items.length;
+      } },
+    { id:'expenses', label:'Expenses',
+      target:'totalExpenses',
+      check:function(){
+        if(num(val('totalExpenses')) > 0) return 'done';
+        // Check itemized expense rows
+        var expWrap = byId('expenseRows');
+        if(expWrap){
+          var inputs = expWrap.querySelectorAll('input[type="text"]');
+          var hasAmount = Array.prototype.slice.call(inputs).some(function(i){ return num(i.value) > 0; });
+          if(hasAmount) return 'done';
+        }
+        return 'todo';
+      } },
+    { id:'description', label:'Description',
+      target:'description',
+      check:function(){ return val('description').trim().length > 40 ? 'done' : 'todo'; } }
+  ];
+
+  function val(id){ var el=byId(id); return el ? (el.value||'') : ''; }
+
+  function buildChecklistHtml(){
+    var done = 0, total = checklistItems.length;
+    var html = '<div class="p1-checklist-hd">' +
+      '<div class="p1-checklist-title">◇ Getting Started</div>' +
+      '<div class="p1-checklist-progress"><b id="p1-prog-num">0</b>/'+total+' complete</div>' +
+    '</div>' +
+    '<div class="p1-checklist-bar"><div class="p1-checklist-bar-fill" id="p1-prog-bar" style="width:0%"></div></div>' +
+    '<ul class="p1-checklist-list">';
+    checklistItems.forEach(function(item){
+      var status = item.check();
+      if(status === 'done') done++;
+      var iconChar = status === 'done' ? '✓' : (status === 'partial' ? '◐' : '○');
+      var detail = item.detail ? (' ' + item.detail()) : '';
+      html += '<li class="p1-checklist-item '+(status==='done'?'done':'')+'" data-target="'+esc(item.target)+'" data-id="'+esc(item.id)+'">'+
+        '<span class="p1-check-icon '+status+'">'+iconChar+'</span>'+
+        '<span>'+esc(item.label)+detail+'</span>'+
+      '</li>';
+    });
+    html += '</ul>';
+    return {html:html, done:done, total:total};
+  }
+
+  function renderChecklist(){
+    var host = byId('p1-checklist');
+    if(!host) return;
+    var built = buildChecklistHtml();
+    host.innerHTML = built.html;
+    var pct = built.total ? Math.round((built.done/built.total)*100) : 0;
+    var bar = byId('p1-prog-bar'); if(bar) bar.style.width = pct + '%';
+    var pn = byId('p1-prog-num'); if(pn) pn.textContent = built.done;
+    // Wire item clicks
+    host.querySelectorAll('.p1-checklist-item').forEach(function(li){
+      li.addEventListener('click', function(){
+        var target = li.dataset.target;
+        var el = byId(target);
+        if(!el) return;
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+        // Brief highlight pulse
+        var orig = el.style.boxShadow;
+        el.style.transition = 'box-shadow .5s';
+        el.style.boxShadow = '0 0 0 3px rgba(201,168,76,.5)';
+        setTimeout(function(){ el.style.boxShadow = orig; }, 800);
+        if(el.focus) try{ el.focus(); }catch(e){}
+      });
+    });
+  }
+
+  function insertChecklist(){
+    if(byId('p1-checklist')) return;
+    var panelHeader = document.querySelector('.panel-left .panel-header');
+    if(!panelHeader) return;
+    var box = document.createElement('div');
+    box.id = 'p1-checklist';
+    box.className = 'p1-checklist';
+    box.innerHTML = '<div class="p1-checklist-hd"><div class="p1-checklist-title">◇ Getting Started</div></div>';
+    // Insert after panel header, before the first form section
+    panelHeader.insertAdjacentElement('afterend', box);
+    renderChecklist();
+  }
+
+  // Re-render on any input change (debounced)
+  var checklistTimer = null;
+  function scheduleChecklistUpdate(){
+    clearTimeout(checklistTimer);
+    checklistTimer = setTimeout(renderChecklist, 250);
+  }
+
+  // =====================================================================
+  // SMART DEFAULTS — fired by an external hook after public records load
+  // =====================================================================
+  function applySmartDefaults(){
+    var changes = [];
+
+    // 1. Market Cap Rate suggestion based on property type
+    var capEl = byId('marketCap');
+    if(capEl && !num(capEl.value)){
+      var propType = val('propertyType');
+      var capByType = {
+        'Mixed-Use': 6.0,
+        'Multifamily': 5.5,
+        'Single Family Rental': 6.5,
+        'Development': 5.0
+      };
+      var cap = capByType[propType] || 6.0;
+      capEl.value = cap;
+      capEl.classList.add('pr-autofilled');
+      tagSuggested(capEl, 'Suggested');
+      changes.push('Market cap rate: ' + cap + '%');
+    }
+
+    // 2. Expense estimates if expenses are empty
+    var totalExpEl = byId('totalExpenses');
+    var resUnits = num(val('residentialUnitCount'));
+    var comUnits = num(val('retailUnitCount'));
+    var sqft = num(val('sqft'));
+    var totalUnits = resUnits + comUnits;
+    var grossInc = num(val('grossIncome'));
+    var prTaxes = num(val('prEstimatedTaxes'));
+
+    var hasExpenses = num(totalExpEl ? totalExpEl.value : 0) > 0;
+    var expRows = byId('expenseRows');
+    if(expRows){
+      var anyRowAmount = Array.prototype.slice.call(expRows.querySelectorAll('input[type="text"]'))
+        .some(function(i){ return num(i.value) > 0; });
+      if(anyRowAmount) hasExpenses = true;
+    }
+
+    if(!hasExpenses && totalUnits > 0){
+      // Build estimated expense lines
+      var estTaxes = prTaxes || (sqft ? sqft * 4 : totalUnits * 4500);
+      var estInsurance = Math.max(totalUnits * 1200, (sqft||0) * 0.85);
+      var estWater = totalUnits * 900;
+      var estHeat = (sqft||0) * 1.15;
+      var estElectric = (sqft||0) * 0.22;
+      var estRepairs = Math.max(totalUnits * 750, (sqft||0) * 0.65);
+      var estManagement = grossInc ? grossInc * 0.04 : totalUnits * 1500;
+
+      if(typeof addExpenseRow === 'function'){
+        // Clear any blank rows first
+        if(expRows) expRows.innerHTML = '';
+        if(typeof window.expenseId !== 'undefined') window.expenseId = 0;
+        addExpenseRow('Real Estate Taxes (est.)', Math.round(estTaxes));
+        addExpenseRow('Insurance (est.)', Math.round(estInsurance));
+        addExpenseRow('Water & Sewer (est.)', Math.round(estWater));
+        addExpenseRow('Heat / Fuel (est.)', Math.round(estHeat));
+        addExpenseRow('Common Electric (est.)', Math.round(estElectric));
+        addExpenseRow('Repairs & Maintenance (est.)', Math.round(estRepairs));
+        addExpenseRow('Management (est.)', Math.round(estManagement));
+        changes.push('Estimated expenses populated (7 line items)');
+      }
+    }
+
+    // 3. Starter description if blank
+    var descEl = byId('description');
+    if(descEl && descEl.value.trim().length < 20){
+      var addr = val('address');
+      var nbhd = val('neighborhood');
+      var year = val('yearBuilt');
+      var sf = val('sqft');
+      var propType2 = val('propertyType') || 'Property';
+      var resU = num(val('residentialUnitCount'));
+      var comU = num(val('retailUnitCount'));
+      var lines = [];
+      var unitDesc = '';
+      if(resU && comU) unitDesc = resU + ' residential unit' + (resU!==1?'s':'') + ' over ' + comU + ' commercial space' + (comU!==1?'s':'');
+      else if(resU) unitDesc = resU + '-unit ' + (resU>=5?'multifamily':'residential building');
+      else if(comU) unitDesc = comU + '-space commercial property';
+      else unitDesc = 'investment property';
+      var l1 = propType2 + ' investment opportunity' +
+        (nbhd ? ' in ' + nbhd : '') +
+        (addr ? ' at ' + addr : '') + '. ' +
+        'The property features ' + unitDesc + (sf ? ' across approximately ' + Number(sf).toLocaleString() + ' gross SF' : '') +
+        (year ? ', built in ' + year : '') + '.';
+      var l2 = 'Replace this auto-generated starter with positioning specific to the asset: income story, lease structure, recent capex, location drivers, and the upside narrative.';
+      descEl.value = l1 + '\n\n' + l2;
+      descEl.classList.add('pr-autofilled');
+      changes.push('Starter description');
+    }
+
+    // Update everything downstream
+    if(typeof updateExpenseTotalFromRows === 'function') updateExpenseTotalFromRows();
+    if(typeof updateSummary === 'function') updateSummary();
+    if(typeof omGenerated !== 'undefined' && omGenerated && typeof generate === 'function') generate(false);
+    renderChecklist();
+
+    if(changes.length){
+      console.log('[BRIC Smart Defaults] applied:', changes);
+    }
+    return changes;
+  }
+
+  function tagSuggested(el, text){
+    if(!el || !el.parentElement) return;
+    // Don't add twice
+    if(el.parentElement.querySelector('.p1-suggested-pill')) return;
+    // Find the matching label by going up to .field then finding the label
+    var fieldWrap = el.closest('.field') || el.parentElement;
+    var label = fieldWrap && fieldWrap.querySelector('label');
+    if(label && !label.querySelector('.p1-suggested-pill')){
+      var pill = document.createElement('span');
+      pill.className = 'p1-suggested-pill';
+      pill.textContent = text || 'Suggested';
+      label.appendChild(pill);
+      // Remove the pill if user edits the field
+      var clear = function(){
+        if(pill.parentNode) pill.parentNode.removeChild(pill);
+        el.removeEventListener('input', clear);
+        el.removeEventListener('change', clear);
+      };
+      el.addEventListener('input', clear);
+      el.addEventListener('change', clear);
+    }
+  }
+
+  // Hook smart defaults to fire AFTER NYC records load.
+  // The records integration script runs `enableSectionToggle('togglePublicRecordPage')`
+  // as the last step of a successful pull, so we listen for changes to PR fields.
+  function watchForRecordsLoaded(){
+    var keyFields = ['prYearBuilt','prGrossBuildingSf','prResidentialUnits','prTaxClass'];
+    var fired = false;
+    function maybeFire(){
+      if(fired) return;
+      var hasData = keyFields.some(function(id){ return val(id).trim() !== ''; });
+      if(hasData){
+        fired = true;
+        setTimeout(applySmartDefaults, 400);
+        setTimeout(function(){ fired = false; }, 5000); // allow refire after reset
+      }
+    }
+    keyFields.forEach(function(id){
+      var el = byId(id);
+      if(el) el.addEventListener('change', maybeFire);
+    });
+    // Also poll briefly after fetch button clicks
+    document.addEventListener('click', function(e){
+      if(e.target && (e.target.id === 'fetchPublicRecordsBtn' || (e.target.closest && e.target.closest('#fetchPublicRecordsBtn')))){
+        setTimeout(maybeFire, 1200);
+        setTimeout(maybeFire, 2500);
+      }
+    });
+  }
+
+  // Expose for manual triggering / debugging
+  window.bricSmartDefaults = applySmartDefaults;
+
+  // =====================================================================
+  // SANITY CHECKS — yellow notes for off-pattern inputs
+  // =====================================================================
+  // We render warnings into a single banner area near the generate button.
+  function ensureWarnHost(){
+    var host = byId('p1-warn-host');
+    if(host) return host;
+    var anchor = byId('generateOmBtn') || document.querySelector('.panel-left');
+    if(!anchor) return null;
+    host = document.createElement('div');
+    host.id = 'p1-warn-host';
+    host.style.cssText = 'padding:0 2rem;margin:.5rem 0';
+    // Place above the generate button if we can find it
+    var parent = anchor.closest('.form-section') || anchor.parentElement;
+    if(parent && parent.parentElement) parent.parentElement.insertBefore(host, parent);
+    else document.querySelector('.panel-left').appendChild(host);
+    return host;
+  }
+
+  function runSanityChecks(){
+    var host = ensureWarnHost();
+    if(!host) return;
+    var warnings = [];
+
+    var cap = num(val('marketCap'));
+    if(cap > 0){
+      if(cap > 9) warnings.push({title:'Cap rate looks high', body:'A market cap of '+cap+'% is unusually high for NYC. Double-check that operating income and expenses are correct, or that this submarket warrants it.'});
+      if(cap > 0 && cap < 3.5) warnings.push({title:'Cap rate looks low', body:'A market cap of '+cap+'% is below most NYC trade ranges. Verify the cap rate matches what your submarket is actually printing.'});
+    }
+
+    // Pro forma aggressive?
+    var items = (typeof rrItems !== 'undefined') ? rrItems : (window.rrItems || []);
+    if(items.length){
+      var totalCur = 0, totalPf = 0;
+      items.forEach(function(it){
+        var c = num(it.currentRent), p = num(it.proformaRent);
+        var freq = (it.frequency==='annual' && it.type==='retail') ? 1 : 12;
+        totalCur += c * freq;
+        totalPf += p * freq;
+      });
+      if(totalCur > 0 && totalPf > 0){
+        var lift = ((totalPf - totalCur) / totalCur) * 100;
+        if(lift > 30){
+          warnings.push({title:'Aggressive pro forma', body:'Pro forma rents are '+Math.round(lift)+'% above current. Buyers will discount unless the description clearly explains the path: renovation scope, lease-up timeline, or where comps support the lift.'});
+        }
+        if(lift < -1){
+          warnings.push({title:'Pro forma below current?', body:'Pro forma total is below current rent. Usually pro forma reflects stabilized upside — confirm this is intentional (e.g. retail tenant vacating to a lower-paying replacement).'});
+        }
+      }
+    }
+
+    // Expense ratio
+    var grossInc = num(val('grossIncome'));
+    if(!grossInc && items.length){
+      items.forEach(function(it){
+        var c = num(it.currentRent);
+        var freq = (it.frequency==='annual' && it.type==='retail') ? 1 : 12;
+        grossInc += c * freq;
+      });
+    }
+    var otherInc = num(val('otherIncome'));
+    var egi = (grossInc + otherInc) * 0.96;
+    var totalExp = num(val('totalExpenses'));
+    if(!totalExp){
+      var rows = byId('expenseRows');
+      if(rows){
+        Array.prototype.slice.call(rows.querySelectorAll('input[type="text"]')).forEach(function(i){
+          var v = num(i.value);
+          // Only count amounts — heuristic: number-looking values
+          if(v > 100 && v < 10000000) totalExp += v;
+        });
+        // Halve because we counted both label and amount fields; better heuristic: read pairs
+        // Actually safer: count only inputs that are within an "input-wrap has-prefix" (amount field)
+        totalExp = 0;
+        var amountInputs = rows.querySelectorAll('.input-wrap.has-prefix input');
+        amountInputs.forEach(function(i){ totalExp += num(i.value); });
+      }
+    }
+    if(egi > 0 && totalExp > 0){
+      var ratio = (totalExp / egi) * 100;
+      if(ratio < 25){
+        warnings.push({title:'Expense ratio looks low', body:'Operating expenses at '+Math.round(ratio)+'% of EGI is below typical NYC multifamily (35–45%). Verify taxes, insurance, and utilities are all included.'});
+      }
+      if(ratio > 60){
+        warnings.push({title:'Expense ratio looks high', body:'Operating expenses at '+Math.round(ratio)+'% of EGI is above typical NYC multifamily (35–45%). Heavy taxes or undercollected rent can cause this — surface the story in the description.'});
+      }
+    }
+
+    // Ask vs cap-implied value
+    var ask = num(val('askingPrice'));
+    if(ask && cap && egi && totalExp){
+      var noi = egi - totalExp;
+      if(noi > 0){
+        var implied = noi / (cap/100);
+        var deltaPct = ((ask - implied) / implied) * 100;
+        if(Math.abs(deltaPct) > 35){
+          var direction = deltaPct > 0 ? 'above' : 'below';
+          warnings.push({title:'Asking price vs. cap-implied value', body:'At your stated '+cap+'% cap, the current NOI implies a value of $'+Math.round(implied).toLocaleString()+'. Asking is '+Math.round(Math.abs(deltaPct))+'% '+direction+' that. This is fine if pro forma upside drives the gap — just make sure the OM tells that story.'});
+        }
+      }
+    }
+
+    if(!warnings.length){ host.innerHTML = ''; return; }
+    host.innerHTML = warnings.map(function(w){
+      return '<div class="p1-warn-banner"><span class="p1-warn-icon">⚠</span><div><b>'+esc(w.title)+'</b> — '+esc(w.body)+'</div></div>';
+    }).join('');
+  }
+
+  var sanityTimer = null;
+  function scheduleSanityCheck(){
+    clearTimeout(sanityTimer);
+    sanityTimer = setTimeout(runSanityChecks, 400);
+  }
+
+  // =====================================================================
+  // WIRE UP
+  // =====================================================================
+  function wire(){
+    injectStyles();
+    insertChecklist();
+    startTooltipObserver();
+    watchForRecordsLoaded();
+
+    // Mark required-ish fields visually (subtle gold dot on labels)
+    var requiredLabels = ['address', 'propertyType', 'askingPrice'];
+    requiredLabels.forEach(function(id){
+      var el = byId(id);
+      if(!el) return;
+      var fieldWrap = el.closest('.field');
+      var label = fieldWrap && fieldWrap.querySelector('label');
+      if(label) label.classList.add('p1-required');
+    });
+
+    // Listen for any input change to refresh checklist + sanity
+    document.addEventListener('input', function(e){
+      if(!e.target || !e.target.id) return;
+      scheduleChecklistUpdate();
+      scheduleSanityCheck();
+    });
+    document.addEventListener('change', function(){
+      scheduleChecklistUpdate();
+      scheduleSanityCheck();
+    });
+
+    // Initial passes
+    setTimeout(renderChecklist, 200);
+    setTimeout(runSanityChecks, 500);
+  }
+  ready(wire);
 })();
 
 </script>
