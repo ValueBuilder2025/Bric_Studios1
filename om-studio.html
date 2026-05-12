@@ -4995,6 +4995,8 @@ window.importSelectedActivity=function(){var growth=(typeof currentTier!=='undef
             <div class="field"><label>Land Use</label><input type="text" id="prLandUse" placeholder="Residential / Mixed-Use / Commercial"></div>
             <div class="field"><label>Building Class</label><input type="text" id="prBuildingClass" placeholder="C1 / S9 / K4 / etc."></div>
             <div class="field"><label>Latitude / Longitude</label><input type="text" id="prLatLng" placeholder="40.6971, -73.9326"></div>
+            <div class="field"><label>Last Sale (ACRIS)</label><input type="text" id="prLastSale" placeholder="$X,XXX,XXX (Date)"></div>
+            <div class="field"><label>Current Owner (ACRIS)</label><input type="text" id="prCurrentOwner" placeholder="Per most recent deed"></div>
           </div>
         </div>
       </div>
@@ -5360,12 +5362,12 @@ document.addEventListener('input', function(e){
   function publicData(){
     deriveStarterRecords();
     var csz=val('prCityStateZip'); var zip=zipFromText(csz)||zipFromText(val('address'));
-    return {address:val('address')||'Property Address',city:val('prNeighborhood')||currentCity(),state:val('prBorough')||currentState(),zip:zip,submarket:val('prSubmarket')||inferSubmarket(zip,val('address'),currentCity(),currentState()),cityStateZip:csz,blockLot:val('prBlockLot'),taxClass:val('prTaxClass'),estimatedTaxes:val('prEstimatedTaxes'),yearBuilt:val('prYearBuilt')||val('yearBuilt'),residentialUnits:val('prResidentialUnits')||val('residentialUnitCount'),commercialUnits:val('prCommercialUnits')||val('retailUnitCount'),totalUnits:val('prTotalUnits'),grossSf:val('prGrossBuildingSf'),lotSf:val('prLotSf'),zoning:val('prZoning'),landUse:val('prLandUse'),buildingClass:val('prBuildingClass'),latLng:val('prLatLng')};
+    return {address:val('address')||'Property Address',city:val('prNeighborhood')||currentCity(),state:val('prBorough')||currentState(),zip:zip,submarket:val('prSubmarket')||inferSubmarket(zip,val('address'),currentCity(),currentState()),cityStateZip:csz,blockLot:val('prBlockLot'),taxClass:val('prTaxClass'),estimatedTaxes:val('prEstimatedTaxes'),yearBuilt:val('prYearBuilt')||val('yearBuilt'),residentialUnits:val('prResidentialUnits')||val('residentialUnitCount'),commercialUnits:val('prCommercialUnits')||val('retailUnitCount'),totalUnits:val('prTotalUnits'),grossSf:val('prGrossBuildingSf'),lotSf:val('prLotSf'),zoning:val('prZoning'),landUse:val('prLandUse'),buildingClass:val('prBuildingClass'),latLng:val('prLatLng'),lastSale:val('prLastSale'),currentOwner:val('prCurrentOwner')};
   }
   function recordRow(a,b){ return '<tr><td>'+esc(a)+'</td><td>'+esc(b||'—')+'</td></tr>'; }
   function publicRecordPageFinal(){
     var d=publicData(); var mapTarget=d.latLng || [d.address,d.city,d.state,d.zip].filter(Boolean).join(' '); var q=encodeURIComponent(mapTarget);
-    return '<div class="om-page public-record-page" data-section-key="togglePublicRecordPage"><div class="om-page-hd"><div class="om-page-hd-title">Property Description | '+esc(String(d.address).toUpperCase())+'</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="public-record-grid"><table class="public-record-table"><tbody>'+recordRow('City / State / Zip',d.cityStateZip || [d.city,d.state,d.zip].filter(Boolean).join(', '))+recordRow('City',d.city)+recordRow('State',d.state)+recordRow('Submarket',d.submarket)+recordRow('Block & Lot',d.blockLot)+recordRow('Tax Class',d.taxClass)+recordRow('Annual Estimated Taxes',d.estimatedTaxes)+recordRow('Year Built',d.yearBuilt)+recordRow('Residential Units',d.residentialUnits)+recordRow('Commercial Units',d.commercialUnits)+recordRow('Total Units',d.totalUnits)+recordRow('Gross Building SF',d.grossSf)+recordRow('Lot SF',d.lotSf)+recordRow('Zoning',d.zoning)+recordRow('Land Use',d.landUse)+recordRow('Building Class',d.buildingClass)+recordRow('Latitude / Longitude',d.latLng)+'</tbody></table><div class="public-record-media public-record-map-only"><div class="record-map-slot"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z=17&output=embed"></iframe></div></div></div><div class="public-record-source">Public-record style page · Tax class, zoning, lot size, land use, and building class should be verified before distribution</div></div>';
+    return '<div class="om-page public-record-page" data-section-key="togglePublicRecordPage"><div class="om-page-hd"><div class="om-page-hd-title">Property Description | '+esc(String(d.address).toUpperCase())+'</div><div class="om-page-hd-brand">BRIC Studios</div></div><div class="public-record-grid"><table class="public-record-table"><tbody>'+recordRow('City / State / Zip',d.cityStateZip || [d.city,d.state,d.zip].filter(Boolean).join(', '))+recordRow('City',d.city)+recordRow('State',d.state)+recordRow('Submarket',d.submarket)+recordRow('Block & Lot',d.blockLot)+recordRow('Tax Class',d.taxClass)+recordRow('Annual Estimated Taxes',d.estimatedTaxes)+recordRow('Year Built',d.yearBuilt)+recordRow('Residential Units',d.residentialUnits)+recordRow('Commercial Units',d.commercialUnits)+recordRow('Total Units',d.totalUnits)+recordRow('Gross Building SF',d.grossSf)+recordRow('Lot SF',d.lotSf)+recordRow('Zoning',d.zoning)+recordRow('Land Use',d.landUse)+recordRow('Building Class',d.buildingClass)+recordRow('Last Sale',d.lastSale)+recordRow('Current Owner',d.currentOwner)+recordRow('Latitude / Longitude',d.latLng)+'</tbody></table><div class="public-record-media public-record-map-only"><div class="record-map-slot"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&z=17&output=embed"></iframe></div></div></div><div class="public-record-source">Public-record style page · Tax class, zoning, lot size, land use, and building class should be verified before distribution</div></div>';
   }
   function classifyExpense(name){ name=String(name||'').toLowerCase(); if(/tax/.test(name)) return 'taxes'; if(/insurance/.test(name)) return 'insurance'; if(/water|sewer/.test(name)) return 'water'; if(/heat|fuel|gas/.test(name)) return 'heat'; if(/electric|common/.test(name)) return 'electric'; if(/repair|maintenance|r&m/.test(name)) return 'repairs'; if(/management|admin|legal/.test(name)) return 'management'; if(/payroll|super|salary/.test(name)) return 'payroll'; return 'other'; }
   function benchmarkFor(category,p,egi){ var units=Math.max(1,num(val('residentialUnitCount'))+num(val('retailUnitCount'))); var sf=Math.max(num(val('sqft')),num(val('prGrossBuildingSf')),1); if(category==='taxes') return null; if(category==='insurance') return Math.max(units*1200,sf*.85); if(category==='water') return units*900; if(category==='heat') return sf*1.15; if(category==='electric') return sf*.22; if(category==='repairs') return Math.max(units*750,sf*.65); if(category==='management') return egi*.03; if(category==='payroll') return units<=10?0:units*900; return null; }
@@ -5595,6 +5597,558 @@ document.addEventListener('input', function(e){
     setTimeout(postProcess,300);
   });
 })();
+</script>
+
+
+
+<script>
+/* =========================================================================
+   BRIC OM Studio — Records Integration v2 (2026-05-12)
+   Single authoritative script. Runs last. Replaces previous fetch logic.
+
+   Purpose:
+   - Wire address input to real NYC public records (Geosearch → PLUTO → ACRIS → DOF → HPD)
+   - Mirror pulled values into main form fields so generate() consumes them naturally
+   - Mark auto-filled fields visually, but keep them user-overridable
+   - For non-NYC addresses, geocode via Nominatim and let user enter rest manually
+   - Stabilize the OM render by suppressing the older racing post-processors
+   ========================================================================= */
+(function(){
+  'use strict';
+  // ---------- Tiny utils ----------
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function byId(id){ return document.getElementById(id); }
+  function val(id){ var el=byId(id); return el ? el.value : ''; }
+  function num(v){ var n=parseFloat(String(v==null?'':v).replace(/[$,%\s,]/g,'')); return Number.isFinite(n)?n:0; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function money(v){ var n=num(v); return n ? '$'+Math.round(n).toLocaleString() : '—'; }
+  function fmtDate(v){ if(!v) return ''; var d=new Date(v); if(isNaN(d.getTime())) return String(v); return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
+  function setStatus(msg, kind){
+    var el=byId('publicRecordStatus'); if(!el) return;
+    el.textContent=msg||'';
+    el.style.color = kind==='error' ? '#d46a55' : (kind==='success' ? '#c9a84c' : '');
+  }
+
+  // ---------- Field marking ----------
+  // Mark a field as auto-filled so it gets a visual badge and the user knows
+  // it came from public records (but can still edit / override).
+  function markAutoFilled(el){
+    if(!el) return;
+    el.classList.add('pr-autofilled');
+    el.dataset.prAutofilled='1';
+    // Strip the badge if the user edits the value
+    if(!el.__prListenerAttached){
+      el.__prListenerAttached=true;
+      el.addEventListener('input', function(){
+        el.classList.remove('pr-autofilled');
+        delete el.dataset.prAutofilled;
+      });
+    }
+  }
+  function fillField(id, value, opts){
+    opts = opts || {};
+    var el=byId(id); if(!el) return false;
+    if(value === undefined || value === null || value === '') return false;
+    // Don't overwrite user-typed values unless told to
+    if(!opts.force && el.value && !el.dataset.prAutofilled) return false;
+    el.value = String(value);
+    markAutoFilled(el);
+    // Fire change so any onchange handlers run (e.g. populateSubmarkets)
+    try{ el.dispatchEvent(new Event('change',{bubbles:true})); }catch(e){}
+    try{ el.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){}
+    return true;
+  }
+  function injectStyles(){
+    if(byId('prAutofillStyles')) return;
+    var s=document.createElement('style');
+    s.id='prAutofillStyles';
+    s.textContent = ''
+      + '.pr-autofilled{border-color:rgba(201,168,76,0.55)!important;background:rgba(201,168,76,0.06)!important}'
+      + '.pr-autofilled:focus{border-color:rgba(201,168,76,0.85)!important}'
+      + '.pr-source-pill{display:inline-block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.12rem .4rem;border-radius:4px;background:rgba(201,168,76,.18);color:#c9a84c;margin-left:.4rem;vertical-align:middle}'
+      + '.pr-records-summary{margin-top:.75rem;padding:.7rem .8rem;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.22);border-radius:8px;font-size:.74rem;line-height:1.55;color:rgba(255,255,255,.7)}'
+      + '.pr-records-summary b{color:#e8d08a;font-weight:600}'
+      + '.pr-records-summary ul{margin:.4rem 0 0;padding:0;list-style:none}'
+      + '.pr-records-summary li{padding:.12rem 0;font-family:var(--mono);font-size:.66rem;color:rgba(255,255,255,.55)}'
+      + '.pr-records-summary li b{color:var(--paper);font-weight:600}';
+    document.head.appendChild(s);
+  }
+
+  // ---------- Address parsing ----------
+  function zipFromText(t){ var m=String(t||'').match(/\b(\d{5})(?:-\d{4})?\b/); return m?m[1]:''; }
+  // Heuristic: is this address in NYC? We use the state dropdown + zip patterns.
+  // NYC zips: 100xx-104xx (Manhattan), 11201-11256 (Brooklyn), 113xx-114xx, 116xx (Queens),
+  // 104xx (Bronx), 103xx (Staten Island). We're permissive: if state is NY and zip starts 1, try NYC.
+  function looksLikeNYC(){
+    var stateEl=byId('city'); // misleading id; this is actually the state dropdown
+    var state=(stateEl && stateEl.value || '').toUpperCase();
+    var addr=val('address');
+    var zip=zipFromText(addr);
+    if(state && state!=='NY' && state!=='') return false;
+    // If we have a zip, check NYC range
+    if(zip){
+      var z=parseInt(zip,10);
+      if((z>=10001 && z<=10499) || (z>=11201 && z<=11256) || (z>=11301 && z<=11499) || (z>=11601 && z<=11699)) return true;
+      // Outside NYC zip ranges → not NYC even if state is NY
+      if(state==='NY') return false;
+    }
+    // No zip, state is NY or unset → optimistically try NYC
+    return state==='NY' || state==='';
+  }
+
+  // ---------- Fetch with timeout ----------
+  function fetchJson(url, timeoutMs){
+    timeoutMs = timeoutMs || 8000;
+    var ctrl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    var to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, timeoutMs);
+    return fetch(url, ctrl?{signal:ctrl.signal}:{})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .finally(function(){ clearTimeout(to); });
+  }
+
+  // ---------- NYC data sources ----------
+  // Geosearch returns BBL, borough, zip, coords.
+  function geosearch(query){
+    var url='https://geosearch.planninglabs.nyc/v2/search?size=1&text='+encodeURIComponent(query);
+    return fetchJson(url).then(function(j){
+      var f = j && j.features && j.features[0]; if(!f) return null;
+      var p = f.properties || {};
+      var coords = f.geometry && f.geometry.coordinates;
+      var bbl = p.addendum && p.addendum.pad && p.addendum.pad.bbl || p.pad_bbl || p.bbl || '';
+      return {
+        label: p.label || '',
+        borough: p.borough || '',
+        zip: p.postalcode || zipFromText(p.label||''),
+        bbl: String(bbl||'').replace(/\D/g,''),
+        lat: coords ? coords[1] : null,
+        lng: coords ? coords[0] : null,
+        bin: p.addendum && p.addendum.pad && p.addendum.pad.bin || ''
+      };
+    });
+  }
+
+  // PLUTO: building characteristics
+  function fetchPluto(bbl){
+    if(!bbl) return Promise.resolve(null);
+    var url='https://data.cityofnewyork.us/resource/64uk-42ks.json?bbl='+encodeURIComponent(bbl);
+    return fetchJson(url).then(function(rows){ return (rows && rows[0]) || null; });
+  }
+
+  // ACRIS: deed transfers (last sale). Combines master + parties tables.
+  // master has document id + type + date; legals links docs to BBL; parties has names.
+  function fetchAcrisLastSale(bbl){
+    if(!bbl || bbl.length<10) return Promise.resolve(null);
+    var b = bbl.padStart(10,'0');
+    var borough = parseInt(b.charAt(0),10);
+    var block = parseInt(b.slice(1,6),10);
+    var lot = parseInt(b.slice(6,10),10);
+    // Step 1: find deed doc IDs for this lot via legals table
+    var legalsUrl = 'https://data.cityofnewyork.us/resource/8h5j-fqxa.json'
+      + '?borough=' + borough
+      + '&block=' + block
+      + '&lot=' + lot
+      + '&$limit=50';
+    return fetchJson(legalsUrl).then(function(legals){
+      if(!legals || !legals.length) return null;
+      var docIds = legals.map(function(r){return r.document_id;}).filter(Boolean);
+      if(!docIds.length) return null;
+      // Step 2: get master records for those docs, filter to deeds, sort newest
+      var inClause = docIds.map(function(id){return "'"+id.replace(/'/g,"''")+"'";}).join(',');
+      var masterUrl = "https://data.cityofnewyork.us/resource/bnx9-e6tj.json?$where=doc_type in ('DEED','DEEDO') AND document_id in ("+inClause+")&$order=document_date DESC&$limit=5";
+      return fetchJson(masterUrl).then(function(masters){
+        if(!masters || !masters.length) return null;
+        var latest = masters[0];
+        // Step 3: try to fetch parties (sellers/buyers) for that doc
+        var partiesUrl="https://data.cityofnewyork.us/resource/636b-3b5g.json?document_id="+encodeURIComponent(latest.document_id)+"&$limit=20";
+        return fetchJson(partiesUrl).catch(function(){return [];}).then(function(parties){
+          var sellers=[], buyers=[];
+          (parties||[]).forEach(function(p){
+            if(p.party_type==='1') sellers.push(p.name);
+            else if(p.party_type==='2') buyers.push(p.name);
+          });
+          return {
+            price: num(latest.document_amt),
+            date: latest.document_date || latest.recorded_filed,
+            docType: latest.doc_type,
+            sellers: sellers,
+            buyers: buyers,
+            documentId: latest.document_id
+          };
+        });
+      });
+    }).catch(function(){return null;});
+  }
+
+  // DOF: real property assessment data (annual). Gives tax class, market value, taxes.
+  function fetchDof(bbl){
+    if(!bbl) return Promise.resolve(null);
+    var url='https://data.cityofnewyork.us/resource/8y4t-faws.json?bble='+encodeURIComponent(bbl)+'&$order=year DESC&$limit=1';
+    return fetchJson(url).then(function(rows){ return (rows && rows[0]) || null; }).catch(function(){return null;});
+  }
+
+  // HPD: building registrations + rent-stabilized counts
+  function fetchHpd(bbl){
+    if(!bbl) return Promise.resolve(null);
+    // HPD registrations endpoint by BBL — boro/block/lot split
+    var b = bbl.padStart(10,'0');
+    var boro = parseInt(b.charAt(0),10);
+    var block = parseInt(b.slice(1,6),10);
+    var lot = parseInt(b.slice(6,10),10);
+    var url='https://data.cityofnewyork.us/resource/tesw-yqqr.json?boroid='+boro+'&block='+block+'&lot='+lot+'&$order=lastregistrationdate DESC&$limit=1';
+    return fetchJson(url).then(function(rows){ return (rows && rows[0]) || null; }).catch(function(){return null;});
+  }
+
+  // Nominatim fallback for non-NYC addresses
+  function nominatim(query){
+    var url='https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q='+encodeURIComponent(query);
+    return fetchJson(url).then(function(rows){
+      if(!Array.isArray(rows) || !rows.length) return null;
+      var r=rows[0], a=r.address||{};
+      return {
+        lat: parseFloat(r.lat),
+        lng: parseFloat(r.lon),
+        city: a.city||a.town||a.village||a.hamlet||'',
+        state: a.state||'',
+        zip: a.postcode||''
+      };
+    });
+  }
+
+  // ---------- Main fetch orchestration ----------
+  var lastFetchToken = 0;
+  function doFetch(){
+    var token = ++lastFetchToken;
+    var address = (val('address')||'').trim();
+    if(!address){
+      setStatus('Enter a property address first.', 'error');
+      return;
+    }
+    injectStyles();
+    setStatus('Looking up address…');
+    var nyc = looksLikeNYC();
+    if(nyc){
+      return runNycFetch(address, token);
+    } else {
+      return runGenericFetch(address, token);
+    }
+  }
+
+  function runNycFetch(address, token){
+    return geosearch(address).then(function(geo){
+      if(token !== lastFetchToken) return;
+      if(!geo){
+        setStatus('Address not found in NYC Geosearch. Falling back to generic geocoder…');
+        return runGenericFetch(address, token);
+      }
+      // Update geo state
+      try{
+        if(typeof propertyGeo !== 'undefined'){
+          propertyGeo.lat = geo.lat; propertyGeo.lng = geo.lng; propertyGeo.status='resolved'; propertyGeo.query=address;
+        }
+      }catch(e){}
+      // Mirror borough → state field (NY) + neighborhood field
+      fillField('city', 'NY');
+      // The "neighborhood" dropdown holds borough/city selections; populate options if helper exists
+      if(geo.borough){
+        try{
+          if(typeof populateSubmarketsForBorough === 'function'){
+            populateSubmarketsForBorough('NY', geo.borough);
+          }
+        }catch(e){}
+        var nhEl=byId('neighborhood');
+        if(nhEl){
+          // Find an option that matches borough
+          var match = Array.prototype.slice.call(nhEl.options).find(function(o){
+            return String(o.textContent||o.value).toLowerCase() === geo.borough.toLowerCase();
+          });
+          if(match){ nhEl.value = match.value; markAutoFilled(nhEl); }
+          else { fillField('neighborhood', geo.borough); }
+        }
+      }
+      // Mirror BBL / zip into PR fields
+      if(geo.bbl){
+        var b=geo.bbl.padStart(10,'0');
+        var blk=parseInt(b.slice(1,6),10), lot=parseInt(b.slice(6,10),10);
+        fillField('prBlockLot', 'Block '+blk+' / Lot '+lot, {force:true});
+      }
+      if(geo.zip) fillField('prCityStateZip', (geo.borough||'')+', NY '+geo.zip, {force:true});
+      fillField('prBorough', geo.borough||'NY', {force:true});
+      fillField('prNeighborhood', geo.borough||'', {force:true});
+      if(geo.lat && geo.lng) fillField('prLatLng', geo.lat.toFixed(6)+', '+geo.lng.toFixed(6), {force:true});
+
+      setStatus('Loading PLUTO, DOF, ACRIS, HPD…');
+      // Parallel fetch of all NYC sources
+      return Promise.all([
+        fetchPluto(geo.bbl).catch(function(){return null;}),
+        fetchDof(geo.bbl).catch(function(){return null;}),
+        fetchAcrisLastSale(geo.bbl).catch(function(){return null;}),
+        fetchHpd(geo.bbl).catch(function(){return null;})
+      ]).then(function(results){
+        if(token !== lastFetchToken) return;
+        var pluto=results[0], dof=results[1], acris=results[2], hpd=results[3];
+        applyNycResults({geo:geo, pluto:pluto, dof:dof, acris:acris, hpd:hpd});
+      });
+    }).catch(function(err){
+      console.warn('NYC fetch error', err);
+      setStatus('Lookup failed. Trying generic geocoder…', 'error');
+      return runGenericFetch(address, token);
+    });
+  }
+
+  function applyNycResults(data){
+    var summary=[];
+    var pluto=data.pluto, dof=data.dof, acris=data.acris, hpd=data.hpd, geo=data.geo;
+
+    // PLUTO → main form + PR fields
+    if(pluto){
+      if(pluto.yearbuilt && pluto.yearbuilt!=='0'){
+        fillField('yearBuilt', pluto.yearbuilt);
+        fillField('prYearBuilt', pluto.yearbuilt, {force:true});
+        summary.push(['Year Built', pluto.yearbuilt]);
+      }
+      if(pluto.bldgarea && num(pluto.bldgarea)>0){
+        fillField('sqft', pluto.bldgarea);
+        fillField('prGrossBuildingSf', Number(pluto.bldgarea).toLocaleString()+' SF', {force:true});
+        summary.push(['Gross Building SF', Number(pluto.bldgarea).toLocaleString()]);
+      }
+      if(pluto.lotarea && num(pluto.lotarea)>0){
+        fillField('prLotSf', Number(pluto.lotarea).toLocaleString()+' SF', {force:true});
+        summary.push(['Lot SF', Number(pluto.lotarea).toLocaleString()]);
+      }
+      if(pluto.unitsres!=null){
+        fillField('residentialUnitCount', pluto.unitsres);
+        fillField('prResidentialUnits', pluto.unitsres, {force:true});
+        summary.push(['Residential Units', pluto.unitsres]);
+      }
+      if(pluto.unitstotal!=null && pluto.unitsres!=null){
+        var com=Math.max(0, num(pluto.unitstotal)-num(pluto.unitsres));
+        fillField('retailUnitCount', com);
+        fillField('prCommercialUnits', com, {force:true});
+        fillField('prTotalUnits', pluto.unitstotal, {force:true});
+        if(com>0) summary.push(['Commercial Units', com]);
+      }
+      var zoneParts=[pluto.zonedist1, pluto.zonedist2, pluto.overlay1, pluto.overlay2].filter(Boolean);
+      if(zoneParts.length){
+        fillField('prZoning', zoneParts.join(' / '), {force:true});
+        // Also populate development zoning if field exists
+        fillField('developmentZoning', zoneParts.join(' / '));
+        summary.push(['Zoning', zoneParts.join(' / ')]);
+      }
+      if(pluto.bldgclass){ fillField('prBuildingClass', pluto.bldgclass, {force:true}); }
+      if(pluto.landuse){ fillField('prLandUse', landUseLabel(pluto.landuse), {force:true}); }
+      // Auto-suggest property type based on units
+      var resU=num(pluto.unitsres), comU=num(pluto.unitstotal)-resU;
+      var propTypeEl=byId('propertyType');
+      if(propTypeEl && !propTypeEl.value){
+        var suggested='';
+        if(comU>0 && resU>0) suggested='Mixed-Use';
+        else if(resU>1) suggested='Multifamily';
+        else if(resU===1) suggested='Single Family Rental';
+        if(suggested){
+          var match=Array.prototype.slice.call(propTypeEl.options).find(function(o){return o.value===suggested;});
+          if(match){ propTypeEl.value=suggested; markAutoFilled(propTypeEl); }
+        }
+      }
+    }
+
+    // DOF → taxes, assessed value, tax class
+    if(dof){
+      if(dof.taxclass){
+        fillField('prTaxClass', dof.taxclass, {force:true});
+        summary.push(['Tax Class', dof.taxclass]);
+      } else if(pluto && pluto.taxclass){
+        fillField('prTaxClass', pluto.taxclass, {force:true});
+      }
+      // taxes_each_year or "fullval" — DOF Property Valuation & Assessment Data
+      // Most reliable: try `fullval`, `taxes_each_year`, or compute from `assesstot` * tax rate
+      var taxes = dof.taxes_each_year || dof.total_property_taxes || '';
+      if(!taxes && dof.assesstot){
+        // Rough estimate: tax class 1 ~ 20.31%, class 2 ~ 12.5% of AV (varies)
+        // Better: use billable AV * rate. For now we only fill if explicit field exists.
+      }
+      if(taxes){
+        var t = num(taxes);
+        if(t>0){
+          fillField('prEstimatedTaxes', '$'+Math.round(t).toLocaleString(), {force:true});
+          summary.push(['Annual Taxes', '$'+Math.round(t).toLocaleString()]);
+        }
+      }
+    }
+
+    // ACRIS → last sale
+    if(acris){
+      if(acris.price && acris.price>1000){
+        var saleStr = '$'+Math.round(acris.price).toLocaleString() + (acris.date ? ' (' + fmtDate(acris.date) + ')' : '');
+        // Look for a "last sale" field; if not, just stash in summary
+        fillField('prLastSale', saleStr, {force:true});
+        summary.push(['Last Sale', saleStr]);
+      }
+      if(acris.sellers && acris.sellers.length){
+        fillField('prCurrentOwner', acris.buyers && acris.buyers.length ? acris.buyers[0] : acris.sellers[0], {force:true});
+        if(acris.buyers && acris.buyers.length) summary.push(['Current Owner (per ACRIS)', acris.buyers[0]]);
+      }
+    }
+
+    // HPD → registration, rent-stab indicator
+    if(hpd){
+      if(hpd.registrationid){
+        summary.push(['HPD Reg #', hpd.registrationid]);
+      }
+    }
+
+    renderSummary(summary, {nyc:true});
+    setStatus('Records loaded from NYC Open Data. Review fields below; edits override.', 'success');
+
+    // Trigger generate if already generated, else just leave fields filled
+    try{
+      if(typeof omGenerated !== 'undefined' && omGenerated && typeof generate === 'function'){
+        generate(false);
+      }
+    }catch(e){}
+  }
+
+  function runGenericFetch(address, token){
+    setStatus('Geocoding (non-NYC fallback)…');
+    return nominatim(address).then(function(geo){
+      if(token !== lastFetchToken) return;
+      if(!geo){
+        setStatus('Could not geocode that address. Enter property details manually.', 'error');
+        return;
+      }
+      try{
+        if(typeof propertyGeo !== 'undefined'){
+          propertyGeo.lat=geo.lat; propertyGeo.lng=geo.lng; propertyGeo.status='resolved'; propertyGeo.query=address;
+        }
+      }catch(e){}
+      if(geo.zip) fillField('prCityStateZip', (geo.city||'')+(geo.state?', '+geo.state:'')+(geo.zip?' '+geo.zip:''), {force:true});
+      if(geo.lat && geo.lng) fillField('prLatLng', geo.lat.toFixed(6)+', '+geo.lng.toFixed(6), {force:true});
+      fillField('prNeighborhood', geo.city||'', {force:true});
+
+      renderSummary([
+        ['City', geo.city],
+        ['State', geo.state],
+        ['ZIP', geo.zip],
+        ['Lat/Lng', geo.lat.toFixed(5)+', '+geo.lng.toFixed(5)]
+      ], {nyc:false});
+      setStatus('Outside NYC — geocoded only. Enter year built, SF, units, taxes manually.', 'success');
+
+      try{
+        if(typeof omGenerated !== 'undefined' && omGenerated && typeof generate === 'function'){
+          generate(false);
+        }
+      }catch(e){}
+    }).catch(function(err){
+      console.warn('Generic geocode error', err);
+      setStatus('Geocoding service unavailable. Enter details manually.', 'error');
+    });
+  }
+
+  function renderSummary(rows, opts){
+    var host = byId('prRecordsSummary');
+    if(!host){
+      var section = byId('publicRecordDetailsSection');
+      if(!section) return;
+      var compact = section.querySelector('.public-record-compact');
+      if(!compact) return;
+      host = document.createElement('div');
+      host.id = 'prRecordsSummary';
+      host.className = 'pr-records-summary';
+      compact.appendChild(host);
+    }
+    if(!rows || !rows.length){ host.innerHTML=''; return; }
+    var sourceLabel = opts && opts.nyc ? 'NYC Open Data (PLUTO · DOF · ACRIS · HPD)' : 'Generic geocoder (Nominatim)';
+    host.innerHTML = '<b>Records pulled — '+esc(sourceLabel)+'</b><ul>' +
+      rows.map(function(r){return '<li>'+esc(r[0])+': <b>'+esc(String(r[1]==null?'—':r[1]))+'</b></li>';}).join('') +
+      '</ul>';
+  }
+
+  // ---------- Land use labels (PLUTO codes) ----------
+  function landUseLabel(code){
+    var map={
+      '01':'One & Two Family Buildings',
+      '02':'Multi-Family Walk-Up Buildings',
+      '03':'Multi-Family Elevator Buildings',
+      '04':'Mixed Residential & Commercial Buildings',
+      '05':'Commercial & Office Buildings',
+      '06':'Industrial & Manufacturing',
+      '07':'Transportation & Utility',
+      '08':'Public Facilities & Institutions',
+      '09':'Open Space & Outdoor Recreation',
+      '10':'Parking Facilities',
+      '11':'Vacant Land'
+    };
+    return map[String(code).padStart(2,'0')] || ('Land Use '+code);
+  }
+
+  // ---------- Wire up ----------
+  function wireFetchButton(){
+    var btn = byId('fetchPublicRecordsBtn');
+    if(!btn) return;
+    // Strip existing handlers by cloning
+    var clone = btn.cloneNode(true);
+    btn.parentNode.replaceChild(clone, btn);
+    clone.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      doFetch();
+    });
+  }
+
+  // Optional: auto-fetch on address blur (debounced) so people don't have to click
+  var blurTimer=null;
+  function wireAddressAutoFetch(){
+    var addrEl=byId('address');
+    if(!addrEl) return;
+    addrEl.addEventListener('blur', function(){
+      clearTimeout(blurTimer);
+      var v=(addrEl.value||'').trim();
+      if(v.length < 8) return;
+      // Only auto-fetch if no records have been pulled yet for this address
+      if(addrEl.dataset.lastAutoFetch === v) return;
+      blurTimer = setTimeout(function(){
+        addrEl.dataset.lastAutoFetch = v;
+        doFetch();
+      }, 400);
+    });
+  }
+
+  // Expose for debugging / external triggers
+  window.bricFetchRecords = doFetch;
+
+  // ---------- Race-condition mitigation ----------
+  // The previous patch scripts wrapped window.generate multiple times, each
+  // adding setTimeout(postProcess, 0/80/100/120/260) callbacks. On each
+  // generate() call that produces 5-7 staggered re-renders which causes
+  // visible flicker. We patch each post-processor function in place to
+  // self-debounce: run at most once per 200ms.
+  function debouncePostProcessors(){
+    var names = ['postProcess', 'postProcessOm', 'appendRentRollUpsideGraphs'];
+    names.forEach(function(name){
+      var fn = window[name];
+      if(typeof fn !== 'function') return;
+      if(fn.__bricDebounced) return;
+      var timer = null;
+      var debounced = function(){
+        var self=this, args=arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          try{ fn.apply(self, args); }catch(e){ console.warn(name+' error:', e); }
+        }, 50);
+      };
+      debounced.__bricDebounced = true;
+      window[name] = debounced;
+    });
+  }
+
+  ready(function(){
+    injectStyles();
+    wireFetchButton();
+    wireAddressAutoFetch();
+    // Let other scripts finish wiring, then debounce
+    setTimeout(debouncePostProcessors, 500);
+  });
+})();
+
 </script>
 
 </body></html>
