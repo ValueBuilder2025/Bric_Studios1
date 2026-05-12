@@ -6132,17 +6132,41 @@ document.addEventListener('input', function(e){
   }
 
   // ---------- Wire up ----------
+  // The previous patch scripts installed a document-level capture-phase click
+  // listener AND assigned window.fetchPublicRecords / window.fetchPublicRecordsFinal.
+  // To make sure OUR fetch runs and the older one does not, we:
+  //   1. Override the global function names so any old call-site uses our version.
+  //   2. Install our own capture-phase listener at the WINDOW level (which fires
+  //      before document-level listeners), call stopImmediatePropagation, and
+  //      run doFetch ourselves.
+  //   3. Also clone the button to strip any direct on-element handlers, and
+  //      attach our own handler as a final safety net.
   function wireFetchButton(){
-    var btn = byId('fetchPublicRecordsBtn');
-    if(!btn) return;
-    // Strip existing handlers by cloning
-    var clone = btn.cloneNode(true);
-    btn.parentNode.replaceChild(clone, btn);
-    clone.addEventListener('click', function(e){
+    // (1) Override the global names so anything calling them runs OUR code
+    try { window.fetchPublicRecords = doFetch; } catch(e){}
+    try { window.fetchPublicRecordsFinal = function(e){ if(e){ try{e.preventDefault(); e.stopImmediatePropagation();}catch(_){} } doFetch(); }; } catch(e){}
+
+    // (2) Window-level capture listener — fires before any document listener
+    window.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || (t.id !== 'fetchPublicRecordsBtn' && !(t.closest && t.closest('#fetchPublicRecordsBtn')))) return;
       e.preventDefault();
       e.stopImmediatePropagation();
+      e.stopPropagation();
       doFetch();
-    });
+    }, true);
+
+    // (3) Direct button binding as a safety net
+    var btn = byId('fetchPublicRecordsBtn');
+    if(btn){
+      var clone = btn.cloneNode(true);
+      btn.parentNode.replaceChild(clone, btn);
+      clone.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        doFetch();
+      });
+    }
   }
 
   // Auto-fetch as the user types the address (debounced).
