@@ -1,753 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BRIC Studios — Deal Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#0d0f0e;
-  --ink-2:#141715;
-  --ink-3:#1a1e1d;
-  --paper:#f5f2ec;
-  --cream:#faf8f3;
-  --gold:#c9a84c;
-  --gold-light:#e8d08a;
-  --gold-dim:rgba(201,168,76,0.13);
-  --slate:#3a4a52;
-  --muted:#7a8a82;
-  --border:rgba(255,255,255,0.07);
-  --success:#6dba8f;
-  --warn:#e8a050;
-  --indigo:#8b9ee8;
-  --serif:'Playfair Display',Georgia,serif;
-  --sans:'DM Sans',sans-serif;
-  --mono:'DM Mono',monospace;
+  --ink:#090b0a;--ink2:#0f1311;--ink3:#151b18;--panel:#101512;--panel2:#131916;
+  --paper:#f7f2e8;--muted:#8b968d;--soft:rgba(247,242,232,.68);--faint:rgba(247,242,232,.42);
+  --line:rgba(247,242,232,.085);--line2:rgba(247,242,232,.14);
+  --green:#8fd3a7;--green2:#1f6b47;--greenDim:rgba(143,211,167,.12);
+  --gold:#c9a84c;--gold2:#e9d48b;--goldDim:rgba(201,168,76,.14);
+  --warn:#e8a050;--bad:#df7f72;--blue:#9ca9f1;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',Arial,sans-serif;--mono:'DM Mono',monospace;
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55;overflow-x:hidden}
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.3}
-
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(13,15,14,0.93);backdrop-filter:blur(16px)}
-.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:0.5rem}
-.nav-dot{width:7px;height:7px;background:var(--gold);border-radius:50%}
-.nav-badge{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.8rem;border-radius:2px}
-.nav-right{display:flex;align-items:center;gap:1rem}
-.nav-back{font-size:0.78rem;color:rgba(255,255,255,0.32);text-decoration:none;transition:color 0.2s}
-.nav-back:hover{color:var(--gold)}
-.nav-ai-badge{display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase}
-.nav-ai-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulseDot 2s infinite}
-@keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(201,168,76,0)}}
-
-/* LAYOUT */
-.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 56px)}
-
-/* LEFT PANEL */
-.panel-left{border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
-.panel-left::-webkit-scrollbar{width:3px}
-.panel-left::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
-
-.panel-header{padding:1.75rem 1.75rem 1.25rem;border-bottom:1px solid var(--border)}
-.panel-eyebrow{font-family:var(--mono);font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
-.panel-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--paper);line-height:1.15}
-.panel-sub{font-size:0.8rem;color:rgba(255,255,255,0.38);margin-top:0.4rem;line-height:1.55}
-
-.form-section{padding:1.25rem 1.75rem;border-bottom:1px solid var(--border)}
-.fsec-title{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
-.fsec-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05)}
-
-.field{margin-bottom:0.85rem}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.85rem}
-label{display:block;font-size:0.72rem;color:rgba(255,255,255,0.42);margin-bottom:0.35rem;letter-spacing:0.02em;font-weight:500}
-.input-wrap{position:relative}
-.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.78rem;color:rgba(255,255,255,0.28);pointer-events:none}
-.input-prefix{left:0.8rem}
-.input-suffix{right:0.8rem}
-input[type="text"],input[type="number"],select,textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--paper);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.8rem;border-radius:3px;outline:none;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none}
-.has-prefix input{padding-left:1.9rem}
-.has-suffix input{padding-right:2rem}
-input:focus,select:focus,textarea:focus{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.04)}
-input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.17)}
-textarea{resize:vertical;min-height:70px;line-height:1.5;font-family:var(--sans)}
-select{cursor:pointer}
-select option{background:var(--ink)}
-
-/* Angle selector chips */
-.angle-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
-.angle-chip{
-  padding:0.7rem 0.85rem;border:1px solid rgba(255,255,255,0.1);border-radius:3px;
-  background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.55);
-  font-size:0.78rem;cursor:pointer;transition:all 0.15s;
-  display:flex;align-items:center;gap:0.5rem;
-}
-.angle-chip:hover{border-color:rgba(201,168,76,0.3);color:var(--paper)}
-.angle-chip.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
-.angle-chip .icon{font-size:0.9rem;opacity:0.8}
-.angle-chip.active .icon{opacity:1}
-
-/* Tone slider */
-.tone-wrap{padding:0.5rem 0}
-.tone-labels{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em}
-input[type="range"]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.1);border-radius:2px;outline:none;cursor:pointer;border:none;padding:0}
-input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer}
-
-/* Generate button */
-.gen-btn{
-  width:100%;padding:0.9rem;
-  background:var(--gold);color:var(--ink);
-  border:none;border-radius:3px;cursor:pointer;
-  font-family:var(--sans);font-size:0.85rem;font-weight:700;
-  letter-spacing:0.08em;text-transform:uppercase;
-  transition:all 0.2s;margin-top:0.5rem;
-  display:flex;align-items:center;justify-content:center;gap:0.5rem;
-}
-.gen-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
-.gen-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
-.gen-btn.generating{background:rgba(201,168,76,0.2);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
-
-/* RIGHT PANEL */
-.panel-right{padding:2rem 2.25rem;overflow-y:auto;max-height:calc(100vh - 56px)}
-.panel-right::-webkit-scrollbar{width:3px}
-.panel-right::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
-
-/* Empty state */
-.empty-state{text-align:center;padding:4rem 2rem;max-width:500px;margin:0 auto}
-.empty-icon{
-  width:80px;height:80px;border-radius:50%;margin:0 auto 1.5rem;
-  background:var(--gold-dim);border:1.5px solid rgba(201,168,76,0.3);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:2rem;color:var(--gold);
-  position:relative;
-}
-.empty-icon::before,.empty-icon::after{
-  content:'';position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,0.2);
-}
-.empty-icon::before{inset:-10px;animation:ripple 3s infinite}
-.empty-icon::after{inset:-18px;animation:ripple 3s infinite 0.5s}
-@keyframes ripple{0%{opacity:0.8;transform:scale(0.9)}100%{opacity:0;transform:scale(1.2)}}
-.empty-title{font-family:var(--serif);font-size:1.5rem;color:var(--paper);margin-bottom:0.5rem;font-weight:700}
-.empty-sub{font-size:0.92rem;color:rgba(255,255,255,0.4);line-height:1.65}
-
-.empty-examples{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:2rem;text-align:left}
-.ex-card{padding:0.9rem 1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;font-size:0.78rem;color:rgba(255,255,255,0.55);line-height:1.5;transition:all 0.2s;cursor:pointer}
-.ex-card:hover{background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.25);color:var(--paper)}
-.ex-card .ex-tag{font-family:var(--mono);font-size:0.58rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.35rem;display:block}
-
-/* RESULTS */
-.results{display:none}
-.results.visible{display:block;animation:fadeIn 0.5s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-.res-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;gap:1rem;flex-wrap:wrap}
-.res-meta{}
-.res-title{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--paper);line-height:1.15;margin-bottom:0.5rem}
-.res-sub{font-family:var(--mono);font-size:0.72rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;text-transform:uppercase}
-.res-actions{display:flex;gap:0.5rem;flex-shrink:0}
-.res-btn{padding:0.55rem 1rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all 0.15s;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem}
-.res-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
-.res-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
-.res-btn-gold:hover{background:var(--gold-light);color:var(--ink)}
-
-/* VARIANT TABS */
-.variants{display:flex;gap:0.5rem;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.v-tab{padding:0.5rem 1rem;border:1px solid rgba(255,255,255,0.1);border-radius:3px;background:transparent;color:rgba(255,255,255,0.55);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:0.5rem}
-.v-tab:hover{border-color:rgba(201,168,76,0.3);color:var(--paper)}
-.v-tab.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
-.v-tab .v-label{font-family:var(--sans);text-transform:none;letter-spacing:0}
-
-/* NARRATIVE CARD */
-.narrative{
-  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
-  padding:2rem 2.25rem;margin-bottom:1.5rem;
-  position:relative;overflow:hidden;
-}
-.narrative::before{
-  content:'';position:absolute;top:0;right:0;width:300px;height:200px;
-  background:radial-gradient(ellipse at top right,rgba(201,168,76,0.08),transparent 70%);
-  pointer-events:none;
-}
-
-.nar-tag{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--gold);padding:0.3rem 0.65rem;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.25);border-radius:2px;margin-bottom:1.25rem}
-
-.nar-headline{
-  font-family:var(--serif);font-size:1.65rem;font-weight:700;
-  color:var(--paper);line-height:1.2;letter-spacing:-0.015em;
-  margin-bottom:1.25rem;
-}
-.nar-headline em{font-style:italic;color:var(--gold-light)}
-
-.nar-lede{
-  font-family:var(--serif);font-size:1.05rem;font-style:italic;
-  color:rgba(245,242,236,0.75);line-height:1.65;
-  padding:1rem 1.25rem;border-left:3px solid var(--gold);
-  margin-bottom:1.5rem;background:rgba(201,168,76,0.04);
-  border-radius:0 3px 3px 0;
-}
-
-.nar-body{font-size:0.92rem;line-height:1.8;color:rgba(245,242,236,0.8)}
-.nar-body p{margin-bottom:1rem}
-.nar-body p:last-child{margin-bottom:0}
-.nar-body strong{color:var(--paper);font-weight:600}
-.nar-body em{color:var(--gold-light);font-style:italic}
-
-/* HIGHLIGHTS STRIP */
-.hl-strip{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-  background:var(--border);border:1px solid var(--border);border-radius:4px;
-  overflow:hidden;margin-bottom:1.5rem;
-}
-.hl-cell{background:var(--ink-2);padding:1rem 1.25rem}
-.hl-num{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--gold-light);line-height:1;margin-bottom:0.25rem}
-.hl-lab{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
-
-/* BULLET SECTIONS */
-.bullets-section{
-  background:var(--ink-2);border:1px solid var(--border);border-radius:6px;
-  padding:1.75rem 2rem;margin-bottom:1.25rem;
-}
-.bs-title{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--paper);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem}
-.bs-title-icon{color:var(--gold);font-size:0.85rem}
-.bullet-list{list-style:none}
-.bullet-item{display:flex;gap:0.9rem;padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.88rem;line-height:1.6;color:rgba(255,255,255,0.7)}
-.bullet-item:last-child{border-bottom:none}
-.bullet-item b{color:var(--paper);font-weight:600}
-.bullet-marker{
-  min-width:28px;height:28px;border-radius:50%;flex-shrink:0;
-  background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:0.7rem;color:var(--gold);font-weight:600;
-}
-
-/* BUYER TARGETING */
-.target-section{
-  background:linear-gradient(135deg,rgba(139,158,232,0.06),rgba(139,158,232,0.01));
-  border:1px solid rgba(139,158,232,0.2);border-radius:6px;
-  padding:1.5rem 1.75rem;margin-bottom:1.25rem;
-}
-.ts-hd{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
-.ts-icon{width:36px;height:36px;border-radius:50%;background:rgba(139,158,232,0.15);border:1.5px solid rgba(139,158,232,0.3);display:flex;align-items:center;justify-content:center;color:var(--indigo);font-size:1rem;flex-shrink:0}
-.ts-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper)}
-.ts-sub{font-size:0.75rem;color:rgba(255,255,255,0.4);font-family:var(--mono);letter-spacing:0.02em;margin-top:0.1rem}
-.ts-text{font-size:0.88rem;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:1.25rem}
-.ts-text b{color:var(--indigo);font-weight:600}
-.target-list{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem}
-.target-chip{padding:0.85rem 1rem;background:rgba(13,15,14,0.5);border:1px solid rgba(255,255,255,0.06);border-radius:3px}
-.tc-type{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo);margin-bottom:0.3rem}
-.tc-name{font-size:0.85rem;font-weight:600;color:var(--paper);margin-bottom:0.2rem}
-.tc-score{font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.02em}
-
-/* SNIPPETS */
-.snippets{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.snip-card{
-  background:var(--ink-2);border:1px solid var(--border);border-radius:4px;
-  padding:1.25rem 1.4rem;transition:all 0.2s;
-}
-.snip-card:hover{border-color:rgba(201,168,76,0.2)}
-.snip-tag{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;justify-content:space-between}
-.snip-copy-btn{
-  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;
-  padding:0.2rem 0.5rem;border-radius:2px;cursor:pointer;
-  background:transparent;color:rgba(255,255,255,0.4);
-  border:1px solid rgba(255,255,255,0.1);transition:all 0.15s;
-}
-.snip-copy-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
-.snip-copy-btn.copied{background:rgba(109,186,143,0.15);color:var(--success);border-color:rgba(109,186,143,0.3)}
-.snip-text{font-size:0.85rem;line-height:1.65;color:rgba(245,242,236,0.75);font-style:italic}
-
-/* LOADING STATE */
-.loading-state{display:none;padding:3rem;text-align:center}
-.loading-state.visible{display:block}
-.loading-icon{
-  width:60px;height:60px;border-radius:50%;margin:0 auto 1.25rem;
-  background:var(--gold-dim);border:2px solid var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--gold);font-family:var(--serif);font-size:1.4rem;
-  animation:spin 1.5s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-title{font-family:var(--serif);font-size:1.25rem;color:var(--paper);margin-bottom:0.5rem;font-weight:700}
-.loading-sub{font-size:0.82rem;color:rgba(255,255,255,0.45);margin-bottom:2rem}
-.loading-steps{display:flex;flex-direction:column;gap:0.75rem;max-width:360px;margin:0 auto;text-align:left}
-.loading-step{display:flex;align-items:center;gap:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.4);opacity:0.4;transition:all 0.3s}
-.loading-step.active{opacity:1;color:var(--paper)}
-.loading-step.done{opacity:1;color:var(--success)}
-.loading-step-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0}
-.loading-step.active .loading-step-dot{border-color:var(--gold);background:var(--gold-dim)}
-.loading-step.done .loading-step-dot{background:var(--success);border-color:var(--success)}
-.loading-step.done .loading-step-dot::after{content:'✓';display:block;text-align:center;color:var(--ink);font-size:0.68rem;line-height:11px;font-weight:bold}
-
-/* Responsive */
-@media(max-width:1024px){
-  .app{grid-template-columns:1fr}
-  .panel-left{position:static;max-height:none}
-  .hl-strip{grid-template-columns:1fr 1fr}
-  .target-list{grid-template-columns:1fr}
-  .snippets{grid-template-columns:1fr}
-  .empty-examples{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .panel-right{padding:1.5rem 1.25rem}
-  .narrative{padding:1.5rem}
-}
+html{scroll-behavior:smooth} body{font-family:var(--sans);background:radial-gradient(circle at 15% -10%,rgba(143,211,167,.13),transparent 34%),radial-gradient(circle at 82% 8%,rgba(201,168,76,.11),transparent 30%),linear-gradient(180deg,#090b0a,#0c0f0d 46%,#070807);color:var(--paper);min-height:100vh;font-size:14.5px;line-height:1.55;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.33}
+a{color:inherit}
+nav{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 2.35rem;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;background:rgba(9,11,10,.88);backdrop-filter:blur(18px)}
+.logo{display:flex;align-items:center;gap:.68rem;text-decoration:none}.mark{width:25px;height:25px;border:1px solid rgba(201,168,76,.45);border-radius:50%;display:grid;place-items:center;color:var(--gold2);font-family:var(--serif);font-size:.9rem;font-weight:700;box-shadow:0 0 35px rgba(201,168,76,.08)}.brand{font-family:var(--serif);font-weight:700;font-size:1.15rem;letter-spacing:.01em}.nav-mid{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.28);background:rgba(201,168,76,.07);padding:.34rem .8rem;border-radius:999px}.nav-actions{display:flex;align-items:center;gap:.7rem}.nav-link{font-size:.78rem;color:rgba(247,242,232,.52);text-decoration:none;transition:.18s}.nav-link:hover{color:var(--green)}.status{font-family:var(--mono);font-size:.61rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green);display:flex;gap:.4rem;align-items:center}.status i{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(143,211,167,.55)}
+.app{display:grid;grid-template-columns:minmax(370px,410px) 1fr;min-height:calc(100vh - 66px)}
+.sidebar{position:sticky;top:66px;max-height:calc(100vh - 66px);overflow:auto;border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(15,19,17,.78),rgba(10,12,11,.7));}.sidebar::-webkit-scrollbar,.main::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb,.main::-webkit-scrollbar-thumb{background:rgba(247,242,232,.12);border-radius:20px}
+.side-head{padding:1.7rem 1.6rem 1.25rem;border-bottom:1px solid var(--line)}.eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:.55rem}.side-title{font-family:var(--serif);font-size:1.72rem;line-height:1.08;font-weight:700;letter-spacing:-.02em}.side-copy{font-size:.82rem;color:rgba(247,242,232,.47);margin-top:.55rem;line-height:1.55}.pillrow{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:1rem}.pill{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line2);color:rgba(247,242,232,.5);border-radius:999px;padding:.28rem .55rem;background:rgba(247,242,232,.025)}
+.section{padding:1.25rem 1.6rem;border-bottom:1px solid var(--line)}.section-title{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(247,242,232,.35)}.section-title::after{content:"";height:1px;flex:1;background:rgba(247,242,232,.055)}
+.source-toggle{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:1rem}.toggle-btn{border:1px solid var(--line2);background:rgba(247,242,232,.035);color:rgba(247,242,232,.56);border-radius:10px;padding:.72rem .75rem;text-align:left;cursor:pointer;transition:.18s}.toggle-btn b{display:block;font-size:.78rem;color:rgba(247,242,232,.75);margin-bottom:.08rem}.toggle-btn span{font-size:.68rem;color:rgba(247,242,232,.34)}.toggle-btn:hover{border-color:rgba(143,211,167,.38);background:rgba(143,211,167,.055)}.toggle-btn.active{border-color:rgba(143,211,167,.62);background:var(--greenDim);box-shadow:0 0 0 1px rgba(143,211,167,.08) inset}.toggle-btn.active b{color:var(--green)}
+.field{margin-bottom:.82rem}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.68rem}.field-row-3{display:grid;grid-template-columns:1fr .9fr .9fr;gap:.68rem}label{display:block;font-size:.71rem;color:rgba(247,242,232,.45);margin-bottom:.35rem;font-weight:600}input,select,textarea{width:100%;font-family:var(--sans);font-size:.86rem;color:var(--paper);background:rgba(247,242,232,.045);border:1px solid rgba(247,242,232,.11);border-radius:10px;padding:.72rem .78rem;outline:none;transition:.18s}textarea{min-height:84px;resize:vertical;line-height:1.55}select{cursor:pointer}select option{background:#101512;color:var(--paper)}input::placeholder,textarea::placeholder{color:rgba(247,242,232,.2)}input:focus,select:focus,textarea:focus{border-color:rgba(143,211,167,.48);background:rgba(143,211,167,.055);box-shadow:0 0 0 3px rgba(143,211,167,.055)}.input-wrap{position:relative}.input-wrap span{position:absolute;left:.78rem;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.78rem;color:rgba(247,242,232,.33)}.input-wrap input{padding-left:1.9rem}.hint{font-size:.69rem;color:rgba(247,242,232,.3);margin-top:.42rem}.hide{display:none!important}.dash-empty{border:1px dashed rgba(247,242,232,.18);background:rgba(247,242,232,.026);border-radius:12px;padding:.8rem;color:rgba(247,242,232,.42);font-size:.78rem;line-height:1.45}.dash-empty a{color:var(--green);text-decoration:none}.dash-empty a:hover{text-decoration:underline}
+.chip-grid{display:grid;grid-template-columns:1fr 1fr;gap:.52rem}.angle-chip{border:1px solid rgba(247,242,232,.11);background:rgba(247,242,232,.035);border-radius:11px;padding:.72rem .75rem;color:rgba(247,242,232,.58);font-size:.78rem;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:.48rem}.angle-chip i{font-style:normal;color:rgba(143,211,167,.7)}.angle-chip:hover{border-color:rgba(143,211,167,.34);color:var(--paper);transform:translateY(-1px)}.angle-chip.active{border-color:rgba(143,211,167,.6);background:var(--greenDim);color:var(--green)}
+.gen{width:100%;border:none;border-radius:12px;padding:.92rem 1rem;background:linear-gradient(135deg,var(--green),#bddfbf);color:#07100b;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:.55rem}.gen:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(143,211,167,.13)}.gen:disabled{opacity:.55;cursor:not-allowed;transform:none}.mini-actions{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.7rem}.ghost{border:1px solid rgba(247,242,232,.12);background:rgba(247,242,232,.035);color:rgba(247,242,232,.62);border-radius:10px;padding:.68rem .75rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s}.ghost:hover{border-color:rgba(201,168,76,.38);color:var(--gold2);background:rgba(201,168,76,.06)}
+.main{max-height:calc(100vh - 66px);overflow:auto;padding:2rem 2.25rem 3rem}.hero{border:1px solid var(--line);border-radius:24px;padding:2rem;background:linear-gradient(135deg,rgba(247,242,232,.055),rgba(247,242,232,.018));position:relative;overflow:hidden;margin-bottom:1.2rem}.hero::before{content:"";position:absolute;right:-120px;top:-140px;width:420px;height:420px;background:radial-gradient(circle,rgba(143,211,167,.12),transparent 65%)}.hero::after{content:"";position:absolute;left:10%;bottom:-160px;width:350px;height:350px;background:radial-gradient(circle,rgba(201,168,76,.09),transparent 68%)}.hero>*{position:relative;z-index:1}.hero-kicker{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:.65rem}.hero h1{font-family:var(--serif);font-size:clamp(2.05rem,4vw,4.25rem);line-height:.98;letter-spacing:-.045em;max-width:900px}.hero h1 em{font-style:normal;color:var(--gold2)}.hero p{margin-top:1rem;max-width:720px;color:rgba(247,242,232,.58);font-size:.98rem;line-height:1.7}.hero-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:1.45rem}.hero-card{border:1px solid var(--line);background:rgba(9,11,10,.44);border-radius:16px;padding:.9rem}.hero-card b{display:block;font-family:var(--serif);font-size:1.28rem;color:var(--paper);line-height:1}.hero-card span{display:block;margin-top:.32rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(247,242,232,.36)}
+.empty{padding:4.5rem 1rem;text-align:center;max-width:680px;margin:0 auto}.empty-icon{width:82px;height:82px;margin:0 auto 1.15rem;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:2rem;color:var(--green);background:var(--greenDim);border:1px solid rgba(143,211,167,.28);box-shadow:0 0 70px rgba(143,211,167,.08)}.empty h2{font-family:var(--serif);font-size:1.65rem}.empty p{margin:.65rem auto 0;color:rgba(247,242,232,.48);max-width:560px;line-height:1.7}.example-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.7rem;text-align:left}.example{border:1px solid var(--line);background:rgba(247,242,232,.035);border-radius:14px;padding:.95rem;cursor:pointer;transition:.18s}.example:hover{border-color:rgba(143,211,167,.36);background:rgba(143,211,167,.06);transform:translateY(-1px)}.example small{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}.example div{margin-top:.35rem;color:rgba(247,242,232,.6);font-size:.82rem;line-height:1.5}
+.loading{display:none;text-align:center;padding:4rem 1rem}.loader{width:62px;height:62px;border-radius:50%;border:1px solid rgba(143,211,167,.25);border-top-color:var(--green);margin:0 auto 1rem;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading h2{font-family:var(--serif);font-size:1.35rem}.loading p{color:rgba(247,242,232,.44);margin-top:.35rem}.steps{max-width:430px;margin:1.4rem auto 0;display:grid;gap:.58rem;text-align:left}.step{display:flex;gap:.7rem;align-items:center;color:rgba(247,242,232,.36);font-size:.82rem}.step i{width:12px;height:12px;border-radius:50%;border:1px solid rgba(247,242,232,.22);display:block}.step.active{color:var(--paper)}.step.active i{border-color:var(--green);background:rgba(143,211,167,.18)}.step.done{color:var(--green)}.step.done i{background:var(--green);border-color:var(--green)}
+.results{display:none}.results.visible,.loading.visible{display:block;animation:fade .35s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.res-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}.res-title{font-family:var(--serif);font-size:2rem;line-height:1.08;letter-spacing:-.025em}.res-sub{margin-top:.4rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(247,242,232,.4)}.res-actions{display:flex;gap:.55rem;flex-wrap:wrap}.btn{border:1px solid rgba(247,242,232,.13);background:rgba(247,242,232,.04);color:rgba(247,242,232,.64);border-radius:999px;padding:.62rem .9rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:.18s}.btn:hover{border-color:rgba(143,211,167,.4);color:var(--green);background:rgba(143,211,167,.06)}.btn.gold{background:var(--gold);border-color:var(--gold);color:#0d0f0e;font-weight:800}.btn.gold:hover{background:var(--gold2);color:#0d0f0e}.tabs{display:flex;gap:.45rem;margin:1rem 0;flex-wrap:wrap}.tab{border:1px solid rgba(247,242,232,.12);background:rgba(247,242,232,.035);color:rgba(247,242,232,.55);border-radius:999px;padding:.58rem .9rem;font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.tab.active{background:var(--greenDim);border-color:rgba(143,211,167,.5);color:var(--green)}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:1rem}.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(247,242,232,.052),rgba(247,242,232,.025));border-radius:20px;padding:1.55rem;position:relative;overflow:hidden}.card::before{content:"";position:absolute;right:-80px;top:-100px;width:260px;height:260px;background:radial-gradient(circle,rgba(143,211,167,.08),transparent 66%)}.card>*{position:relative;z-index:1}.tag{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green);background:rgba(143,211,167,.1);border:1px solid rgba(143,211,167,.23);border-radius:999px;padding:.32rem .64rem;margin-bottom:.9rem}.headline{font-family:var(--serif);font-size:1.75rem;line-height:1.14;letter-spacing:-.025em;margin-bottom:1rem}.headline em{font-style:normal;color:var(--gold2)}.lede{font-family:var(--serif);font-size:1.04rem;line-height:1.62;color:rgba(247,242,232,.75);background:rgba(201,168,76,.055);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:.95rem 1rem;margin-bottom:1rem}.body-copy p{font-size:.92rem;line-height:1.8;color:rgba(247,242,232,.72);margin-bottom:1rem}.body-copy p:last-child{margin-bottom:0}.body-copy strong{color:var(--paper)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}.metric{border:1px solid var(--line);background:rgba(9,11,10,.36);border-radius:16px;padding:1rem}.metric b{font-family:var(--serif);font-size:1.48rem;display:block;line-height:1;color:var(--gold2)}.metric span{font-family:var(--mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:rgba(247,242,232,.35);display:block;margin-top:.38rem}.section-card{margin-top:1rem}.list{list-style:none;display:grid;gap:.55rem}.list li{border:1px solid rgba(247,242,232,.07);background:rgba(9,11,10,.28);border-radius:14px;padding:.82rem .9rem;display:flex;gap:.75rem;color:rgba(247,242,232,.72);font-size:.87rem;line-height:1.55}.num{width:26px;height:26px;border-radius:50%;background:rgba(143,211,167,.1);border:1px solid rgba(143,211,167,.24);color:var(--green);display:grid;place-items:center;flex:0 0 26px;font-family:var(--mono);font-size:.64rem}.list b{color:var(--paper)}.buyer-box{border-color:rgba(156,169,241,.22);background:linear-gradient(135deg,rgba(156,169,241,.075),rgba(247,242,232,.025))}.buyer-box .tag{color:var(--blue);background:rgba(156,169,241,.11);border-color:rgba(156,169,241,.24)}.match-list{display:grid;gap:.6rem;margin-top:.9rem}.match{border:1px solid rgba(247,242,232,.08);background:rgba(9,11,10,.32);border-radius:14px;padding:.85rem}.match-top{display:flex;justify-content:space-between;gap:.7rem;align-items:center}.match b{font-size:.86rem}.score{font-family:var(--mono);font-size:.62rem;color:var(--blue)}.match span{display:block;color:rgba(247,242,232,.42);font-size:.74rem;margin-top:.25rem}.snips{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem}.snip{border:1px solid var(--line);background:rgba(247,242,232,.035);border-radius:16px;padding:1rem}.snip-head{display:flex;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:var(--gold2)}.copybtn{border:1px solid rgba(247,242,232,.12);background:transparent;color:rgba(247,242,232,.45);border-radius:999px;padding:.18rem .5rem;font-family:var(--mono);font-size:.55rem;cursor:pointer}.copybtn:hover{color:var(--green);border-color:rgba(143,211,167,.34)}.snip p{font-size:.83rem;line-height:1.6;color:rgba(247,242,232,.7);font-style:italic}.toast{position:fixed;right:1.2rem;bottom:1.2rem;background:#111813;border:1px solid rgba(143,211,167,.28);color:var(--green);padding:.72rem .9rem;border-radius:999px;font-family:var(--mono);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;opacity:0;transform:translateY(8px);pointer-events:none;transition:.22s;z-index:200}.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1080px){.app{grid-template-columns:1fr}.sidebar{position:relative;top:auto;max-height:none;border-right:none;border-bottom:1px solid var(--line)}.main{max-height:none}.hero-cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.field-row-3{grid-template-columns:1fr 1fr}.res-head{display:block}.res-actions{margin-top:1rem}}
+@media(max-width:640px){nav{padding:0 1rem}.nav-mid,.status{display:none}.app{display:block}.main{padding:1.2rem 1rem 2rem}.section,.side-head{padding-left:1rem;padding-right:1rem}.source-toggle,.field-row,.field-row-3,.hero-cards,.example-grid,.metrics,.snips{grid-template-columns:1fr}.hero{padding:1.35rem;border-radius:20px}.hero h1{font-size:2.35rem}.chip-grid{grid-template-columns:1fr}.res-title{font-size:1.55rem}.card{padding:1.15rem}.headline{font-size:1.35rem}}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="index.html" class="nav-logo"><span class="nav-dot"></span>BRIC Studios</a>
-  <span class="nav-badge">Deal Studio</span>
-  <div class="nav-right">
-    <span class="nav-ai-badge"><span class="nav-ai-dot"></span>AI Powered</span>
-    <a href="dashboard.html" class="nav-back">← Dashboard</a>
-  </div>
+  <a class="logo" href="index.html" aria-label="BRIC Studios home"><span class="mark">B</span><span class="brand">BRIC Studios</span></a>
+  <div class="nav-mid">Deal Studio</div>
+  <div class="nav-actions"><span class="status"><i></i>Live Builder</span><a class="nav-link" href="dashboard.html">Dashboard</a><a class="nav-link" href="om-studio.html">OM Studio</a></div>
 </nav>
-
 <div class="app">
-
-  <!-- LEFT: BUILDER -->
-  <div class="panel-left">
-    <div class="panel-header">
-      <div class="panel-eyebrow">Pitch Generator</div>
-      <div class="panel-title">Deal Studio</div>
-      <div class="panel-sub">Turn your asset into a compelling, investor-ready narrative. Our AI structures the story brokers get paid to tell.</div>
+  <aside class="sidebar">
+    <div class="side-head">
+      <div class="eyebrow">Owner Deal Workspace</div>
+      <div class="side-title">Turn property data into next steps.</div>
+      <div class="side-copy">Pull a saved dashboard property or enter any address. Deal Studio creates the owner-facing deal angle, buyer profile, outreach copy, and handoff into the OM builder.</div>
+      <div class="pillrow"><span class="pill">Buyer Intel</span><span class="pill">Broker Match</span><span class="pill">OM Ready</span></div>
     </div>
-
-    <!-- Property Basics -->
-    <div class="form-section">
-      <div class="fsec-title">Property Context</div>
-      <div class="field">
-        <label>Property Address</label>
-        <input type="text" id="f-addr" placeholder="142 Bedford Avenue" value="142 Bedford Avenue"/>
+    <section class="section">
+      <div class="section-title">Property Source</div>
+      <div class="source-toggle">
+        <button type="button" class="toggle-btn active" id="srcSaved"><b>Dashboard</b><span>Use saved property</span></button>
+        <button type="button" class="toggle-btn" id="srcManual"><b>Manual</b><span>Type any address</span></button>
+      </div>
+      <div id="savedWrap" class="field">
+        <label for="savedProperty">Saved Dashboard Property</label>
+        <select id="savedProperty"></select>
+        <div id="savedEmpty" class="dash-empty hide">No saved dashboard properties were found in this browser. You can still use manual entry, or generate/save a valuation first from <a href="valuation.html">Valuation Studio</a>.</div>
+        <div class="hint">Reads common BRIC dashboard/localStorage keys and imports address, units, NOI, price, city, state, and property type when available.</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-title">Property Context</div>
+      <div class="field"><label for="fAddr">Property Address</label><input id="fAddr" type="text" placeholder="Enter property address" autocomplete="off" /></div>
+      <div class="field-row-3">
+        <div class="field"><label for="fCity">City</label><input id="fCity" type="text" placeholder="Select / type city" /></div>
+        <div class="field"><label for="fState">State</label><select id="fState"></select></div>
+        <div class="field"><label for="fZip">ZIP</label><input id="fZip" type="text" placeholder="Optional" /></div>
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Submarket</label>
-          <input type="text" id="f-sub" placeholder="Williamsburg" value="Williamsburg"/>
-        </div>
-        <div class="field">
-          <label>Units</label>
-          <input type="number" id="f-units" value="6"/>
-        </div>
+        <div class="field"><label for="fType">Property Type</label><select id="fType"><option>Multifamily</option><option>Mixed-Use</option><option>Retail</option><option>Office</option><option>Industrial</option><option>Development</option><option>Single-Family Rental</option></select></div>
+        <div class="field"><label for="fUnits">Units</label><input id="fUnits" type="number" min="0" placeholder="0" /></div>
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Ask Price</label>
-          <div class="input-wrap has-prefix">
-            <span class="input-prefix">$</span>
-            <input type="number" id="f-price" value="3200000"/>
-          </div>
-        </div>
-        <div class="field">
-          <label>Current NOI</label>
-          <div class="input-wrap has-prefix">
-            <span class="input-prefix">$</span>
-            <input type="number" id="f-noi" value="163000"/>
-          </div>
-        </div>
+        <div class="field"><label for="fPrice">Target / Ask Price</label><div class="input-wrap"><span>$</span><input id="fPrice" type="number" min="0" placeholder="Optional" /></div></div>
+        <div class="field"><label for="fNOI">Current NOI</label><div class="input-wrap"><span>$</span><input id="fNOI" type="number" min="0" placeholder="Optional" /></div></div>
       </div>
-    </div>
-
-    <!-- Deal Angle -->
-    <div class="form-section">
-      <div class="fsec-title">Deal Angle</div>
-      <label style="margin-bottom:0.75rem">Choose the story you want to tell</label>
-      <div class="angle-grid">
-        <div class="angle-chip active" data-angle="value-add"><span class="icon">◆</span>Value-Add</div>
-        <div class="angle-chip" data-angle="stabilized"><span class="icon">◉</span>Stabilized Hold</div>
-        <div class="angle-chip" data-angle="repositioning"><span class="icon">◈</span>Repositioning</div>
-        <div class="angle-chip" data-angle="redevelopment"><span class="icon">▲</span>Redevelopment</div>
-        <div class="angle-chip" data-angle="under-market"><span class="icon">▼</span>Under-Market Rent</div>
-        <div class="angle-chip" data-angle="turnkey"><span class="icon">●</span>Turnkey Investment</div>
+      <div class="field-row">
+        <div class="field"><label for="fUpside">Rent / NOI Upside</label><input id="fUpside" type="number" min="0" placeholder="e.g. 18" /></div>
+        <div class="field"><label for="fCapex">Capex Status</label><select id="fCapex"><option value="recent">Recent upgrades completed</option><option value="light">Light cosmetic updates needed</option><option value="moderate">Moderate repositioning needed</option><option value="heavy">Heavy renovation / redevelopment</option></select></div>
       </div>
-    </div>
-
-    <!-- Key Strengths -->
-    <div class="form-section">
-      <div class="fsec-title">What makes this deal special?</div>
-      <div class="field">
-        <label>Key Strengths (one per line)</label>
-        <textarea id="f-strengths" placeholder="Enter the differentiators...">Below-market rents with 25% upside potential
-Prime Williamsburg location near L train
-Recently upgraded roof and mechanicals
-100% occupancy with strong tenant base
-Favorable R6B zoning with air rights</textarea>
+    </section>
+    <section class="section">
+      <div class="section-title">Deal Angle</div>
+      <div class="chip-grid" id="angleGrid">
+        <button type="button" class="angle-chip active" data-angle="value-add"><i>◆</i>Value-Add</button>
+        <button type="button" class="angle-chip" data-angle="stabilized"><i>●</i>Stabilized Hold</button>
+        <button type="button" class="angle-chip" data-angle="repositioning"><i>◈</i>Repositioning</button>
+        <button type="button" class="angle-chip" data-angle="redevelopment"><i>▲</i>Redevelopment</button>
+        <button type="button" class="angle-chip" data-angle="refi"><i>◇</i>Refi / Hold</button>
+        <button type="button" class="angle-chip" data-angle="broker"><i>✦</i>Broker Opinion</button>
       </div>
-      <div class="field">
-        <label>Known Challenges (optional — AI will reframe)</label>
-        <textarea id="f-challenges" placeholder="e.g. older boiler, needs cosmetic work">Older boiler — may need replacement within 3 years
-Two units require cosmetic updates</textarea>
+    </section>
+    <section class="section">
+      <div class="section-title">Positioning Inputs</div>
+      <div class="field"><label for="fStrengths">Key Strengths</label><textarea id="fStrengths" placeholder="One per line: location, rent upside, unit mix, recent upgrades, tax benefit, zoning, assumable debt..."></textarea></div>
+      <div class="field"><label for="fChallenges">Known Challenges</label><textarea id="fChallenges" placeholder="Optional: vacancy, repairs, older systems, rent-stabilized units, tax reassessment risk..."></textarea><div class="hint">Deal Studio reframes issues honestly instead of pretending they do not exist.</div></div>
+      <div class="field-row">
+        <div class="field"><label for="fAudience">Target Audience</label><select id="fAudience"><option value="private">Private Investors</option><option value="owner-operator">Owner-Operators</option><option value="family-office">Family Offices / HNW</option><option value="institutional">Institutional Capital</option><option value="broker">Brokers / Advisors</option><option value="mixed">Broad Market</option></select></div>
+        <div class="field"><label for="fTone">Tone</label><select id="fTone"><option value="conservative">Conservative</option><option value="confident" selected>Confident</option><option value="direct">Direct / Punchy</option><option value="premium">Premium</option></select></div>
       </div>
-    </div>
-
-    <!-- Target Audience -->
-    <div class="form-section">
-      <div class="fsec-title">Target Buyer Profile</div>
-      <div class="field">
-        <label>Who's this pitch for?</label>
-        <select id="f-audience">
-          <option value="institutional">Institutional Investors</option>
-          <option value="family-office" selected>Family Offices & HNW</option>
-          <option value="private">Private Investors</option>
-          <option value="owner-operator">Owner-Operators</option>
-          <option value="mixed">Broad Market</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Pitch Tone</label>
-        <div class="tone-wrap">
-          <div class="tone-labels">
-            <span>Conservative</span><span>Confident</span><span>Bold</span>
-          </div>
-          <input type="range" id="f-tone" min="1" max="3" value="2" step="1"/>
-        </div>
-      </div>
-    </div>
-
-    <!-- Generate -->
-    <div class="form-section" style="border-bottom:none">
-      <button class="gen-btn" id="genBtn" onclick="generateDeal()">
-        <span>✦</span> Generate Deal Narrative
-      </button>
-      <div style="text-align:center;margin-top:0.75rem;font-size:0.7rem;color:rgba(255,255,255,0.25);font-family:var(--mono);letter-spacing:0.03em">
-        AI-generated · Review before external use
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT: OUTPUT -->
-  <div class="panel-right">
-
-    <!-- Empty State -->
-    <div class="empty-state" id="emptyState">
-      <div class="empty-icon">✦</div>
-      <div class="empty-title">Your Deal Narrative Will Appear Here</div>
-      <div class="empty-sub">Deal Studio analyzes your property details, market data, and buyer profile to craft a compelling investment story — the same way top brokers do it, minus the commission.</div>
-      <div class="empty-examples">
-        <div class="ex-card">
-          <span class="ex-tag">Value-Add Pitch</span>
-          Repositioned to highlight below-market rent upside and Class B to B+ path.
-        </div>
-        <div class="ex-card">
-          <span class="ex-tag">Stabilized Hold</span>
-          Emphasizes durable cash flow, tenant quality, and low-management burden.
-        </div>
-        <div class="ex-card">
-          <span class="ex-tag">Repositioning</span>
-          Frames renovation potential and submarket momentum as compounding upside.
-        </div>
-        <div class="ex-card">
-          <span class="ex-tag">Redevelopment</span>
-          Focuses on zoning, air rights, and long-term land value creation.
-        </div>
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div class="loading-state" id="loadingState">
-      <div class="loading-icon">✦</div>
-      <div class="loading-title">Crafting Your Deal Narrative</div>
-      <div class="loading-sub">Analyzing property, market, and buyer signals...</div>
-      <div class="loading-steps">
-        <div class="loading-step" id="step1"><div class="loading-step-dot"></div>Analyzing property fundamentals</div>
-        <div class="loading-step" id="step2"><div class="loading-step-dot"></div>Benchmarking against submarket comps</div>
-        <div class="loading-step" id="step3"><div class="loading-step-dot"></div>Matching narrative to buyer profile</div>
-        <div class="loading-step" id="step4"><div class="loading-step-dot"></div>Generating pitch variations</div>
-      </div>
-    </div>
-
-    <!-- Results -->
-    <div class="results" id="results">
-
-      <!-- Header -->
-      <div class="res-header">
-        <div class="res-meta">
-          <div class="res-title" id="resTitle">142 Bedford Avenue · Williamsburg</div>
-          <div class="res-sub" id="resSub">Value-Add Pitch · Family Office Audience</div>
-        </div>
-        <div class="res-actions">
-          <button class="res-btn" onclick="regenerate()">↻ Regenerate</button>
-          <a href="om-studio.html" class="res-btn res-btn-gold">→ Build Full OM</a>
-        </div>
-      </div>
-
-      <!-- Variant tabs -->
-      <div class="variants">
-        <button class="v-tab active" data-variant="0" onclick="showVariant(0)">
-          <span>A</span><span class="v-label">Narrative</span>
-        </button>
-        <button class="v-tab" data-variant="1" onclick="showVariant(1)">
-          <span>B</span><span class="v-label">Investor Story</span>
-        </button>
-        <button class="v-tab" data-variant="2" onclick="showVariant(2)">
-          <span>C</span><span class="v-label">Punchy / Brief</span>
-        </button>
-      </div>
-
-      <!-- Narrative variant content -->
-      <div class="narrative" id="narrative">
-        <!-- Populated by JS -->
-      </div>
-
-      <!-- Highlights strip -->
-      <div class="hl-strip">
-        <div class="hl-cell">
-          <div class="hl-num">25%</div>
-          <div class="hl-lab">Rent Upside</div>
-        </div>
-        <div class="hl-cell">
-          <div class="hl-num">5.1%</div>
-          <div class="hl-lab">Current Cap</div>
-        </div>
-        <div class="hl-cell">
-          <div class="hl-num">6.3%</div>
-          <div class="hl-lab">Pro-Forma Cap</div>
-        </div>
-        <div class="hl-cell">
-          <div class="hl-num">+8.4%</div>
-          <div class="hl-lab">Submarket YoY</div>
-        </div>
-      </div>
-
-      <!-- Investment Highlights -->
-      <div class="bullets-section">
-        <div class="bs-title"><span class="bs-title-icon">◆</span>Investment Highlights</div>
-        <ul class="bullet-list" id="bulletList">
-          <!-- Populated by JS -->
-        </ul>
-      </div>
-
-      <!-- Buyer Targeting -->
-      <div class="target-section">
-        <div class="ts-hd">
-          <div class="ts-icon">◉</div>
-          <div>
-            <div class="ts-title">This Pitch Targets</div>
-            <div class="ts-sub">Based on your submarket's active buyer pool</div>
-          </div>
-        </div>
-        <div class="ts-text">
-          This narrative is calibrated for <b>family offices and HNW private investors</b> focused on Brooklyn value-add plays. It emphasizes below-market rent delta, stabilized current cash flow, and clear paths to NOI growth — the combination this buyer class historically rewards most.
-        </div>
-        <div class="target-list">
-          <div class="target-chip">
-            <div class="tc-type">Best Match</div>
-            <div class="tc-name">Stonebridge Capital</div>
-            <div class="tc-score">87% match · Family Office · Williamsburg focus</div>
-          </div>
-          <div class="target-chip">
-            <div class="tc-type">Strong Match</div>
-            <div class="tc-name">Cooper Properties</div>
-            <div class="tc-score">94% match · Private Investor · Value-Add</div>
-          </div>
-          <div class="target-chip">
-            <div class="tc-type">Possible Match</div>
-            <div class="tc-name">Meridian Holdings</div>
-            <div class="tc-score">85% match · Owner-Operator · Long-term hold</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Snippets -->
-      <div class="snippets">
-        <div class="snip-card">
-          <div class="snip-tag">
-            <span>Email Subject Line</span>
-            <button class="snip-copy-btn" onclick="copySnip(this,'Off-Market Opportunity — 142 Bedford Ave, Williamsburg')">Copy</button>
-          </div>
-          <div class="snip-text">"Off-Market Opportunity — 142 Bedford Ave, Williamsburg"</div>
-        </div>
-        <div class="snip-card">
-          <div class="snip-tag">
-            <span>LinkedIn Post Teaser</span>
-            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
-          </div>
-          <div class="snip-text">"Rare Williamsburg 6-unit with 25% rent upside, full occupancy, and favorable zoning. Available to qualified buyers — DM for details."</div>
-        </div>
-        <div class="snip-card">
-          <div class="snip-tag">
-            <span>30-Second Phone Pitch</span>
-            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
-          </div>
-          <div class="snip-text">"Six-unit pre-war on Bedford Ave — stabilized at a 5.1 with a clear 25% rent delta vs. market. Recently upgraded roof and mechanicals, R6B zoning. Williamsburg rents up 8.4% YoY. Pro-forma to a 6.3 cap."</div>
-        </div>
-        <div class="snip-card">
-          <div class="snip-tag">
-            <span>Pitch Deck Opening Line</span>
-            <button class="snip-copy-btn" onclick="copySnip(this,this.parentElement.parentElement.querySelector('.snip-text').textContent)">Copy</button>
-          </div>
-          <div class="snip-text">"In one of Brooklyn's most supply-constrained submarkets, a rare opportunity to acquire a stabilized, fully-occupied asset with embedded rent upside."</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
+    </section>
+    <section class="section" style="border-bottom:none">
+      <button class="gen" id="genBtn" type="button"><span>✦</span> Run Deal Studio</button>
+      <div class="mini-actions"><button class="ghost" id="clearBtn" type="button">Clear</button><button class="ghost" id="saveBtn" type="button">Save Result</button></div>
+      <div class="hint" style="text-align:center">Static HTML prototype · Functional localStorage import/export · API-ready structure</div>
+    </section>
+  </aside>
+  <main class="main">
+    <section class="hero" id="heroIntro">
+      <div class="hero-kicker">Deal Studio</div>
+      <h1>From property data to a <em>real deal strategy.</em></h1>
+      <p>Use this as the bridge between Valuation Studio, Buyer Intelligence, Broker Intelligence, and OM Studio. The goal is not a generic directory — it is a guided owner workflow that turns a property into a next-best-action plan.</p>
+      <div class="hero-cards"><div class="hero-card"><b id="dashCount">0</b><span>Saved Properties Found</span></div><div class="hero-card"><b>3</b><span>Pitch Variations</span></div><div class="hero-card"><b>4</b><span>Outreach Assets</span></div><div class="hero-card"><b>1</b><span>OM Handoff</span></div></div>
+    </section>
+    <section class="empty" id="emptyState">
+      <div class="empty-icon">✦</div><h2>Your deal strategy will appear here.</h2>
+      <p>Choose a saved dashboard property or enter any address, then run Deal Studio. You’ll get a clean narrative, buyer targeting, investment highlights, risk framing, and outreach snippets.</p>
+      <div class="example-grid"><div class="example" data-example="value"><small>Value-Add</small><div>Frame rent upside and expense improvement without overselling the deal.</div></div><div class="example" data-example="refi"><small>Refi / Hold</small><div>Position the property around NOI, DSCR, lender questions, and hold strategy.</div></div><div class="example" data-example="broker"><small>Broker Selection</small><div>Use the property profile to decide which local experts are actually relevant.</div></div><div class="example" data-example="om"><small>OM Handoff</small><div>Convert the narrative into the opening logic for the OM builder.</div></div></div>
+    </section>
+    <section class="loading" id="loadingState"><div class="loader"></div><h2>Building the deal strategy</h2><p>Analyzing the property profile, buyer audience, city/state context, and deal angle.</p><div class="steps"><div class="step" id="s1"><i></i>Reading property and dashboard inputs</div><div class="step" id="s2"><i></i>Choosing the most relevant buyer narrative</div><div class="step" id="s3"><i></i>Framing risks and strengths</div><div class="step" id="s4"><i></i>Preparing OM and outreach copy</div></div></section>
+    <section class="results" id="results">
+      <div class="res-head"><div><div class="res-title" id="resTitle"></div><div class="res-sub" id="resSub"></div></div><div class="res-actions"><button class="btn" id="copyAllBtn" type="button">Copy Strategy</button><button class="btn" id="regenBtn" type="button">Regenerate</button><a class="btn gold" id="omLink" href="om-studio.html">Build OM →</a></div></div>
+      <div class="tabs"><button class="tab active" data-variant="0">A · Owner Strategy</button><button class="tab" data-variant="1">B · Investor Story</button><button class="tab" data-variant="2">C · Punchy Brief</button></div>
+      <div class="grid"><div><article class="card" id="narrativeCard"></article><article class="card section-card"><span class="tag">◆ Investment Highlights</span><ul class="list" id="highlightList"></ul></article><article class="card section-card"><span class="tag">◇ Risk Framing</span><ul class="list" id="riskList"></ul></article></div><aside><div class="metrics" id="metricBox"></div><article class="card buyer-box"><span class="tag">◉ Buyer / Provider Targeting</span><div class="body-copy" id="targetText"></div><div class="match-list" id="matchList"></div></article></aside></div>
+      <div class="snips" id="snippetBox"></div>
+    </section>
+  </main>
 </div>
-
+<div class="toast" id="toast">Copied</div>
 <script>
-const VARIANTS = {
-  0: {
-    label: 'Narrative',
-    headline: 'A stabilized Williamsburg asset with <em>embedded upside</em>.',
-    lede: 'In one of Brooklyn\'s most supply-constrained submarkets, a rare opportunity to acquire a 100%-occupied, fully-operating multifamily property with clear, quantifiable value-add potential.',
-    body: [
-      '<strong>142 Bedford Avenue</strong> sits in the heart of Williamsburg — a submarket posting <strong>+8.4% year-over-year rent growth</strong> and a 2.8% vacancy rate. The six-unit building produces reliable cash flow today, but its real story is the gap between current rents and market: a delta approaching <em>25% upside</em> for a new owner willing to bring units to their natural ceiling.',
-      'The asset has been meaningfully de-risked by the current ownership. <strong>Roof and mechanicals were upgraded in 2021</strong>, and the building is stabilized with a strong, long-term tenant base. The building\'s R6B zoning and modest footprint also leave open optionality for long-term value creation — air rights and redevelopment scenarios remain on the table for a patient capital partner.',
-      'For a family office or HNW investor, this is a rare combination in today\'s market: <em>stabilized cash flow at acquisition, visible NOI growth post-turnover, and a Brooklyn submarket where rent fundamentals continue to compound</em>.'
-    ],
-    bullets: [
-      '<b>Below-market rents with ~25% upside.</b> Current rents trail market by approximately $650/unit/mo — a clear and quantifiable path to NOI growth as units turn.',
-      '<b>Prime Williamsburg location.</b> Walking distance to the L train, Domino Park, and one of NYC\'s most active retail corridors.',
-      '<b>Recently upgraded mechanicals (2021).</b> Roof, common-area HVAC, and electrical updates meaningfully reduce near-term capex risk.',
-      '<b>100% occupied with strong tenant base.</b> Durable in-place cash flow; no lease-up risk for an incoming owner.',
-      '<b>R6B zoning with air rights potential.</b> Optionality on redevelopment or vertical expansion for patient capital.'
-    ]
-  },
-  1: {
-    label: 'Investor Story',
-    headline: '<em>5.1% going in. 6.3% pro-forma.</em> Brooklyn\'s most durable asset class.',
-    lede: 'This deal prices at a discount to replacement cost, with a clear, achievable path from a 5.1% current cap to a 6.3% pro-forma — driven entirely by contractual rent burn-off, not speculation.',
-    body: [
-      'Williamsburg multifamily trades on <strong>durability and rent momentum</strong>. Both are present here. Transaction velocity in the submarket is up <strong>24% year-over-year</strong>, with 47 days to close the trailing average for 6–8 unit multifamily in the $3M range.',
-      'The mathematics are simple: in-place NOI of <strong>$163K</strong> at a <strong>$3.2M ask</strong> delivers a 5.1% going-in yield. Bringing the five underwater units to market over a 24–36 month hold takes NOI to approximately <strong>$202K</strong>, implying a 6.3% cap at basis and a meaningful markup to appraisal on refinance.',
-      'Downside is protected by <strong>Williamsburg\'s 2.8% vacancy rate</strong> and the property\'s fully-occupied status. Upside comes entirely from rent repricing — a lever the current ownership has chosen not to pull. For an investor with execution capacity, <em>this is the cleanest form of value-add</em>: no renovation, no re-tenanting, no lease-up.'
-    ],
-    bullets: [
-      '<b>Going-in yield: 5.1%.</b> Fully stabilized and operating at acquisition — no stabilization premium required.',
-      '<b>Pro-forma yield: 6.3%.</b> Achievable through organic rent repricing over a 24–36 month turnover cycle.',
-      '<b>Rent delta: ~$650/unit/mo.</b> Quantified gap to market rents based on comparable 2024 leases within 0.5 miles.',
-      '<b>Submarket velocity: +24% YoY.</b> Williamsburg transaction volume accelerating; 47-day average close for this asset profile.',
-      '<b>Discount to replacement cost.</b> $533K per unit vs. $680K+ replacement at current construction economics.'
-    ]
-  },
-  2: {
-    label: 'Punchy / Brief',
-    headline: 'Six units. <em>Williamsburg.</em> 25% rent upside. Closed in 47 days.',
-    lede: 'A fully-occupied Williamsburg 6-unit with quantifiable rent upside, recent mechanicals, and zoning optionality. Priced to move.',
-    body: [
-      '<strong>The asset:</strong> 6 units, ~5,200 SF, R6B zoning, pre-war. Roof and HVAC updated 2021. 100% occupied today.',
-      '<strong>The play:</strong> In-place rents trail market by ~25%. A 24–36 month rent reset takes you from a 5.1 going-in to a 6.3 pro-forma. No renovation required. No re-tenanting required.',
-      '<strong>The market:</strong> Williamsburg rents up 8.4% YoY. Submarket vacancy 2.8%. 47-day average close for this profile.',
-      '<strong>The ask:</strong> $3.2M. Clean title. Quick-close preferred.'
-    ],
-    bullets: [
-      '<b>6 units, 100% occupied.</b> Zero lease-up risk.',
-      '<b>Below market by ~25%.</b> Straightforward rent reset play.',
-      '<b>Recent capex (2021).</b> Roof, mechanicals, electrical done.',
-      '<b>R6B zoning.</b> Air rights optionality for patient capital.',
-      '<b>$3.2M ask / $533K per unit.</b> Discount to replacement.'
-    ]
-  }
-};
-
-let currentVariant = 0;
-
-function generateDeal() {
-  const btn = document.getElementById('genBtn');
-  btn.classList.add('generating');
-  btn.disabled = true;
-  btn.innerHTML = '<span>✦</span> Generating...';
-
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('results').classList.remove('visible');
-  document.getElementById('loadingState').classList.add('visible');
-
-  // Animate loading steps
-  const steps = ['step1', 'step2', 'step3', 'step4'];
-  steps.forEach((id, i) => {
-    setTimeout(() => {
-      document.getElementById(id).classList.add('active');
-      if (i > 0) {
-        document.getElementById(steps[i-1]).classList.remove('active');
-        document.getElementById(steps[i-1]).classList.add('done');
-      }
-    }, i * 550);
-  });
-
-  // Finish
-  setTimeout(() => {
-    document.getElementById(steps[3]).classList.remove('active');
-    document.getElementById(steps[3]).classList.add('done');
-  }, 4 * 550);
-
-  setTimeout(() => {
-    document.getElementById('loadingState').classList.remove('visible');
-    document.getElementById('results').classList.add('visible');
-    renderVariant(0);
-    // Reset loading steps for next time
-    steps.forEach(id => {
-      document.getElementById(id).classList.remove('active', 'done');
-    });
-    btn.classList.remove('generating');
-    btn.disabled = false;
-    btn.innerHTML = '<span>✦</span> Regenerate Narrative';
-  }, 2800);
-}
-
-function renderVariant(idx) {
-  const v = VARIANTS[idx];
-  const nar = document.getElementById('narrative');
-  const bodyHTML = v.body.map(p => `<p>${p}</p>`).join('');
-
-  nar.innerHTML = `
-    <div class="nar-tag">◆ ${v.label.toUpperCase()} · VARIANT ${String.fromCharCode(65+idx)}</div>
-    <div class="nar-headline">${v.headline}</div>
-    <div class="nar-lede">${v.lede}</div>
-    <div class="nar-body">${bodyHTML}</div>
-  `;
-
-  const bl = document.getElementById('bulletList');
-  bl.innerHTML = v.bullets.map((b, i) => `
-    <li class="bullet-item">
-      <div class="bullet-marker">${String(i+1).padStart(2,'0')}</div>
-      <div>${b}</div>
-    </li>`).join('');
-}
-
-function showVariant(idx) {
-  currentVariant = idx;
-  document.querySelectorAll('.v-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.v-tab')[idx].classList.add('active');
-  renderVariant(idx);
-}
-
-function regenerate() {
-  generateDeal();
-}
-
-function copySnip(btn, text) {
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.classList.remove('copied');
-    }, 1800);
-  }).catch(() => {
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'Copy';
-      btn.classList.remove('copied');
-    }, 1800);
-  });
-}
-
-// Angle chip selection
-document.querySelectorAll('.angle-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.angle-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
-
-// Example card click - trigger generation
-document.querySelectorAll('.ex-card').forEach(card => {
-  card.addEventListener('click', () => generateDeal());
-});
+const STATES=['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'];
+const COMMON_KEYS=['bricSavedProperties','bricProperties','bricDashboardProperties','bric_dashboard_properties','savedProperties','properties','bricValuations','savedValuations','valuationResults','bricSavedValuations','bricDealProperties'];
+let savedProperties=[];let currentVariant=0;let currentOutput=null;let sourceMode='saved';
+const $=id=>document.getElementById(id);const fmt=n=>{n=Number(n||0);return n?n.toLocaleString():''};const money=n=>{n=Number(n||0);return n?'$'+n.toLocaleString():''};
+function toast(msg='Copied'){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700)}
+function safeJSON(raw){try{return JSON.parse(raw)}catch(e){return null}}
+function flattenRecord(x){if(!x||typeof x!=='object')return null;const p=x.property||x.subject||x.valuation||x.data||x;return {address:p.address||p.propertyAddress||p.addr||p.street||p.name||x.address||'',city:p.city||p.market||p.submarket||x.city||'',state:p.state||x.state||'',zip:p.zip||p.zipCode||x.zip||'',type:p.propertyType||p.type||x.propertyType||'Multifamily',units:p.units||p.totalUnits||p.unitCount||x.units||'',price:p.price||p.askPrice||p.targetPrice||p.value||p.estimatedValue||x.price||'',noi:p.noi||p.currentNOI||p.netOperatingIncome||x.noi||'',upside:p.upside||p.rentUpside||p.upsidePct||x.upside||'',strengths:p.strengths||p.highlights||x.strengths||'',challenges:p.challenges||x.challenges||''}}
+function loadSavedProperties(){const seen=new Set();const out=[];COMMON_KEYS.forEach(k=>{const raw=localStorage.getItem(k);if(!raw)return;const parsed=safeJSON(raw);const arr=Array.isArray(parsed)?parsed:(parsed&&typeof parsed==='object'?Object.values(parsed):[]);arr.forEach(item=>{const rec=flattenRecord(item);if(rec&&rec.address){const id=(rec.address+'|'+rec.city+'|'+rec.state).toLowerCase();if(!seen.has(id)){seen.add(id);out.push(rec)}}})});savedProperties=out;renderSavedSelect()}
+function renderStates(){const s=$('fState');s.innerHTML='<option value="">State</option>'+STATES.map(st=>`<option value="${st}">${st}</option>`).join('');s.value='NY'}
+function renderSavedSelect(){const sel=$('savedProperty');$('dashCount').textContent=savedProperties.length;if(savedProperties.length===0){sel.innerHTML='<option value="">No saved properties found</option>';$('savedEmpty').classList.remove('hide');return}else{$('savedEmpty').classList.add('hide');sel.innerHTML='<option value="">Select a dashboard property</option>'+savedProperties.map((p,i)=>`<option value="${i}">${p.address}${p.city?', '+p.city:''}${p.state?', '+p.state:''}</option>`).join('')}}
+function setSource(mode){sourceMode=mode;$('srcSaved').classList.toggle('active',mode==='saved');$('srcManual').classList.toggle('active',mode==='manual');$('savedWrap').classList.toggle('hide',mode!=='saved');if(mode==='manual'){$('savedProperty').value=''}}
+function fillForm(p){$('fAddr').value=p.address||'';$('fCity').value=p.city||'';$('fState').value=(p.state||'').toUpperCase()||'NY';$('fZip').value=p.zip||'';$('fType').value=p.type||'Multifamily';$('fUnits').value=p.units||'';$('fPrice').value=p.price||'';$('fNOI').value=p.noi||'';$('fUpside').value=p.upside||'';if(p.strengths) $('fStrengths').value=Array.isArray(p.strengths)?p.strengths.join('\n'):p.strengths;if(p.challenges) $('fChallenges').value=Array.isArray(p.challenges)?p.challenges.join('\n'):p.challenges}
+function getForm(){return {address:$('fAddr').value.trim(),city:$('fCity').value.trim(),state:$('fState').value,zip:$('fZip').value.trim(),type:$('fType').value,units:Number($('fUnits').value||0),price:Number($('fPrice').value||0),noi:Number($('fNOI').value||0),upside:Number($('fUpside').value||0),capex:$('fCapex').value,angle:document.querySelector('.angle-chip.active')?.dataset.angle||'value-add',strengths:$('fStrengths').value.split('\n').map(x=>x.trim()).filter(Boolean),challenges:$('fChallenges').value.split('\n').map(x=>x.trim()).filter(Boolean),audience:$('fAudience').value,tone:$('fTone').value}}
+function defaultsForExample(type){setSource('manual');if(type==='refi'){fillForm({address:'275 Grove Street',city:'Jersey City',state:'NJ',type:'Multifamily',units:12,price:4250000,noi:265000,upside:12,strengths:'Stable collections\nBelow-market operating expenses after insurance rebid\nStrong commuter location\nDurable rental demand',challenges:'Upcoming loan maturity\nTaxes may reset after refinance'});selectAngle('refi')}else if(type==='broker'){fillForm({address:'88 Franklin Avenue',city:'Brooklyn',state:'NY',type:'Mixed-Use',units:8,price:5200000,noi:310000,upside:18,strengths:'Corner mixed-use asset\nRetail income anchors cash flow\nMultiple qualified buyer pools\nRecent facade work completed',challenges:'Retail lease expiration inside 18 months'});selectAngle('broker')}else{fillForm({address:'142 Bedford Avenue',city:'Brooklyn',state:'NY',type:'Multifamily',units:6,price:3200000,noi:163000,upside:25,strengths:'Below-market rents with measurable upside\nPrime location near transit and retail\nRecently upgraded roof and common areas\n100% occupied with stable collections',challenges:'Older boiler may need replacement\nTwo units need cosmetic updates'});selectAngle('value-add')}}
+function selectAngle(a){document.querySelectorAll('.angle-chip').forEach(c=>c.classList.toggle('active',c.dataset.angle===a))}
+function capRate(d){return d.price&&d.noi?(d.noi/d.price*100):0}function proFormaNOI(d){return d.noi?Math.round(d.noi*(1+(d.upside||0)/100)):0}function proFormaCap(d){const pnoi=proFormaNOI(d);return d.price&&pnoi?(pnoi/d.price*100):0}
+function audienceLabel(a){return {'private':'Private Investors','owner-operator':'Owner-Operators','family-office':'Family Offices / HNW','institutional':'Institutional Capital','broker':'Brokers / Advisors','mixed':'Broad Market'}[a]||'Private Investors'}
+function angleLabel(a){return {'value-add':'Value-Add','stabilized':'Stabilized Hold','repositioning':'Repositioning','redevelopment':'Redevelopment','refi':'Refi / Hold','broker':'Broker Opinion'}[a]||'Value-Add'}
+function buildOutput(d){const loc=[d.city,d.state].filter(Boolean).join(', ');const cr=capRate(d), pfc=proFormaCap(d), pnoi=proFormaNOI(d);const hasUpside=d.upside>0;const strengths=d.strengths.length?d.strengths:['Clear property story','Defined buyer audience','Actionable next step into OM Studio'];const risks=d.challenges.length?d.challenges:['Confirm rent roll, expenses, title, tax exposure, and recent building condition before external marketing.'];
+const baseTitle=d.address||'Untitled Property';
+const variant0={tag:'Owner Strategy',headline:`${baseTitle} is not just a listing — it is a <em>${angleLabel(d.angle).toLowerCase()}</em> decision.`,lede:`The current strategy should be framed around ${d.type.toLowerCase()} fundamentals in ${loc||'the selected market'}, with a clear recommendation for whether the owner should sell, refinance, hold, renovate, or package the asset for a more competitive buyer process.`,body:[`Based on the inputs, this property should be positioned first around <strong>${strengths[0]}</strong>${hasUpside?` and a visible upside story of approximately <strong>${d.upside}%</strong>.`:'.'} The goal is to make the decision path obvious: what is the asset today, what can it become, and which buyer or advisor is best positioned to unlock that value.`,`${d.noi?`Current NOI is shown at <strong>${money(d.noi)}</strong>${d.price?`, implying a going-in cap rate of <strong>${cr.toFixed(2)}%</strong> at the indicated price.`:'.'} `:''}${pnoi&&d.price?`If the upside is achieved, projected NOI moves toward <strong>${money(pnoi)}</strong>, which implies a pro-forma cap rate near <strong>${pfc.toFixed(2)}%</strong>. `:''}That math should drive the narrative, not generic marketing language.`,`The cleanest next step is to use this output as the bridge into OM Studio: pull the strongest 3–5 highlights, disclose the risks clearly, then match the asset against qualified buyers, brokers, lenders, contractors, or managers depending on the owner's intent.`]};
+const variant1={tag:'Investor Story',headline:`A ${d.city||'market'} ${d.type.toLowerCase()} opportunity with <em>measurable execution upside</em>.`,lede:`For ${audienceLabel(d.audience).toLowerCase()}, the pitch should focus on basis, cash flow, risk control, and the specific lever that improves value after acquisition.`,body:[`The investment case is strongest when it is simple: ${strengths.slice(0,2).join(' and ').toLowerCase()}. ${hasUpside?`The ${d.upside}% upside estimate gives buyers a reason to underwrite beyond the current income while still anchoring the story in actual operating data.`:'The strategy should avoid speculative upside and instead lean into stability, location, and operating durability.'}`,`At ${d.units||'the current unit count'} units, the asset is likely to appeal to ${audienceLabel(d.audience).toLowerCase()} seeking ${angleLabel(d.angle).toLowerCase()} exposure in ${loc||'this market'}. The buyer pool should be filtered by proof of execution, similar property history, and ability to move quickly after diligence.`,`The most credible pitch is premium but disciplined: show the upside, explain how it is achieved, then identify what needs to be verified before a buyer, lender, or broker leans into the opportunity.`]};
+const variant2={tag:'Punchy Brief',headline:`${baseTitle}. ${d.type}. ${d.city||'Target market'}. <em>Clear next step.</em>`,lede:`A concise deal brief for calls, email teasers, and dashboard summaries.`,body:[`<strong>The asset:</strong> ${d.units?d.units+' units, ':''}${d.type.toLowerCase()} in ${loc||'the selected market'}${d.price?', target price '+money(d.price):''}.`,`<strong>The angle:</strong> ${angleLabel(d.angle)}${hasUpside?` with approximately ${d.upside}% upside`:''}. Lead with ${strengths[0].toLowerCase()}.`,`<strong>The buyer:</strong> ${audienceLabel(d.audience)}. Prioritize groups that understand the location, can underwrite the risks, and will value the upside without needing a perfect story.`,`<strong>The next move:</strong> build the OM, compare local experts, and pressure-test pricing against buyer feedback.`]};
+return {data:d,title:baseTitle,sub:`${angleLabel(d.angle)} · ${audienceLabel(d.audience)} · ${loc||'City / State not set'}`,variants:[variant0,variant1,variant2],highlights:strengths.map((s,i)=>`<b>${s.split(':')[0]}.</b> ${s.includes(':')?s.split(':').slice(1).join(':').trim():highlightExplain(s,d)}`),risks:risks.map(r=>`<b>${riskTitle(r)}.</b> ${riskExplain(r)}`),metrics:[['Units',d.units?fmt(d.units):'—'],['Current NOI',money(d.noi)||'—'],['Current Cap',cr?cr.toFixed(2)+'%':'—'],['Pro-Forma Cap',pfc?pfc.toFixed(2)+'%':'—']],targets:buildTargets(d),snips:buildSnips(d,baseTitle,loc)}}
+function highlightExplain(s,d){const x=s.toLowerCase();if(x.includes('rent')||x.includes('upside'))return `Use this as the primary value creation lever${d.upside?` and quantify it around the ${d.upside}% upside estimate.`:'.'}`;if(x.includes('location')||x.includes('transit'))return 'Keep this high in the pitch because location is the easiest point for buyers and lenders to understand quickly.';if(x.includes('roof')||x.includes('mechanical')||x.includes('upgrade'))return 'This reduces perceived near-term capex risk and supports a cleaner underwriting process.';if(x.includes('occupied')||x.includes('collection'))return 'This supports downside protection and a more financeable going-in story.';return 'This should be verified and converted into a specific marketing bullet before external use.'}
+function riskTitle(r){const x=r.toLowerCase();if(x.includes('tax'))return 'Tax exposure';if(x.includes('boiler')||x.includes('roof')||x.includes('repair')||x.includes('capex'))return 'Capex risk';if(x.includes('vacan'))return 'Vacancy risk';if(x.includes('lease'))return 'Lease timing';if(x.includes('rent'))return 'Rent regulation / rent roll risk';return 'Diligence item'}
+function riskExplain(r){return `${r}. Frame it directly, then explain what diligence or pricing adjustment resolves it.`}
+function buildTargets(d){const city=d.city||'Local';const audience=audienceLabel(d.audience);return {text:`This strategy is calibrated for <strong>${audience}</strong>. The best matches are not just whoever pays for visibility — they are groups with relevant market experience, deal size fit, and a reason to care about this specific property type in ${city}.`,matches:[['Best Buyer Fit',d.angle==='redevelopment'?'Local developers / zoning-driven investors':d.audience==='institutional'?'Small-balance institutional capital':'Private owner-operators','High intent · property type fit'],['Best Advisor Fit',`${city} ${d.type} brokers`,'Track record matters more than generic reach'],['Best Provider Fit',d.capex==='heavy'?'GC / construction pricing team':'Management + insurance benchmark review','Useful before pricing or refinance']]}}
+function buildSnips(d,title,loc){const cap=capRate(d);return [['Email Subject',`${title}${loc?' · '+loc:''} — ${angleLabel(d.angle)} Opportunity`],['Broker / Buyer Teaser',`${d.type} opportunity in ${loc||'the market'}${d.units?` with ${d.units} units`:''}${d.upside?`, approximately ${d.upside}% upside`:''}${cap?`, and a ${cap.toFixed(2)}% current cap`:''}.`],['30-Second Call Pitch',`This is ${title}: ${d.type.toLowerCase()} in ${loc||'the selected market'}, positioned as ${angleLabel(d.angle).toLowerCase()}. The story is ${d.strengths[0]||'clear property fundamentals'}, with risks identified upfront and a direct path into OM diligence.`],['OM Opening Line',`A disciplined ${angleLabel(d.angle).toLowerCase()} opportunity in ${loc||'the selected market'}, combining current property fundamentals with a clearer path to buyer, broker, and lender decision-making.`]]}
+function renderVariant(i=0){currentVariant=i;const o=currentOutput;if(!o)return;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',Number(t.dataset.variant)===i));const v=o.variants[i];$('narrativeCard').innerHTML=`<span class="tag">✦ ${v.tag}</span><div class="headline">${v.headline}</div><div class="lede">${v.lede}</div><div class="body-copy">${v.body.map(p=>`<p>${p}</p>`).join('')}</div>`;$('highlightList').innerHTML=o.highlights.map((h,idx)=>`<li><span class="num">${String(idx+1).padStart(2,'0')}</span><span>${h}</span></li>`).join('');$('riskList').innerHTML=o.risks.map((r,idx)=>`<li><span class="num">${String(idx+1).padStart(2,'0')}</span><span>${r}</span></li>`).join('')}
+function renderOutput(o){$('resTitle').textContent=o.title;$('resSub').textContent=o.sub;$('metricBox').innerHTML=o.metrics.map(m=>`<div class="metric"><b>${m[1]}</b><span>${m[0]}</span></div>`).join('');$('targetText').innerHTML=`<p>${o.targets.text}</p>`;$('matchList').innerHTML=o.targets.matches.map(m=>`<div class="match"><div class="match-top"><b>${m[1]}</b><span class="score">${m[0]}</span></div><span>${m[2]}</span></div>`).join('');$('snippetBox').innerHTML=o.snips.map((s,idx)=>`<div class="snip"><div class="snip-head"><span>${s[0]}</span><button class="copybtn" data-snip="${idx}">Copy</button></div><p>${s[1]}</p></div>`).join('');$('omLink').href='om-studio.html?source=deal-studio&address='+encodeURIComponent(o.data.address||'')+'&city='+encodeURIComponent(o.data.city||'')+'&state='+encodeURIComponent(o.data.state||'')+'&type='+encodeURIComponent(o.data.type||'');renderVariant(currentVariant)}
+function runDeal(){const d=getForm();if(!d.address){$('fAddr').focus();toast('Add address first');return}if(!d.city||!d.state){toast('Add city and state');return}$('heroIntro').style.display='none';$('emptyState').style.display='none';$('results').classList.remove('visible');$('loadingState').classList.add('visible');['s1','s2','s3','s4'].forEach((id,i)=>{const el=$(id);el.classList.remove('active','done');setTimeout(()=>{el.classList.add('active');if(i>0){$( ['s1','s2','s3','s4'][i-1]).classList.remove('active');$( ['s1','s2','s3','s4'][i-1]).classList.add('done')}},i*280)});setTimeout(()=>{$('s4').classList.remove('active');$('s4').classList.add('done');currentOutput=buildOutput(d);renderOutput(currentOutput);$('loadingState').classList.remove('visible');$('results').classList.add('visible')},1250)}
+function copyStrategy(){if(!currentOutput)return;const v=currentOutput.variants[currentVariant];const text=[currentOutput.title,currentOutput.sub,'',v.lede,'',...v.body.map(x=>x.replace(/<[^>]+>/g,'')),'','Highlights:',...currentOutput.highlights.map(x=>'- '+x.replace(/<[^>]+>/g,'')),'','Risks:',...currentOutput.risks.map(x=>'- '+x.replace(/<[^>]+>/g,''))].join('\n');navigator.clipboard.writeText(text).then(()=>toast('Strategy copied'))}
+function saveResult(){if(!currentOutput){toast('Run first');return}const key='bricDealStudioResults';const arr=safeJSON(localStorage.getItem(key))||[];arr.unshift({...currentOutput.data,createdAt:new Date().toISOString(),title:currentOutput.title,sub:currentOutput.sub,variant:currentOutput.variants[currentVariant]});localStorage.setItem(key,JSON.stringify(arr.slice(0,30)));toast('Saved to dashboard storage')}
+function clearForm(){['fAddr','fCity','fZip','fUnits','fPrice','fNOI','fUpside','fStrengths','fChallenges'].forEach(id=>$(id).value='');$('fState').value='NY';$('fType').value='Multifamily';$('fCapex').value='recent';$('fAudience').value='private';$('fTone').value='confident';selectAngle('value-add');currentOutput=null;$('results').classList.remove('visible');$('loadingState').classList.remove('visible');$('emptyState').style.display='block';$('heroIntro').style.display='block'}
+document.addEventListener('DOMContentLoaded',()=>{renderStates();loadSavedProperties();$('srcSaved').onclick=()=>setSource('saved');$('srcManual').onclick=()=>setSource('manual');$('savedProperty').onchange=e=>{const p=savedProperties[Number(e.target.value)];if(p)fillForm(p)};document.querySelectorAll('.angle-chip').forEach(c=>c.onclick=()=>selectAngle(c.dataset.angle));document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>renderVariant(Number(t.dataset.variant)));$('genBtn').onclick=runDeal;$('regenBtn').onclick=runDeal;$('copyAllBtn').onclick=copyStrategy;$('saveBtn').onclick=saveResult;$('clearBtn').onclick=clearForm;document.body.addEventListener('click',e=>{if(e.target.matches('.copybtn')){const idx=Number(e.target.dataset.snip);navigator.clipboard.writeText(currentOutput?.snips?.[idx]?.[1]||'').then(()=>toast('Snippet copied'))}});document.querySelectorAll('.example').forEach(ex=>ex.onclick=()=>{defaultsForExample(ex.dataset.example);runDeal()});if(savedProperties.length){$('savedProperty').value='0';fillForm(savedProperties[0])}else{setSource('manual')}});
 </script>
 </body>
 </html>
