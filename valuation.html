@@ -2891,6 +2891,20 @@ function prSet(id,val,opts={}){
 }
 function prFmtMoney(n){if(n===null||n===undefined||isNaN(n))return '—';if(Math.abs(n)>=1e9)return '$'+(n/1e9).toFixed(2)+'B';if(Math.abs(n)>=1e6)return '$'+(n/1e6).toFixed(2)+'M';if(Math.abs(n)>=1e3)return '$'+Math.round(n/1e3)+'K';return '$'+Math.round(n).toLocaleString()}
 function prFmtNum(n){if(n===null||n===undefined||isNaN(n)||n===0)return '—';return Math.round(n).toLocaleString()}
+// PLUTO returns whole-number fields like numfloors='4.0000000' and unitsres='6.0000000'
+// as decimal strings, so passing them through directly displays as '4.0000000'.
+// prFmtInt parses, rounds, and returns a clean integer string (or '—' for empty/zero).
+function prFmtInt(v){
+  if(v===null||v===undefined||v==='') return '—';
+  const n=parseFloat(v);
+  if(isNaN(n)||n===0) return '—';
+  return String(Math.round(n));
+}
+// For fields with a unit suffix (e.g., "25 ft", "100 ft"). Returns '—' if value is empty/zero.
+function prFmtIntWithSuffix(v, suffix){
+  const formatted=prFmtInt(v);
+  return formatted==='—' ? '—' : formatted+' '+suffix;
+}
 function prFmtDate(d){if(!d)return '—';try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}catch(e){return d}}
 
 // Parse a free-form NYC address into house number, street, borough
@@ -2955,12 +2969,27 @@ async function prFetchPLUTO(bbl, signal){
   }catch(e){return null}
 }
 // Fetch DOF property valuation (current FY)
+/* Fetch DOF Property Valuation & Assessment data from dataset 8y4t-faws.
+   Notes on field names (confirmed against columns.json schema):
+   - parid: 10-digit BBL (NOT 'bbl')
+   - finmktland / finmkttot: Final Market Value (land / total) — DOF's estimated market value
+   - finacttot: Final Actual Total Assessed Value (used to compute taxes)
+   - finactextot: Final Actual Exemption Total
+   - fintxbtot: Final Taxable Total (assessed minus exemptions)
+   - fintaxclass: Final Tax Class (1, 1A, 1B, 1C, 1D, 2, 2A, 2B, 2C, 3, 4, 4A)
+   - year: tax year (2023-2027 are typical)
+   The 'cur_*' field names used previously do not exist in this dataset. */
 async function prFetchDOF(bbl, signal){
   if(!bbl) return null;
   try{
-    const rows=await prSoda('data.cityofnewyork.us','8y4t-faws',{$where:`bbl='${bbl}'`,$order:'year DESC',$limit:1},signal);
-    return rows[0]||null;
-  }catch(e){return null}
+    // Query by parid (the BBL), most recent year, take final-roll record if multiple exist
+    const rows=await prSoda('data.cityofnewyork.us','8y4t-faws',
+      {$where:`parid='${bbl}'`,$order:'year DESC',$limit:5},signal);
+    if(!rows.length) return null;
+    // Prefer the most recent year's record where the final-roll values are populated
+    // (finacttot > 0). Otherwise fall back to the most recent record.
+    return rows.find(r => parseFloat(r.finacttot) > 0) || rows[0];
+  }catch(e){ console.warn('DOF fetch failed:', e); return null; }
 }
 // Fetch DOB open violations by BIN
 async function prFetchDOBViolations(bin, signal){
@@ -3200,21 +3229,21 @@ async function lookupPublicRecords(force){
 
     // -- Building characteristics --
     if(pluto){
-      prSet('prYearBuilt',pluto.yearbuilt&&pluto.yearbuilt!=='0'?pluto.yearbuilt:'—');
-      prSet('prStories',pluto.numfloors||'—');
+      prSet('prYearBuilt',prFmtInt(pluto.yearbuilt));
+      prSet('prStories',prFmtInt(pluto.numfloors));
       prSet('prBldgSF',prFmtNum(parseFloat(pluto.bldgarea)));
       prSet('prResSF',prFmtNum(parseFloat(pluto.resarea)));
       prSet('prComSF',prFmtNum(parseFloat(pluto.comarea)));
-      prSet('prTotalUnits',pluto.unitstotal||'—');
-      prSet('prResUnits',pluto.unitsres||'—');
-      prSet('prComUnits',pluto.unitscomm||'—');
+      prSet('prTotalUnits',prFmtInt(pluto.unitstotal));
+      prSet('prResUnits',prFmtInt(pluto.unitsres));
+      prSet('prComUnits',prFmtInt(pluto.unitscomm));
       prSet('prBldgClass',pluto.bldgclass||'—');
       prSet('prLandUse',pluto.landuse?({'01':'1-2 Family','02':'Multifamily Walk-up','03':'Multifamily Elevator','04':'Mixed Res/Commercial','05':'Commercial/Office','06':'Industrial','07':'Transportation/Utility','08':'Public Facility','09':'Open Space','10':'Parking','11':'Vacant Land'}[pluto.landuse]||pluto.landuse):'—');
 
       // Lot & zoning
       prSet('prLotArea',prFmtNum(parseFloat(pluto.lotarea))+' SF');
-      prSet('prLotFrontage',pluto.lotfront?pluto.lotfront+' ft':'—');
-      prSet('prLotDepth',pluto.lotdepth?pluto.lotdepth+' ft':'—');
+      prSet('prLotFrontage',prFmtIntWithSuffix(pluto.lotfront,'ft'));
+      prSet('prLotDepth',prFmtIntWithSuffix(pluto.lotdepth,'ft'));
       prSet('prBuiltFAR',pluto.builtfar?parseFloat(pluto.builtfar).toFixed(2):'—');
       prSet('prResFAR',pluto.residfar?parseFloat(pluto.residfar).toFixed(2):'—');
       prSet('prComFAR',pluto.commfar?parseFloat(pluto.commfar).toFixed(2):'—');
@@ -3229,18 +3258,57 @@ async function lookupPublicRecords(force){
     }
 
     // -- DOF / Tax --
+    // Field reference (dataset 8y4t-faws):
+    //   finmkttot   = Final Market Value (DOF's estimate of fair market)
+    //   finacttot   = Final Actual Total Assessed Value
+    //   finactextot = Final Exemption Total
+    //   fintxbtot   = Final Taxable Total (assessed minus exemptions)
+    //   fintaxclass = Tax class (1, 2, 2A, 2B, 2C, 4, etc.)
+    //   year        = tax year
+    // Tax bill = fintxbtot × tax_rate(class). NYC FY 2025-26 rates as published
+    // by DOF; these change annually so we keep them in one place.
     if(dof){
-      prSet('prMktVal',prFmtMoney(parseFloat(dof.fullval||dof.curmkttot)));
-      prSet('prAssessedVal',prFmtMoney(parseFloat(dof.curasstot||dof.curassland)));
-      prSet('prTaxableVal',prFmtMoney(parseFloat(dof.cur_actl_tot||dof.curasstot)));
-      prSet('prTaxClass',dof.taxclass||dof.curtaxclass||'—');
-      prSet('prAnnualTax',prFmtMoney(parseFloat(dof.cur_actl_tax||dof.cur_actl_tot*0.12)));
-      prSet('prExemptions',dof.exempttot?prFmtMoney(parseFloat(dof.exempttot)):'None on record');
-      const taxClass=dof.taxclass||dof.curtaxclass;
-      const rates={'1':'~0.20%','2':'~12.50%','2A':'~12.50%','2B':'~12.50%','4':'~10.80%'};
-      prSet('prTaxRate',rates[taxClass]||'—');
+      const mktTotal = parseFloat(dof.finmkttot || dof.tenmkttot || dof.cbnmkttot || dof.pymkttot);
+      const assessedTotal = parseFloat(dof.finacttot || dof.tenacttot || dof.cbnacttot || dof.pyacttot);
+      const exemptTotal = parseFloat(dof.finactextot || dof.tenactextot || dof.cbnactextot || dof.pyactextot);
+      const taxableTotal = parseFloat(dof.fintxbtot || dof.tentxbtot || dof.cbntxbtot || dof.pytxbtot)
+                          || Math.max(0, (assessedTotal||0) - (exemptTotal||0));
+      const taxClass = dof.fintaxclass || dof.tentaxclass || dof.cbntaxclass || dof.pytaxclass || '';
+      const taxYear = dof.year || '';
+
+      prSet('prMktVal', mktTotal > 0 ? prFmtMoney(mktTotal) : '—');
+      prSet('prAssessedVal', assessedTotal > 0 ? prFmtMoney(assessedTotal) : '—');
+      prSet('prTaxableVal', taxableTotal > 0 ? prFmtMoney(taxableTotal) : '—');
+      prSet('prTaxClass', taxClass ? 'Class '+taxClass + (taxYear ? ' · FY'+taxYear : '') : '—');
+      prSet('prExemptions', exemptTotal > 0 ? prFmtMoney(exemptTotal) : 'None on record');
+
+      // NYC FY 2025-26 tax rates by class (published by DOF, June 2025).
+      // Numeric form for math, plus display form. We compound 1A/1B/1C/1D into 1
+      // and 2A/2B/2C into 2 since they share the same rate (the letter distinguishes
+      // assessment treatment, not the rate itself).
+      const TAX_RATES = {
+        '1':  0.20085,  // Class 1: 1-3 family homes
+        '1A': 0.20085, '1B': 0.20085, '1C': 0.20085, '1D': 0.20085,
+        '2':  0.12502,  // Class 2: rentals, co-ops, condos
+        '2A': 0.12502, '2B': 0.12502, '2C': 0.12502,
+        '3':  0.12502,  // Class 3: utility
+        '4':  0.10592,  // Class 4: commercial
+        '4A': 0.10592
+      };
+      const rate = TAX_RATES[taxClass];
+      if(rate && taxableTotal > 0){
+        const annualTax = taxableTotal * rate;
+        prSet('prAnnualTax', prFmtMoney(annualTax));
+        prSet('prTaxRate', (rate * 100).toFixed(3) + '%');
+      } else if(taxClass){
+        prSet('prAnnualTax', '—');
+        prSet('prTaxRate', '—');
+      } else {
+        prSet('prAnnualTax', '—');
+        prSet('prTaxRate', '—');
+      }
     } else {
-      prSet('prTaxBenefit','—');
+      prSet('prTaxBenefit', '—');
     }
 
     // -- ACRIS / Sale --
@@ -3315,7 +3383,8 @@ async function lookupPublicRecords(force){
       const yr=parseInt(pluto.yearbuilt,10)||0;
       const bldgClass=(pluto.bldgclass||'').toUpperCase();
       const isCondoCoop=/^R/.test(bldgClass);
-      const hasTaxExempt=!!(dof && dof.exempttot && parseFloat(dof.exempttot)>0);
+      const exemptVal = parseFloat(dof?.finactextot || dof?.tenactextot || dof?.pyactextot) || 0;
+      const hasTaxExempt = exemptVal > 0;
       let rsText='—';
       if(resUnits<=5){
         rsText='None (≤5 units, exempt)';
@@ -3343,8 +3412,9 @@ async function lookupPublicRecords(force){
     // still does the more aggressive fills (property type, taxes, zoning, etc.).
     if(pluto) {
       const unitsEl=document.getElementById('units');
-      if(unitsEl && pluto.unitstotal && parseInt(pluto.unitstotal,10)>0 && !unitsEl.value) {
-        unitsEl.value=pluto.unitstotal;
+      const plutoUnits=parseInt(parseFloat(pluto.unitstotal),10);
+      if(unitsEl && plutoUnits>0 && !unitsEl.value) {
+        unitsEl.value=plutoUnits;
         // Fire the same downstream cascade that user-typing would
         if(typeof updateDerivedBenchmarks==='function') updateDerivedBenchmarks();
         if(typeof allocatePerUnitSF==='function') allocatePerUnitSF();
@@ -3377,6 +3447,9 @@ async function lookupPublicRecords(force){
     if(rentRollActive && typeof syncRentRollRows==='function') syncRentRollRows();
     // Re-run market benchmarks now that property type may be set (affects vacancy/cap calcs)
     if(typeof updateMarketBenchmarks==='function') updateMarketBenchmarks();
+    // Auto-fill the Property Taxes expense row from DOF data — runs inline so the
+    // user doesn't have to click 'Apply records' to get tax info into expenses.
+    if(dof && typeof autoFillPropertyTaxes==='function') autoFillPropertyTaxes(dof);
   } catch(err){
     if(err.name==='AbortError') return;
     console.warn('Public records lookup failed:',err);
@@ -3388,12 +3461,65 @@ async function lookupPublicRecords(force){
 
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
+// NYC FY 2025-26 property tax rates by class (as published by DOF).
+// Used in both the Public Records panel display and the expense auto-fill,
+// so they stay in sync. Update annually when the new rates are set.
+const NYC_TAX_RATES = {
+  '1':  0.20085, '1A': 0.20085, '1B': 0.20085, '1C': 0.20085, '1D': 0.20085,
+  '2':  0.12502, '2A': 0.12502, '2B': 0.12502, '2C': 0.12502,
+  '3':  0.12502,
+  '4':  0.10592, '4A': 0.10592
+};
+
+// Compute the estimated annual property tax bill from a DOF record.
+// Uses Final Taxable Total × FY 2025-26 tax rate (by class). Falls back to
+// older rolls (tentative, combined, prior year) if final isn't populated.
+// Returns 0 if data is insufficient to compute.
+function computeAnnualPropertyTax(dof){
+  if(!dof) return 0;
+  const taxableTotal = parseFloat(
+    dof.fintxbtot || dof.tentxbtot || dof.cbntxbtot || dof.pytxbtot
+  ) || 0;
+  const taxClass = dof.fintaxclass || dof.tentaxclass || dof.cbntaxclass || dof.pytaxclass || '';
+  const rate = NYC_TAX_RATES[taxClass];
+  if(rate && taxableTotal > 0) return taxableTotal * rate;
+  return 0;
+}
+
+// Auto-fill the Property Taxes expense row from a DOF record. Skips if the
+// user has already typed a value (respects manual edits). Called both from
+// the explicit 'Apply records' button and inline on PR load.
+function autoFillPropertyTaxes(dof){
+  if(!dof) return;
+  const annualTax = computeAnnualPropertyTax(dof);
+  if(annualTax <= 0) return;
+  document.querySelectorAll('.expense-block').forEach(block => {
+    const nameEl = block.querySelector('.exp-name');
+    const amtEl = block.querySelector('.exp-amount');
+    if(!nameEl || !amtEl) return;
+    if(!/property tax|^tax$|real estate tax/i.test(nameEl.value)) return;
+    // Respect existing user input — only fill if blank or in auto-fill state
+    const isBlank = !amtEl.value || amtEl.value === '0';
+    const isAutoFilled = block.dataset.autoFill === '1';
+    if(isBlank || isAutoFilled){
+      amtEl.value = Math.round(annualTax);
+      block.dataset.autoFill = '0';  // mark as 'from public records' so user knows
+      const id = parseInt(block.id.replace('exp-',''), 10);
+      if(!isNaN(id) && typeof updateExpenseBenchmark === 'function'){
+        updateExpenseBenchmark(id);
+      }
+    }
+  });
+  if(typeof updateExpenseTotalDisplay === 'function') updateExpenseTotalDisplay();
+}
+
 function applyPublicRecordsToForm(){
   if(!prCurrentRecords||!prCurrentRecords.pluto){return;}
   const p=prCurrentRecords.pluto;
   // Units
   const unitsEl=document.getElementById('units');
-  if(unitsEl && p.unitstotal && !unitsEl.value){unitsEl.value=p.unitstotal;}
+  const plutoUnits=parseInt(parseFloat(p.unitstotal),10);
+  if(unitsEl && plutoUnits>0 && !unitsEl.value){unitsEl.value=plutoUnits;}
   // Gross sqft (prefer total building area)
   const sqftEl=document.getElementById('sqft');
   if(sqftEl && p.bldgarea && !sqftEl.value){sqftEl.value=Math.round(parseFloat(p.bldgarea));}
@@ -3418,19 +3544,7 @@ function applyPublicRecordsToForm(){
   }
   // Property taxes from DOF into the expense row
   if(prCurrentRecords.dof){
-    const annualTax=parseFloat(prCurrentRecords.dof.cur_actl_tax)||parseFloat(prCurrentRecords.dof.cur_actl_tot*0.12);
-    if(annualTax>0){
-      document.querySelectorAll('.expense-block').forEach(block=>{
-        const nameEl=block.querySelector('.exp-name');
-        const amtEl=block.querySelector('.exp-amount');
-        if(nameEl && /property tax|tax/i.test(nameEl.value) && amtEl){
-          amtEl.value=Math.round(annualTax);
-          block.dataset.autoFill='0';
-          const id=parseInt(block.id.replace('exp-',''),10);
-          if(!isNaN(id)) updateExpenseBenchmark(id);
-        }
-      });
-    }
+    autoFillPropertyTaxes(prCurrentRecords.dof);
   }
   updateDerivedBenchmarks();
   // Quick feedback
@@ -4230,13 +4344,29 @@ function updateExpenseBenchmark(id){
   if(status==='bad') block.classList.add('over'); else if(status==='good') block.classList.add('good');
   const min=bench.low*0.65, max=bench.high*1.35;
   const pct=v=>Math.max(0,Math.min(100,((v-min)/(max-min))*100));
+  // For income-tied expenses (Management Fee), show what % of gross income
+  // the benchmark midpoint represents so the user understands the derivation.
+  let pctHint = '';
+  if(canonical === 'Management Fee'){
+    const ctx = getContext();
+    if(ctx.grossIncome > 0){
+      const pctOfGross = (bench.mid / ctx.grossIncome) * 100;
+      const userPct = amount > 0 ? (amount / ctx.grossIncome) * 100 : null;
+      const grossSrc = rentRollActive ? 'rent roll' : 'gross income';
+      pctHint = userPct !== null
+        ? ` · <b>${userPct.toFixed(1)}%</b> of ${formatMoney(ctx.grossIncome)} ${grossSrc}`
+        : ` · ~${pctOfGross.toFixed(1)}% of ${formatMoney(ctx.grossIncome)} ${grossSrc}`;
+    } else {
+      pctHint = ` · enter rent roll or gross income to size`;
+    }
+  }
   benchWrap.innerHTML=`<span class="benchmark-label">Market</span>
     <div class="benchmark-visual">
       <div class="benchmark-range" style="left:${pct(bench.low)}%;right:${100-pct(bench.high)}%"></div>
       <div class="benchmark-mid" style="left:${pct(bench.mid)}%"></div>
       ${amount>0?`<div class="benchmark-user" style="left:${pct(amount)}%"></div>`:''}
     </div>
-    <span class="benchmark-text ${status}">${formatMoney(bench.low)}–${formatMoney(bench.high)} · <b>${benchmarkLabel(status)}</b></span>`;
+    <span class="benchmark-text ${status}">${formatMoney(bench.low)}–${formatMoney(bench.high)} · <b>${benchmarkLabel(status)}</b>${pctHint}</span>`;
   if(status==='bad'){
     const savings=Math.max(0,amount-bench.mid);
     saveWrap.innerHTML=`<div class="savings-chip">Potential savings: ~${formatMoney(savings)}/yr</div>`;
@@ -4423,6 +4553,11 @@ function updateRentRollTotals(){
   if(typeof updateGrowthProjections === 'function') updateGrowthProjections();
   // Update per-row Yr1/Yr2 readouts inline in the rent roll
   if(typeof updateRentRollProjections === 'function') updateRentRollProjections();
+  // Income-tied expense benchmarks (notably Management Fee, computed as % of
+  // gross) must refresh whenever the rent roll changes, since the rent roll
+  // total feeds getGrossIncomeValue() which feeds getContext().grossIncome.
+  // Without this, typing rent into Apt 1 wouldn't update the management fee.
+  if(typeof updateAllExpenseBenchmarks === 'function') updateAllExpenseBenchmarks();
 }
 
 /* Compute per-row Yr 1 / Yr 2 rent readouts shown inline in the rent roll.
@@ -6160,7 +6295,7 @@ function autoDetectBuildingProfile(){
   const yr = p ? (parseInt(p.yearbuilt, 10) || 0) : 0;
   const bldgClass = p ? (p.bldgclass || '').toUpperCase() : '';
   const isCondoOrCoop = /^R/.test(bldgClass);
-  const has421aOrJ51 = !!(pr && pr.dof && (pr.dof.exempttot && parseFloat(pr.dof.exempttot) > 0));
+  const has421aOrJ51 = !!(pr && pr.dof && (parseFloat(pr.dof.finactextot||pr.dof.tenactextot||pr.dof.pyactextot) > 0));
   const propType = document.getElementById('propertyType')?.value || '';
 
   // Source label for the explanation — distinguishes PLUTO-confirmed vs user-input-only
@@ -7365,22 +7500,22 @@ function buildValuationPDFHtml(d){
         <tr><td>BBL</td><td class="num">${escapePDFHtml(prCurrentRecords.geo?.bbl||'—')}</td></tr>
         <tr><td>BIN</td><td class="num">${escapePDFHtml(prCurrentRecords.geo?.bin||'—')}</td></tr>
         <tr><td>Owner of Record</td><td>${escapePDFHtml(prCurrentRecords.pluto.ownername||'—')}</td></tr>
-        <tr><td>Year Built</td><td class="num">${prCurrentRecords.pluto.yearbuilt&&prCurrentRecords.pluto.yearbuilt!=='0'?prCurrentRecords.pluto.yearbuilt:'—'}</td></tr>
-        <tr><td>Stories</td><td class="num">${prCurrentRecords.pluto.numfloors||'—'}</td></tr>
+        <tr><td>Year Built</td><td class="num">${prFmtInt(prCurrentRecords.pluto.yearbuilt)}</td></tr>
+        <tr><td>Stories</td><td class="num">${prFmtInt(prCurrentRecords.pluto.numfloors)}</td></tr>
         <tr><td>Gross Building SF</td><td class="num">${prCurrentRecords.pluto.bldgarea?Math.round(parseFloat(prCurrentRecords.pluto.bldgarea)).toLocaleString():'—'}</td></tr>
         <tr><td>Lot Area</td><td class="num">${prCurrentRecords.pluto.lotarea?Math.round(parseFloat(prCurrentRecords.pluto.lotarea)).toLocaleString()+' SF':'—'}</td></tr>
-        <tr><td>Residential Units (Records)</td><td class="num">${prCurrentRecords.pluto.unitsres||'—'}</td></tr>
-        <tr><td>Commercial Units (Records)</td><td class="num">${prCurrentRecords.pluto.unitscomm||'—'}</td></tr>
+        <tr><td>Residential Units (Records)</td><td class="num">${prFmtInt(prCurrentRecords.pluto.unitsres)}</td></tr>
+        <tr><td>Commercial Units (Records)</td><td class="num">${prFmtInt(prCurrentRecords.pluto.unitscomm)}</td></tr>
         <tr><td>Building Class</td><td>${escapePDFHtml(prCurrentRecords.pluto.bldgclass||'—')}</td></tr>
         <tr><td>Zoning District</td><td>${escapePDFHtml(prCurrentRecords.pluto.zonedist1||'—')}</td></tr>
         <tr><td>Built FAR</td><td class="num">${prCurrentRecords.pluto.builtfar?parseFloat(prCurrentRecords.pluto.builtfar).toFixed(2):'—'}</td></tr>
         <tr><td>Residential FAR (As of Right)</td><td class="num">${prCurrentRecords.pluto.residfar?parseFloat(prCurrentRecords.pluto.residfar).toFixed(2):'—'}</td></tr>
         <tr><td>Landmark</td><td>${(prCurrentRecords.pluto.landmark&&prCurrentRecords.pluto.landmark!=='0')?escapePDFHtml(prCurrentRecords.pluto.landmark):'No'}</td></tr>
         ${prCurrentRecords.dof?`
-        <tr><td>DOF Market Value</td><td class="num">${prCurrentRecords.dof.fullval?fmtFull(parseFloat(prCurrentRecords.dof.fullval)):'—'}</td></tr>
-        <tr><td>Assessed Value</td><td class="num">${prCurrentRecords.dof.curasstot?fmtFull(parseFloat(prCurrentRecords.dof.curasstot)):'—'}</td></tr>
-        <tr><td>Annual Property Tax</td><td class="num">${prCurrentRecords.dof.cur_actl_tax?fmtFull(parseFloat(prCurrentRecords.dof.cur_actl_tax)):'—'}</td></tr>
-        <tr><td>Tax Class</td><td>${escapePDFHtml(prCurrentRecords.dof.taxclass||prCurrentRecords.dof.curtaxclass||'—')}</td></tr>
+        <tr><td>DOF Market Value</td><td class="num">${parseFloat(prCurrentRecords.dof.finmkttot||prCurrentRecords.dof.tenmkttot||prCurrentRecords.dof.pymkttot)>0?fmtFull(parseFloat(prCurrentRecords.dof.finmkttot||prCurrentRecords.dof.tenmkttot||prCurrentRecords.dof.pymkttot)):'—'}</td></tr>
+        <tr><td>Assessed Value</td><td class="num">${parseFloat(prCurrentRecords.dof.finacttot||prCurrentRecords.dof.tenacttot||prCurrentRecords.dof.pyacttot)>0?fmtFull(parseFloat(prCurrentRecords.dof.finacttot||prCurrentRecords.dof.tenacttot||prCurrentRecords.dof.pyacttot)):'—'}</td></tr>
+        <tr><td>Annual Property Tax (Est.)</td><td class="num">${(()=>{const t=typeof computeAnnualPropertyTax==='function'?computeAnnualPropertyTax(prCurrentRecords.dof):0;return t>0?fmtFull(t):'—'})()}</td></tr>
+        <tr><td>Tax Class</td><td>${escapePDFHtml(prCurrentRecords.dof.fintaxclass||prCurrentRecords.dof.tentaxclass||prCurrentRecords.dof.pytaxclass||'—')}</td></tr>
         `:''}
         ${prCurrentRecords.acris?`
         <tr><td>Last Recorded Sale</td><td class="num">${prCurrentRecords.acris.document_date?new Date(prCurrentRecords.acris.document_date).toLocaleDateString():'—'}</td></tr>
