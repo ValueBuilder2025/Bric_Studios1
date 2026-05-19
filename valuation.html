@@ -2576,7 +2576,9 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 
 
     <div class="form-section form-gated-section" style="border-bottom:none">
-      <div class="action-row" style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem"><button class="calc-btn bvi-locked" data-bvi-requires-intent="true" onclick="calculate()" style="margin-top:0" disabled>Generate Valuation</button><button class="calc-btn bvi-locked" data-bvi-requires-intent="true" onclick="saveCurrentValuationExplicit()" style="margin-top:0;background:transparent;color:var(--gold);border:1px solid var(--border-gold)" disabled>Save to Dashboard</button></div><div id="saveStatus" style="margin-top:.55rem;font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.04em"></div>
+      <div class="action-row" style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem"><button class="calc-btn bvi-locked" data-bvi-requires-intent="true" onclick="calculate()" style="margin-top:0" disabled>Generate Valuation</button><button class="calc-btn bvi-locked" data-bvi-requires-intent="true" onclick="saveCurrentValuationExplicit()" style="margin-top:0;background:transparent;color:var(--gold);border:1px solid var(--border-gold)" disabled>Save to Dashboard</button></div>
+      <button class="calc-btn bvi-locked" data-bvi-requires-intent="true" onclick="saveDraftManually()" style="margin-top:.5rem;height:36px;background:transparent;color:rgba(255,255,255,.55);border:1px dashed rgba(255,255,255,.18);font-size:.62rem;letter-spacing:.1em" disabled>💾 Save Working Draft (Free)</button>
+      <div id="saveStatus" style="margin-top:.55rem;font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.04em"></div>
     </div>
   </div>
 
@@ -6563,18 +6565,28 @@ async function handleRentRollUpload(event){
     }
 
     // Try to auto-detect whether this is residential or retail by looking at headers
-    const detection=detectRentRollKind(rawRows);
-    const parsed=parseRowsAsRentRoll(rawRows, detection.kind);
+    let detection, parsed;
+    try {
+      detection=detectRentRollKind(rawRows);
+      parsed=parseRowsAsRentRoll(rawRows, detection.kind);
+    } catch(parseErr){
+      console.warn('Row parse error:', parseErr);
+      setUploadStatus('warn', `Read ${rawRows.length} rows from <b>${escapeHtml(name)}</b> but couldn't auto-map columns. <a class="review-link" onclick="openRentRollPaste()">Review in paste flow</a>`);
+      try { stagePastedRows(rawRows, 'res'); } catch(e){}
+      return;
+    }
     if(!parsed.length){
       setUploadStatus('warn', `Found ${rawRows.length} rows in <b>${escapeHtml(name)}</b> but couldn't map columns. <a class="review-link" onclick="openUploadInPasteFlow()">Review in paste flow</a>`);
       // Pre-fill the paste textarea with the file content so the user can review
-      stagePastedRows(rawRows, detection.kind);
+      try { stagePastedRows(rawRows, detection.kind); } catch(e){}
       return;
     }
 
     // Stage in the paste modal for review instead of auto-applying — this
     // gives the user a chance to verify the column mapping before committing.
-    stagePastedRows(rawRows, detection.kind);
+    try { stagePastedRows(rawRows, detection.kind); } catch(e){
+      console.warn('stagePastedRows failed:', e);
+    }
     setUploadStatus('success', `Parsed <b>${parsed.length}</b> ${detection.kind==='res'?'residential unit':'retail space'}${parsed.length===1?'':'s'} from <b>${escapeHtml(name)}</b>. <a class="review-link" onclick="openRentRollPaste()">Review & Apply</a>`);
   } catch(err){
     console.warn('Rent roll upload error:',err);
@@ -7780,6 +7792,33 @@ function buildHoldProjection(inputs){
 
 function calculate(){
   if(!bviRequireIntent()) return;
+  try {
+    _calculateImpl();
+  } catch(err){
+    console.error('Calculate failed:', err);
+    const panel=document.getElementById('panelRight');
+    if(panel){
+      panel.innerHTML=`<div class="results"><div class="empty-state" style="padding:2rem;text-align:left">
+        <div class="empty-title" style="color:var(--cream-text)!important">Something went wrong generating the valuation</div>
+        <div class="empty-sub" style="color:var(--cream-text-muted)!important;margin-top:.6rem;line-height:1.5">
+          The tool hit an error while building the report. A few common fixes:
+          <ul style="margin:.7rem 0 0 1.1rem;line-height:1.7">
+            <li>Make sure <b>Gross Rental Income</b> and <b>Cap Rate</b> are filled in (both must be greater than 0).</li>
+            <li>Confirm the address is entered.</li>
+            <li>Try refreshing the page — your work is saved automatically.</li>
+          </ul>
+          <div style="margin-top:.9rem;padding:.7rem .85rem;background:rgba(168,58,24,.08);border:1px solid rgba(168,58,24,.25);border-radius:8px;font-family:var(--mono);font-size:.7rem;color:var(--cream-bad)">
+            <b>Technical detail:</b> ${escapeHtml(err.message || String(err))}
+          </div>
+        </div>
+      </div></div>`;
+    }
+  }
+}
+
+// Original calculation body — invoked through the try/catch wrapper above so
+// errors surface to the user instead of failing silently in the console.
+function _calculateImpl(){
   const address=document.getElementById('address').value.trim()||'(No Address Entered)';
   const propType=getSelectedPropertyType();
   const development=getDevelopmentData();
@@ -7788,7 +7827,10 @@ function calculate(){
   const grossIncome=getGrossIncomeValue();
   const vacancyRate=parseFloat(document.getElementById('vacancyRate').value)||5;
   const otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
-  const capRate=parseFloat(document.getElementById('capRate').value)/100;
+  const capRateRaw=parseFloat(document.getElementById('capRate').value);
+  // Guard against missing / zero cap rate which would otherwise cause divide-by-zero
+  // and produce NaN values that crash the renderer downstream.
+  const capRate = (capRateRaw > 0 ? capRateRaw : 6) / 100;
   let totalExpenses=0,totalSavings=0;
   const expenseList=[];
   document.querySelectorAll('.expense-block').forEach(row=>{
@@ -7841,6 +7883,29 @@ function calculate(){
 function renderResults(d){
   currentValuationPDFData=d;
   const panel=document.getElementById('panelRight');
+  try {
+    _renderResultsImpl(d, panel);
+  } catch(err){
+    console.error('renderResults failed:', err, 'payload:', d);
+    panel.innerHTML=`<div class="results"><div class="empty-state" style="padding:2rem;text-align:left">
+      <div class="empty-title" style="color:var(--cream-text)!important">Could not render the valuation document</div>
+      <div class="empty-sub" style="color:var(--cream-text-muted)!important;margin-top:.6rem;line-height:1.5">
+        The valuation calculated successfully but the document renderer hit an error. Your inputs are saved.
+        <div style="margin-top:.9rem;padding:.7rem .85rem;background:rgba(168,58,24,.08);border:1px solid rgba(168,58,24,.25);border-radius:8px;font-family:var(--mono);font-size:.7rem;color:var(--cream-bad);overflow:auto">
+          <b>Technical detail:</b> ${escapeHtml(err.message || String(err))}
+        </div>
+        <div style="margin-top:.9rem;font-size:.78rem;line-height:1.5">
+          <b>Quick fallback values:</b><br>
+          NOI: ${fmt(d.noi||0)}<br>
+          Valuation at ${fmtPct((d.capRate||.06)*100)} cap: ${fmt(d.baseVal||0)}<br>
+          Units: ${d.units||'—'} · SF: ${d.sqft||'—'}
+        </div>
+      </div>
+    </div></div>`;
+  }
+}
+
+function _renderResultsImpl(d, panel){
   const typeLabels={multifamily:'Multifamily',mixed:'Mixed-Use',singlefamilyrental:'Single Family Rental',development:'Development'};
   const typeLabel=typeLabels[d.propType]||d.propType;
   const intentLabel=d.intentLabel || BVI_INTENT_LABELS[d.intent||bviSelectedIntent] || '';
@@ -8956,12 +9021,36 @@ function buildValuationPayload(){
 }
 function saveCurrentValuation(){
   if(!bviRequireIntent()) return;
-  // Auto-save behavior: silently no-op when user lacks paid access.
-  // The explicit "Save to Dashboard" button uses saveCurrentValuationExplicit()
-  // which surfaces the paywall.
+  // Build the payload so we can save it (even partially)
+  let payload;
+  try {
+    payload=buildValuationPayload();
+  } catch(err){
+    console.warn('Could not build payload for save:',err);
+    return;
+  }
+  if(!payload.address || payload.address==='(No Address Entered)') return;
+
+  // EVERYONE — free or paid — gets a working draft saved to localStorage so they
+  // can't lose work mid-session. The draft is overwritten on every save. The
+  // Dashboard "My Properties" save only happens for paid users.
+  try {
+    localStorage.setItem('bricValuationDraft', JSON.stringify(payload));
+    const status=document.getElementById('saveStatus');
+    if(status){
+      const access=getAccessState();
+      if(access.hasAccess){
+        status.textContent='Saved to Dashboard Properties · '+new Date().toLocaleString();
+      } else {
+        status.textContent='Draft saved locally · '+new Date().toLocaleTimeString()+' (Unlock to save to Dashboard)';
+      }
+    }
+  } catch(err){
+    console.warn('Local draft save failed:',err);
+  }
+
+  // For paid users, also push to Dashboard Properties workspace
   if(!getAccessState().hasAccess) return;
-  const payload=buildValuationPayload();
-  if(!payload.address || payload.address==='(No Address Entered)'){alert('Add a property address before saving.');return;}
   const valuationId=getQueryParam('valuationId')||uid('val');
   const linked=upsertPropertyFromValuation(payload, valuationId);
   const ws=linked.ws; const property=linked.property;
@@ -8972,11 +9061,8 @@ function saveCurrentValuation(){
   ws.activity.unshift({type:'valuation_saved',propertyId:property.id,address:property.address,time:new Date().toISOString(),detail:'Valuation saved'});
   ws.activity=ws.activity.slice(0,25);
   setWorkspace(ws);
-  localStorage.setItem('bricValuationDraft', JSON.stringify(payload));
   localStorage.setItem('bricValuationTransfer', JSON.stringify(payload));
   const url=new URL(window.location.href); url.searchParams.set('propertyId', property.id); url.searchParams.set('valuationId', valuationId); history.replaceState({},'',url.toString());
-  const status=document.getElementById('saveStatus');
-  if(status) status.textContent='Saved to Dashboard Properties · '+new Date().toLocaleString();
 }
 // Explicit save (from Save to Dashboard button) — surfaces paywall if no access
 function saveCurrentValuationExplicit(){
@@ -8991,6 +9077,39 @@ function saveCurrentValuationExplicit(){
       saveCurrentValuation();
     }
   });
+}
+
+// Manual draft save — explicitly invoked by the "Save Working Draft" button.
+// Always works regardless of paid status. Saves the in-progress form state to
+// localStorage so a refresh or accidental close doesn't lose work.
+function saveDraftManually(){
+  if(!bviRequireIntent()) return;
+  let payload;
+  try {
+    payload=buildValuationPayload();
+  } catch(err){
+    console.warn('Could not build payload:',err);
+    alert('Could not save draft: '+(err.message||'unknown error'));
+    return;
+  }
+  if(!payload.address || payload.address==='(No Address Entered)'){
+    alert('Add a property address before saving a draft.');
+    return;
+  }
+  try {
+    localStorage.setItem('bricValuationDraft', JSON.stringify(payload));
+    const status=document.getElementById('saveStatus');
+    if(status){
+      status.textContent='✓ Draft saved · '+new Date().toLocaleTimeString();
+      status.style.color='var(--green-tint)';
+      setTimeout(()=>{
+        if(status){ status.style.color=''; }
+      }, 3000);
+    }
+  } catch(err){
+    console.warn('Local draft save failed:',err);
+    alert('Could not save draft: '+(err.message||'unknown error'));
+  }
 }
 function loadSavedValuationIntoForm(payload){
   if(!payload) return;
@@ -9067,6 +9186,17 @@ function tryLoadSavedValuation(){
   if(valuationId) payload=ws.valuations.find(v=>v.id===valuationId);
   if(!payload && propertyId){
     payload=ws.valuations.find(v=>v.propertyId===propertyId);
+  }
+  // Fall back to the local draft for free-tier users so their work survives a refresh.
+  // Only load the draft if no explicit valuation ID was requested via URL (otherwise
+  // we'd silently replace the requested record).
+  if(!payload && !valuationId && !propertyId){
+    try {
+      const draftRaw=localStorage.getItem('bricValuationDraft');
+      if(draftRaw){
+        payload=JSON.parse(draftRaw);
+      }
+    } catch(err){ console.warn('Could not load local draft:',err); }
   }
   if(payload) loadSavedValuationIntoForm(payload);
 }
