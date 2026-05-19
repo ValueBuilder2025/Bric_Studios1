@@ -1033,19 +1033,22 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
   --cream-bg: #f6f1e8;
   --cream-card: #ffffff;
   --cream-card-elevated: #faf6ec;
-  --cream-text: #1a1814;
-  --cream-text-muted: #6e6660;
-  --cream-text-faint: #9a928a;
-  --cream-line: #e6dfd2;
-  --cream-line-strong: #d4cab9;
-  --cream-green: #2d8a47;
-  --cream-green-bg: rgba(45,138,71,.07);
-  --cream-green-line: rgba(45,138,71,.22);
-  --cream-gold: #9c7d2c;
-  --cream-gold-bg: rgba(156,125,44,.07);
-  --cream-gold-line: rgba(156,125,44,.22);
-  --cream-warn: #b86b1f;
-  --cream-bad: #c2461f;
+  --cream-text: #14110d;            /* near-black, ~16:1 contrast on cream */
+  --cream-text-muted: #4a423a;       /* dark warm gray, ~8:1 contrast */
+  --cream-text-faint: #6b6258;       /* mid warm gray, ~5.2:1 contrast (meets AA for body) */
+  --cream-line: #e2dac9;
+  --cream-line-strong: #c8bda8;
+  --cream-green: #1f6e36;            /* darker green, ~6:1 contrast */
+  --cream-green-bg: rgba(31,110,54,.07);
+  --cream-green-line: rgba(31,110,54,.28);
+  --cream-gold: #7d6320;             /* darker gold, ~6:1 contrast */
+  --cream-gold-bg: rgba(125,99,32,.07);
+  --cream-gold-line: rgba(125,99,32,.28);
+  --cream-warn: #9c5717;              /* darker warm rust for warning text */
+  --cream-bad: #a83a18;
+  --cream-info-bg: #fbf8f0;
+  --cream-callout-bg: rgba(125,99,32,.05);
+  --cream-callout-line: rgba(125,99,32,.18);
   background: var(--cream-bg) !important;
   color: var(--cream-text);
 }
@@ -1294,6 +1297,605 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 /* Scrollbar adjustment for cream pane */
 .panel-right::-webkit-scrollbar-thumb{
   background: rgba(26,24,20,.18) !important;
+}
+
+/* ============================================================
+   DOCUMENT-STYLE LAYOUT — Cover, Pages, Back Cover
+   ============================================================
+   The results pane is structured as a presentable document so it
+   looks the same on screen and in the exported PDF. Each .doc-page
+   is a "page" with consistent padding; page breaks render between
+   them in print. */
+.doc-page{
+  background: var(--cream-card) !important;
+  border: 1px solid var(--cream-line) !important;
+  border-radius: 14px !important;
+  padding: 1.5rem 1.6rem !important;
+  margin-bottom: 1.4rem !important;
+  box-shadow: 0 2px 12px rgba(20,17,13,.05) !important;
+  page-break-after: always;
+}
+.doc-page:last-child{ page-break-after: auto; }
+@media print{
+  .doc-page{ box-shadow: none !important; border: none !important; }
+}
+
+/* Cover page */
+.bric-cover{
+  background: linear-gradient(180deg, #faf6ec 0%, #f6f1e8 100%) !important;
+  border: 1px solid var(--cream-gold-line) !important;
+  padding: 3rem 2rem 2.5rem !important;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.bric-cover::before{
+  content: ""; position: absolute; top: -150px; right: -150px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(125,99,32,.08), transparent 70%);
+  pointer-events: none;
+}
+.bric-cover::after{
+  content: ""; position: absolute; bottom: -100px; left: -100px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(31,110,54,.06), transparent 70%);
+  pointer-events: none;
+}
+.bric-cover > *{ position: relative; z-index: 1; }
+.bric-cover-logo{
+  font-family: var(--sans);
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: .25em;
+  color: var(--cream-text);
+  margin-bottom: .4rem;
+}
+.bric-cover-tagline{
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 800;
+  margin-bottom: 3.5rem;
+}
+.bric-cover-kicker{
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--cream-text-muted);
+  font-weight: 700;
+  margin-bottom: .8rem;
+}
+.bric-cover-title{
+  font-family: var(--sans);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  margin-bottom: .5rem;
+  padding: 0 1rem;
+}
+.bric-cover-address{
+  font-family: var(--sans);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--cream-text-muted);
+  letter-spacing: -.01em;
+  margin-bottom: 2.5rem;
+}
+.bric-cover-stats{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0 auto 2.5rem;
+  max-width: 540px;
+}
+.bric-cover-stat{
+  padding: 1rem .75rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,.6);
+  border: 1px solid var(--cream-line);
+}
+.bric-cover-stat-label{
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cream-text-faint);
+  font-weight: 700;
+  margin-bottom: .3rem;
+  display: block;
+}
+.bric-cover-stat-val{
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.01em;
+  display: block;
+}
+.bric-cover-stat-val.green{ color: var(--cream-green); }
+.bric-cover-meta{
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  color: var(--cream-text-faint);
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--cream-line);
+}
+.bric-cover-meta span{ display: flex; flex-direction: column; gap: .2rem; }
+.bric-cover-meta b{ color: var(--cream-text); font-size: .75rem; font-family: var(--sans); font-weight: 700; letter-spacing: -.005em; }
+
+/* Page header pattern — used on every internal page */
+.doc-page-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.4rem;
+  padding-bottom: .8rem;
+  border-bottom: 2px solid var(--cream-line-strong);
+}
+.doc-page-head-left{ flex: 1; }
+.doc-page-head-kicker{
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 800;
+  margin-bottom: .25rem;
+}
+.doc-page-head-title{
+  font-family: var(--sans);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.02em;
+}
+.doc-page-head-right{
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--cream-text-faint);
+  font-weight: 700;
+  text-align: right;
+  padding-left: 1rem;
+  padding-bottom: .15rem;
+}
+
+/* Inline explainer block — short prose that explains a metric or section */
+.explainer{
+  font-family: var(--sans);
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--cream-text-muted);
+  margin: .65rem 0 1rem;
+  padding: 0;
+}
+.explainer b{ color: var(--cream-text); font-weight: 700; }
+.explainer.tight{ margin: .35rem 0 .6rem; font-size: .78rem; }
+
+/* Callout box — for "why this matters" insights, beneath a metric */
+.callout{
+  background: var(--cream-callout-bg);
+  border-left: 3px solid var(--cream-gold);
+  padding: .8rem 1rem;
+  border-radius: 6px;
+  margin: .8rem 0 .4rem;
+  font-family: var(--sans);
+  font-size: .78rem;
+  line-height: 1.55;
+  color: var(--cream-text-muted);
+}
+.callout b{ color: var(--cream-text); font-weight: 700; }
+.callout-label{
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 800;
+  display: block;
+  margin-bottom: .3rem;
+}
+.callout.green{ background: var(--cream-green-bg); border-left-color: var(--cream-green); }
+.callout.green .callout-label{ color: var(--cream-green); }
+.callout.warn{ background: rgba(156,87,23,.06); border-left-color: var(--cream-warn); }
+.callout.warn .callout-label{ color: var(--cream-warn); }
+
+/* Tooltip — info icon next to jargon terms, expands to a definition on hover */
+.tip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px; height: 14px;
+  margin-left: .25rem;
+  border-radius: 50%;
+  background: var(--cream-gold-bg);
+  border: 1px solid var(--cream-gold-line);
+  color: var(--cream-gold);
+  font-family: var(--mono);
+  font-size: .55rem;
+  font-weight: 800;
+  cursor: help;
+  vertical-align: middle;
+  position: relative;
+}
+.tip:hover{ background: var(--cream-gold); color: var(--cream-card); }
+.tip::after{
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cream-text);
+  color: var(--cream-card);
+  font-family: var(--sans);
+  font-size: .72rem;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: .55rem .7rem;
+  border-radius: 6px;
+  width: 240px;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s ease;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(20,17,13,.18);
+}
+.tip::before{
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--cream-text);
+  opacity: 0;
+  transition: opacity .15s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+.tip:hover::after, .tip:hover::before{ opacity: 1; }
+/* Push the tooltip down for tips near the top edge so it doesn't clip */
+.tip.below::after{ bottom: auto; top: calc(100% + 8px); }
+.tip.below::before{ bottom: auto; top: calc(100% + 2px); border-top-color: transparent; border-bottom-color: var(--cream-text); }
+
+/* === Simplified Sensitivity Analysis === */
+.sens-block{
+  background: var(--cream-info-bg);
+  border: 1px solid var(--cream-line);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  margin: 1rem 0;
+}
+.sens-block-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: .3rem;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+.sens-block-title{
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.01em;
+}
+.sens-block-anchor{
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  color: var(--cream-text-muted);
+  font-weight: 700;
+}
+.sens-block-anchor b{ color: var(--cream-green); font-weight: 800; }
+.sens-row{
+  display: grid;
+  grid-template-columns: 130px 1fr 130px;
+  align-items: center;
+  gap: .85rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--cream-line);
+  font-family: var(--sans);
+}
+.sens-row:last-child{ border-bottom: none; }
+.sens-row-label{
+  font-size: .82rem;
+  color: var(--cream-text);
+  font-weight: 600;
+}
+.sens-row-label .delta{
+  display: block;
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: var(--cream-text-faint);
+  letter-spacing: .04em;
+  font-weight: 600;
+  margin-top: .12rem;
+}
+.sens-row-bar{
+  position: relative;
+  height: 22px;
+  background: rgba(20,17,13,.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sens-row-bar-fill{
+  position: absolute;
+  top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--cream-green) 0%, rgba(31,110,54,.7) 100%);
+  border-radius: 4px;
+  transition: all .25s ease;
+}
+.sens-row-bar-fill.warn{
+  background: linear-gradient(90deg, var(--cream-warn) 0%, rgba(156,87,23,.7) 100%);
+}
+.sens-row-bar-fill.base{
+  background: var(--cream-text);
+  opacity: .85;
+}
+.sens-row-bar-marker{
+  position: absolute;
+  top: -3px; bottom: -3px;
+  width: 2px;
+  background: var(--cream-gold);
+  z-index: 2;
+}
+.sens-row-val{
+  text-align: right;
+  font-family: var(--sans);
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+}
+.sens-row-val.green{ color: var(--cream-green); }
+.sens-row-val.warn{ color: var(--cream-warn); }
+.sens-row-val.base{ color: var(--cream-text); }
+.sens-row-val .delta{
+  display: block;
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: var(--cream-text-faint);
+  letter-spacing: .03em;
+  font-weight: 600;
+  margin-top: .1rem;
+}
+
+/* === Renovations + Partners page === */
+.reno-section-title{
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.015em;
+  margin: 1.4rem 0 .6rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--cream-line);
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+.reno-section-title:first-child{ margin-top: 0; }
+.reno-section-title-kicker{
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 700;
+}
+.reno-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .7rem;
+  margin-top: .6rem;
+}
+@media(max-width: 760px){ .reno-grid{ grid-template-columns: 1fr; } }
+.reno-card{
+  padding: .9rem 1rem;
+  background: var(--cream-card-elevated);
+  border: 1px solid var(--cream-line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.reno-card-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .5rem;
+}
+.reno-card-title{
+  font-family: var(--sans);
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.01em;
+}
+.reno-card-roi{
+  font-family: var(--mono);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  padding: .2rem .5rem;
+  border-radius: 999px;
+  background: var(--cream-green-bg);
+  color: var(--cream-green);
+  border: 1px solid var(--cream-green-line);
+  white-space: nowrap;
+}
+.reno-card-roi.med{ background: var(--cream-gold-bg); color: var(--cream-gold); border-color: var(--cream-gold-line); }
+.reno-card-roi.low{ background: rgba(156,87,23,.08); color: var(--cream-warn); border-color: rgba(156,87,23,.25); }
+.reno-card-cost{
+  font-family: var(--mono);
+  font-size: .68rem;
+  color: var(--cream-text-muted);
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.reno-card-cost b{ color: var(--cream-text); font-weight: 800; }
+.reno-card-desc{
+  font-family: var(--sans);
+  font-size: .76rem;
+  line-height: 1.5;
+  color: var(--cream-text-muted);
+  margin-top: .25rem;
+}
+
+.partners-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .7rem;
+  margin-top: .6rem;
+}
+@media(max-width: 760px){ .partners-grid{ grid-template-columns: 1fr; } }
+.partner-card{
+  padding: 1rem 1.05rem;
+  background: var(--cream-card-elevated);
+  border: 1px solid var(--cream-line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  text-align: center;
+}
+.partner-card-icon{
+  font-size: 1.4rem;
+  margin-bottom: .25rem;
+}
+.partner-card-title{
+  font-family: var(--sans);
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--cream-text);
+  letter-spacing: -.01em;
+  margin-bottom: .15rem;
+}
+.partner-card-desc{
+  font-family: var(--sans);
+  font-size: .73rem;
+  line-height: 1.5;
+  color: var(--cream-text-muted);
+  margin-bottom: .55rem;
+  flex: 1;
+}
+.partner-card-btn{
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 800;
+  padding: .5rem .7rem;
+  background: rgba(255,255,255,.7);
+  border: 1px solid var(--cream-gold-line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .12s ease;
+}
+.partner-card-btn:hover{ background: var(--cream-gold); color: var(--cream-card); }
+
+/* Back cover */
+.bric-back-cover{
+  background: linear-gradient(180deg, var(--cream-text) 0%, #0a0805 100%) !important;
+  color: var(--cream-card) !important;
+  text-align: center;
+  padding: 3rem 2rem 2.5rem !important;
+  border: none !important;
+  border-radius: 14px !important;
+}
+.bric-back-cover .back-logo{
+  font-family: var(--sans);
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: .25em;
+  color: var(--cream-card);
+  margin-bottom: .4rem;
+}
+.bric-back-cover .back-tagline{
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: rgba(246,241,232,.55);
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+.bric-back-cover .back-credit{
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(246,241,232,.85);
+  margin-bottom: .35rem;
+}
+.bric-back-cover .back-team{
+  font-family: var(--sans);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--cream-card);
+  letter-spacing: -.015em;
+  margin-bottom: 2rem;
+}
+.bric-back-cover .back-divider{
+  width: 80px;
+  height: 1px;
+  background: rgba(246,241,232,.25);
+  margin: 0 auto 2rem;
+}
+.bric-back-cover .back-tag{
+  font-family: var(--sans);
+  font-size: .88rem;
+  line-height: 1.6;
+  color: rgba(246,241,232,.78);
+  max-width: 480px;
+  margin: 0 auto 2rem;
+}
+.bric-back-cover .back-meta{
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(246,241,232,.5);
+  font-weight: 700;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(246,241,232,.15);
+}
+
+@media(max-width: 760px){
+  .bric-cover-logo{ font-size: 1.9rem; }
+  .bric-cover-title{ font-size: 1.55rem; }
+  .bric-cover-address{ font-size: 1.05rem; }
+  .bric-cover-stats{ grid-template-columns: 1fr; }
+  .bric-cover-meta{ flex-direction: column; gap: .8rem; }
+  .doc-page-head{ flex-direction: column; align-items: flex-start; }
+  .doc-page-head-right{ text-align: left; padding-left: 0; margin-top: .4rem; }
+  .doc-page-head-title{ font-size: 1.3rem; }
+  .sens-row{ grid-template-columns: 100px 1fr 100px; gap: .5rem; }
+  .sens-row-label{ font-size: .72rem; }
+  .sens-row-val{ font-size: .8rem; }
+  .tip::after{ width: 200px; left: 0; transform: translateX(0); }
 }
 
 </style>
@@ -7242,32 +7844,400 @@ function renderResults(d){
   const typeLabels={multifamily:'Multifamily',mixed:'Mixed-Use',singlefamilyrental:'Single Family Rental',development:'Development'};
   const typeLabel=typeLabels[d.propType]||d.propType;
   const intentLabel=d.intentLabel || BVI_INTENT_LABELS[d.intent||bviSelectedIntent] || '';
+  const generatedDate=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  // Helper for tooltips — keeps the markup readable in the giant template literal
+  const tip=(text)=>`<span class="tip" data-tip="${text.replace(/"/g,'&quot;')}">?</span>`;
+
+  // === COVER PAGE ===
+  const coverPage = `<div class="doc-page bric-cover">
+    <div class="bric-cover-logo">BRIC</div>
+    <div class="bric-cover-tagline">Studios Valuation Report</div>
+    <div class="bric-cover-kicker">Property Valuation · ${intentLabel||typeLabel}</div>
+    <h1 class="bric-cover-title">${escapeHtml(d.address)}</h1>
+    <div class="bric-cover-address">${typeLabel} · ${d.units} ${d.units===1?'unit':'units'}${d.sqft>0?' · '+d.sqft.toLocaleString()+' SF':''}</div>
+    <div class="bric-cover-stats">
+      <div class="bric-cover-stat"><span class="bric-cover-stat-label">Estimated Value</span><span class="bric-cover-stat-val green">${fmt(Math.max(0,d.baseVal))}</span></div>
+      <div class="bric-cover-stat"><span class="bric-cover-stat-label">Net Operating Income</span><span class="bric-cover-stat-val">${fmt(Math.max(0,d.noi))}</span></div>
+      <div class="bric-cover-stat"><span class="bric-cover-stat-label">Cap Rate Applied</span><span class="bric-cover-stat-val">${fmtPct(d.capRate*100)}</span></div>
+    </div>
+    <div class="bric-cover-meta">
+      <span><b>Prepared</b>${generatedDate}</span>
+      <span><b>For</b>${intentLabel||'Owner Review'}</span>
+      <span><b>By</b>BRIC Studios</span>
+    </div>
+  </div>`;
+
+  // === HEADLINE VALUATION PAGE ===
+  const valuationPage = `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page 01 · Valuation</div>
+        <div class="doc-page-head-title">What Your Property Is Worth</div>
+      </div>
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+
+    <p class="explainer">Your property's value is a function of its <b>Net Operating Income</b>${tip('NOI = Effective Gross Income minus Operating Expenses. It is the cash the property produces before debt service and taxes.')} and the <b>cap rate</b>${tip('The capitalization rate is the unlevered yield buyers demand for properties like yours in this submarket. Lower cap rate = higher price. Higher cap rate = lower price.')} the market would pay for that income. The formula is simple: <b>Value = NOI ÷ Cap Rate</b>. The three numbers below show what the property would sell for at conservative, market, and aggressive cap rates so you can see the realistic trading range.</p>
+
+    <div class="value-range-card">
+      <div class="vr-label">Estimated Valuation Range</div>
+      <div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end;margin-top:.4rem">
+        <div>
+          <div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div>
+          <div class="vr-sub">At market — ${fmtPct(d.capRate*100)} cap</div>
+        </div>
+      </div>
+      <div class="vr-caps">
+        <div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div>
+        <div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div>
+        <div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">How These Three Numbers Are Built</span>
+      <b>Conservative</b> applies a wider cap rate (+75 bps), which is what a cautious buyer or a buyer in a higher-interest-rate environment might pay. <b>Market</b> is the cap rate the tool recommends for your specific submarket and building profile. <b>Aggressive</b> applies a tighter cap rate (-75 bps), what a strategic buyer paying up for a unique asset, or a buyer in a low-rate environment, might pay.
+    </div>
+
+    <div class="kpi-grid" style="margin-top:1.4rem">
+      <div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Eff. Gross${tip('Effective Gross Income = Gross Rental Income minus Vacancy Loss plus Other Income. This is what the property actually collects in a normal year.')}</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div>
+    </div>
+  </div>`;
+
+  // === SENSITIVITY PAGE — SIMPLIFIED ===
+  const sensitivityPage = buildSimplifiedSensitivityPage(d, tip);
+
+  // === INCOME & EXPENSE BREAKDOWN PAGE ===
   const expRows=d.expenseList.filter(e=>e.bench).map(e=>{
     const min=e.bench.low*.65,max=e.bench.high*1.35,pct=v=>Math.max(0,Math.min(100,((v-min)/(max-min))*100));
     const tag=e.status==='bad'?'bad':e.status==='warn'?'warn':'good';
     const tagText=e.status==='bad'?'Above Avg':e.status==='warn'?'Near Top':'Below Avg';
-    return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .5rem 0;font-family:var(--mono);font-size:.62rem;color:#e1a06f">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}`;
-  }).join('') || `<div style="font-size:.8rem;color:rgba(255,255,255,.4)">No benchmarked expenses yet.</div>`;
+    return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .5rem 0;font-family:var(--mono);font-size:.62rem;color:var(--cream-warn)">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}`;
+  }).join('') || `<div style="font-size:.8rem;color:var(--cream-text-faint)">No benchmarked expenses yet.</div>`;
   const expBreakdownHTML=d.expenseList.map(e=>`<div class="breakdown-row"><span class="breakdown-row-name">${e.name}</span><span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span></div>`).join('')||'<div class="breakdown-row"><span class="breakdown-row-name">No expenses entered</span></div>';
-  const developmentHtml=d.propType==='development' ? `<div class="expense-comparison development-result-card">
-    <div class="ec-head"><div class="ec-title">Development Site Analysis</div><div class="ec-save">${d.developmentUnlocked?'Growth unlocked':'Growth required'}</div></div>
-    ${!d.developmentUnlocked?`<div class="development-lock-note" style="margin:0">Development calculations are available in Growth. Switch to Growth to enter lot size, FAR, zoning, street width, and estimated buildable SF.</div>`:`
-      <div class="development-result-grid">
-        <div class="development-result-stat"><span>Lot Size</span><strong>${d.development?.lotSize?Math.round(d.development.lotSize).toLocaleString():'—'}</strong></div>
-        <div class="development-result-stat"><span>FAR</span><strong>${d.development?.far||'—'}</strong></div>
-        <div class="development-result-stat"><span>Buildable SF</span><strong>${d.development?.buildableSF?Math.round(d.development.buildableSF).toLocaleString():'—'}</strong></div>
-        <div class="development-result-stat"><span>Street Width</span><strong>${d.development?.streetWidth?d.development.streetWidth+' ft':'—'}</strong></div>
-        <div class="development-result-stat"><span>Zoning</span><strong>${d.development?.zoning||'—'}</strong></div>
-        <div class="development-result-stat"><span>Primary Formula</span><strong>Lot × FAR</strong></div>
+
+  const breakdownPage = `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page 02 · Operations</div>
+        <div class="doc-page-head-title">Income & Expense Breakdown</div>
       </div>
-      <div class="development-zoning-output">${d.development?.zoningDescription || zoningBaseDescription(d.development?.zoning) || 'Enter zoning to generate an editable zoning description.'}</div>
-    `}
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+    <p class="explainer">This page shows exactly where your NOI comes from. <b>Effective Gross Income</b> starts with rent, subtracts the rent you'd lose to vacancy in a normal year, and adds in any other income. From there, every operating expense is subtracted to arrive at NOI — the single most important number in your valuation.</p>
+
+    <div class="expense-comparison" style="margin-top:1rem">
+      <div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>
+      ${expRows}
+    </div>
+    <div class="callout">
+      <span class="callout-label">How to Read This</span>
+      Each bar shows where your expense falls vs the market range for your building type and size. <b>Below Avg</b> (left side) means you're already efficient. <b>Near Top</b> (right side) means you might be overpaying — consider a vendor review. <b>Above Avg</b> means there's likely meaningful savings on the table. The "Potential savings" line estimates the annual dollar difference if you brought the expense in line with the market midpoint.
+    </div>
+
+    <div class="expense-comparison" style="margin-top:1.4rem">
+      <div class="ec-head"><div class="ec-title">Full Income & Expense Statement</div></div>
+      <div class="breakdown-grid">
+        <div>
+          <div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div>
+          <div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div>
+          <div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div>
+          <div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div>
+        </div>
+        <div>
+          ${expBreakdownHTML}
+          <div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div>
+        </div>
+      </div>
+      <div class="breakdown-total" style="margin-top:1rem;background:var(--cream-callout-bg);padding:.85rem 1rem;border:1px solid var(--cream-callout-line);border-radius:10px">
+        <span>Net Operating Income</span><span class="breakdown-total-val">${fmtFull(d.noi)}</span>
+      </div>
+    </div>
+  </div>`;
+
+  // === ANALYSIS PAGE — Profile, Debt, Hypothetical, Hold Projection ===
+  // All the existing cards live here. They self-render with their own explainers
+  // via the individual build*Card functions (which were already explainer-friendly).
+  const analysisCards = `${buildProfileSummaryCard(d)}${buildDebtResultCard(d)}${buildHypotheticalCard(d)}${buildHoldProjectionCard(d)}`;
+  const analysisPage = analysisCards.trim() ? `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page 03 · Risk & Returns</div>
+        <div class="doc-page-head-title">Building Profile, Debt & Long-Term Returns</div>
+      </div>
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+    <p class="explainer">The cards below explain <b>how your specific building profile</b> shifts the cap rate (vintage, class, rent stabilization, abatements), <b>what a typical loan</b> on this property would look like, what the upside could be if vacant units were brought to market, and how the deal performs over a 5, 7, or 10-year hold.</p>
+    ${analysisCards}
   </div>` : '';
-  panel.innerHTML=`<div class="results"><div class="result-header"><div><div class="result-address">${d.address}</div><div class="result-meta">${typeLabel}${intentLabel?' · Intent: '+intentLabel:''} ${d.propType==='development' ? (d.development?.buildableSF?'· '+Math.round(d.development.buildableSF).toLocaleString()+' Buildable SF':'· Growth development analysis') : ('· '+d.units+' Units '+(d.sqft>0?'· '+d.sqft.toLocaleString()+' SF':''))}</div></div><div class="result-timestamp">Generated</div></div>${developmentHtml}<div class="value-range-card"><div class="vr-label">Estimated Valuation Range</div><div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-end"><div><div class="vr-val">${fmt(Math.max(0,d.baseVal))}</div><div class="vr-sub">At Market (${fmtPct(d.capRate*100)} Cap)</div></div></div><div class="vr-caps"><div class="vr-cap"><strong>${fmt(Math.max(0,d.lowVal))}</strong>conservative value<div class="vr-sub">${fmtPct((d.capRate*100)+0.75)} cap · ${fmtFull(Math.max(0,d.lowVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.lowVal/d.sqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.baseVal))}</strong>market value<div class="vr-sub">${fmtPct(d.capRate*100)} cap · ${fmtFull(Math.max(0,d.pricePerUnit))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.pricePerSqft))} / SF`:''}</div></div><div class="vr-cap"><strong>${fmt(Math.max(0,d.highVal))}</strong>aggressive value<div class="vr-sub">${fmtPct(Math.max(0.01,(d.capRate*100)-0.75))} cap · ${fmtFull(Math.max(0,d.highVal/d.units))} / unit${d.sqft>0?` · ${fmtFull(Math.max(0,d.highVal/d.sqft))} / SF`:''}</div></div></div></div>${buildSensitivityTable(d)}${buildHypotheticalCard(d)}${buildProfileSummaryCard(d)}${buildDebtResultCard(d)}${buildHoldProjectionCard(d)}<button class="pdf-report-btn" onclick="downloadValuationPDF()">Save Valuation as PDF</button><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Gross Income</div><div class="kpi-val">${fmt(d.grossIncome)}</div></div><div class="kpi-card"><div class="kpi-label">Eff. Gross</div><div class="kpi-val">${fmt(d.effectiveGross)}</div></div><div class="kpi-card"><div class="kpi-label">Expenses</div><div class="kpi-val warning">${fmt(d.totalExpenses)}</div></div><div class="kpi-card"><div class="kpi-label">NOI</div><div class="kpi-val ${d.noi>=0?'positive':'warning'}">${d.noi<0?'−':''}${fmt(Math.abs(d.noi))}</div></div></div>
-  ${buildOpexRatioCard(d)}
-  <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Expense Benchmark Check</div><div class="ec-save">${d.totalSavings>0?'Potential savings: '+fmtFull(d.totalSavings)+'/yr':'No major overpayment flags'}</div></div>${expRows}</div>
-  <div class="expense-comparison"><div class="ec-head"><div class="ec-title">Income & Expense Breakdown</div></div><div class="breakdown-grid"><div><div class="breakdown-row"><span class="breakdown-row-name">Gross Rental Income</span><span class="breakdown-row-val income">${fmtFull(d.grossIncome)}</span></div><div class="breakdown-row"><span class="breakdown-row-name">Vacancy Loss (${fmtPct(d.vacancyRate)})</span><span class="breakdown-row-val expense">(${fmtFull(d.vacancyLoss)})</span></div><div class="breakdown-row"><span class="breakdown-row-name">Additional Income</span><span class="breakdown-row-val income">${fmtFull(d.otherIncome)}</span></div><div class="breakdown-total"><span>Effective Gross Income</span><span class="breakdown-total-val">${fmtFull(d.effectiveGross)}</span></div></div><div>${expBreakdownHTML}<div class="breakdown-total"><span>Total Expenses</span><span class="breakdown-total-val">${fmtFull(d.totalExpenses)}</span></div></div></div><div class="breakdown-total" style="margin-top:1rem;background:rgba(201,168,76,.08);padding:.85rem 1rem;border:1px solid rgba(201,168,76,.18);border-radius:10px"><span>Net Operating Income</span><span class="breakdown-total-val">${fmtFull(d.noi)}</span></div><div class="disclaimer">Directional estimate only — static prototype, not an appraisal.</div></div></div>`;
+
+  // === DEVELOPMENT PAGE (only for development properties) ===
+  const developmentPage = d.propType==='development' ? `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page · Development</div>
+        <div class="doc-page-head-title">Development Site Analysis</div>
+      </div>
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+    <p class="explainer">For development sites, value is driven by what can legally be built on the parcel. The buildable square footage equals <b>Lot Size × FAR</b>${tip('Floor Area Ratio — the ratio of buildable floor area to lot size. NYC zoning sets the maximum FAR for each district.')}, with adjustments for street width and contextual zoning rules.</p>
+    <div class="expense-comparison development-result-card">
+      <div class="ec-head"><div class="ec-title">Site Profile</div><div class="ec-save">${d.developmentUnlocked?'Growth unlocked':'Growth required'}</div></div>
+      ${!d.developmentUnlocked?`<div class="development-lock-note" style="margin:0">Development calculations are available in Growth. Switch to Growth to enter lot size, FAR, zoning, street width, and estimated buildable SF.</div>`:`
+        <div class="development-result-grid">
+          <div class="development-result-stat"><span>Lot Size</span><strong>${d.development?.lotSize?Math.round(d.development.lotSize).toLocaleString():'—'}</strong></div>
+          <div class="development-result-stat"><span>FAR</span><strong>${d.development?.far||'—'}</strong></div>
+          <div class="development-result-stat"><span>Buildable SF</span><strong>${d.development?.buildableSF?Math.round(d.development.buildableSF).toLocaleString():'—'}</strong></div>
+          <div class="development-result-stat"><span>Street Width</span><strong>${d.development?.streetWidth?d.development.streetWidth+' ft':'—'}</strong></div>
+          <div class="development-result-stat"><span>Zoning</span><strong>${d.development?.zoning||'—'}</strong></div>
+          <div class="development-result-stat"><span>Primary Formula</span><strong>Lot × FAR</strong></div>
+        </div>
+        <div class="development-zoning-output">${d.development?.zoningDescription || zoningBaseDescription(d.development?.zoning) || 'Enter zoning to generate an editable zoning description.'}</div>
+      `}
+    </div>
+  </div>` : '';
+
+  // === RENOVATIONS + PARTNERS PAGE ===
+  const renovationsPage = buildRenovationsPartnersPage(d);
+
+  // === BACK COVER ===
+  const backCover = `<div class="doc-page bric-back-cover">
+    <div class="back-logo">BRIC</div>
+    <div class="back-tagline">Studios</div>
+    <div class="back-credit">Presented by</div>
+    <div class="back-team">The BRIC Studios Valuation Team</div>
+    <div class="back-divider"></div>
+    <div class="back-tag">
+      Every BRIC valuation combines public records, neighborhood-level cap rate benchmarks, and your own underwriting inputs to give you an honest, defensible read on what your property is worth — and how to grow it.
+    </div>
+    <div class="back-meta">
+      <span>Generated · ${generatedDate}</span>
+      <span>${escapeHtml(d.address)}</span>
+    </div>
+  </div>`;
+
+  panel.innerHTML=`<div class="results">
+    ${coverPage}
+    ${valuationPage}
+    ${sensitivityPage}
+    ${breakdownPage}
+    ${developmentPage}
+    ${analysisPage}
+    ${renovationsPage}
+    <button class="pdf-report-btn" onclick="downloadValuationPDF()">Save Valuation as PDF</button>
+    <div class="disclaimer">Directional estimate only — not an appraisal. Numbers reflect the assumptions you entered and current market benchmarks. Real bids may differ.</div>
+    ${backCover}
+  </div>`;
 }
+
+/* === Simplified Sensitivity Analysis Page ===
+   Replaces the old grid table with a horizontal-bar visualization that's
+   easier for non-experts to parse. Each row shows: what changes, a bar
+   showing the resulting value vs base, and the dollar number. */
+function buildSimplifiedSensitivityPage(d, tip){
+  const baseVal = Math.max(0, d.baseVal);
+  const baseCap = d.capRate * 100;
+  const baseNOI = d.noi;
+  // Compute scenarios: cap-rate ±25/±50/±75 bps AND NOI ±10/±20%
+  const capScenarios = [
+    { bps: -75, label: '−75 bps' },
+    { bps: -50, label: '−50 bps' },
+    { bps: -25, label: '−25 bps' },
+    { bps: 0,   label: 'Base case' },
+    { bps: +25, label: '+25 bps' },
+    { bps: +50, label: '+50 bps' },
+    { bps: +75, label: '+75 bps' }
+  ].map(s => {
+    const cap = Math.max(0.01, baseCap + s.bps/100);
+    const val = baseNOI / (cap/100);
+    return { ...s, capPct: cap, val, delta: val - baseVal, isBase: s.bps === 0 };
+  });
+  const noiScenarios = [
+    { pct: -20, label: 'NOI down 20%' },
+    { pct: -10, label: 'NOI down 10%' },
+    { pct: 0,   label: 'Today\'s NOI' },
+    { pct: +10, label: 'NOI up 10%' },
+    { pct: +20, label: 'NOI up 20%' }
+  ].map(s => {
+    const noi = baseNOI * (1 + s.pct/100);
+    const val = noi / (baseCap/100);
+    return { ...s, noi, val, delta: val - baseVal, isBase: s.pct === 0 };
+  });
+
+  // Bar widths anchor at base = 50% so positive scenarios expand right, negative left
+  // Find max absolute delta to scale the bars
+  const allDeltas = [...capScenarios, ...noiScenarios].map(s => Math.abs(s.delta));
+  const maxAbsDelta = Math.max(1, ...allDeltas);
+  function barWidth(delta){
+    // Map delta from [-maxAbsDelta, +maxAbsDelta] to a 0-100% width relative to base
+    // Bars grow from a center anchor (50%) outward
+    const pct = (Math.abs(delta) / maxAbsDelta) * 45; // up to 45% so bars don't fully fill
+    return pct;
+  }
+
+  const capRows = capScenarios.map(s => {
+    const w = barWidth(s.delta);
+    const fillClass = s.isBase ? 'base' : (s.delta < 0 ? 'warn' : '');
+    const valClass = s.isBase ? 'base' : (s.delta < 0 ? 'warn' : 'green');
+    const deltaStr = s.isBase ? '' : (s.delta > 0 ? '+' : '−') + fmt(Math.abs(s.delta));
+    // Position the fill: if positive delta, start at center going right; if negative, start at (50% - w) going right
+    const fillLeft = s.delta < 0 ? (50 - w) : 50;
+    return `<div class="sens-row">
+      <div class="sens-row-label">${s.label}<span class="delta">${s.capPct.toFixed(2)}% cap</span></div>
+      <div class="sens-row-bar">
+        <div class="sens-row-marker" style="left:50%"></div>
+        <div class="sens-row-bar-fill ${fillClass}" style="left:${fillLeft}%;width:${Math.max(2, w)}%"></div>
+      </div>
+      <div class="sens-row-val ${valClass}">${fmt(s.val)}<span class="delta">${deltaStr}</span></div>
+    </div>`;
+  }).join('');
+
+  const noiRows = noiScenarios.map(s => {
+    const w = barWidth(s.delta);
+    const fillClass = s.isBase ? 'base' : (s.delta < 0 ? 'warn' : '');
+    const valClass = s.isBase ? 'base' : (s.delta < 0 ? 'warn' : 'green');
+    const deltaStr = s.isBase ? '' : (s.delta > 0 ? '+' : '−') + fmt(Math.abs(s.delta));
+    const fillLeft = s.delta < 0 ? (50 - w) : 50;
+    return `<div class="sens-row">
+      <div class="sens-row-label">${s.label}<span class="delta">NOI ${fmt(s.noi)}</span></div>
+      <div class="sens-row-bar">
+        <div class="sens-row-marker" style="left:50%"></div>
+        <div class="sens-row-bar-fill ${fillClass}" style="left:${fillLeft}%;width:${Math.max(2, w)}%"></div>
+      </div>
+      <div class="sens-row-val ${valClass}">${fmt(s.val)}<span class="delta">${deltaStr}</span></div>
+    </div>`;
+  }).join('');
+
+  return `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page · Sensitivity</div>
+        <div class="doc-page-head-title">What Moves Your Value</div>
+      </div>
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+
+    <p class="explainer">Two numbers control your property's value: the <b>cap rate</b>${tip('The yield buyers demand. Cap rates are set by market conditions — interest rates, neighborhood demand, regulatory risk. You cannot fully control your cap rate, but you can influence it by improving the building.')} the market applies to your income, and the <b>NOI</b>${tip('Net Operating Income — the cash your property produces after expenses. You CAN control your NOI by raising rents (where legal), reducing expenses, or filling vacant units.')} you produce. Below, see exactly how much your value moves when each of these shifts. The gold line in each bar marks today's value.</p>
+
+    <div class="sens-block">
+      <div class="sens-block-head">
+        <div class="sens-block-title">If the Cap Rate Changes</div>
+        <div class="sens-block-anchor">Today: <b>${baseCap.toFixed(2)}% cap · ${fmt(baseVal)}</b></div>
+      </div>
+      <p class="explainer tight">Cap rates move when interest rates change, when neighborhood demand shifts, or when comparable sales come in tighter or wider. A <b>25 bps move</b> (0.25%) is a normal monthly fluctuation in some markets.</p>
+      ${capRows}
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Why This Matters</span>
+      Every 25 bps of cap rate movement changes your value by roughly <b>${fmt(Math.abs(capScenarios[2].delta))}</b>. That's the leverage of cap rate — small market shifts produce big dollar swings on stabilized assets. To <b>tighten</b> your cap rate over time, reduce regulatory risk (deregulate units when legal), improve the building's class through renovation, and demonstrate strong, growing rent comps.
+    </div>
+
+    <div class="sens-block" style="margin-top:1.6rem">
+      <div class="sens-block-head">
+        <div class="sens-block-title">If Your NOI Changes</div>
+        <div class="sens-block-anchor">Today: <b>NOI ${fmt(baseNOI)} · ${fmt(baseVal)}</b></div>
+      </div>
+      <p class="explainer tight">NOI grows when you raise rents (where legal) or cut expenses. A <b>10% NOI lift</b> usually comes from a combination of small wins: re-tenanting a vacant unit at market, refinancing operating costs, or removing a stale management contract.</p>
+      ${noiRows}
+    </div>
+
+    <div class="callout green">
+      <span class="callout-label">What You Can Actually Control</span>
+      Unlike cap rates, NOI is largely under your control. A <b>10% NOI lift adds about ${fmt(Math.abs(noiScenarios[3].delta))}</b> to your value. The Renovations page later in this report shows the highest-ROI improvements to drive that lift. The Expense Benchmark Check in the previous page shows which line items are running above market.
+    </div>
+  </div>`;
+}
+
+/* === Renovations + Service Partners Page ===
+   Provides a curated list of renovation projects ranked by ROI for the
+   property type, plus an easy way to connect with brokers, managers, and
+   contractors through BRIC's network. The renovations list is property-
+   type-aware (different recommendations for multifamily vs single-family). */
+function buildRenovationsPartnersPage(d){
+  // Property-type-aware reno list. Each item has cost band, ROI band, label, and explanation.
+  // ROI here means: estimated value lift from the reno divided by cost. >2x is "high", 1.2-2x "med", <1.2x "low".
+  const renoLists = {
+    multifamily: [
+      { title:'Vacant Unit Renovation', cost:'$25,000–$50,000', roi:'2.5–4×', tier:'high', desc:'Bringing a vacant free-market unit from old kitchen/bath to modern finishes typically allows a $400–$800/mo rent bump, which capitalizes into significant value at today\'s cap rates.' },
+      { title:'Roof Replacement (Membrane)', cost:'$15,000–$30,000', roi:'1.5–2.5×', tier:'med', desc:'Eliminates the largest single capex risk a buyer underwrites against, often translating to a measurably tighter cap rate at sale and removing reserve requirements from lenders.' },
+      { title:'Boiler / Heating System', cost:'$15,000–$40,000', roi:'1.5–2×', tier:'med', desc:'A new high-efficiency boiler reduces heat expense 20–40% and is a major buyer concern. Also positions for LL97 emissions compliance starting 2024.' },
+      { title:'Common-Area Hallway Refresh', cost:'$8,000–$20,000', roi:'2–3×', tier:'high', desc:'Fresh paint, new flooring, modern lighting in lobbies and hallways. Affects every tour and inspection. Cheapest way to lift the building\'s perceived class.' },
+      { title:'Sub-Metering Conversion', cost:'$10,000–$25,000', roi:'2–3×', tier:'high', desc:'Shifts utility costs from landlord to tenant on new leases. Permanent expense reduction that capitalizes directly into value. Requires PSC approval.' },
+      { title:'Facade & Pointing (LL11/FISP)', cost:'$30,000–$80,000', roi:'1–1.5×', tier:'low', desc:'Required for buildings 6+ stories every 5 years. Doesn\'t add upside but failure to complete kills financing and triggers DOB violations. Required defensive spend.' },
+    ],
+    mixed: [
+      { title:'Vacant Retail Build-Out', cost:'$40,000–$100,000', roi:'3–5×', tier:'high', desc:'A turn-key white-box retail space leases 30-50% faster than a raw space. Reducing vacancy on the commercial portion has outsized impact since retail rent is often 2-3× residential PSF.' },
+      { title:'Storefront Modernization', cost:'$15,000–$40,000', roi:'2–3×', tier:'high', desc:'New windows, signage band, and entrance materially improve foot traffic and the quality of tenant you can attract. Drives both higher rent and stronger covenants.' },
+      { title:'Residential Unit Renovation', cost:'$25,000–$50,000', roi:'2.5–4×', tier:'high', desc:'See multifamily list. Same logic applies for the residential side.' },
+      { title:'Separated Tenant Entrances', cost:'$8,000–$20,000', roi:'1.5–2.5×', tier:'med', desc:'Where feasible, separating residential and commercial entrances substantially improves both tenant experience and building presentation.' },
+      { title:'Roof Replacement', cost:'$15,000–$30,000', roi:'1.5–2×', tier:'med', desc:'Same logic as multifamily — eliminates a big buyer concern.' },
+    ],
+    singlefamilyrental: [
+      { title:'Kitchen Renovation', cost:'$15,000–$35,000', roi:'2.5–4×', tier:'high', desc:'For single-family rentals, the kitchen is the single biggest driver of monthly rent. Modern finishes typically add $300–$600/mo on a market-rate property.' },
+      { title:'Bathroom Renovation', cost:'$8,000–$18,000', roi:'2–3×', tier:'high', desc:'A clean, modern bathroom is the second-biggest rent driver after the kitchen. Tile, vanity, fixtures.' },
+      { title:'Flooring & Paint', cost:'$5,000–$12,000', roi:'2–3×', tier:'high', desc:'Highest-ROI single improvement. Hardwood (or LVP) plus fresh white walls instantly lifts perceived value and rent.' },
+      { title:'HVAC Replacement', cost:'$8,000–$15,000', roi:'1.5–2×', tier:'med', desc:'New central HVAC reduces tenant complaints and removes a major buyer reserve item.' },
+    ],
+    development: [
+      { title:'Pre-Development Survey & Plans', cost:'$25,000–$60,000', roi:'Hard to quantify', tier:'med', desc:'A complete survey, environmental phase I, and as-of-right architectural massing study materially de-risks the site for buyers and lenders. Reduces buyer due diligence time from 90 to 30 days.' },
+      { title:'Site Cleanup / Demolition', cost:'$20,000–$80,000', roi:'1.2–2×', tier:'med', desc:'A clean, level, fenced site sells faster and at a premium versus a site requiring demolition. Removes a major friction point for buyers.' },
+      { title:'Zoning Lot Merger / Air Rights', cost:'Variable', roi:'2–10×', tier:'high', desc:'If adjacent properties have unused FAR, merging lots or buying air rights can dramatically expand the buildable envelope. Highest possible ROI in development; requires legal coordination.' },
+    ]
+  };
+  const renos = renoLists[d.propType] || renoLists.multifamily;
+  const renoCards = renos.map(r => `
+    <div class="reno-card">
+      <div class="reno-card-head">
+        <div class="reno-card-title">${r.title}</div>
+        <div class="reno-card-roi ${r.tier}">${r.roi} ROI</div>
+      </div>
+      <div class="reno-card-cost"><b>Typical cost:</b> ${r.cost}</div>
+      <div class="reno-card-desc">${r.desc}</div>
+    </div>`).join('');
+
+  // Service partner cards
+  const partners = [
+    { icon:'🏢', title:'Broker', desc:'Sell, refinance, or position for a 1031 exchange. BRIC connects you with high-performing brokers who close in your submarket.', cta:'Request a broker referral' },
+    { icon:'🔑', title:'Property Manager', desc:'Stabilize operations, reduce vacancy, and improve tenant retention. BRIC-vetted managers handle the day-to-day.', cta:'Request a manager referral' },
+    { icon:'🛠', title:'Contractor', desc:'Get bids on the renovations listed above. BRIC pre-qualifies contractors by license, insurance, and recent local work.', cta:'Request a contractor referral' }
+  ];
+  const partnerCards = partners.map(p => `
+    <div class="partner-card">
+      <div class="partner-card-icon">${p.icon}</div>
+      <div class="partner-card-title">${p.title}</div>
+      <div class="partner-card-desc">${p.desc}</div>
+      <button class="partner-card-btn" onclick="alert('BRIC partner network — coming soon. Contact the BRIC Studios team to request a referral.')">${p.cta}</button>
+    </div>`).join('');
+
+  return `<div class="doc-page">
+    <div class="doc-page-head">
+      <div class="doc-page-head-left">
+        <div class="doc-page-head-kicker">Page · Action Plan</div>
+        <div class="doc-page-head-title">Renovations & Service Partners</div>
+      </div>
+      <div class="doc-page-head-right">${escapeHtml(d.address)}</div>
+    </div>
+    <p class="explainer">Every dollar of NOI you can add gets <b>capitalized</b>${tip('When you add $1 of NOI and the market values it at a 6% cap rate, your property value increases by $1 ÷ 0.06 = $16.67. That\'s the cap rate multiplier — small recurring savings produce big value lifts.')} into roughly $15–$20 of property value at today's cap rates. The renovations below are ranked by ROI for your specific property type. Items marked <b>high ROI</b> typically return 2–4× their cost in property value.</p>
+
+    <div class="reno-section-title"><span>Renovations Ranked by ROI</span><span class="reno-section-title-kicker">For ${({multifamily:'multifamily',mixed:'mixed-use',singlefamilyrental:'single-family rental',development:'development'})[d.propType]||'this property'}</span></div>
+    <div class="reno-grid">${renoCards}</div>
+
+    <div class="callout warn" style="margin-top:1.2rem">
+      <span class="callout-label">ROI Estimates Are Directional</span>
+      Cost and ROI bands reflect typical NYC-area pricing and historical lift on similar buildings. <b>Actual returns depend on your existing rent levels, regulatory status, and local comps.</b> For rent-stabilized units, raising rent above legal limits is not legal — the renovation ROI on RS units depends on Individual Apartment Improvement (IAI) rules, which cap pass-through rent increases. Consult an attorney before assuming RS unit renovation ROI.
+    </div>
+
+    <div class="reno-section-title" style="margin-top:1.6rem"><span>Connect With Trusted Service Partners</span><span class="reno-section-title-kicker">Pre-vetted by BRIC</span></div>
+    <p class="explainer tight">BRIC maintains a network of brokers, property managers, and contractors who work in your submarket and have closed deals through us. Each referral is free and there's no obligation.</p>
+    <div class="partners-grid">${partnerCards}</div>
+  </div>`;
+}
+
 
 
 function escapePDFHtml(value){
