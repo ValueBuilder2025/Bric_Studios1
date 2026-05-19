@@ -9187,18 +9187,75 @@ function tryLoadSavedValuation(){
   if(!payload && propertyId){
     payload=ws.valuations.find(v=>v.propertyId===propertyId);
   }
-  // Fall back to the local draft for free-tier users so their work survives a refresh.
-  // Only load the draft if no explicit valuation ID was requested via URL (otherwise
-  // we'd silently replace the requested record).
-  if(!payload && !valuationId && !propertyId){
-    try {
-      const draftRaw=localStorage.getItem('bricValuationDraft');
-      if(draftRaw){
-        payload=JSON.parse(draftRaw);
-      }
-    } catch(err){ console.warn('Could not load local draft:',err); }
+  // Workspace-loaded valuations (from Dashboard My Properties) auto-fill immediately
+  // since the user explicitly chose that property by clicking it.
+  if(payload){
+    loadSavedValuationIntoForm(payload);
+    return;
   }
-  if(payload) loadSavedValuationIntoForm(payload);
+  // For local drafts (free-tier work-in-progress), DO NOT auto-load — that would
+  // hijack a fresh session. Instead, show a small banner offering to restore the
+  // draft. The user can dismiss it and start clean.
+  try {
+    const draftRaw=localStorage.getItem('bricValuationDraft');
+    if(draftRaw){
+      const draft=JSON.parse(draftRaw);
+      if(draft && draft.address && draft.address !== '(No Address Entered)'){
+        showDraftRestoreBanner(draft);
+      }
+    }
+  } catch(err){ console.warn('Could not check local draft:',err); }
+}
+
+// Show a small banner offering to restore the last working draft.
+// User can click "Restore" to load it or "Start Fresh" to dismiss
+// (which also clears the draft so it stops appearing).
+function showDraftRestoreBanner(draft){
+  // Don't show the banner if there's already one on screen
+  if(document.getElementById('draftRestoreBanner')) return;
+  const banner=document.createElement('div');
+  banner.id='draftRestoreBanner';
+  banner.style.cssText=`
+    position:relative;margin:0 0 1rem 0;padding:.85rem 1rem;
+    background:linear-gradient(180deg,rgba(201,168,76,.1),rgba(201,168,76,.04));
+    border:1px solid rgba(201,168,76,.32);border-radius:10px;
+    display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--text);
+  `;
+  const addrShort=String(draft.address||'').slice(0,60)+(draft.address?.length>60?'…':'');
+  banner.innerHTML=`
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);font-weight:800;margin-bottom:.2rem">Unsaved Draft Found</div>
+      <div style="color:rgba(255,255,255,.78);line-height:1.4">You have a working draft for <b style="color:var(--text)">${escapeHtml(addrShort)}</b>. Restore it or start fresh.</div>
+    </div>
+    <div style="display:flex;gap:.4rem;flex-shrink:0">
+      <button onclick="restoreDraftFromBanner()" style="padding:.5rem .8rem;border-radius:6px;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.45);color:var(--gold-light);font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800;cursor:pointer">Restore</button>
+      <button onclick="dismissDraftBanner()" style="padding:.5rem .8rem;border-radius:6px;background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;cursor:pointer">Start Fresh</button>
+    </div>
+  `;
+  // Insert at the top of the form panel (above the BVI shell)
+  const form=document.querySelector('.panel-left .form');
+  if(form){
+    form.insertBefore(banner, form.firstChild);
+  } else {
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+}
+function restoreDraftFromBanner(){
+  try {
+    const draftRaw=localStorage.getItem('bricValuationDraft');
+    if(draftRaw){
+      const draft=JSON.parse(draftRaw);
+      if(draft) loadSavedValuationIntoForm(draft);
+    }
+  } catch(err){ console.warn('Restore failed:',err); }
+  dismissDraftBanner();
+}
+function dismissDraftBanner(){
+  const banner=document.getElementById('draftRestoreBanner');
+  if(banner) banner.remove();
+  // Also clear the draft so the banner doesn't reappear on next page load
+  try { localStorage.removeItem('bricValuationDraft'); } catch(e){}
 }
 
 
