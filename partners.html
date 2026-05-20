@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Become a Partner</title>
+<meta name="description" content="Join the BRIC Partner Network. Get discovered by property owners and investors as a verified broker, manager, or contractor."/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D;--bg-2:#111317;--panel:#111317;
+    --line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.12);
+    --text:#f4f3ee;--muted:rgba(244,243,238,.70);--muted-2:rgba(244,243,238,.48);
+    --green:#0e9d52;--green-soft:rgba(14,157,82,.14);--green-tint:#7fc99a;
+    --warm:#cbb49b;--warm-soft:rgba(203,180,155,.14);--warm-strong:rgba(203,180,155,.32);
+    --indigo:#8b9ee8;
+    --gold:#cbb49b;--gold-tint:#e3c89e;--gold-bright:#ffe3a1;
+    --shadow:0 26px 90px rgba(0,0,0,.38);
+    --radius-xl:36px;--radius-lg:30px;--radius-md:22px;--radius-sm:14px;
+    --sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(214,200,180,.045), transparent 24%),
+      radial-gradient(circle at top right, rgba(255,255,255,.025), transparent 22%),
+      linear-gradient(180deg,#0A0B0D 0%,#07080A 100%);
+    overflow-x:hidden;line-height:1.5;min-height:100vh;}
+  a{text-decoration:none;color:inherit}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 28px}
+  .serif{font-family:var(--serif);font-weight:600;font-style:italic;color:var(--warm)}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(10,11,13,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1360px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.18rem;letter-spacing:-.02em}
+  .brand-wordmark{display:inline-flex;align-items:baseline;gap:2px}
+  .nav-links{display:flex;gap:14px;align-items:center;color:var(--muted);font-weight:700}
+  .nav-links a{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;color:var(--muted);transition:.2s ease;border:1px solid transparent}
+  .nav-links a::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 18% 50%, rgba(14,157,82,.14), transparent 38%),linear-gradient(90deg, rgba(14,157,82,.10), rgba(14,157,82,.02) 55%, transparent 90%);opacity:0;transition:opacity .2s ease;pointer-events:none}
+  .nav-links a:hover{color:var(--text);border-color:rgba(14,157,82,.14);transform:translateY(-1px)}
+  .nav-links a:hover::before{opacity:1}
+  .nav-links a.active{color:var(--text);border-color:rgba(14,157,82,.20);background:rgba(14,157,82,.06)}
+  .nav-links a span,.nav-links a{z-index:1}
+  .nav-cta{display:inline-flex;align-items:center;justify-content:center;min-width:156px;padding:11px 22px;border-radius:999px;background:rgba(255,255,255,.98);color:#08100b !important;-webkit-text-fill-color:#08100b;font-weight:800;letter-spacing:-.01em;transition:.2s ease;border:1px solid rgba(255,255,255,.82);position:relative;z-index:2}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(14,157,82,.12)}
+  .brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(14,157,82,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+  .brand-mark-b svg,.foot-mark-b svg{width:100%;height:100%;display:block}
+  .b-logo-bg{fill:#111317}.b-logo-main{fill:#f4f1e8}.b-logo-cut{fill:#1F6F3D}
+  .foot-brand-lockup{display:flex;align-items:center;gap:12px}
+  .foot-mark-b{width:34px;height:34px;display:inline-flex;border-radius:12px;overflow:hidden;flex:0 0 auto}
+  .nav-toggle-input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+  .menu-toggle{display:none;width:42px;height:42px;border:0;background:transparent;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;padding:0;border-radius:999px;z-index:110;-webkit-tap-highlight-color:transparent}
+  .menu-toggle span{width:22px;height:2px;border-radius:999px;background:rgba(244,243,238,.94);display:block;transition:transform .2s ease, opacity .2s ease}
+  .nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(2){opacity:0}
+  .nav-toggle-input:checked + .nav-inner .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mobile-menu{display:none;max-width:1360px;margin:0 auto;padding:0 28px 18px;flex-direction:column;gap:10px}
+  .nav-toggle-input:checked ~ .mobile-menu{display:flex !important}
+  .mobile-menu a{display:block;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text);font-weight:700}
+  .mobile-menu-cta{background:linear-gradient(180deg,#f7f4ed,#ddd1be) !important;color:#09100b !important;border:none !important;text-align:center;font-weight:800 !important}
+
+  /* HERO */
+  .hero{padding:64px 0 20px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(221,174,74,.18), transparent 66%);filter:blur(12px)}
+  .hero:after{content:"";position:absolute;left:-180px;bottom:-180px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(14,157,82,.06), transparent 70%);filter:blur(14px)}
+  .hero-inner{position:relative;z-index:2;text-align:center;max-width:820px;margin:0 auto}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--line);font-size:.78rem;font-weight:800;color:var(--muted);margin-bottom:24px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
+  .eyebrow-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(14,157,82,.6)}
+  .hero h1{font-size:clamp(2.5rem,5vw,4rem);line-height:1.02;letter-spacing:-.04em;font-weight:800;margin-bottom:20px}
+  .hero p{font-size:1.08rem;color:var(--muted);font-weight:500;max-width:600px;margin:0 auto;line-height:1.6}
+  .hero-trust{display:flex;gap:28px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+  .hero-trust span{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted-2);font-weight:600}
+  .hero-trust .ck{color:var(--green)}
+
+  /* STEP RAIL */
+  .steprail{display:flex;align-items:center;justify-content:center;gap:0;max-width:640px;margin:38px auto 0;position:relative;z-index:2}
+  .srstep{display:flex;align-items:center;gap:10px;color:var(--muted-2);font-weight:700;font-size:.82rem}
+  .srnum{width:28px;height:28px;border-radius:50%;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.76rem;flex-shrink:0;transition:all .3s ease;background:rgba(255,255,255,.02)}
+  .srstep.on{color:var(--text)}
+  .srstep.on .srnum{background:var(--green);border-color:var(--green);color:#06110c;box-shadow:0 0 0 4px rgba(14,157,82,.14)}
+  .srstep.done .srnum{background:rgba(14,157,82,.16);border-color:rgba(14,157,82,.4);color:var(--green-tint)}
+  .srline{flex:1;height:1px;background:var(--line-strong);margin:0 12px;min-width:24px}
+
+  /* SECTIONS */
+  .section{padding:30px 0 90px}
+  .step-panel{display:none}
+  .step-panel.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ROLE CHOOSER */
+  .role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1040px;margin:0 auto}
+  .role-card{position:relative;overflow:hidden;padding:34px 28px;cursor:pointer;border-radius:var(--radius-lg);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid var(--line);transition:all .25s ease;display:flex;flex-direction:column;text-align:left}
+  .role-card::before{content:"";position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:0}
+  .role-card>*{position:relative;z-index:1}
+  .role-card:hover{transform:translateY(-5px);box-shadow:0 26px 70px rgba(0,0,0,.4)}
+  .role-card:hover::before{opacity:1}
+  /* pale champagne gold accent for all roles — matches index, steps up into bright gold at premium */
+  .role-card::before{background:radial-gradient(circle at 18% 18%, rgba(203,180,155,.18), transparent 44%),linear-gradient(90deg, rgba(203,180,155,.11), transparent 80%)}
+  .role-card:hover{border-color:rgba(203,180,155,.40)}
+  .role-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;border:1px solid rgba(203,180,155,.22);background:linear-gradient(180deg,rgba(203,180,155,.13),rgba(203,180,155,.04));color:var(--gold-tint);transition:all .25s ease}
+  .role-card:hover .role-icon{border-color:rgba(203,180,155,.42);box-shadow:0 8px 22px rgba(203,180,155,.18);color:#f0d8b2}
+  .role-icon svg{width:28px;height:28px;display:block}
+  .role-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-tint);font-weight:700;margin-bottom:8px}
+  .role-card h3{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+  .role-card p{color:var(--muted);font-size:.92rem;line-height:1.55;font-weight:500;margin-bottom:22px;min-height:66px}
+  .role-pick{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--gold-tint)}
+  .role-card:hover .role-pick .arr{transform:translateX(4px)}
+  .role-pick .arr{transition:transform .2s ease}
+
+  /* FORM PANEL */
+  .form-shell{max-width:880px;margin:0 auto}
+  .back-link{display:inline-flex;align-items:center;gap:8px;color:var(--muted-2);font-weight:700;font-size:.85rem;margin-bottom:22px;cursor:pointer;transition:color .2s}
+  .back-link:hover{color:var(--text)}
+  .form-head{display:flex;align-items:center;gap:13px;margin-bottom:8px}
+  .form-head .role-icon{width:44px;height:44px;margin-bottom:0;border-radius:12px;background:linear-gradient(180deg,rgba(203,180,155,.13),rgba(203,180,155,.04));color:var(--gold-tint);border:1px solid rgba(203,180,155,.22);flex-shrink:0}
+  .form-head .role-icon svg{width:22px;height:22px}
+  .form-head h2{font-size:1.9rem;font-weight:800;letter-spacing:-.025em}
+  .form-sub{color:var(--muted);font-size:.98rem;margin-bottom:34px;font-weight:500}
+
+  .form-card{padding:32px 30px;margin-bottom:22px}
+  .form-card-title{display:flex;align-items:center;gap:12px;font-size:.72rem;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:700;margin-bottom:22px}
+  .form-card-title .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:.84rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .field label .opt{color:var(--muted-2);font-weight:500;font-size:.78rem;margin-left:6px}
+  .field input,.field textarea,.field select{width:100%;padding:13px 15px;background:rgba(255,255,255,.03);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font-family:var(--sans);font-size:.95rem;transition:border-color .2s, box-shadow .2s}
+  .field input::placeholder,.field textarea::placeholder{color:var(--muted-2)}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:rgba(14,157,82,.5);box-shadow:0 0 0 3px rgba(14,157,82,.12)}
+  .field textarea{resize:vertical;min-height:96px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .upload{display:flex;align-items:center;gap:18px;padding:18px;border:1px dashed var(--line-strong);border-radius:var(--radius-md);background:rgba(255,255,255,.02);transition:border-color .2s}
+  .upload:hover{border-color:rgba(14,157,82,.4)}
+  .upload-thumb{width:64px;height:64px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.5rem;color:var(--muted-2);flex-shrink:0;overflow:hidden}
+  .upload-thumb img{width:100%;height:100%;object-fit:cover}
+  .upload-text{flex:1}
+  .upload-text .ut-main{font-weight:700;font-size:.92rem;margin-bottom:3px}
+  .upload-text .ut-sub{font-size:.78rem;color:var(--muted-2)}
+  .upload-btn{padding:9px 16px;border-radius:999px;border:1px solid var(--line-strong);background:rgba(255,255,255,.04);color:var(--text);font-weight:700;font-size:.82rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .upload-btn:hover{border-color:rgba(14,157,82,.4);background:rgba(14,157,82,.08)}
+
+  /* LOCKED PREMIUM */
+  .locked-card{position:relative;padding:32px 30px;margin-bottom:22px;border:1px solid rgba(221,174,74,.22);border-radius:var(--radius-lg);background:linear-gradient(180deg,rgba(221,174,74,.05),rgba(221,174,74,.015));overflow:hidden}
+  .locked-card.unlocked{border-color:rgba(14,157,82,.3);background:linear-gradient(180deg,rgba(14,157,82,.05),rgba(14,157,82,.012))}
+  .lc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+  .lc-title{display:flex;align-items:center;gap:11px;font-size:1.05rem;font-weight:800;letter-spacing:-.01em}
+  .lc-lockicon{font-size:1rem}
+  .lc-pill{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);color:#1a1205}
+  .locked-card.unlocked .lc-pill{background:var(--green);color:#06110c}
+  .lc-feats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .lc-feat{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:var(--radius-sm);background:rgba(255,255,255,.02);border:1px solid var(--line);opacity:.55;transition:opacity .3s,filter .3s;filter:saturate(.4)}
+  .locked-card.unlocked .lc-feat{opacity:1;filter:none;border-color:rgba(14,157,82,.16)}
+  .lc-feat-ic{width:34px;height:34px;border-radius:10px;background:rgba(221,174,74,.14);color:#e8c87a;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:.9rem}
+  .locked-card.unlocked .lc-feat-ic{background:rgba(14,157,82,.16);color:var(--green-tint)}
+  .lc-feat-main{font-weight:700;font-size:.9rem;margin-bottom:3px}
+  .lc-feat-sub{font-size:.78rem;color:var(--muted-2);line-height:1.45;font-weight:500}
+  .lc-cta{margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--line)}
+  .lc-cta-text{font-size:.9rem;color:var(--muted);font-weight:500}
+  .lc-cta-text b{color:var(--text);font-weight:800}
+
+  /* TIERS */
+  .tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:0 auto}
+  .tier{position:relative;overflow:hidden;padding:30px 28px;border-radius:var(--radius-lg);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid var(--line);display:flex;flex-direction:column}
+  .tier.gold{border:1.5px solid var(--warm-strong);background:linear-gradient(180deg,rgba(221,174,74,.08),rgba(221,174,74,.02))}
+  .tier-badge{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;padding:5px 10px;border-radius:999px;background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);color:#1a1205}
+  .tier-name{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:700;margin-bottom:10px}
+  .tier-price{font-size:2.6rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .tier-price span{font-size:.9rem;color:var(--muted-2);font-weight:600;letter-spacing:0}
+  .tier-bill{font-family:var(--mono);font-size:.72rem;color:var(--muted-2);margin-top:6px;letter-spacing:.04em}
+  .tier-desc{color:var(--muted);font-size:.9rem;line-height:1.55;font-weight:500;margin:16px 0 18px}
+  .tier-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  .tier-list li{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);font-weight:500}
+  .tier-list li .ck{color:var(--green);flex-shrink:0;font-weight:800}
+  .tier-list li.muted{opacity:.5}
+  .tier-list li.muted .ck{color:var(--muted-2)}
+  .tier-btn{margin-top:auto;display:flex;align-items:center;justify-content:center;height:50px;border-radius:999px;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .22s ease;border:1px solid var(--line-strong);background:rgba(255,255,255,.04);color:var(--text)}
+  .tier-btn:hover{border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+  .tier-btn.gold{background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);border-color:rgba(255,218,143,.92);color:#07100b}
+  .tier-btn.gold:hover{box-shadow:0 14px 34px rgba(217,167,66,.3),0 0 0 3px rgba(217,167,66,.14)}
+
+  /* SUBMIT */
+  .submit-row{display:flex;align-items:center;justify-content:flex-start;gap:16px;flex-wrap:wrap;margin-top:8px}
+  .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 34px;border-radius:999px;font-weight:800;font-size:1rem;cursor:pointer;border:none;background:var(--green);color:#06110c;transition:all .22s ease;box-shadow:0 14px 34px rgba(14,157,82,.22)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(14,157,82,.32)}
+  .btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:54px;padding:0 28px;border-radius:999px;font-weight:800;font-size:.95rem;cursor:pointer;border:1px solid var(--line-strong);background:transparent;color:var(--text);transition:all .2s}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.3)}
+  .submit-note{font-size:.82rem;color:var(--muted-2);margin-top:16px;font-weight:500;line-height:1.55}
+  .submit-note code{font-family:var(--mono);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:6px;color:var(--warm);font-size:.78rem}
+
+  /* UNLOCK BANNER */
+  .unlocked-banner{display:none;align-items:center;gap:14px;padding:18px 22px;border-radius:var(--radius-md);background:linear-gradient(90deg,rgba(14,157,82,.14),rgba(14,157,82,.04));border:1px solid rgba(14,157,82,.3);margin-bottom:24px}
+  .unlocked-banner.show{display:flex;animation:fade .4s ease}
+  .ub-ic{width:40px;height:40px;border-radius:50%;background:var(--green);color:#06110c;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+  .ub-text b{font-weight:800}
+  .ub-text div{font-size:.85rem;color:var(--muted);font-weight:500;margin-top:2px}
+
+  /* CONFIRM */
+  .confirm{max-width:620px;margin:0 auto;text-align:center;padding:50px 30px}
+  .confirm-ic{width:84px;height:84px;border-radius:50%;background:rgba(14,157,82,.14);border:1px solid rgba(14,157,82,.4);display:flex;align-items:center;justify-content:center;font-size:2.4rem;color:var(--green);margin:0 auto 26px}
+  .confirm h2{font-size:2rem;font-weight:800;letter-spacing:-.025em;margin-bottom:14px}
+  .confirm p{color:var(--muted);font-size:1rem;line-height:1.6;font-weight:500;margin-bottom:30px}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:60px 0 40px;background:rgba(255,255,255,.012)}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px;margin-bottom:40px}
+  .foot-brand{font-weight:800;font-size:1.15rem;margin-bottom:14px}
+  .foot-copy{color:var(--muted-2);font-size:.88rem;line-height:1.6;font-weight:500;max-width:340px}
+  footer h4{font-size:.72rem;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:16px;font-weight:700}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  footer ul a{color:var(--muted);font-size:.9rem;font-weight:600;transition:color .2s}
+  footer ul a:hover{color:var(--text)}
+  .foot-bottom{display:flex;justify-content:space-between;padding-top:26px;border-top:1px solid var(--line);color:var(--muted-2);font-size:.82rem;font-weight:600;flex-wrap:wrap;gap:10px}
+
+  @media(max-width:880px){
+    .nav-links{display:none}.menu-toggle{display:flex}
+    .role-grid{grid-template-columns:1fr}
+    .tier-grid{grid-template-columns:1fr}
+    .lc-feats{grid-template-columns:1fr}
+    .field-row{grid-template-columns:1fr}
+    .footer-grid{grid-template-columns:1fr 1fr}
+    .steprail{max-width:100%}
+    .srstep span.lbl{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <input class="nav-toggle-input" type="checkbox" id="navToggle" aria-hidden="true" />
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark-b" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect>
+          <path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path>
+          <path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path>
+        </svg>
+      </span>
+      <span class="brand-wordmark">BRIC Studios</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#platform">Platform</a>
+      <a href="index.html#learning">Learning Studio</a>
+      <a href="shop.html">Shop</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="partners.html" class="active">Partners</a>
+      <a href="index.html#early-access" class="nav-cta">Early Access</a>
+    </div>
+    <label class="menu-toggle" for="navToggle" aria-label="Open menu"><span></span><span></span><span></span></label>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#platform">Platform</a>
+    <a href="index.html#learning">Learning Studio</a>
+    <a href="shop.html">Shop</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="partners.html">Partners</a>
+    <a href="index.html#early-access" class="mobile-menu-cta">Early Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> BRIC Partner Network</div>
+      <h1>Get discovered by<br><span class="serif">owners & investors.</span></h1>
+      <p>Join the BRIC Partner Network as a broker, manager, or contractor. Build your profile, get listed where owners are searching, and let the right clients find you.</p>
+      <div class="hero-trust">
+        <span><span class="ck">✓</span> Free to list</span>
+        <span><span class="ck">✓</span> No website access required</span>
+        <span><span class="ck">✓</span> Featured placement available</span>
+      </div>
+    </div>
+    <div class="steprail" id="stepRail">
+      <div class="srstep on" data-step="1"><span class="srnum">1</span><span class="lbl">Choose role</span></div>
+      <div class="srline"></div>
+      <div class="srstep" data-step="2"><span class="srnum">2</span><span class="lbl">Your details</span></div>
+      <div class="srline"></div>
+      <div class="srstep" data-step="3"><span class="srnum">3</span><span class="lbl">Confirm</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+
+    <!-- STEP 1: ROLE CHOOSER -->
+    <div class="step-panel active" id="panel-role">
+      <div class="role-grid">
+        <div class="role-card broker" onclick="chooseRole('broker')">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l2 2a1 1 0 0 0 1.4 0l3.6-3.6a2 2 0 0 0 0-2.8L13 8"/><path d="M3 13l3.5 3.5a1.5 1.5 0 0 0 2.1 0l.4-.4"/><path d="M21 13l-3-3"/><path d="M3 13l5-5 3 3"/><path d="M8 8L6 6"/></svg></div>
+          <div class="role-tag">For Brokers</div>
+          <h3>Broker</h3>
+          <p>List your services and reach owners and investors actively researching deals. Surface your profile in the Broker network.</p>
+          <span class="role-pick">Apply as broker <span class="arr">→</span></span>
+        </div>
+        <div class="role-card manager" onclick="chooseRole('manager')">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15"/><path d="M14 21V10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11"/><path d="M2 21h20"/><path d="M7 8h0M7 12h0M7 16h0M10 8h0M10 12h0M10 16h0M17 13h0M17 17h0"/></svg></div>
+          <div class="role-tag">For Managers</div>
+          <h3>Property Manager</h3>
+          <p>Show owners you can run their assets. Get matched with owners looking for management in your markets.</p>
+          <span class="role-pick">Apply as manager <span class="arr">→</span></span>
+        </div>
+        <div class="role-card contractor" onclick="chooseRole('contractor')">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17v3h3l5.5-5.5a4 4 0 0 0 5.2-5.2l-2.4 2.4-2.1-.4-.4-2.1z"/></svg></div>
+          <div class="role-tag">For Contractors</div>
+          <h3>Contractor</h3>
+          <p>Get in front of owners planning capital work, renovations, and repairs. List your trades and service areas.</p>
+          <span class="role-pick">Apply as contractor <span class="arr">→</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: FORM -->
+    <div class="step-panel" id="panel-form">
+      <div class="form-shell">
+        <div class="back-link" onclick="goStep(1)">← Back to roles</div>
+        <div class="form-head">
+          <div class="role-icon" id="formIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l2 2a1 1 0 0 0 1.4 0l3.6-3.6a2 2 0 0 0 0-2.8L13 8"/><path d="M3 13l3.5 3.5a1.5 1.5 0 0 0 2.1 0l.4-.4"/><path d="M21 13l-3-3"/><path d="M3 13l5-5 3 3"/><path d="M8 8L6 6"/></svg></div>
+          <h2 id="formTitle">Broker Application</h2>
+        </div>
+        <p class="form-sub" id="formSub">Tell owners who you are. Free to list — upgrade anytime for a verified badge and featured placement.</p>
+
+        <div class="unlocked-banner" id="unlockBanner">
+          <div class="ub-ic">✓</div>
+          <div class="ub-text"><b>Verified Partner unlocked.</b><div>Premium fields are now active and your listing is marked for featured placement.</div></div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-card-title"><span class="dot"></span> Partner details · Free</div>
+          <div class="field-row">
+            <div class="field"><label>Business name</label><input type="text" placeholder="e.g. Keystone Realty Advisors"></div>
+            <div class="field"><label>Contact name</label><input type="text" placeholder="Your full name"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Email</label><input type="email" placeholder="you@company.com"></div>
+            <div class="field"><label>Phone <span class="opt">optional</span></label><input type="tel" placeholder="(716) 000-0000"></div>
+          </div>
+          <div class="field"><label id="catLabel">Primary specialty</label><input type="text" id="catField" placeholder="e.g. Multifamily acquisitions"></div>
+          <div class="field"><label>Service areas / markets</label><input type="text" placeholder="e.g. Buffalo, Rochester, WNY"></div>
+          <div class="field"><label>Short description <span class="opt">shown on your listing</span></label><textarea placeholder="A few sentences owners will see when they find you."></textarea></div>
+          <div class="field">
+            <label>Logo <span class="opt">optional — PNG or SVG</span></label>
+            <div class="upload">
+              <div class="upload-thumb" id="logoThumb">B</div>
+              <div class="upload-text"><div class="ut-main">Upload your logo</div><div class="ut-sub">Square works best · max 2MB</div></div>
+              <label class="upload-btn">Choose file<input type="file" accept="image/*" style="display:none" onchange="previewLogo(this)"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="locked-card" id="lockedCard">
+          <div class="lc-head">
+            <div class="lc-title"><span class="lc-lockicon" id="lcLockIcon">🔒</span> Verified Partner features</div>
+            <div class="lc-pill" id="lcPill">Locked · $120/yr</div>
+          </div>
+          <div class="lc-feats">
+            <div class="lc-feat"><div class="lc-feat-ic">✓</div><div><div class="lc-feat-main">BRIC Verified badge</div><div class="lc-feat-sub">A trust mark on your listing and a badge you can use on your own site.</div></div></div>
+            <div class="lc-feat"><div class="lc-feat-ic">★</div><div><div class="lc-feat-main">Featured placement</div><div class="lc-feat-sub">Rank above standard listings in your category and market.</div></div></div>
+            <div class="lc-feat"><div class="lc-feat-ic">⊞</div><div><div class="lc-feat-main">Rich profile</div><div class="lc-feat-sub">Add gallery, multiple categories, links, and team details.</div></div></div>
+            <div class="lc-feat"><div class="lc-feat-ic">↗</div><div><div class="lc-feat-main">Lead routing</div><div class="lc-feat-sub">Owners can contact you directly from your profile page.</div></div></div>
+          </div>
+          <div class="lc-cta">
+            <div class="lc-cta-text"><b>$120/yr</b> — that's $10/mo, billed annually. Cancel anytime.</div>
+            <button class="tier-btn gold" style="height:46px;padding:0 26px;width:auto;margin-top:0" onclick="openTiers()">Unlock Verified →</button>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn-primary" onclick="submitForm()">Submit application</button>
+          <button class="btn-ghost" onclick="openTiers()">Compare tiers</button>
+        </div>
+        <p class="submit-note">By submitting, your details are sent to the BRIC team for review. Approved listings appear in the matching network within 1–2 business days.<br>Setup: replace <code>FORM_ENDPOINT</code> in the page script with your Formspree/Tally/Typeform endpoint to receive submissions.</p>
+      </div>
+    </div>
+
+    <!-- STEP 2b: TIERS -->
+    <div class="step-panel" id="panel-tiers">
+      <div class="form-shell">
+        <div class="back-link" onclick="goStep(2)">← Back to application</div>
+        <div class="form-head"><h2>Choose your partner tier</h2></div>
+        <p class="form-sub">Start free, or unlock the verified badge and featured placement.</p>
+        <div class="tier-grid">
+          <div class="tier">
+            <div class="tier-name">Listed Partner</div>
+            <div class="tier-price">$0<span></span></div>
+            <div class="tier-bill">Free forever</div>
+            <p class="tier-desc">Get on the map. A clean listing owners can find and contact.</p>
+            <ul class="tier-list">
+              <li><span class="ck">✓</span> Basic profile + contact</li>
+              <li><span class="ck">✓</span> One category / specialty</li>
+              <li><span class="ck">✓</span> Logo on your listing</li>
+              <li class="muted"><span class="ck">○</span> No verified badge</li>
+              <li class="muted"><span class="ck">○</span> Standard placement</li>
+            </ul>
+            <button class="tier-btn" onclick="selectTier('free')">Continue free</button>
+          </div>
+          <div class="tier gold">
+            <div class="tier-badge">★ Recommended</div>
+            <div class="tier-name">Verified Partner</div>
+            <div class="tier-price">$120<span>/yr</span></div>
+            <div class="tier-bill">≈ $10/mo · billed annually</div>
+            <p class="tier-desc">Stand out. The verified badge, featured placement, and a richer profile.</p>
+            <ul class="tier-list">
+              <li><span class="ck">✓</span> Everything in Listed</li>
+              <li><span class="ck">✓</span> <b>BRIC Verified</b> badge</li>
+              <li><span class="ck">✓</span> Featured placement</li>
+              <li><span class="ck">✓</span> Rich profile + gallery</li>
+              <li><span class="ck">✓</span> Direct lead routing</li>
+            </ul>
+            <button class="tier-btn gold" onclick="selectTier('paid')">Pay $120/yr →</button>
+          </div>
+        </div>
+        <p class="submit-note" style="text-align:center;max-width:620px;margin:24px auto 0">Setup: replace <code>STRIPE_PAYMENT_LINK</code> in the page script with your Stripe Payment Link URL. Until then, "Pay" simulates a successful upgrade so you can preview the unlocked state.</p>
+      </div>
+    </div>
+
+    <!-- STEP 3: CONFIRM -->
+    <div class="step-panel" id="panel-confirm">
+      <div class="confirm card">
+        <div class="confirm-ic">✓</div>
+        <h2 id="confirmTitle">Application received.</h2>
+        <p id="confirmBody">Thanks for applying to the BRIC Partner Network. Our team will review your details and your listing will go live within 1–2 business days. We'll email you when it's published.</p>
+        <div class="submit-row" style="justify-content:center">
+          <a href="index.html" class="btn-primary" style="text-decoration:none">Back to home</a>
+          <a href="pricing.html" class="btn-ghost" style="text-decoration:none">See pricing</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="foot-brand foot-brand-lockup">
+          <span class="foot-mark-b" aria-hidden="true">
+            <svg viewBox="0 0 64 64">
+              <rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect>
+              <path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path>
+              <path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path>
+            </svg>
+          </span> BRIC Studios
+        </div>
+        <div class="foot-copy">Building Research & Investment Company. An owner-first property intelligence platform built for investment properties, including multifamily and mixed-use assets.</div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="valuation.html">Valuation Studio</a></li>
+          <li><a href="om-studio.html">OM Studio</a></li>
+          <li><a href="heatmap.html">Market Intent Heatmaps</a></li>
+          <li><a href="learning.html">Learning Studio</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Partners</h4>
+        <ul>
+          <li><a href="partners.html">Become a Partner</a></li>
+          <li><a href="broker-advisor-intelligence.html">Broker Network</a></li>
+          <li><a href="property-management-intelligence.html">Manager Network</a></li>
+          <li><a href="contractor-intelligence.html">Contractor Network</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:matthew@bricstudios.com">matthew@bricstudios.com</a></li>
+          <li><a href="tel:+17166045763">(716) 604-5763</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 BRIC Studios · All Rights Reserved</span>
+      <span>Owner-first property intelligence platform</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== CONFIG: replace these placeholders before launch =====
+  const FORM_ENDPOINT = "FORM_ENDPOINT";              // e.g. https://formspree.io/f/xxxx
+  const STRIPE_PAYMENT_LINK = "STRIPE_PAYMENT_LINK";  // e.g. https://buy.stripe.com/xxxx
+
+  const ICONS = {
+    broker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l2 2a1 1 0 0 0 1.4 0l3.6-3.6a2 2 0 0 0 0-2.8L13 8"/><path d="M3 13l3.5 3.5a1.5 1.5 0 0 0 2.1 0l.4-.4"/><path d="M21 13l-3-3"/><path d="M3 13l5-5 3 3"/><path d="M8 8L6 6"/></svg>',
+    manager:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15"/><path d="M14 21V10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11"/><path d="M2 21h20"/><path d="M7 8h0M7 12h0M7 16h0M10 8h0M10 12h0M10 16h0M17 13h0M17 17h0"/></svg>',
+    contractor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17v3h3l5.5-5.5a4 4 0 0 0 5.2-5.2l-2.4 2.4-2.1-.4-.4-2.1z"/></svg>'
+  };
+  const ROLES = {
+    broker:    {title:"Broker Application",     cat:"Primary specialty", catPh:"e.g. Multifamily acquisitions", net:"Broker network"},
+    manager:   {title:"Manager Application",    cat:"Management focus",  catPh:"e.g. Multifamily, 50+ units",   net:"Manager network"},
+    contractor:{title:"Contractor Application", cat:"Primary trade",     catPh:"e.g. Roofing & exteriors",      net:"Contractor network"}
+  };
+  let currentRole = "broker";
+  let isPaid = false;
+
+  function chooseRole(role){
+    currentRole = role;
+    const r = ROLES[role];
+    document.getElementById('formIcon').innerHTML = ICONS[role];
+    document.getElementById('formTitle').textContent = r.title;
+    document.getElementById('catLabel').textContent = r.cat;
+    document.getElementById('catField').placeholder = r.catPh;
+    goStep(2);
+  }
+
+  function goStep(n){
+    document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+    if(n===1) document.getElementById('panel-role').classList.add('active');
+    if(n===2) document.getElementById('panel-form').classList.add('active');
+    if(n==='tiers') document.getElementById('panel-tiers').classList.add('active');
+    if(n===3) document.getElementById('panel-confirm').classList.add('active');
+    const railMap = {1:1,2:2,'tiers':2,3:3};
+    const active = railMap[n];
+    document.querySelectorAll('.srstep').forEach(s=>{
+      const sn = parseInt(s.dataset.step);
+      s.classList.remove('on','done');
+      if(sn < active) s.classList.add('done');
+      else if(sn === active) s.classList.add('on');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function openTiers(){ goStep('tiers'); }
+
+  function selectTier(tier){
+    if(tier==='free'){ goStep(2); return; }
+    if(STRIPE_PAYMENT_LINK && STRIPE_PAYMENT_LINK !== "STRIPE_PAYMENT_LINK"){
+      window.location.href = STRIPE_PAYMENT_LINK; return;
+    }
+    isPaid = true;
+    unlockPremium();
+    goStep(2);
+  }
+
+  function unlockPremium(){
+    const lc = document.getElementById('lockedCard');
+    lc.classList.add('unlocked');
+    document.getElementById('lcLockIcon').textContent = "✓";
+    document.getElementById('lcPill').textContent = "Unlocked · Verified";
+    document.getElementById('unlockBanner').classList.add('show');
+    lc.querySelector('.lc-cta').innerHTML =
+      '<div class="lc-cta-text"><b>Verified Partner active.</b> These features are now part of your listing.</div>';
+  }
+
+  function previewLogo(input){
+    if(input.files && input.files[0]){
+      const reader = new FileReader();
+      reader.onload = e => { document.getElementById('logoThumb').innerHTML = '<img src="'+e.target.result+'" alt="logo">'; };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function submitForm(){
+    const r = ROLES[currentRole];
+    document.getElementById('confirmTitle').textContent = isPaid ? "You're in — Verified Partner." : "Application received.";
+    document.getElementById('confirmBody').textContent = isPaid
+      ? "Thanks for upgrading to Verified Partner. Your listing is queued for featured placement in the "+r.net+" and will go live within 1–2 business days. We'll email you when it's published."
+      : "Thanks for applying to the BRIC Partner Network. Our team will review your details and your listing will appear in the "+r.net+" within 1–2 business days.";
+    goStep(3);
+  }
+
+  // deep-link: partners.html?role=broker
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role');
+    if(role && ROLES[role]) chooseRole(role);
+  })();
+</script>
+</body>
+</html>
