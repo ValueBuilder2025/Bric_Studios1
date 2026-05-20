@@ -1,0 +1,3474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRIC Studios — Owner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ═══════════════════════════════════════════════════════════
+   PALETTE — refined, no gold. Theme-aware (light + dark).
+   Default: light (matches broker dashboard's default).
+   Override with data-theme="dark" on <html>.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --emerald:#2c8a5c;
+  --emerald-soft:rgba(44,138,92,0.10);
+  --emerald-line:rgba(44,138,92,0.28);
+  --emerald-glow:rgba(44,138,92,0.16);
+
+  --warn:#c2864c;
+  --danger:#b35a3a;
+
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter Tight','Helvetica Neue',Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+
+  /* ── LIGHT THEME (default) ── */
+  --bg-grad-1: rgba(168,148,114,0.04);
+  --bg-grad-2: rgba(44,138,92,0.022);
+  --bg-base-1: #f6f1e6;
+  --bg-base-2: #efe9da;
+
+  --surface-1: #fdfaf2;       /* panels */
+  --surface-2: #f3eddc;       /* deeper sections */
+  --surface-3: #fbf6e8;       /* nested cards */
+
+  --paper:#1a1814;             /* primary text */
+  --paper-soft:#34302a;        /* secondary text */
+  --paper-dim:#615a4f;         /* tertiary text */
+  --paper-mute:#8a8275;        /* labels, captions */
+  --ivory:#fdfaf2;             /* highlighted text in dark accents */
+  --ivory-dim:rgba(26,24,20,0.55);
+
+  --ink-0:#f4eedc;
+  --ink-1:#f9f3e2;
+  --ink-2:#fdfaf2;
+  --ink-3:#fff;
+  --ink-4:#fff;
+
+  --bronze:#7a6a52;
+  --bronze-soft:rgba(168,148,114,0.14);
+  --bronze-line:rgba(168,148,114,0.32);
+
+  --border:rgba(26,24,20,0.08);
+  --border-strong:rgba(26,24,20,0.14);
+  --border-soft:rgba(26,24,20,0.05);
+
+  --shadow-card: 0 4px 14px rgba(40,33,22,0.06), 0 1px 3px rgba(40,33,22,0.04);
+  --shadow-card-hover: 0 10px 28px rgba(40,33,22,0.10), 0 2px 6px rgba(40,33,22,0.05);
+  --shadow-lg: 0 24px 64px rgba(40,33,22,0.18);
+
+  --grain-opacity: 0.10;
+}
+
+[data-theme="dark"]{
+  --emerald:#3aa676;
+  --emerald-soft:rgba(58,166,118,0.12);
+  --emerald-line:rgba(58,166,118,0.32);
+  --emerald-glow:rgba(58,166,118,0.18);
+
+  --warn:#c8895a;
+  --danger:#c87a5a;
+
+  --bg-grad-1: rgba(168,148,114,0.05);
+  --bg-grad-2: rgba(58,166,118,0.025);
+  --bg-base-1: #0a0c0e;
+  --bg-base-2: #07080a;
+
+  --surface-1: linear-gradient(180deg, rgba(20,24,30,0.85), rgba(14,17,21,0.85));
+  --surface-2: linear-gradient(180deg, rgba(18,21,26,0.85), rgba(13,16,20,0.85));
+  --surface-3: rgba(18,21,26,0.85);
+
+  --paper:#ece7dc;
+  --paper-soft:#d8d2c4;
+  --paper-dim:#a8a294;
+  --paper-mute:#7a7468;
+  --ivory:#f3eee2;
+  --ivory-dim:rgba(243,238,226,0.55);
+
+  --ink-0:#08090a;
+  --ink-1:#0c0e10;
+  --ink-2:#12151a;
+  --ink-3:#181c22;
+  --ink-4:#1f242b;
+
+  --bronze:#7a6a52;
+  --bronze-soft:rgba(168,148,114,0.18);
+  --bronze-line:rgba(168,148,114,0.22);
+
+  --border:rgba(243,238,226,0.06);
+  --border-strong:rgba(243,238,226,0.10);
+  --border-soft:rgba(243,238,226,0.035);
+
+  --shadow-card: 0 14px 40px rgba(0,0,0,0.32);
+  --shadow-card-hover: 0 14px 40px rgba(0,0,0,0.32), 0 0 22px rgba(58,166,118,0.05);
+  --shadow-lg: 0 30px 80px rgba(0,0,0,0.5);
+
+  --grain-opacity: 0.32;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:
+    radial-gradient(circle at 12% 0%, var(--bg-grad-1), transparent 28%),
+    radial-gradient(circle at 88% 4%, var(--bg-grad-2), transparent 26%),
+    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 100%);
+  color:var(--paper);
+  min-height:100vh;
+  font-size:14.5px;
+  line-height:1.55;
+  overflow-x:hidden;
+  font-feature-settings:"ss01","cv11";
+  -webkit-font-smoothing:antialiased;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Subtle grain — keeps it from feeling plasticky */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity: var(--grain-opacity);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ═══ APP SHELL ═══ */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{
+  background:linear-gradient(180deg,#06080a 0%, #050608 100%);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+}
+.sb-header{padding:1.35rem 1.15rem 1rem;border-bottom:1px solid var(--border)}
+.sb-logo{
+  font-family:var(--sans);font-weight:700;font-size:1rem;letter-spacing:-0.015em;
+  color:var(--paper);text-decoration:none;
+  display:flex;align-items:center;gap:0.7rem;
+}
+.sb-brand-mark{
+  width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  border-radius:11px;overflow:hidden;
+  box-shadow:0 8px 22px rgba(58,166,118,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.sb-brand-mark svg{width:100%;height:100%;display:block}
+.b-logo-bg{fill:#0b1510}
+.b-logo-main{fill:var(--ivory)}
+.b-logo-cut{fill:#143b25}
+.sb-wordmark{display:inline-flex;align-items:baseline;white-space:nowrap;font-weight:600}
+.sb-tag{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--paper-mute);margin-top:0.6rem;margin-left:3rem;
+}
+
+.sb-section{padding:0.85rem 0.75rem;flex:1;overflow-y:auto}
+.sb-section::-webkit-scrollbar{width:3px}
+.sb-section::-webkit-scrollbar-thumb{background:rgba(243,238,226,0.08);border-radius:2px}
+
+.sb-label{
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(243,238,226,0.28);padding:0.85rem 0.9rem 0.5rem;
+}
+
+.sb-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.55rem 0.85rem;border-radius:6px;
+  font-size:0.82rem;color:rgba(243,238,226,0.62);
+  text-decoration:none;cursor:pointer;
+  transition:all 0.18s ease;margin-bottom:0.1rem;
+  position:relative;
+}
+.sb-item:hover{background:rgba(243,238,226,0.035);color:var(--paper)}
+.sb-item.active{
+  background:linear-gradient(90deg, rgba(58,166,118,0.08), transparent 80%);
+  color:var(--paper);
+  box-shadow:inset 2px 0 0 var(--emerald);
+}
+.sb-icon{
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;border-radius:7px;
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.07);
+  color:var(--paper-dim);
+  transition:all 0.18s ease;
+}
+.sb-icon svg,.p-thumb svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sb-item:hover .sb-icon{background:rgba(243,238,226,0.05);color:var(--paper)}
+.sb-item.active .sb-icon{
+  background:var(--emerald-soft);
+  border-color:var(--emerald-line);
+  color:var(--emerald);
+}
+.sb-badge{
+  margin-left:auto;font-family:var(--mono);font-size:0.58rem;
+  background:rgba(243,238,226,0.05);color:var(--paper-dim);
+  padding:0.12rem 0.42rem;border-radius:3px;
+  border:1px solid rgba(243,238,226,0.08);
+}
+
+/* Locked items (broker-only when in owner mode) */
+.sb-item.locked{opacity:0.45;cursor:not-allowed}
+.sb-item.locked:hover{background:transparent;color:rgba(243,238,226,0.62)}
+.sb-lock{margin-left:auto;display:flex;align-items:center;gap:0.35rem}
+.sb-lock-pill{
+  font-family:var(--mono);font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--paper-mute);background:rgba(243,238,226,0.04);
+  border:1px solid rgba(243,238,226,0.07);
+  padding:0.12rem 0.38rem;border-radius:3px;white-space:nowrap;
+}
+.sb-lock svg{width:11px;height:11px;color:var(--paper-mute)}
+
+.sb-footer{padding:0.85rem 0.75rem;border-top:1px solid var(--border)}
+.sb-user{
+  display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.7rem;border-radius:8px;
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.05);
+  cursor:pointer;transition:all 0.18s;text-decoration:none;color:inherit;
+}
+.sb-user:hover{background:rgba(243,238,226,0.045);border-color:rgba(243,238,226,0.09)}
+.sb-avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg, #3aa676, #2a6b4f);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ivory);font-weight:700;font-size:0.74rem;
+  letter-spacing:0.02em;
+}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:0.78rem;font-weight:600;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-family:var(--mono);font-size:0.6rem;color:var(--paper-mute);margin-top:0.1rem}
+
+/* ═══ MAIN ═══ */
+.main{padding:0;overflow-x:hidden;min-width:0}
+
+/* ═══ TOPBAR ═══ */
+.topbar{
+  display:flex;align-items:center;gap:1rem;
+  padding:0.85rem 2.25rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(8,9,11,0.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  position:sticky;top:0;z-index:50;
+}
+
+/* ── Mode Toggle ── */
+.mode-toggle{
+  display:inline-flex;align-items:center;
+  background:rgba(243,238,226,0.035);
+  border:1px solid rgba(243,238,226,0.08);
+  border-radius:8px;
+  padding:3px;position:relative;
+  flex-shrink:0;
+}
+.mode-btn{
+  font-family:var(--sans);font-size:0.74rem;font-weight:600;letter-spacing:0.01em;
+  padding:0.42rem 0.9rem;border-radius:6px;
+  background:transparent;border:none;cursor:pointer;
+  color:var(--paper-dim);
+  display:inline-flex;align-items:center;gap:0.4rem;
+  transition:color 0.2s ease;
+  position:relative;z-index:1;
+}
+.mode-btn.active{color:var(--paper)}
+.mode-btn:hover:not(.active):not(.locked){color:var(--paper)}
+.mode-btn.locked{color:var(--paper-mute);cursor:pointer}
+.mode-btn.locked:hover{color:var(--paper-dim)}
+.mode-slider{
+  position:absolute;top:3px;bottom:3px;
+  background:linear-gradient(180deg, rgba(58,166,118,0.18), rgba(58,166,118,0.10));
+  border:1px solid var(--emerald-line);
+  border-radius:6px;
+  transition:left 0.28s cubic-bezier(.4,.0,.2,1), width 0.28s cubic-bezier(.4,.0,.2,1);
+  box-shadow:0 4px 12px rgba(58,166,118,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+  z-index:0;
+}
+.mode-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mode-btn .lock-mini{width:10px;height:10px;margin-left:0.15rem;opacity:0.7}
+
+.tb-search{flex:1;max-width:420px;position:relative}
+.tb-search input{
+  width:100%;
+  background:rgba(243,238,226,0.03);
+  border:1px solid rgba(243,238,226,0.07);
+  color:var(--paper);font-family:var(--sans);font-size:0.84rem;
+  padding:0.55rem 0.9rem 0.55rem 2.2rem;
+  border-radius:7px;outline:none;
+  transition:all 0.2s ease;
+}
+.tb-search input:focus{
+  border-color:var(--emerald-line);
+  background:rgba(243,238,226,0.05);
+  box-shadow:0 0 0 3px rgba(58,166,118,0.06);
+}
+.tb-search input::placeholder{color:var(--paper-mute)}
+.tb-search-icon{
+  position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);
+  color:var(--paper-mute);pointer-events:none;
+}
+.tb-search-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+.tb-right{display:flex;align-items:center;gap:0.55rem;flex-shrink:0}
+.tb-btn{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.5rem 0.9rem;
+  border:1px solid rgba(243,238,226,0.08);
+  background:rgba(243,238,226,0.025);
+  color:var(--paper-dim);font-size:0.76rem;font-weight:500;font-family:var(--sans);
+  border-radius:7px;cursor:pointer;transition:all 0.18s ease;
+  text-decoration:none;
+}
+.tb-btn:hover{border-color:rgba(243,238,226,0.16);color:var(--paper);background:rgba(243,238,226,0.04)}
+.tb-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tb-btn-primary{
+  background:linear-gradient(180deg, #3aa676, #2c7c58);
+  color:var(--ivory);
+  border:1px solid rgba(58,166,118,0.4);
+  font-weight:600;
+  box-shadow:0 6px 16px rgba(58,166,118,0.14), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.tb-btn-primary:hover{
+  background:linear-gradient(180deg, #43b884, #2f8a62);
+  color:var(--ivory);
+  border-color:rgba(58,166,118,0.55);
+  box-shadow:0 8px 22px rgba(58,166,118,0.22), inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+/* Theme toggle + notifications icon button */
+.nav-icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:34px;border-radius:8px;
+  border:1px solid rgba(243,238,226,0.08);
+  background:rgba(243,238,226,0.025);
+  color:var(--paper-dim);cursor:pointer;
+  transition:all 0.18s ease;flex-shrink:0;
+  padding:0;
+}
+.nav-icon-btn:hover{border-color:rgba(243,238,226,0.16);color:var(--paper);background:rgba(243,238,226,0.04)}
+.nav-icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nav-icon-btn.icon-only{width:34px}
+/* Theme toggle has icon + text label */
+#themeToggle{gap:0.45rem;padding:0 0.7rem 0 0.6rem}
+#themeToggle .theme-label{
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--paper-dim);
+}
+#themeToggle:hover .theme-label{color:var(--paper)}
+@media(max-width:600px){
+  #themeToggle{width:34px;padding:0;gap:0}
+  #themeToggle .theme-label{display:none}
+}
+
+/* ═══ CONTENT ═══ */
+.content{padding:2rem 2.25rem 4rem}
+
+/* ═══ BRAND ROW (top of content, above hero) ═══ */
+.brand-row{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  margin-bottom:1.25rem;
+}
+.brand-row-left{display:flex;align-items:center;gap:0.7rem;min-width:0}
+.brand-row-words{display:inline-flex;align-items:baseline;gap:0.5rem;white-space:nowrap}
+.brand-row-name{
+  font-family:var(--sans);font-weight:700;font-size:1rem;letter-spacing:-0.01em;
+  color:var(--paper);
+}
+.brand-row-tag{
+  font-family:var(--serif);font-style:italic;font-weight:500;font-size:0.92rem;
+  color:var(--emerald);
+}
+.brand-row-right{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--paper-mute);
+  border:1px solid var(--border);
+  padding:0.32rem 0.6rem;border-radius:5px;white-space:nowrap;
+  background:rgba(253,250,242,0.4);
+}
+[data-theme="dark"] .brand-row-right{background:rgba(243,238,226,0.025)}
+
+/* ═══ Hero / Insight Banner (merged with greeting) ═══ */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg, rgba(168,148,114,0.05), rgba(243,238,226,0.012) 40%, rgba(58,166,118,0.045) 100%);
+  border:1px solid rgba(243,238,226,0.08);
+  border-radius:14px;
+  padding:1.85rem 2rem 1.65rem;
+  margin-bottom:1.5rem;
+}
+.hero::before{
+  content:'';position:absolute;top:-40%;right:-10%;width:46%;height:180%;
+  background:radial-gradient(circle, rgba(58,166,118,0.10), transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--emerald);font-weight:600;
+  margin-bottom:0.85rem;
+  position:relative;
+}
+.hero-eyebrow-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--emerald);
+  box-shadow:0 0 0 3px var(--emerald-soft);
+}
+.hero-greeting{
+  font-family:var(--serif);font-size:2.15rem;font-weight:600;
+  line-height:1.05;letter-spacing:-0.02em;color:var(--paper);
+  margin-bottom:0.65rem;position:relative;
+}
+.hero-greeting em{
+  font-style:italic;color:var(--bronze);font-weight:500;
+}
+[data-theme="dark"] .hero-greeting em{color:var(--paper-soft)}
+
+.hero-sub{
+  font-size:0.92rem;color:var(--paper-dim);
+  max-width:42rem;line-height:1.55;
+  margin-bottom:1.1rem;position:relative;
+}
+.hero-sub b{color:var(--paper);font-weight:600}
+
+.hero-dismiss{
+  position:absolute;top:1.05rem;right:1.05rem;z-index:2;
+  width:30px;height:30px;border-radius:8px;
+  background:transparent;border:1px solid rgba(243,238,226,0.06);
+  color:var(--paper-mute);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s ease;
+}
+.hero-dismiss:hover{color:var(--paper);border-color:rgba(243,238,226,0.16);background:rgba(243,238,226,0.03)}
+.hero-dismiss svg{width:13px;height:13px}
+
+.hero-metrics{
+  display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:0.55rem;
+  margin:0 0 1.1rem;max-width:680px;position:relative;
+}
+.hero-metric{
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.06);
+  border-radius:8px;
+  padding:0.7rem 0.85rem;
+}
+.hero-metric-k{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--paper-mute);margin-bottom:0.25rem;
+}
+.hero-metric-v{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper);line-height:1.1}
+
+/* Empty-state checklist: SIMPLE block layout, no flex on the text wrapper. */
+.hero-checklist{
+  margin:0 0 1.1rem;
+  width:100%;
+  position:relative;
+}
+.hero-check-item{
+  position:relative;
+  width:100%;
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.06);
+  border-radius:9px;
+  padding:0.85rem 1rem 0.85rem 3.5rem;
+  margin-bottom:0.5rem;
+  box-sizing:border-box;
+  min-height:62px;
+}
+.hero-check-item:last-child{margin-bottom:0}
+.hero-check-num{
+  position:absolute;
+  left:0.95rem;
+  top:50%;
+  transform:translateY(-50%);
+  width:28px;height:28px;border-radius:50%;
+  background:var(--emerald-soft);
+  border:1px solid var(--emerald-line);
+  color:var(--emerald);
+  font-family:var(--mono);font-size:0.74rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  z-index:1;
+}
+.hero-check-text{display:block;width:100%}
+.hero-check-title{
+  display:block;
+  font-size:0.86rem;font-weight:600;color:var(--paper);line-height:1.3;
+  margin-bottom:0.15rem;
+}
+.hero-check-sub{
+  display:block;
+  font-family:var(--sans);font-size:0.76rem;color:var(--paper-mute);
+  line-height:1.4;letter-spacing:0;text-transform:none;
+}
+
+.hero-actions{display:flex;gap:0.45rem;flex-wrap:wrap;position:relative}
+.hero-btn{
+  font-family:var(--sans);font-size:0.74rem;font-weight:500;
+  padding:0.46rem 0.85rem;border-radius:6px;cursor:pointer;
+  background:rgba(243,238,226,0.04);
+  color:var(--paper);
+  text-decoration:none;
+  border:1px solid rgba(243,238,226,0.10);
+  transition:all 0.18s ease;
+  display:inline-flex;align-items:center;gap:0.35rem;
+}
+.hero-btn:hover{background:rgba(58,166,118,0.08);border-color:var(--emerald-line);color:var(--paper)}
+.hero-btn.primary{
+  background:rgba(58,166,118,0.12);
+  border-color:var(--emerald-line);
+  color:var(--ivory);
+}
+.hero-btn.primary:hover{background:rgba(58,166,118,0.18);border-color:rgba(58,166,118,0.5)}
+.hero-btn.muted{color:var(--paper-mute);border-color:rgba(243,238,226,0.06)}
+.hero-btn.muted:hover{background:rgba(243,238,226,0.04);color:var(--paper-dim);border-color:rgba(243,238,226,0.10)}
+
+/* ═══ KPI ROW ═══ */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.9rem;margin-bottom:1.5rem}
+.kpi-card{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:linear-gradient(180deg, rgba(20,24,30,0.85), rgba(14,17,21,0.85));
+  border:1px solid rgba(243,238,226,0.07);
+  border-radius:10px;
+  padding:1.15rem 1.3rem;
+  transition:border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+}
+.kpi-card:hover{
+  border-color:rgba(58,166,118,0.22);
+  box-shadow:0 14px 40px rgba(0,0,0,0.32), 0 0 22px rgba(58,166,118,0.05);
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg, transparent, var(--emerald), transparent);
+  opacity:0;transition:opacity 0.3s ease;
+}
+.kpi-card:hover::before{opacity:0.7}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem}
+.kpi-label{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--paper-mute);font-weight:500;
+}
+.kpi-trend{
+  display:inline-flex;align-items:center;gap:0.25rem;
+  font-family:var(--mono);font-size:0.6rem;font-weight:500;
+  padding:0.16rem 0.42rem;border-radius:4px;letter-spacing:0.02em;
+}
+.kpi-trend.up{background:var(--emerald-soft);color:var(--emerald);border:1px solid var(--emerald-line)}
+.kpi-trend.down{background:rgba(200,137,90,0.08);color:var(--warn);border:1px solid rgba(200,137,90,0.18)}
+.kpi-trend.flat{background:rgba(243,238,226,0.04);color:var(--paper-dim);border:1px solid rgba(243,238,226,0.08)}
+.kpi-val{
+  font-family:var(--serif);font-size:1.85rem;font-weight:800;
+  color:var(--paper);line-height:1;letter-spacing:-0.022em;
+  margin-bottom:0.32rem;
+  font-variant-numeric:tabular-nums;
+}
+.kpi-sub{font-size:0.7rem;color:var(--paper-mute);line-height:1.4}
+
+/* Empty-state preview panel */
+.preview-panel{padding:1.15rem 1.35rem}
+.preview-grid{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:1.5rem}
+.preview-cell{display:flex;flex-direction:column;gap:0.55rem;min-height:78px}
+.preview-label{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper-mute)}
+.preview-hint{font-size:0.7rem;color:rgba(243,238,226,0.32);margin-top:auto;line-height:1.4}
+.preview-svg{width:100%;height:36px;opacity:0.7}
+.preview-lines{display:flex;flex-direction:column;gap:0.4rem;padding:0.2rem 0}
+.preview-line{height:5px;background:rgba(243,238,226,0.08);border-radius:2px;width:85%}
+.preview-line.short{width:55%}
+.preview-bars{display:flex;align-items:flex-end;gap:0.35rem;height:36px}
+.preview-bar{flex:1;background:linear-gradient(180deg, rgba(58,166,118,0.32), rgba(58,166,118,0.10));border-radius:2px 2px 0 0;min-height:10%}
+
+/* ═══ GRID LAYOUT ═══ */
+.grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:1rem;margin-bottom:1rem}
+.grid-3{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+
+.panel{
+  background:linear-gradient(180deg, rgba(18,21,26,0.85), rgba(13,16,20,0.85));
+  border:1px solid rgba(243,238,226,0.07);
+  border-radius:10px;
+  overflow:hidden;
+}
+.panel-hd{
+  padding:0.95rem 1.35rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-title{font-family:var(--serif);font-size:1.02rem;font-weight:700;color:var(--paper);letter-spacing:-0.01em}
+.panel-sub{
+  font-size:0.74rem;color:var(--paper-mute);margin-top:0.25rem;line-height:1.45;
+  max-width:46rem;
+}
+
+/* Coming Soon pill */
+.coming-pill{
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--paper-soft);
+  background:rgba(168,148,114,0.08);
+  border:1px solid rgba(168,148,114,0.25);
+  padding:0.28rem 0.55rem;border-radius:4px;white-space:nowrap;
+  flex-shrink:0;align-self:flex-start;
+}
+
+/* Pro tiles */
+.pro-grid{
+  display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:1px;
+  background:var(--border);
+}
+.pro-tile{
+  background:rgba(18,21,26,0.85);
+  padding:1.15rem 1.25rem;
+  display:flex;flex-direction:column;gap:0.55rem;
+  min-height:138px;
+  position:relative;
+  opacity:0.78;
+  transition:opacity 0.2s;
+}
+.pro-tile:hover{opacity:0.95}
+.pro-icon{
+  width:36px;height:36px;border-radius:9px;
+  background:rgba(243,238,226,0.03);
+  border:1px solid rgba(243,238,226,0.07);
+  color:var(--paper-soft);
+  display:flex;align-items:center;justify-content:center;
+}
+.pro-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+.pro-title{font-family:var(--serif);font-size:0.98rem;font-weight:700;color:var(--paper);letter-spacing:-0.01em}
+.pro-copy{font-size:0.74rem;color:var(--paper-dim);line-height:1.5}
+
+/* Waitlist row */
+.waitlist{
+  display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
+  padding:0.95rem 1.35rem;
+  border-top:1px solid var(--border);
+  background:rgba(58,166,118,0.025);
+}
+.waitlist-text{display:flex;flex-direction:column;gap:0.15rem;min-width:0;flex:1}
+.waitlist-eyebrow{
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--emerald);
+}
+.waitlist-line{font-size:0.78rem;color:var(--paper-dim);line-height:1.4}
+.waitlist-form{display:flex;gap:0.4rem;flex-shrink:0}
+.waitlist-input{
+  background:rgba(243,238,226,0.04);
+  border:1px solid rgba(243,238,226,0.10);
+  color:var(--paper);
+  font-family:var(--sans);font-size:0.78rem;
+  padding:0.5rem 0.8rem;
+  border-radius:6px;outline:none;
+  width:220px;
+  transition:border-color 0.18s;
+}
+.waitlist-input:focus{border-color:var(--emerald-line);background:rgba(243,238,226,0.06)}
+.waitlist-input::placeholder{color:var(--paper-mute)}
+.waitlist-input.error{border-color:rgba(200,122,90,0.5)}
+.waitlist-btn{
+  background:linear-gradient(180deg, #3aa676, #2c7c58);
+  color:var(--ivory);
+  border:1px solid rgba(58,166,118,0.4);
+  font-family:var(--sans);font-size:0.76rem;font-weight:600;
+  padding:0.5rem 0.95rem;border-radius:6px;cursor:pointer;
+  transition:background 0.18s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.waitlist-btn:hover{background:linear-gradient(180deg, #43b884, #2f8a62)}
+.waitlist-success{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.95rem 1.35rem;
+  border-top:1px solid var(--border);
+  background:rgba(58,166,118,0.06);
+  color:var(--emerald);
+  font-size:0.8rem;
+}
+.waitlist-success svg{width:16px;height:16px;flex-shrink:0}
+.panel-link{
+  font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--emerald);text-decoration:none;transition:opacity 0.18s;font-weight:500;
+}
+.panel-link:hover{opacity:0.75}
+
+/* ═══ PROPERTIES TABLE ═══ */
+.p-actions{display:flex;align-items:center;justify-content:flex-end;gap:0.35rem;flex-wrap:wrap}
+.p-action-btn{
+  border:1px solid rgba(243,238,226,0.08);
+  background:rgba(243,238,226,0.025);
+  color:var(--paper-dim);
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0.3rem 0.5rem;border-radius:4px;cursor:pointer;text-decoration:none;
+  transition:all 0.15s;
+}
+.p-action-btn:hover{border-color:var(--emerald-line);color:var(--emerald);background:var(--emerald-soft)}
+.p-action-btn.delete:hover{border-color:rgba(200,137,90,0.32);color:var(--danger);background:rgba(200,137,90,0.06)}
+
+.ptable{width:100%;border-collapse:collapse}
+.ptable th{
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--paper-mute);
+  padding:0.7rem 1.35rem;text-align:left;font-weight:500;
+  border-bottom:1px solid var(--border);
+}
+.ptable th.num{text-align:right}
+.ptable td{
+  padding:0.85rem 1.35rem;border-bottom:1px solid rgba(243,238,226,0.035);
+  font-size:0.82rem;color:var(--paper-dim);
+}
+.ptable tr:last-child td{border-bottom:none}
+.ptable tr{transition:background 0.1s}
+.ptable tr:hover td{background:rgba(243,238,226,0.015)}
+.ptable td.num{text-align:right;font-family:var(--mono);font-size:0.78rem;color:var(--paper);font-variant-numeric:tabular-nums}
+
+.p-name{display:flex;align-items:center;gap:0.7rem}
+.p-thumb{
+  width:32px;height:32px;border-radius:7px;flex-shrink:0;
+  background:rgba(168,148,114,0.06);
+  border:1px solid rgba(168,148,114,0.18);
+  color:var(--paper-soft);
+  display:flex;align-items:center;justify-content:center;
+}
+.p-name-text{min-width:0}
+.p-addr{font-weight:600;color:var(--paper);margin-bottom:0.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;font-size:0.84rem}
+.p-sub{font-family:var(--mono);font-size:0.6rem;color:var(--paper-mute);letter-spacing:0.02em}
+
+.status-pill{
+  display:inline-block;font-family:var(--mono);font-size:0.56rem;
+  padding:0.2rem 0.5rem;border-radius:3px;letter-spacing:0.06em;
+  text-transform:uppercase;font-weight:500;
+}
+.status-active{background:var(--emerald-soft);color:var(--emerald);border:1px solid var(--emerald-line)}
+.status-analyzing{background:rgba(243,238,226,0.04);color:var(--paper-dim);border:1px solid rgba(243,238,226,0.08)}
+.status-listed{background:rgba(200,137,90,0.10);color:var(--warn);border:1px solid rgba(200,137,90,0.22)}
+
+.perf-mini{display:flex;align-items:center;gap:0.5rem}
+.perf-bar{flex:1;height:3px;background:rgba(243,238,226,0.06);border-radius:2px;overflow:hidden;min-width:40px;max-width:80px}
+.perf-fill{height:100%;border-radius:2px;background:linear-gradient(90deg, var(--emerald), #5cc294)}
+
+/* ═══ QUICK ACTIONS ═══ */
+.qa-list{padding:0.85rem}
+.qa-item{
+  display:flex;align-items:center;gap:0.85rem;padding:0.78rem 0.85rem;
+  border:1px solid rgba(243,238,226,0.05);
+  border-radius:7px;
+  text-decoration:none;color:var(--paper);
+  margin-bottom:0.4rem;
+  transition:all 0.18s ease;cursor:pointer;
+}
+.qa-item:hover{
+  border-color:var(--emerald-line);
+  background:rgba(58,166,118,0.04);
+  transform:translateX(2px);
+}
+.qa-item:last-child{margin-bottom:0}
+.qa-icon{
+  width:38px;height:38px;border-radius:9px;flex-shrink:0;
+  background:rgba(243,238,226,0.03);
+  border:1px solid rgba(243,238,226,0.07);
+  color:var(--paper-soft);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.18s ease;
+}
+.qa-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.qa-item:hover .qa-icon{background:var(--emerald-soft);border-color:var(--emerald-line);color:var(--emerald)}
+.qa-text{flex:1;min-width:0}
+.qa-name{font-size:0.82rem;font-weight:600;margin-bottom:0.1rem;color:var(--paper)}
+.qa-desc{font-size:0.7rem;color:var(--paper-mute);line-height:1.45}
+.qa-arrow{color:var(--paper-mute);font-size:1rem;transition:all 0.15s}
+.qa-item:hover .qa-arrow{color:var(--emerald);transform:translateX(2px)}
+
+/* ═══ ACTIVITY FEED ═══ */
+.feed-list{padding:0.4rem 1rem 0.85rem}
+.feed-item{
+  display:flex;gap:0.75rem;padding:0.75rem 0.25rem;
+  border-bottom:1px solid rgba(243,238,226,0.035);
+}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{
+  width:7px;height:7px;border-radius:50%;margin-top:0.45rem;flex-shrink:0;
+  background:var(--emerald);box-shadow:0 0 0 3px rgba(58,166,118,0.14);
+}
+.feed-dot.warn{background:var(--warn);box-shadow:0 0 0 3px rgba(200,137,90,0.14)}
+.feed-dot.neutral{background:var(--paper-dim);box-shadow:0 0 0 3px rgba(243,238,226,0.06)}
+.feed-content{flex:1;min-width:0}
+.feed-title{font-size:0.78rem;color:var(--paper);font-weight:500;margin-bottom:0.18rem;line-height:1.4}
+.feed-title b{color:var(--emerald);font-weight:600}
+.feed-time{font-family:var(--mono);font-size:0.6rem;color:var(--paper-mute);letter-spacing:0.02em}
+
+/* ═══ MARKET SIGNAL ═══ */
+.sig-grid{padding:0.9rem 1.35rem 1.2rem}
+.sig-row{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid rgba(243,238,226,0.035)}
+.sig-row:last-child{border-bottom:none}
+.sig-left{display:flex;align-items:center;gap:0.7rem;min-width:0;flex:1}
+.sig-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sig-name{font-size:0.8rem;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig-val{font-family:var(--mono);font-size:0.76rem;color:var(--paper);font-weight:500;flex-shrink:0;margin-left:0.5rem;font-variant-numeric:tabular-nums}
+.sig-val.hot{color:var(--warn)}
+.sig-val.warm{color:var(--emerald)}
+
+/* ═══ CHART ═══ */
+.chart-area{padding:0.95rem 1.35rem 1.35rem}
+.chart-legend{display:flex;align-items:center;gap:1.15rem;margin-bottom:0.85rem}
+.cl-item{display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--paper-dim);font-family:var(--mono);letter-spacing:0.04em}
+.cl-dot{width:7px;height:7px;border-radius:2px}
+.chart-svg{width:100%;height:180px;display:block}
+.chart-foot{display:flex;justify-content:space-between;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border)}
+.chart-foot-k{font-family:var(--mono);font-size:0.54rem;color:var(--paper-mute);letter-spacing:0.12em;margin-bottom:0.22rem;text-transform:uppercase}
+.chart-foot-v{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper);font-variant-numeric:tabular-nums}
+.chart-foot-v.up{color:var(--emerald)}
+
+.chart-tag{
+  font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--paper-mute);
+  background:rgba(243,238,226,0.04);
+  border:1px solid rgba(243,238,226,0.08);
+  padding:0.24rem 0.55rem;border-radius:4px;
+}
+.chart-empty{display:flex;flex-direction:column;gap:0.85rem}
+.chart-empty .chart-svg{height:130px}
+.chart-hint{
+  font-size:0.74rem;color:var(--paper-mute);line-height:1.5;
+  padding:0 0.25rem;
+}
+
+/* ═══ SAVED OMs ═══ */
+.om-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--border)}
+.om-card{background:rgba(18,21,26,0.85);padding:1.05rem 1.15rem;min-height:178px;display:flex;flex-direction:column;gap:0.75rem;transition:background 0.18s}
+.om-card:hover{background:rgba(22,26,32,0.95)}
+.om-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem}
+.om-card-title{font-weight:700;color:var(--paper);font-size:0.9rem;line-height:1.3}
+.om-card-meta{font-family:var(--mono);font-size:0.6rem;color:var(--paper-mute);letter-spacing:0.02em;margin-top:0.2rem}
+.om-card-status{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--emerald);background:var(--emerald-soft);border:1px solid var(--emerald-line);
+  padding:0.18rem 0.42rem;border-radius:3px;white-space:nowrap;
+}
+.om-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-top:0.1rem}
+.om-stat{background:rgba(243,238,226,0.02);border:1px solid rgba(243,238,226,0.05);border-radius:5px;padding:0.5rem 0.55rem}
+.om-stat-label{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--paper-mute);margin-bottom:0.15rem}
+.om-stat-val{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--paper);line-height:1.1;font-variant-numeric:tabular-nums}
+.om-card-actions{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;margin-top:auto}
+.om-empty{padding:1.15rem 1.4rem;color:var(--paper-dim);line-height:1.55;font-size:0.85rem}
+.om-empty a{color:var(--emerald);text-decoration:none}
+.om-empty a:hover{text-decoration:underline}
+
+/* ═══ LEARNING STUDIO ═══ */
+.learning-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--border)}
+.learning-card{
+  background:rgba(18,21,26,0.85);padding:1.15rem 1.25rem;min-height:172px;
+  display:flex;flex-direction:column;gap:0.75rem;
+  text-decoration:none;color:inherit;
+  transition:background 0.18s, transform 0.22s;
+}
+.learning-card:hover{background:rgba(22,26,32,0.95)}
+.learning-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:0.8rem}
+.learning-step{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--emerald);background:var(--emerald-soft);border:1px solid var(--emerald-line);
+  border-radius:999px;padding:0.22rem 0.5rem;white-space:nowrap;
+}
+.learning-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper);line-height:1.18;letter-spacing:-0.01em}
+.learning-card:hover .learning-title{color:var(--ivory)}
+.learning-copy{font-size:0.76rem;line-height:1.55;color:var(--paper-dim)}
+.learning-tags{display:flex;flex-wrap:wrap;gap:0.32rem;margin-top:auto}
+.learning-tag{
+  font-family:var(--mono);font-size:0.52rem;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--paper-mute);background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.05);border-radius:999px;padding:0.22rem 0.45rem;
+}
+
+/* ═══ UPGRADE MODAL ═══ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(5,6,8,0.72);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;z-index:200;
+  padding:2rem;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:linear-gradient(180deg, #161a20, #0e1115);
+  border:1px solid rgba(243,238,226,0.10);
+  border-radius:14px;max-width:460px;width:100%;
+  padding:2rem 2rem 1.75rem;
+  position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,0.5);
+}
+.modal-eyebrow{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--emerald);margin-bottom:0.5rem;
+}
+.modal-title{font-family:var(--serif);font-size:1.45rem;font-weight:700;letter-spacing:-0.015em;color:var(--paper);margin-bottom:0.5rem;line-height:1.2}
+.modal-body{font-size:0.86rem;line-height:1.55;color:var(--paper-dim);margin-bottom:1.5rem}
+.modal-body b{color:var(--paper)}
+.modal-actions{display:flex;gap:0.55rem;flex-wrap:wrap}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;
+  width:30px;height:30px;border-radius:6px;
+  background:transparent;border:1px solid rgba(243,238,226,0.07);
+  color:var(--paper-mute);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+}
+.modal-close:hover{color:var(--paper);border-color:rgba(243,238,226,0.16)}
+.modal-close svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* Form modal */
+.modal-form{max-width:560px}
+.form-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;
+  margin-bottom:0.85rem;
+}
+.form-field{display:flex;flex-direction:column;gap:0.35rem;min-width:0}
+.form-field-full{grid-column:1 / -1}
+.form-label{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--paper-mute);font-weight:500;
+}
+.form-label .req{color:var(--emerald);margin-left:0.15rem}
+.form-input{
+  background:rgba(243,238,226,0.03);
+  border:1px solid rgba(243,238,226,0.10);
+  color:var(--paper);
+  font-family:var(--sans);font-size:0.85rem;
+  padding:0.55rem 0.75rem;
+  border-radius:7px;outline:none;
+  width:100%;
+  transition:border-color 0.18s, background 0.18s;
+}
+.form-input:focus{
+  border-color:var(--emerald-line);
+  background:rgba(243,238,226,0.05);
+  box-shadow:0 0 0 3px rgba(58,166,118,0.06);
+}
+.form-input::placeholder{color:var(--paper-mute)}
+.form-input.error{border-color:rgba(200,122,90,0.55);background:rgba(200,122,90,0.04)}
+.form-input-readonly{
+  color:var(--paper-dim);
+  background:rgba(243,238,226,0.02);
+  border-style:dashed;
+  font-family:var(--mono);font-size:0.78rem;
+  letter-spacing:0.02em;
+  cursor:default;
+}
+select.form-input{
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 5L6 8L9 5' stroke='%23a8a294' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.7rem center;background-size:12px;
+  padding-right:2rem;
+}
+.input-prefix{position:relative;display:flex;align-items:center}
+.input-prefix .prefix-sym{
+  position:absolute;left:0.75rem;
+  color:var(--paper-mute);font-family:var(--mono);font-size:0.85rem;
+  pointer-events:none;
+}
+.input-prefix .form-input{padding-left:1.7rem}
+.form-error{
+  font-size:0.78rem;color:var(--danger);
+  background:rgba(200,122,90,0.06);
+  border:1px solid rgba(200,122,90,0.18);
+  border-radius:6px;
+  padding:0.55rem 0.75rem;
+  margin-bottom:0.85rem;
+}
+.form-actions{
+  display:flex;align-items:center;gap:0.5rem;
+  margin-top:1.15rem;flex-wrap:wrap;
+}
+.form-btn-delete{
+  color:var(--danger);
+  border-color:rgba(200,122,90,0.28);
+  background:rgba(200,122,90,0.04);
+}
+.form-btn-delete:hover{
+  border-color:rgba(200,122,90,0.5);
+  background:rgba(200,122,90,0.08);
+  color:var(--danger);
+}
+.form-hint{font-family:var(--sans);font-size:0.66rem;color:var(--paper-mute);text-transform:none;letter-spacing:0;font-weight:400;margin-left:0.3rem}
+
+/* Shared-with section inside property modal */
+.pf-shares{
+  margin:0.2rem 0 1.1rem;
+  padding:0.95rem 1rem;
+  background:rgba(58,166,118,0.04);
+  border:1px solid rgba(58,166,118,0.14);
+  border-radius:8px;
+}
+.pf-shares-hd{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:0.6rem}
+.pf-share-add{
+  background:transparent;border:1px dashed rgba(58,166,118,0.4);
+  color:var(--emerald);
+  font-family:var(--sans);font-size:0.72rem;font-weight:600;
+  padding:0.35rem 0.65rem;border-radius:5px;cursor:pointer;
+  transition:all 0.15s;
+}
+.pf-share-add:hover{background:rgba(58,166,118,0.08);border-color:rgba(58,166,118,0.6)}
+
+.share-card{
+  display:flex;align-items:center;gap:0.7rem;
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.06);
+  border-radius:7px;
+  padding:0.6rem 0.75rem;
+  margin-bottom:0.4rem;
+}
+.share-card:last-child{margin-bottom:0}
+.share-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg, #3aa676, #2a6b4f);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ivory);font-weight:700;font-size:0.7rem;
+}
+.share-card-text{flex:1;min-width:0}
+.share-card-name{font-size:0.8rem;font-weight:600;color:var(--paper);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.share-card-meta{font-family:var(--mono);font-size:0.58rem;color:var(--paper-mute);letter-spacing:0.04em;margin-top:0.1rem}
+.share-tier-pill{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.18rem 0.42rem;border-radius:3px;
+  flex-shrink:0;
+}
+.share-tier-pill.review{color:var(--emerald);background:var(--emerald-soft);border:1px solid var(--emerald-line)}
+.share-tier-pill.represent{color:var(--warn);background:rgba(200,137,90,0.10);border:1px solid rgba(200,137,90,0.22)}
+.share-revoke{
+  background:transparent;border:1px solid rgba(243,238,226,0.08);
+  color:var(--paper-mute);
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0.28rem 0.5rem;border-radius:4px;cursor:pointer;
+  transition:all 0.15s;
+}
+.share-revoke:hover{color:var(--danger);border-color:rgba(200,122,90,0.32);background:rgba(200,122,90,0.04)}
+
+/* Share context inside share modal */
+.share-context{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.7rem 0.85rem;margin-bottom:1.1rem;
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.07);
+  border-radius:7px;
+}
+.share-context-thumb{
+  width:32px;height:32px;border-radius:7px;flex-shrink:0;
+  background:rgba(168,148,114,0.06);
+  border:1px solid rgba(168,148,114,0.18);
+  color:var(--paper-soft);
+  display:flex;align-items:center;justify-content:center;
+}
+.share-context-thumb svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.share-context-text{flex:1;min-width:0}
+.share-context-addr{font-weight:600;font-size:0.82rem;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.share-context-sub{font-family:var(--mono);font-size:0.58rem;color:var(--paper-mute);letter-spacing:0.04em;margin-top:0.1rem}
+
+/* Tier selector */
+.share-tier-section{margin-bottom:1rem}
+.tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.55rem}
+.tier-card{cursor:pointer;position:relative}
+.tier-card input[type="radio"]{position:absolute;opacity:0;pointer-events:none}
+.tier-inner{
+  background:rgba(243,238,226,0.025);
+  border:1px solid rgba(243,238,226,0.08);
+  border-radius:7px;
+  padding:0.75rem 0.85rem;
+  height:100%;
+  transition:all 0.18s ease;
+}
+.tier-card:hover .tier-inner{border-color:rgba(243,238,226,0.16);background:rgba(243,238,226,0.04)}
+.tier-card input:checked + .tier-inner{
+  border-color:var(--emerald-line);
+  background:rgba(58,166,118,0.06);
+  box-shadow:0 0 0 1px var(--emerald-line);
+}
+.tier-head{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin-bottom:0.4rem}
+.tier-name{font-size:0.84rem;font-weight:600;color:var(--paper)}
+.tier-badge{
+  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.16rem 0.4rem;border-radius:3px;
+}
+.tier-badge-soft{color:var(--paper-mute);background:rgba(243,238,226,0.04);border:1px solid rgba(243,238,226,0.08)}
+.tier-badge-warn{color:var(--warn);background:rgba(200,137,90,0.08);border:1px solid rgba(200,137,90,0.22)}
+.tier-desc{font-size:0.72rem;color:var(--paper-dim);line-height:1.45}
+
+/* Notification preferences */
+.share-notify-section{
+  margin-bottom:1rem;
+  padding:0.85rem 0.95rem;
+  background:rgba(243,238,226,0.02);
+  border:1px solid rgba(243,238,226,0.06);
+  border-radius:7px;
+}
+.notify-row{
+  display:flex;align-items:flex-start;gap:0.65rem;
+  padding:0.42rem 0;cursor:pointer;
+}
+.notify-row input[type="checkbox"]{
+  margin-top:0.18rem;flex-shrink:0;
+  accent-color:var(--emerald);
+  width:14px;height:14px;cursor:pointer;
+}
+.notify-row input[disabled]{cursor:not-allowed;opacity:0.7}
+.notify-title{font-size:0.78rem;font-weight:600;color:var(--paper);line-height:1.3}
+.notify-always{
+  font-family:var(--mono);font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--paper-mute);background:rgba(243,238,226,0.04);
+  border:1px solid rgba(243,238,226,0.06);
+  padding:0.12rem 0.36rem;border-radius:3px;margin-left:0.35rem;font-weight:500;
+}
+.notify-sub{font-size:0.7rem;color:var(--paper-mute);margin-top:0.15rem;line-height:1.45}
+
+/* NDA */
+.share-nda{
+  margin-bottom:1rem;padding:0.8rem 0.95rem;
+  background:rgba(200,137,90,0.05);
+  border:1px solid rgba(200,137,90,0.18);
+  border-radius:7px;
+}
+.nda-row{display:flex;gap:0.65rem;cursor:pointer}
+.nda-row input[type="checkbox"]{margin-top:0.18rem;flex-shrink:0;accent-color:var(--emerald);width:14px;height:14px;cursor:pointer}
+.nda-text{font-size:0.74rem;color:var(--paper-dim);line-height:1.5}
+
+/* Row-level shared pill on property table */
+.shared-pill{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--emerald);
+  background:var(--emerald-soft);
+  border:1px solid var(--emerald-line);
+  padding:0.18rem 0.42rem;border-radius:3px;
+  margin-left:0.4rem;
+  white-space:nowrap;
+}
+.shared-pill svg{width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Share-with icon button in row actions */
+.p-action-btn.share-btn{color:var(--emerald);border-color:var(--emerald-line);background:var(--emerald-soft)}
+.p-action-btn.share-btn:hover{background:rgba(58,166,118,0.18);border-color:rgba(58,166,118,0.5);color:var(--emerald)}
+
+@media(max-width:520px){
+  .form-row{grid-template-columns:1fr;gap:0.7rem}
+  .tier-grid{grid-template-columns:1fr}
+}
+
+/* ═══ ANIMATIONS ═══ */
+.fade-up{opacity:0;transform:translateY(8px);animation:fadeUp 0.5s ease forwards}
+.fade-up:nth-child(1){animation-delay:0.04s}
+.fade-up:nth-child(2){animation-delay:0.08s}
+.fade-up:nth-child(3){animation-delay:0.12s}
+.fade-up:nth-child(4){animation-delay:0.16s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+.pulse{animation:pulse 2.4s infinite ease-in-out}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1200px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-248px;top:0;z-index:200;transition:left 0.3s}
+  .sidebar.open{left:0}
+  .topbar{padding:0.85rem 1.25rem;flex-wrap:wrap;gap:0.65rem}
+  .content{padding:1.5rem 1.25rem 3rem}
+  .kpi-row{grid-template-columns:1fr 1fr;gap:0.75rem}
+  .kpi-val{font-size:1.45rem}
+  .ptable th,.ptable td{padding:0.65rem 0.85rem}
+  .p-addr{max-width:130px}
+  .mode-toggle{order:1}
+  .tb-right{order:2;margin-left:auto}
+  .tb-search{order:3;flex-basis:100%;max-width:none}
+  .om-card-grid{grid-template-columns:1fr 1fr}
+  .preview-grid{grid-template-columns:1fr;gap:1.1rem}
+  .pro-grid{grid-template-columns:1fr}
+  .pro-tile{min-height:auto;padding:1rem 1.1rem}
+  .waitlist{flex-direction:column;align-items:stretch;gap:0.75rem;padding:0.85rem 1.05rem}
+  .waitlist-form{width:100%}
+  .waitlist-input{flex:1;width:auto}
+}
+@media(max-width:600px){
+  .topbar{padding:0.75rem 1rem;gap:0.55rem}
+  .content{padding:1.15rem 1rem 2.5rem}
+
+  /* Brand row — hide the date pill on small phones to keep it clean */
+  .brand-row{margin-bottom:0.85rem}
+  .brand-row-right{display:none}
+  .brand-row-name{font-size:0.92rem}
+  .brand-row-tag{font-size:0.85rem}
+
+  .hero{padding:1.35rem 1.15rem 1.2rem;border-radius:12px;margin-bottom:1.1rem}
+  /* On mobile the giant radial pseudo-element causes paint glitches on iOS Safari. */
+  .hero::before{display:none}
+  .hero-eyebrow{font-size:0.56rem;margin-bottom:0.6rem}
+  .hero-greeting{font-size:1.55rem;line-height:1.1;margin-bottom:0.5rem}
+  .hero-sub{font-size:0.84rem;margin-bottom:0.95rem}
+  .hero-metrics:empty{display:none;margin:0}
+  .hero-actions{gap:0.4rem}
+  .hero-btn{padding:0.5rem 0.85rem;font-size:0.76rem}
+  /* Checklist tiles get a bit tighter on mobile */
+  .hero-check-item{padding:0.65rem 0.8rem;gap:0.7rem}
+  .hero-check-num{width:24px;height:24px;font-size:0.68rem}
+  .hero-check-title{font-size:0.82rem}
+  .hero-check-sub{font-size:0.72rem}
+  /* Body grain overlay is expensive on phones */
+  body::after{opacity:0.18}
+
+  .om-card-grid{grid-template-columns:1fr}
+  .mode-btn{padding:0.4rem 0.65rem;font-size:0.72rem}
+  .tb-btn{padding:0.45rem 0.7rem;font-size:0.72rem}
+  .tb-btn svg{width:12px;height:12px}
+  /* Hide the secondary upload button on small phones; "+" remains */
+  .tb-btn-secondary{display:none}
+  /* Keep theme toggle visible; hide notifications to save space */
+  .nav-icon-btn[aria-label="Notifications"]{display:none}
+
+  /* KPI: Portfolio Value full width and prominent, others 2x grid below */
+  .kpi-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;
+  }
+  .kpi-hero{
+    grid-column:1 / -1;
+    padding:1.35rem 1.4rem;
+  }
+  .kpi-hero .kpi-val{font-size:2.15rem}
+  .kpi-hero .kpi-sub{font-size:0.74rem}
+  .kpi-mini{padding:0.9rem 1rem}
+  .kpi-mini .kpi-val{font-size:1.25rem;margin-bottom:0.22rem}
+  .kpi-mini .kpi-sub{font-size:0.64rem}
+
+  .panel-hd{padding:0.85rem 1.05rem}
+  .panel-title{font-size:0.95rem}
+  .qa-list{padding:0.65rem}
+  .qa-item{padding:0.65rem 0.7rem;gap:0.7rem}
+  .qa-icon{width:34px;height:34px}
+  .qa-name{font-size:0.78rem}
+  .qa-desc{font-size:0.66rem}
+  .feed-list{padding:0.3rem 0.85rem 0.7rem}
+  .sig-grid{padding:0.7rem 1.05rem 1rem}
+  .chart-area{padding:0.85rem 1.05rem 1.1rem}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT THEME OVERRIDES
+   The base CSS uses ivory-on-dark overlays (rgba(243,238,226,X))
+   which become invisible on light backgrounds. This block remaps
+   those to dark-on-light overlays for every component.
+   ═══════════════════════════════════════════════════════════ */
+:root:not([data-theme="dark"]){
+  color-scheme: light;
+}
+[data-theme="dark"]{
+  color-scheme: dark;
+}
+
+:root:not([data-theme="dark"]) .sidebar{
+  background:linear-gradient(180deg, #faf4e4 0%, #f3ecd9 100%);
+  border-right:1px solid var(--border);
+}
+:root:not([data-theme="dark"]) .sb-item{color:rgba(26,24,20,0.62)}
+:root:not([data-theme="dark"]) .sb-item:hover{background:rgba(26,24,20,0.04);color:var(--paper)}
+:root:not([data-theme="dark"]) .sb-item.active{
+  background:linear-gradient(90deg, var(--emerald-soft), transparent 80%);
+}
+:root:not([data-theme="dark"]) .sb-icon{
+  background:rgba(26,24,20,0.025);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .sb-item:hover .sb-icon{background:rgba(26,24,20,0.05);color:var(--paper)}
+:root:not([data-theme="dark"]) .sb-badge{
+  background:rgba(26,24,20,0.04);
+  color:var(--paper-dim);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .sb-lock-pill{
+  color:var(--paper-mute);background:rgba(26,24,20,0.03);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .sb-user{
+  background:rgba(26,24,20,0.025);
+  border:1px solid rgba(26,24,20,0.06);
+}
+:root:not([data-theme="dark"]) .sb-user:hover{background:rgba(26,24,20,0.05);border-color:rgba(26,24,20,0.10)}
+
+:root:not([data-theme="dark"]) .topbar{
+  background:rgba(253,250,242,0.88);
+  border-bottom:1px solid var(--border);
+}
+:root:not([data-theme="dark"]) .mode-toggle{
+  background:rgba(26,24,20,0.04);
+  border:1px solid rgba(26,24,20,0.10);
+}
+:root:not([data-theme="dark"]) .mode-slider{
+  background:linear-gradient(180deg, rgba(44,138,92,0.14), rgba(44,138,92,0.06));
+  border:1px solid var(--emerald-line);
+  box-shadow:0 4px 12px rgba(44,138,92,0.10);
+}
+:root:not([data-theme="dark"]) .mode-btn{color:var(--paper-dim)}
+:root:not([data-theme="dark"]) .mode-btn.active{color:var(--paper)}
+
+:root:not([data-theme="dark"]) .tb-search input{
+  background:rgba(26,24,20,0.03);
+  border:1px solid rgba(26,24,20,0.10);
+  color:var(--paper);
+}
+:root:not([data-theme="dark"]) .tb-search input:focus{
+  border-color:var(--emerald-line);
+  background:rgba(253,250,242,0.85);
+  box-shadow:0 0 0 3px rgba(44,138,92,0.08);
+}
+:root:not([data-theme="dark"]) .tb-btn{
+  border:1px solid rgba(26,24,20,0.10);
+  background:rgba(253,250,242,0.6);
+  color:var(--paper-dim);
+}
+:root:not([data-theme="dark"]) .tb-btn:hover{border-color:rgba(26,24,20,0.20);color:var(--paper);background:rgba(253,250,242,0.9)}
+:root:not([data-theme="dark"]) .tb-btn-primary{
+  background:linear-gradient(180deg, var(--emerald), #1f7048);
+  color:#fff;
+  border:1px solid var(--emerald-line);
+  box-shadow:0 6px 14px rgba(44,138,92,0.18), inset 0 1px 0 rgba(255,255,255,0.16);
+}
+:root:not([data-theme="dark"]) .tb-btn-primary:hover{
+  background:linear-gradient(180deg, #339a66, #246e4c);
+  color:#fff;
+}
+:root:not([data-theme="dark"]) .nav-icon-btn{
+  background:rgba(253,250,242,0.6);
+  border:1px solid rgba(26,24,20,0.10);
+  color:var(--paper-dim);
+}
+:root:not([data-theme="dark"]) .nav-icon-btn:hover{
+  color:var(--paper);border-color:rgba(26,24,20,0.20);background:rgba(253,250,242,0.9);
+}
+
+:root:not([data-theme="dark"]) .hero{
+  background:linear-gradient(135deg, rgba(168,148,114,0.10), rgba(253,250,242,0.6) 40%, rgba(44,138,92,0.06) 100%);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .hero::before{
+  background:radial-gradient(circle, rgba(44,138,92,0.08), transparent 65%);
+}
+:root:not([data-theme="dark"]) .hero-dismiss{
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .hero-dismiss:hover{
+  border-color:rgba(26,24,20,0.18);background:rgba(26,24,20,0.03);
+}
+:root:not([data-theme="dark"]) .hero-metric{
+  background:rgba(253,250,242,0.5);
+  border:1px solid rgba(26,24,20,0.07);
+}
+:root:not([data-theme="dark"]) .hero-check-item{
+  background:rgba(253,250,242,0.5);
+  border:1px solid rgba(26,24,20,0.07);
+}
+:root:not([data-theme="dark"]) .hero-btn{
+  background:rgba(253,250,242,0.6);
+  color:var(--paper);
+  border:1px solid rgba(26,24,20,0.12);
+}
+:root:not([data-theme="dark"]) .hero-btn:hover{background:var(--emerald-soft);border-color:var(--emerald-line)}
+:root:not([data-theme="dark"]) .hero-btn.primary{
+  background:var(--emerald);
+  border-color:var(--emerald);
+  color:#fff;
+}
+:root:not([data-theme="dark"]) .hero-btn.primary:hover{background:#339a66;border-color:#339a66;color:#fff}
+:root:not([data-theme="dark"]) .hero-btn.muted{color:var(--paper-mute);border-color:rgba(26,24,20,0.08)}
+:root:not([data-theme="dark"]) .hero-btn.muted:hover{background:rgba(26,24,20,0.04);color:var(--paper-dim);border-color:rgba(26,24,20,0.14)}
+
+/* KPI cards */
+:root:not([data-theme="dark"]) .kpi-card{
+  background:#fdfaf2;
+  border:1px solid rgba(26,24,20,0.08);
+  box-shadow:var(--shadow-card);
+}
+:root:not([data-theme="dark"]) .kpi-card:hover{
+  border-color:var(--emerald-line);
+  box-shadow:var(--shadow-card-hover);
+}
+
+/* Panels */
+:root:not([data-theme="dark"]) .panel{
+  background:#fdfaf2;
+  border:1px solid rgba(26,24,20,0.08);
+  box-shadow:var(--shadow-card);
+}
+:root:not([data-theme="dark"]) .panel-hd{border-bottom:1px solid var(--border)}
+
+/* Properties table */
+:root:not([data-theme="dark"]) .ptable th{border-bottom:1px solid var(--border)}
+:root:not([data-theme="dark"]) .ptable td{border-bottom:1px solid rgba(26,24,20,0.04)}
+:root:not([data-theme="dark"]) .ptable tr:hover td{background:rgba(26,24,20,0.02)}
+:root:not([data-theme="dark"]) .p-thumb{
+  background:rgba(168,148,114,0.08);
+  border:1px solid rgba(168,148,114,0.22);
+}
+:root:not([data-theme="dark"]) .status-analyzing{
+  background:rgba(26,24,20,0.04);
+  color:var(--paper-dim);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .perf-bar{background:rgba(26,24,20,0.08)}
+:root:not([data-theme="dark"]) .p-action-btn{
+  border:1px solid rgba(26,24,20,0.10);
+  background:rgba(253,250,242,0.6);
+  color:var(--paper-dim);
+}
+:root:not([data-theme="dark"]) .p-action-btn:hover{
+  border-color:var(--emerald-line);color:var(--emerald);background:var(--emerald-soft);
+}
+
+/* Quick Actions */
+:root:not([data-theme="dark"]) .qa-item{
+  border:1px solid rgba(26,24,20,0.06);
+}
+:root:not([data-theme="dark"]) .qa-item:hover{
+  border-color:var(--emerald-line);
+  background:var(--emerald-soft);
+}
+:root:not([data-theme="dark"]) .qa-icon{
+  background:rgba(26,24,20,0.03);
+  border:1px solid rgba(26,24,20,0.08);
+}
+
+/* Feed */
+:root:not([data-theme="dark"]) .feed-item{border-bottom:1px solid rgba(26,24,20,0.04)}
+
+/* Submarkets / signals */
+:root:not([data-theme="dark"]) .sig-row{border-bottom:1px solid rgba(26,24,20,0.04)}
+
+/* Chart */
+:root:not([data-theme="dark"]) .chart-tag{
+  background:rgba(26,24,20,0.04);
+  border:1px solid rgba(26,24,20,0.08);
+}
+
+/* Preview empty-state panel */
+:root:not([data-theme="dark"]) .preview-line{background:rgba(26,24,20,0.08)}
+
+/* OMs */
+:root:not([data-theme="dark"]) .om-card{background:#fdfaf2}
+:root:not([data-theme="dark"]) .om-card:hover{background:#fbf5e6}
+:root:not([data-theme="dark"]) .om-stat{background:rgba(168,148,114,0.05);border:1px solid rgba(26,24,20,0.06)}
+
+/* Vetted Pros */
+:root:not([data-theme="dark"]) .pro-tile{
+  background:#fdfaf2;
+}
+:root:not([data-theme="dark"]) .pro-icon{
+  background:rgba(26,24,20,0.03);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .waitlist{
+  background:rgba(44,138,92,0.04);
+  border-top:1px solid var(--border);
+}
+:root:not([data-theme="dark"]) .waitlist-input{
+  background:rgba(253,250,242,0.7);
+  border:1px solid rgba(26,24,20,0.14);
+  color:var(--paper);
+}
+:root:not([data-theme="dark"]) .waitlist-input:focus{
+  border-color:var(--emerald-line);background:rgba(253,250,242,1);
+}
+:root:not([data-theme="dark"]) .waitlist-btn{
+  background:linear-gradient(180deg, var(--emerald), #1f7048);
+  color:#fff;border:1px solid var(--emerald-line);
+}
+
+/* Modals */
+:root:not([data-theme="dark"]) .modal-bg{background:rgba(40,33,22,0.32);backdrop-filter:blur(6px)}
+:root:not([data-theme="dark"]) .modal{
+  background:#fdfaf2;
+  border:1px solid rgba(26,24,20,0.10);
+  box-shadow:var(--shadow-lg);
+}
+:root:not([data-theme="dark"]) .modal-close{
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .modal-close:hover{
+  border-color:rgba(26,24,20,0.20);
+}
+
+/* Form inputs */
+:root:not([data-theme="dark"]) .form-input{
+  background:rgba(253,250,242,0.7);
+  border:1px solid rgba(26,24,20,0.12);
+  color:var(--paper);
+}
+:root:not([data-theme="dark"]) .form-input:focus{
+  border-color:var(--emerald-line);
+  background:rgba(253,250,242,1);
+  box-shadow:0 0 0 3px rgba(44,138,92,0.08);
+}
+:root:not([data-theme="dark"]) .form-input-readonly{
+  background:rgba(26,24,20,0.02);
+  color:var(--paper-dim);
+}
+
+/* Share section in property modal */
+:root:not([data-theme="dark"]) .pf-shares{
+  background:rgba(44,138,92,0.04);
+  border:1px solid rgba(44,138,92,0.18);
+}
+:root:not([data-theme="dark"]) .share-card{
+  background:rgba(253,250,242,0.6);
+  border:1px solid rgba(26,24,20,0.07);
+}
+:root:not([data-theme="dark"]) .share-revoke{
+  border:1px solid rgba(26,24,20,0.08);
+  color:var(--paper-mute);
+}
+
+/* Share modal */
+:root:not([data-theme="dark"]) .share-context{
+  background:rgba(26,24,20,0.025);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .share-context-thumb{
+  background:rgba(168,148,114,0.08);
+  border:1px solid rgba(168,148,114,0.22);
+}
+:root:not([data-theme="dark"]) .tier-inner{
+  background:rgba(253,250,242,0.6);
+  border:1px solid rgba(26,24,20,0.10);
+}
+:root:not([data-theme="dark"]) .tier-card:hover .tier-inner{border-color:rgba(26,24,20,0.20);background:rgba(253,250,242,0.9)}
+:root:not([data-theme="dark"]) .tier-card input:checked + .tier-inner{
+  border-color:var(--emerald-line);
+  background:var(--emerald-soft);
+}
+:root:not([data-theme="dark"]) .tier-badge-soft{
+  color:var(--paper-mute);background:rgba(26,24,20,0.04);
+  border:1px solid rgba(26,24,20,0.08);
+}
+:root:not([data-theme="dark"]) .share-notify-section{
+  background:rgba(26,24,20,0.02);
+  border:1px solid rgba(26,24,20,0.06);
+}
+:root:not([data-theme="dark"]) .notify-always{
+  color:var(--paper-mute);background:rgba(26,24,20,0.04);
+  border:1px solid rgba(26,24,20,0.08);
+}
+
+/* Coming Soon pill */
+:root:not([data-theme="dark"]) .coming-pill{
+  color:var(--paper-soft);
+  background:rgba(168,148,114,0.12);
+  border:1px solid rgba(168,148,114,0.32);
+}
+
+/* Shared pill on property row */
+:root:not([data-theme="dark"]) .shared-pill{
+  color:var(--emerald);
+  background:var(--emerald-soft);
+  border:1px solid var(--emerald-line);
+}
+</style>
+</head>
+<body>
+
+<!-- ⚠ Version stamp — confirms which build you're viewing. Remove for production. -->
+<div id="versionStamp" style="position:fixed;bottom:8px;right:8px;z-index:99999;font-family:ui-monospace,monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#fff;background:#c2864c;padding:4px 8px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.2);pointer-events:none;opacity:0.9">v.MAY19-absolute</div>
+
+<!-- Apply saved theme synchronously to avoid a flash of wrong theme -->
+<script>
+  (function(){
+    var THEME_KEY = 'bric_theme';
+    var THEME_KEY_LEGACY = 'bric_broker_theme_v1';
+    var saved = 'light';
+    try { saved = localStorage.getItem(THEME_KEY) || localStorage.getItem(THEME_KEY_LEGACY) || 'light'; } catch(e){}
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+</script>
+
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <a href="index.html" class="sb-logo">
+        <span class="sb-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"/><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"/><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"/></svg>
+        </span>
+        <span class="sb-wordmark">BRIC Studios</span>
+      </a>
+      <div class="sb-tag" id="sbTag">Owner Workspace</div>
+    </div>
+
+    <nav class="sb-section" id="sbNav">
+      <div class="sb-label">Workspace</div>
+      <a class="sb-item active">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6.5 24.5H25.5"/><path d="M9 21V16.5"/><path d="M13.5 21V11.5"/><path d="M18 21V14.5"/><path d="M22.5 21V8.5"/></svg></span>
+        Overview
+      </a>
+      <a class="sb-item">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"/><path d="M6 25.5H26"/><path d="M11.5 11H14"/><path d="M18 11H20.5"/><path d="M11.5 15.5H14"/><path d="M18 15.5H20.5"/><path d="M14 25.5V20H18V25.5"/></svg></span>
+        My Properties
+        <span class="sb-badge" id="myPropertiesBadge">0</span>
+      </a>
+      <a class="sb-item">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="8"/><path d="M16 8V16L21 19"/><path d="M6 16H4"/><path d="M28 16H26"/></svg></span>
+        Activity
+      </a>
+      <a class="sb-item">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></span>
+        Saved OMs
+        <span class="sb-badge" id="savedOmsBadge">0</span>
+      </a>
+
+      <div class="sb-label" style="margin-top:0.65rem">Studios</div>
+      <a class="sb-item" href="valuation.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"/><path d="M8.5 21V16.5"/><path d="M13 21V12.5"/><path d="M17.5 21V15"/><path d="M22 21V9.5"/><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"/><path d="M21 6.5H23.5V9"/></svg></span>
+        Valuation Studio
+      </a>
+      <a class="sb-item" href="om-studio.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></span>
+        OM Studio
+      </a>
+      <a class="sb-item" href="learning.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4"/><path d="M10 17h4"/><path d="M21 13h2"/></svg></span>
+        Learning Studio
+      </a>
+      <a class="sb-item" href="deal-studio.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="6.5" width="12" height="18" rx="2"/><path d="M10.5 11H15.5"/><path d="M10.5 15H15.5"/><path d="M10.5 19H14"/><path d="M21 11.5L25.8 16.3"/><path d="M23.1 9.4L27.9 14.2"/><path d="M20.1 18.3L17.8 20.6"/></svg></span>
+        Deal Studio
+      </a>
+      <a class="sb-item" href="heatmap.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"/><path d="M13 7V22"/><path d="M19 9.5V24.5"/><rect x="16.4" y="13.2" width="4.4" height="4.4" rx="0.9"/></svg></span>
+        Market Heatmap
+      </a>
+
+      <!-- Broker-only items (locked unless plan includes broker) -->
+      <div class="sb-label" id="brokerLabel" style="margin-top:0.65rem">Broker Tools</div>
+      <a class="sb-item locked" data-broker-only="1" onclick="handleBrokerLockedClick(event)">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7.5"/><circle cx="16" cy="16" r="2"/><path d="M16 4.5V8"/><path d="M27.5 16H24"/><path d="M16 27.5V24"/><path d="M4.5 16H8"/><circle cx="23.7" cy="8.3" r="1.7"/></svg></span>
+        Buyer Intelligence
+        <span class="sb-lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        </span>
+      </a>
+
+      <div class="sb-label" style="margin-top:0.65rem">Network</div>
+      <a class="sb-item" href="network.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="9.5" cy="12" r="3"/><circle cx="22.5" cy="12" r="3"/><path d="M6 24C6.8 20.8 9 19.2 12.5 19.2"/><path d="M26 24C25.2 20.8 23 19.2 19.5 19.2"/><path d="M13 22H19"/><path d="M16 18V25"/></svg></span>
+        Find Vetted Pros
+        <span class="sb-badge" style="background:rgba(168,148,114,0.08);border-color:rgba(168,148,114,0.22);color:var(--paper-soft)">Soon</span>
+      </a>
+    </nav>
+
+    <div class="sb-footer">
+      <a href="pricing.html" class="sb-user">
+        <div class="sb-avatar">MP</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Matthew Peters</div>
+          <div class="sb-user-role" id="sbUserPlanLabel">Owner Plan</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <!-- Mode Toggle -->
+      <div class="mode-toggle" role="tablist" aria-label="Dashboard mode">
+        <div class="mode-slider" id="modeSlider"></div>
+        <button class="mode-btn active" id="modeOwnerBtn" data-mode="owner" role="tab" aria-selected="true" onclick="setMode('owner')">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 14L16 6L26 14V25C26 25.6 25.6 26 25 26H7C6.4 26 6 25.6 6 25V14Z"/><path d="M13 26V18H19V26"/></svg>
+          <span class="mode-label-long">Owner</span>
+        </button>
+        <button class="mode-btn" id="modeBrokerBtn" data-mode="broker" role="tab" aria-selected="false" onclick="setMode('broker')">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 12H27L25 24H7L5 12Z"/><path d="M11 12V9C11 7.3 12.3 6 14 6H18C19.7 6 21 7.3 21 9V12"/><path d="M11 17V19"/><path d="M21 17V19"/></svg>
+          <span class="mode-label-long">Broker</span>
+          <svg class="lock-mini" id="brokerLockIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        </button>
+      </div>
+
+      <div class="tb-search">
+        <span class="tb-search-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21L16.65 16.65"/></svg></span>
+        <input type="text" placeholder="Search properties, addresses, markets..."/>
+      </div>
+
+      <div class="tb-right">
+        <!-- Theme toggle -->
+        <button class="nav-icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle theme">
+          <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <span class="theme-label" id="themeLabel">Dark</span>
+        </button>
+        <!-- Notifications -->
+        <button class="nav-icon-btn icon-only" title="Notifications" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <!-- Upload Rent Roll (hidden on small phones) -->
+        <button class="tb-btn tb-btn-secondary" id="uploadRentRollBtn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3V15"/><path d="M7 8L12 3L17 8"/><path d="M5 21H19"/></svg> Upload Rent Roll</button>
+        <!-- Primary Add Property -->
+        <button class="tb-btn tb-btn-primary" id="addPropertyBtn" onclick="openPropertyModal()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V19"/><path d="M5 12H19"/></svg> Add Property</button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- BRAND ROW (mirrors broker dashboard top-of-content) -->
+      <div class="brand-row">
+        <div class="brand-row-left">
+          <span class="sb-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"/><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"/><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"/></svg>
+          </span>
+          <div class="brand-row-words">
+            <span class="brand-row-name">BRIC Studios</span>
+            <span class="brand-row-tag">owners</span>
+          </div>
+        </div>
+        <div class="brand-row-right" id="brandRowDate"></div>
+      </div>
+
+      <!-- HERO (greeting + next best action merged) -->
+      <section class="hero fade-up" id="insightBanner">
+        <button type="button" class="hero-dismiss" id="insightDismiss" aria-label="Dismiss for today">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg>
+        </button>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          <span id="heroEyebrowText">My Portfolio</span>
+        </div>
+        <h1 class="hero-greeting" id="heroGreeting">Good afternoon, <em>Matthew.</em></h1>
+        <p class="hero-sub" id="insightText">Review your latest saved property — update the valuation, generate an OM, or check submarket signals.</p>
+        <div class="hero-metrics" id="insightMetrics"></div>
+        <div class="hero-actions">
+          <a href="valuation.html" class="hero-btn primary" id="insightPrimary">Run Valuation →</a>
+          <a href="om-studio.html" class="hero-btn" id="insightSecondary">Generate OM →</a>
+        </div>
+      </section>
+
+      <!-- KPI ROW (owner-focused) -->
+      <div class="kpi-row">
+        <div class="kpi-card kpi-hero fade-up">
+          <div class="kpi-top">
+            <div class="kpi-label">Portfolio Value</div>
+            <div class="kpi-trend flat" id="kpiTrend0" hidden>— —</div>
+          </div>
+          <div class="kpi-val" id="kpiVal0">$0</div>
+          <div class="kpi-sub" id="kpiSub0">No properties yet</div>
+        </div>
+        <div class="kpi-card kpi-mini fade-up">
+          <div class="kpi-top">
+            <div class="kpi-label">Annual NOI</div>
+            <div class="kpi-trend flat" id="kpiTrend1" hidden>— —</div>
+          </div>
+          <div class="kpi-val" id="kpiVal1">$0</div>
+          <div class="kpi-sub" id="kpiSub1">Add a property to begin</div>
+        </div>
+        <div class="kpi-card kpi-mini fade-up">
+          <div class="kpi-top">
+            <div class="kpi-label">Avg. Cap Rate</div>
+            <div class="kpi-trend flat" id="kpiTrend2" hidden>— —</div>
+          </div>
+          <div class="kpi-val" id="kpiVal2">—</div>
+          <div class="kpi-sub" id="kpiSub2">Derived from NOI ÷ Value</div>
+        </div>
+        <div class="kpi-card kpi-mini fade-up">
+          <div class="kpi-top">
+            <div class="kpi-label">Occupancy</div>
+            <div class="kpi-trend flat" id="kpiTrend3" hidden>— —</div>
+          </div>
+          <div class="kpi-val" id="kpiVal3">—</div>
+          <div class="kpi-sub" id="kpiSub3">Across all units</div>
+        </div>
+      </div>
+
+      <!-- ROW: Properties + Quick Actions -->
+      <div class="grid-2">
+
+        <!-- Properties Table -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Your Properties</div>
+            <a class="panel-link">View All →</a>
+          </div>
+          <table class="ptable">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th class="num">Value</th>
+                <th class="num">NOI</th>
+                <th>Performance</th>
+                <th>Status</th>
+                <th class="num">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardPropertiesBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Quick Actions (owner-focused) -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Quick Actions</div>
+          </div>
+          <div class="qa-list">
+            <a href="valuation.html" class="qa-item">
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"/><path d="M8.5 21V16.5"/><path d="M13 21V12.5"/><path d="M17.5 21V15"/><path d="M22 21V9.5"/><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"/><path d="M21 6.5H23.5V9"/></svg></div>
+              <div class="qa-text">
+                <div class="qa-name">Run a Valuation</div>
+                <div class="qa-desc">Calculate NOI, cap rate & current value</div>
+              </div>
+              <span class="qa-arrow">→</span>
+            </a>
+            <a href="om-studio.html" class="qa-item">
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></div>
+              <div class="qa-text">
+                <div class="qa-name">Generate OM</div>
+                <div class="qa-desc">Lender or buyer-ready PDF package</div>
+              </div>
+              <span class="qa-arrow">→</span>
+            </a>
+            <a href="valuation.html#expenses" class="qa-item">
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 12H26"/><path d="M6 16H26"/><path d="M6 20H22"/><path d="M9 6H23C24.1 6 25 6.9 25 8V24C25 25.1 24.1 26 23 26H9C7.9 26 7 25.1 7 24V8C7 6.9 7.9 6 9 6Z"/></svg></div>
+              <div class="qa-text">
+                <div class="qa-name">Review Expenses</div>
+                <div class="qa-desc">Benchmark op-ex and surface NOI lift</div>
+              </div>
+              <span class="qa-arrow">→</span>
+            </a>
+            <a href="learning.html" class="qa-item">
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4"/><path d="M10 17h4"/><path d="M21 13h2"/></svg></div>
+              <div class="qa-text">
+                <div class="qa-name">Open Learning Studio</div>
+                <div class="qa-desc">Dictionary, guides & owner playbooks</div>
+              </div>
+              <span class="qa-arrow">→</span>
+            </a>
+            <a href="heatmap.html" class="qa-item">
+              <div class="qa-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"/><path d="M13 7V22"/><path d="M19 9.5V24.5"/><rect x="16.4" y="13.2" width="4.4" height="4.4" rx="0.9"/></svg></div>
+              <div class="qa-text">
+                <div class="qa-name">Explore Market</div>
+                <div class="qa-desc">Heatmaps & neighborhood signals</div>
+              </div>
+              <span class="qa-arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Find Vetted Professionals (Coming Soon teaser) -->
+      <div style="margin-bottom:1rem">
+        <div class="panel">
+          <div class="panel-hd">
+            <div>
+              <div class="panel-title">Find Vetted Professionals</div>
+              <div class="panel-sub">Curated brokers, managers, and contractors with real experience in your asset class and submarket — not search-ad results.</div>
+            </div>
+            <span class="coming-pill">Coming Soon</span>
+          </div>
+          <div class="pro-grid">
+            <div class="pro-tile">
+              <div class="pro-icon"><svg viewBox="0 0 32 32" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="12" r="3"/><circle cx="22.5" cy="12" r="3"/><path d="M6 24C6.8 20.8 9 19.2 12.5 19.2"/><path d="M26 24C25.2 20.8 23 19.2 19.5 19.2"/><path d="M13 22H19"/><path d="M16 18V25"/></svg></div>
+              <div class="pro-title">Brokers</div>
+              <div class="pro-copy">Closers who actually work your submarket and asset class — vetted by track record, not the ad spend.</div>
+            </div>
+            <div class="pro-tile">
+              <div class="pro-icon"><svg viewBox="0 0 32 32" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><path d="M7 24.5H25"/><rect x="9" y="7" width="14" height="17.5" rx="2"/><path d="M12.5 11H19.5"/><path d="M12.5 15H19.5"/><path d="M12.5 19H15"/><path d="M18 24.5V20.5H21"/></svg></div>
+              <div class="pro-title">Property Managers</div>
+              <div class="pro-copy">PMs matched to your portfolio size and building type — pre-war walk-ups, mixed-use, small multifamily.</div>
+            </div>
+            <div class="pro-tile">
+              <div class="pro-icon"><svg viewBox="0 0 32 32" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><path d="M11 9.5L22.5 21"/><path d="M9.2 11.3L12.8 7.7"/><path d="M20.7 22.8L24.3 19.2"/><path d="M18.8 7.8L24.2 13.2"/><path d="M17.3 9.3L22.7 14.7"/><path d="M7.8 24.2L14.4 17.6"/><path d="M6.7 25.3L9.5 22.5"/></svg></div>
+              <div class="pro-title">Contractors</div>
+              <div class="pro-copy">Trade-by-trade specialists for renovations, capex projects, and turnarounds — reviewed by other owners.</div>
+            </div>
+          </div>
+          <div class="waitlist" id="waitlistRow">
+            <div class="waitlist-text">
+              <span class="waitlist-eyebrow">Be first in line</span>
+              <span class="waitlist-line">We'll email you when the network goes live in your market.</span>
+            </div>
+            <form class="waitlist-form" id="waitlistForm" novalidate>
+              <input type="email" class="waitlist-input" id="waitlistEmail" placeholder="you@example.com" autocomplete="email" required/>
+              <button type="submit" class="waitlist-btn">Notify Me</button>
+            </form>
+          </div>
+          <div class="waitlist-success" id="waitlistSuccess" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>You're on the list. We'll reach out when the network launches.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty-state preview (shown when no properties saved) -->
+      <div id="emptyPreviewWrap" hidden style="margin-bottom:1rem">
+        <div class="panel preview-panel">
+          <div class="preview-grid">
+            <div class="preview-cell">
+              <div class="preview-label">NOI Trend</div>
+              <svg viewBox="0 0 120 36" class="preview-svg" preserveAspectRatio="none">
+                <path d="M 4 28 L 24 24 L 44 26 L 64 18 L 84 14 L 104 10 L 116 6" fill="none" stroke="rgba(58,166,118,0.32)" stroke-width="1.5"/>
+                <circle cx="116" cy="6" r="2" fill="rgba(58,166,118,0.5)"/>
+              </svg>
+              <div class="preview-hint">Appears with first valuation</div>
+            </div>
+            <div class="preview-cell">
+              <div class="preview-label">Recent Activity</div>
+              <div class="preview-lines">
+                <div class="preview-line"></div>
+                <div class="preview-line short"></div>
+                <div class="preview-line"></div>
+              </div>
+              <div class="preview-hint">Tracks valuations & OMs</div>
+            </div>
+            <div class="preview-cell">
+              <div class="preview-label">Submarket Signals</div>
+              <div class="preview-bars">
+                <div class="preview-bar" style="height:60%"></div>
+                <div class="preview-bar" style="height:80%"></div>
+                <div class="preview-bar" style="height:45%"></div>
+                <div class="preview-bar" style="height:90%"></div>
+                <div class="preview-bar" style="height:55%"></div>
+              </div>
+              <div class="preview-hint">YoY rent & cap trends</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Offering Memorandums (hidden when empty) -->
+      <div style="margin-bottom:1rem" id="savedOmsWrap" hidden>
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Saved Offering Memorandums</div>
+            <a href="om-studio.html" class="panel-link">Create OM →</a>
+          </div>
+          <div id="savedOmsBody">
+            <div class="om-empty">Loading saved OMs...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart + Activity + Submarkets (hidden when no properties) -->
+      <div class="grid-3" id="dataPanelsWrap" hidden>
+
+        <!-- NOI Chart -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Portfolio NOI</div>
+            <span class="chart-tag" id="chartTag">Snapshot</span>
+          </div>
+          <div class="chart-area">
+            <div class="chart-empty" id="chartEmpty">
+              <svg viewBox="0 0 320 140" class="chart-svg" preserveAspectRatio="none" aria-hidden="true">
+                <line x1="0" y1="35" x2="320" y2="35" stroke="rgba(243,238,226,0.04)" stroke-width="1"/>
+                <line x1="0" y1="75" x2="320" y2="75" stroke="rgba(243,238,226,0.04)" stroke-width="1"/>
+                <line x1="0" y1="115" x2="320" y2="115" stroke="rgba(243,238,226,0.08)" stroke-width="1"/>
+                <circle cx="296" cy="60" r="4" fill="var(--emerald)"/>
+                <circle cx="296" cy="60" r="9" fill="var(--emerald)" fill-opacity="0.18"/>
+                <text x="296" y="48" text-anchor="end" fill="rgba(243,238,226,0.45)" font-family="JetBrains Mono" font-size="8">TODAY</text>
+              </svg>
+              <div class="chart-hint">A 12-month trend line builds as you update valuations over time. Right now you're seeing a snapshot of current NOI.</div>
+            </div>
+            <div class="chart-foot">
+              <div><div class="chart-foot-k">Current NOI</div><div class="chart-foot-v" id="chartCurrentNoi">$0</div></div>
+              <div><div class="chart-foot-k">Properties</div><div class="chart-foot-v" id="chartProperties">0</div></div>
+              <div><div class="chart-foot-k">Avg per unit</div><div class="chart-foot-v" id="chartAvgPerUnit">—</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Recent Activity</div>
+          </div>
+          <div class="feed-list" id="activityFeed"></div>
+        </div>
+
+        <!-- Submarkets -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Your Submarkets</div>
+            <a class="panel-link" href="heatmap.html">Open Heatmap</a>
+          </div>
+          <div class="sig-grid" id="submarketsBody"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ═══ UPGRADE MODAL ═══ -->
+<div class="modal-bg" id="upgradeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button class="modal-close" onclick="closeUpgradeModal()" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-eyebrow">Locked · Broker Workspace</div>
+    <h2 class="modal-title" id="modalTitle">Unlock the Broker workspace</h2>
+    <p class="modal-body">
+      The <b>Broker Dashboard</b> adds <b>Buyer Intelligence</b> — a live database of active acquirers with match scoring against your listings, plus listing pipelines and broker-grade OMs for representing other owners' deals.
+      Your <b>Owner</b> plan already covers your own portfolio analytics, valuations, OMs, and Deal Studio for FSBO. Upgrade if you want to broker others' deals.
+    </p>
+    <div class="modal-actions">
+      <a href="pricing.html" class="hero-btn primary">View Plans →</a>
+      <button class="hero-btn" onclick="closeUpgradeModal()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD / EDIT PROPERTY MODAL ═══ -->
+<div class="modal-bg" id="propertyModal" role="dialog" aria-modal="true" aria-labelledby="propertyModalTitle">
+  <div class="modal modal-form">
+    <button class="modal-close" onclick="closePropertyModal()" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-eyebrow" id="propertyModalEyebrow">New Property</div>
+    <h2 class="modal-title" id="propertyModalTitle">Add a property</h2>
+    <p class="modal-body" style="margin-bottom:1.1rem">Enter the basics. You can run a detailed valuation, update assumptions, and generate OMs after saving.</p>
+
+    <form id="propertyForm" onsubmit="return savePropertyForm(event)" novalidate>
+      <input type="hidden" id="propertyId" value=""/>
+
+      <div class="form-row">
+        <label class="form-field form-field-full">
+          <span class="form-label">Address <span class="req">*</span></span>
+          <input type="text" id="pfAddress" class="form-input" placeholder="142 Bedford Ave, Brooklyn, NY 11211" required/>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span class="form-label">Submarket / Neighborhood</span>
+          <input type="text" id="pfSubmarket" class="form-input" placeholder="Williamsburg"/>
+        </label>
+        <label class="form-field">
+          <span class="form-label">Borough / City</span>
+          <input type="text" id="pfBorough" class="form-input" placeholder="Brooklyn"/>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span class="form-label">Property Type</span>
+          <select id="pfType" class="form-input">
+            <option value="Multifamily">Multifamily</option>
+            <option value="Mixed-Use">Mixed-Use</option>
+            <option value="Walk-Up">Walk-Up</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Retail">Retail</option>
+            <option value="Office">Office</option>
+            <option value="Industrial">Industrial</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="form-field">
+          <span class="form-label">Units <span class="req">*</span></span>
+          <input type="number" id="pfUnits" class="form-input" placeholder="8" min="1" step="1" required/>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span class="form-label">Current Value <span class="req">*</span></span>
+          <div class="input-prefix"><span class="prefix-sym">$</span><input type="number" id="pfValue" class="form-input" placeholder="2,400,000" min="0" step="1000" required/></div>
+        </label>
+        <label class="form-field">
+          <span class="form-label">Annual NOI <span class="req">*</span></span>
+          <div class="input-prefix"><span class="prefix-sym">$</span><input type="number" id="pfNoi" class="form-input" placeholder="142,000" min="0" step="1000" required/></div>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span class="form-label">Occupied Units</span>
+          <input type="number" id="pfOccupied" class="form-input" placeholder="leave blank for 100%" min="0" step="1"/>
+        </label>
+        <div class="form-field">
+          <span class="form-label">Cap Rate (derived)</span>
+          <div class="form-input form-input-readonly" id="pfCapRate">—</div>
+        </div>
+      </div>
+
+      <div class="form-error" id="pfError" hidden></div>
+
+      <!-- Shared With (only visible in edit mode) -->
+      <div class="pf-shares" id="pfSharesSection" hidden>
+        <div class="pf-shares-hd">
+          <span class="form-label" style="margin:0">Shared with</span>
+          <button type="button" class="pf-share-add" onclick="openShareModalFromProperty()">+ Share with a broker</button>
+        </div>
+        <div id="pfSharesList"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="hero-btn form-btn-delete" id="pfDeleteBtn" onclick="deletePropertyFromModal()" hidden>Delete Property</button>
+        <div style="flex:1"></div>
+        <button type="button" class="hero-btn" onclick="closePropertyModal()">Cancel</button>
+        <button type="submit" class="hero-btn primary" id="pfSubmitBtn">Save Property</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ SHARE WITH BROKER MODAL ═══ -->
+<div class="modal-bg" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+  <div class="modal modal-form">
+    <button class="modal-close" onclick="closeShareModal()" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-eyebrow">Share with Broker</div>
+    <h2 class="modal-title" id="shareModalTitle">Share property with a broker</h2>
+    <p class="modal-body" style="margin-bottom:1.1rem">Send your valuation, financials, and live updates to a broker for review or representation. You stay in control — revoke access anytime.</p>
+
+    <form id="shareForm" onsubmit="return saveShareForm(event)" novalidate>
+      <input type="hidden" id="sharePropertyId" value=""/>
+      <input type="hidden" id="shareEditingId" value=""/>
+
+      <!-- Property context -->
+      <div class="share-context" id="shareContext"></div>
+
+      <div class="form-row">
+        <label class="form-field form-field-full">
+          <span class="form-label">Broker email <span class="req">*</span></span>
+          <input type="email" id="sfEmail" class="form-input" placeholder="broker@example.com" autocomplete="email" required/>
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field form-field-full">
+          <span class="form-label">Broker name <span class="form-hint">(optional)</span></span>
+          <input type="text" id="sfName" class="form-input" placeholder="Jane Hart"/>
+        </label>
+      </div>
+
+      <!-- Tier toggle -->
+      <div class="share-tier-section">
+        <span class="form-label" style="display:block;margin-bottom:0.55rem">Access tier <span class="req">*</span></span>
+        <div class="tier-grid">
+          <label class="tier-card">
+            <input type="radio" name="shareTier" value="review" checked/>
+            <div class="tier-inner">
+              <div class="tier-head">
+                <span class="tier-name">Review Only</span>
+                <span class="tier-badge tier-badge-soft">Most common</span>
+              </div>
+              <div class="tier-desc">Broker can view your valuation, financials, and updates — but cannot edit. Use this for a second opinion.</div>
+            </div>
+          </label>
+          <label class="tier-card">
+            <input type="radio" name="shareTier" value="represent"/>
+            <div class="tier-inner">
+              <div class="tier-head">
+                <span class="tier-name">Representation</span>
+                <span class="tier-badge tier-badge-warn">Full access</span>
+              </div>
+              <div class="tier-desc">Broker can edit inputs, generate OMs, and act on your behalf. Use this only after a representation agreement.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Optional message -->
+      <div class="form-row">
+        <label class="form-field form-field-full">
+          <span class="form-label">Message <span class="form-hint">(optional)</span></span>
+          <textarea id="sfMessage" class="form-input" rows="2" placeholder="Hi Jane — appreciate a second look at the cap rate assumption on this one."></textarea>
+        </label>
+      </div>
+
+      <!-- Notification preferences -->
+      <div class="share-notify-section">
+        <span class="form-label" style="display:block;margin-bottom:0.5rem">Broker will receive</span>
+        <label class="notify-row">
+          <input type="checkbox" id="sfNotifyActivity" checked disabled/>
+          <div>
+            <div class="notify-title">Activity log <span class="notify-always">Always on</span></div>
+            <div class="notify-sub">Every change appears in their "Shared with me" feed.</div>
+          </div>
+        </label>
+        <label class="notify-row">
+          <input type="checkbox" id="sfNotifyRealtime" checked/>
+          <div>
+            <div class="notify-title">Real-time alerts on high-signal events</div>
+            <div class="notify-sub">New vacancies, rent changes &gt;5%, valuation changes &gt;10%, OMs generated.</div>
+          </div>
+        </label>
+        <label class="notify-row">
+          <input type="checkbox" id="sfNotifyDigest" checked/>
+          <div>
+            <div class="notify-title">Daily summary email</div>
+            <div class="notify-sub">A single 8am recap of everything that changed yesterday.</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- NDA acknowledgment (first share only) -->
+      <div class="share-nda" id="shareNda" hidden>
+        <label class="nda-row">
+          <input type="checkbox" id="sfNdaAck"/>
+          <div class="nda-text">
+            I understand brokers I share with see my property's full financials. They cannot share or distribute this information without my permission.
+          </div>
+        </label>
+      </div>
+
+      <div class="form-error" id="sfError" hidden></div>
+
+      <div class="form-actions">
+        <div style="flex:1"></div>
+        <button type="button" class="hero-btn" onclick="closeShareModal()">Cancel</button>
+        <button type="submit" class="hero-btn primary" id="sfSubmitBtn">Send to Broker</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   THEME (light/dark) — shared key with broker dashboard
+   ═══════════════════════════════════════════════════════════ */
+const THEME_KEY = 'bric_theme';
+const THEME_KEY_LEGACY = 'bric_broker_theme_v1';
+
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  const moon = document.getElementById('iconMoon');
+  const sun  = document.getElementById('iconSun');
+  const label = document.getElementById('themeLabel');
+  if (moon && sun){
+    // Light mode: show MOON (tap to go dark). Dark mode: show SUN.
+    moon.style.display = (t === 'light') ? '' : 'none';
+    sun.style.display  = (t === 'light') ? 'none' : '';
+  }
+  if (label) label.textContent = (t === 'light') ? 'Dark' : 'Light';
+}
+function toggleTheme(){
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  try {
+    localStorage.setItem(THEME_KEY, next);
+    localStorage.setItem(THEME_KEY_LEGACY, next);
+  } catch(e){}
+  applyTheme(next);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PLAN STATE
+   Set userPlan to 'owner', 'broker', or 'both'.
+   In production this comes from your auth/billing layer.
+   ═══════════════════════════════════════════════════════════ */
+const userPlan = (function(){
+  try {
+    // DEMO: defaults to 'both' so the toggle is unlocked while you're testing.
+    // Change back to 'owner' when you wire real auth/billing.
+    return localStorage.getItem('bricUserPlan') || 'both';
+  } catch(e){ return 'owner'; }
+})();
+
+const currentMode = 'owner'; // this file is the owner dashboard
+
+/* ── Mode Toggle ── */
+function positionModeSlider(){
+  const active = document.querySelector('.mode-btn.active');
+  const slider = document.getElementById('modeSlider');
+  if (!active || !slider) return;
+  slider.style.left = active.offsetLeft + 'px';
+  slider.style.width = active.offsetWidth + 'px';
+}
+
+function setMode(mode){
+  if (mode === 'broker') {
+    // Owner-only users hit upgrade modal. Both/broker users navigate.
+    if (userPlan === 'owner') {
+      openUpgradeModal();
+      return;
+    }
+    window.location.href = 'broker-dashboard.html';
+    return;
+  }
+  // Owner: already here. No-op.
+}
+
+function openUpgradeModal(){
+  document.getElementById('upgradeModal').classList.add('open');
+}
+function closeUpgradeModal(){
+  document.getElementById('upgradeModal').classList.remove('open');
+}
+
+function handleBrokerLockedClick(e){
+  e.preventDefault();
+  if (userPlan === 'owner') openUpgradeModal();
+}
+
+/* Show/hide broker-only items in sidebar based on plan */
+function applyPlanVisibility(){
+  const brokerOnly = document.querySelectorAll('[data-broker-only]');
+  const brokerLabel = document.getElementById('brokerLabel');
+  const lockIcon = document.getElementById('brokerLockIcon');
+  const planLabel = document.getElementById('sbUserPlanLabel');
+
+  if (userPlan === 'both' || userPlan === 'broker'){
+    // Unlock broker items in the nav
+    brokerOnly.forEach(el => {
+      el.classList.remove('locked');
+      const lock = el.querySelector('.sb-lock');
+      if (lock) lock.remove();
+    });
+    if (lockIcon) lockIcon.style.display = 'none';
+    if (planLabel) planLabel.textContent = userPlan === 'both' ? 'Owner + Broker · $700/mo' : 'Broker Plan';
+  } else {
+    if (planLabel) planLabel.textContent = 'Owner Plan · $400/mo';
+  }
+}
+
+/* ── Date ── */
+(function(){
+  const todayStr = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  const brandRow = document.getElementById('brandRowDate');
+  const legacy = document.getElementById('todayDate');
+  if (brandRow) brandRow.textContent = todayStr;
+  if (legacy) legacy.textContent = todayStr;
+})();
+
+/* ── Greeting based on time ── */
+(function(){
+  const h = new Date().getHours();
+  let g = 'Good evening';
+  if (h < 12) g = 'Good morning';
+  else if (h < 18) g = 'Good afternoon';
+  const el = document.getElementById('heroGreeting');
+  if (el) el.innerHTML = g + ', <em>Matthew</em>.';
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   WORKSPACE / DATA LAYER  (preserved from original)
+   ═══════════════════════════════════════════════════════════ */
+function getWorkspace(){
+  try{ return JSON.parse(localStorage.getItem('bricWorkspaceV1')) || {properties:[],valuations:[],oms:[],activity:[]}; }
+  catch(e){ return {properties:[],valuations:[],oms:[],activity:[]}; }
+}
+function setWorkspace(ws){ localStorage.setItem('bricWorkspaceV1', JSON.stringify(ws)); }
+
+/* ═══════════════════════════════════════════════════════════
+   PROPERTY CRUD — Add / Edit / Delete via modal
+   ═══════════════════════════════════════════════════════════ */
+function makePropertyId(){
+  return 'prop_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+function openPropertyModal(propertyId){
+  const modal = document.getElementById('propertyModal');
+  if(!modal) return;
+  const form = document.getElementById('propertyForm');
+  if(form) form.reset();
+  clearFormErrors();
+
+  const eyebrow = document.getElementById('propertyModalEyebrow');
+  const title = document.getElementById('propertyModalTitle');
+  const submitBtn = document.getElementById('pfSubmitBtn');
+  const deleteBtn = document.getElementById('pfDeleteBtn');
+  const idField = document.getElementById('propertyId');
+
+  if(propertyId){
+    const ws = getWorkspace();
+    const property = (ws.properties || []).find(p => p.id === propertyId);
+    if(!property){ console.warn('Property not found:', propertyId); return; }
+
+    eyebrow.textContent = 'Edit Property';
+    title.textContent = property.address || 'Edit property';
+    submitBtn.textContent = 'Save Changes';
+    deleteBtn.hidden = false;
+    idField.value = property.id;
+
+    document.getElementById('pfAddress').value = property.address || '';
+    document.getElementById('pfSubmarket').value = property.submarket || '';
+    document.getElementById('pfBorough').value = property.borough || '';
+    document.getElementById('pfType').value = property.propertyType || 'Multifamily';
+    document.getElementById('pfUnits').value = property.units || '';
+    document.getElementById('pfValue').value = property.lastValuationValue || '';
+    document.getElementById('pfNoi').value = property.lastNoi || '';
+    document.getElementById('pfOccupied').value = property.occupiedUnits != null ? property.occupiedUnits : '';
+    renderPropertyShares(property.id);
+  } else {
+    eyebrow.textContent = 'New Property';
+    title.textContent = 'Add a property';
+    submitBtn.textContent = 'Save Property';
+    deleteBtn.hidden = true;
+    idField.value = '';
+    renderPropertyShares(null);
+  }
+
+  updateDerivedCap();
+  modal.classList.add('open');
+  setTimeout(() => document.getElementById('pfAddress').focus(), 50);
+}
+
+function closePropertyModal(){
+  const modal = document.getElementById('propertyModal');
+  if(modal) modal.classList.remove('open');
+  clearFormErrors();
+}
+
+function clearFormErrors(){
+  document.querySelectorAll('#propertyForm .form-input').forEach(el => el.classList.remove('error'));
+  const err = document.getElementById('pfError');
+  if(err){ err.hidden = true; err.textContent = ''; }
+}
+
+function showFormError(message, fieldIds){
+  const err = document.getElementById('pfError');
+  if(err){ err.textContent = message; err.hidden = false; }
+  (fieldIds || []).forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.add('error');
+  });
+}
+
+function updateDerivedCap(){
+  const value = Number(document.getElementById('pfValue').value) || 0;
+  const noi = Number(document.getElementById('pfNoi').value) || 0;
+  const display = document.getElementById('pfCapRate');
+  if(!display) return;
+  if(value > 0 && noi > 0){
+    display.textContent = ((noi / value) * 100).toFixed(2) + '%';
+  } else {
+    display.textContent = '—';
+  }
+}
+
+function savePropertyForm(e){
+  e.preventDefault();
+  clearFormErrors();
+
+  const id = document.getElementById('propertyId').value.trim();
+  const address = document.getElementById('pfAddress').value.trim();
+  const submarket = document.getElementById('pfSubmarket').value.trim();
+  const borough = document.getElementById('pfBorough').value.trim();
+  const propertyType = document.getElementById('pfType').value;
+  const units = Number(document.getElementById('pfUnits').value);
+  const value = Number(document.getElementById('pfValue').value);
+  const noi = Number(document.getElementById('pfNoi').value);
+  const occupiedRaw = document.getElementById('pfOccupied').value.trim();
+  const occupied = occupiedRaw === '' ? units : Number(occupiedRaw);
+
+  const missing = [];
+  if(!address) missing.push('pfAddress');
+  if(!units || units < 1) missing.push('pfUnits');
+  if(!value || value <= 0) missing.push('pfValue');
+  if(!noi || noi <= 0) missing.push('pfNoi');
+
+  if(missing.length){
+    showFormError('Please fill in all required fields with valid numbers.', missing);
+    return false;
+  }
+  if(occupied > units){
+    showFormError('Occupied units cannot exceed total units.', ['pfOccupied','pfUnits']);
+    return false;
+  }
+
+  const ws = getWorkspace();
+  ws.properties = ws.properties || [];
+  ws.activity = ws.activity || [];
+  const now = new Date().toISOString();
+  const capRate = (noi / value) * 100;
+
+  if(id){
+    const idx = ws.properties.findIndex(p => p.id === id);
+    if(idx === -1){ showFormError('Property not found. Try refreshing.'); return false; }
+    const existing = ws.properties[idx];
+    const before = {
+      lastValuationValue: existing.lastValuationValue,
+      lastNoi: existing.lastNoi,
+      occupiedUnits: existing.occupiedUnits,
+      address: existing.address,
+    };
+    const updated = {
+      ...existing,
+      address, submarket, borough, propertyType,
+      units, occupiedUnits: occupied,
+      lastValuationValue: value,
+      lastNoi: noi,
+      capRate,
+      updatedAt: now,
+    };
+    ws.properties[idx] = updated;
+    ws.activity.unshift({ type:'property_updated', propertyId:id, address, time:now, detail:'Property details updated' });
+    logSharedChanges(id, before, updated, ws);
+    // Sync the stub valuation so valuation.html pre-fills correctly on next visit
+    upsertStubValuation(ws, updated);
+  } else {
+    const newId = makePropertyId();
+    const newProperty = {
+      id: newId,
+      address, submarket, borough, propertyType,
+      units, occupiedUnits: occupied,
+      lastValuationValue: value,
+      lastNoi: noi,
+      capRate,
+      status: 'Active',
+      createdAt: now,
+      updatedAt: now,
+    };
+    ws.properties.unshift(newProperty);
+    ws.activity.unshift({ type:'property_added', propertyId:newId, address, time:now, detail:'Property added to dashboard' });
+    // Seed a stub valuation so valuation.html can pre-fill the form when opened
+    upsertStubValuation(ws, newProperty);
+  }
+  ws.activity = ws.activity.slice(0, 25);
+  setWorkspace(ws);
+
+  closePropertyModal();
+  renderSavedProperties();
+  renderSavedOms();
+  renderInsightBanner();
+  return false;
+}
+
+/* Create or update a stub valuation entry so valuation.html can pre-fill its form.
+   valuation.html reads ws.valuations matching by propertyId or valuationId — without
+   a stub, a property added here would open with an empty valuation form. */
+function upsertStubValuation(ws, property){
+  ws.valuations = ws.valuations || [];
+  const now = new Date().toISOString();
+  // Derive a few extra fields valuation.html may use
+  const capRateDecimal = property.capRate && property.capRate > 1 ? property.capRate / 100 : (property.capRate || 0);
+  const stub = {
+    id: property.lastValuationId || ('val_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,6)),
+    propertyId: property.id,
+    address: property.address,
+    borough: property.borough || '',
+    submarket: property.submarket || '',
+    propertyType: property.propertyType || '',
+    units: Number(property.units) || 0,
+    sqft: 0,
+    baseVal: Number(property.lastValuationValue) || 0,
+    noi: Number(property.lastNoi) || 0,
+    capRate: capRateDecimal,
+    marketCap: capRateDecimal,
+    updatedAt: now,
+    source: 'dashboard_stub', // marker so valuation.html (or we) can tell it's not a real run
+  };
+  const existingIdx = ws.valuations.findIndex(v => v.id === stub.id);
+  if(existingIdx > -1){
+    ws.valuations[existingIdx] = { ...ws.valuations[existingIdx], ...stub };
+  } else {
+    ws.valuations.unshift(stub);
+  }
+  // Link property back to this valuation
+  property.lastValuationId = stub.id;
+}
+
+function deletePropertyFromModal(){
+  const id = document.getElementById('propertyId').value.trim();
+  if(!id) return;
+  closePropertyModal();
+  deleteSavedProperty(id);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BROKER SHARES — share, revoke, notify
+   Store shape:
+   {
+     shares: [{
+       id, propertyId, brokerEmail, brokerName, tier ('review'|'represent'),
+       message, notifyRealtime, notifyDigest, createdAt
+     }],
+     ndaAcknowledged: bool
+   }
+   ═══════════════════════════════════════════════════════════ */
+function getShareStore(){
+  try{ return JSON.parse(localStorage.getItem('bricBrokerShares')) || { shares:[], ndaAcknowledged:false }; }
+  catch(e){ return { shares:[], ndaAcknowledged:false }; }
+}
+function setShareStore(s){ localStorage.setItem('bricBrokerShares', JSON.stringify(s)); }
+
+function getSharesForProperty(propertyId){
+  return getShareStore().shares.filter(s => s.propertyId === propertyId);
+}
+
+function initialsFor(nameOrEmail){
+  const v = (nameOrEmail || '').trim();
+  if(!v) return '?';
+  if(v.includes('@')){
+    const local = v.split('@')[0];
+    return local.slice(0,2).toUpperCase();
+  }
+  const parts = v.split(/\s+/);
+  if(parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return v.slice(0,2).toUpperCase();
+}
+
+function renderPropertyShares(propertyId){
+  const section = document.getElementById('pfSharesSection');
+  const list = document.getElementById('pfSharesList');
+  if(!section || !list) return;
+  if(!propertyId){ section.hidden = true; return; }
+  section.hidden = false;
+
+  const shares = getSharesForProperty(propertyId);
+  if(!shares.length){
+    list.innerHTML = '<div style="font-size:0.74rem;color:var(--paper-mute);padding:0.35rem 0;line-height:1.5">Not shared with anyone yet. Share with a broker to get a second opinion on your valuation or to start a representation conversation.</div>';
+    return;
+  }
+
+  list.innerHTML = shares.map(s => {
+    const created = s.createdAt ? new Date(s.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const tierLabel = s.tier === 'represent' ? 'Representation' : 'Review';
+    return `
+      <div class="share-card">
+        <div class="share-avatar">${safeText(initialsFor(s.brokerName || s.brokerEmail))}</div>
+        <div class="share-card-text">
+          <div class="share-card-name">${safeText(s.brokerName || s.brokerEmail)}</div>
+          <div class="share-card-meta">${safeText(s.brokerEmail)}${created ? ' · since '+safeText(created) : ''}</div>
+        </div>
+        <span class="share-tier-pill ${s.tier === 'represent' ? 'represent' : 'review'}">${safeText(tierLabel)}</span>
+        <button type="button" class="share-revoke" onclick="revokeShare('${s.id}')">Revoke</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function openShareModalFromProperty(){
+  const propertyId = document.getElementById('propertyId').value.trim();
+  if(!propertyId){ alert('Save the property first, then share it.'); return; }
+  openShareModal(propertyId);
+}
+
+function openShareModal(propertyId, editingShareId){
+  const modal = document.getElementById('shareModal');
+  const form = document.getElementById('shareForm');
+  if(!modal || !form) return;
+  form.reset();
+  clearShareErrors();
+
+  document.getElementById('sharePropertyId').value = propertyId || '';
+  document.getElementById('shareEditingId').value = editingShareId || '';
+
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const ctx = document.getElementById('shareContext');
+  if(property && ctx){
+    const units = Number(property.units || 0);
+    const value = Number(property.lastValuationValue || 0);
+    const sub = [property.submarket, property.borough, units ? units+' units' : '', value ? fmtDashMoney(value) : '']
+      .filter(Boolean).map(s => safeText(s)).join(' · ');
+    ctx.innerHTML = `
+      <div class="share-context-thumb">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"/><path d="M6 25.5H26"/><path d="M11.5 11H14"/><path d="M18 11H20.5"/><path d="M14 25.5V20H18V25.5"/></svg>
+      </div>
+      <div class="share-context-text">
+        <div class="share-context-addr">${safeText(property.address || 'Untitled')}</div>
+        <div class="share-context-sub">${sub || 'Property details'}</div>
+      </div>
+    `;
+  }
+
+  // NDA: hide on subsequent shares
+  const ndaSection = document.getElementById('shareNda');
+  const store = getShareStore();
+  if(ndaSection) ndaSection.hidden = !!store.ndaAcknowledged;
+
+  modal.classList.add('open');
+  setTimeout(() => document.getElementById('sfEmail').focus(), 50);
+}
+
+function closeShareModal(){
+  const modal = document.getElementById('shareModal');
+  if(modal) modal.classList.remove('open');
+  clearShareErrors();
+}
+
+function clearShareErrors(){
+  const err = document.getElementById('sfError');
+  if(err){ err.hidden = true; err.textContent = ''; }
+  ['sfEmail'].forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('error'); });
+}
+
+function showShareError(message, fieldIds){
+  const err = document.getElementById('sfError');
+  if(err){ err.textContent = message; err.hidden = false; }
+  (fieldIds || []).forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('error'); });
+}
+
+function isValidEmailLoose(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim());
+}
+
+function saveShareForm(e){
+  e.preventDefault();
+  clearShareErrors();
+
+  const propertyId = document.getElementById('sharePropertyId').value.trim();
+  const editingId = document.getElementById('shareEditingId').value.trim();
+  const email = document.getElementById('sfEmail').value.trim();
+  const name = document.getElementById('sfName').value.trim();
+  const tier = (document.querySelector('input[name="shareTier"]:checked') || {}).value || 'review';
+  const message = document.getElementById('sfMessage').value.trim();
+  const notifyRealtime = document.getElementById('sfNotifyRealtime').checked;
+  const notifyDigest = document.getElementById('sfNotifyDigest').checked;
+
+  if(!isValidEmailLoose(email)){
+    showShareError('Please enter a valid broker email.', ['sfEmail']);
+    return false;
+  }
+  if(!propertyId){
+    showShareError('No property selected.');
+    return false;
+  }
+
+  // NDA acknowledgment (first share only)
+  const store = getShareStore();
+  if(!store.ndaAcknowledged){
+    const ack = document.getElementById('sfNdaAck');
+    if(!ack || !ack.checked){
+      showShareError('Please acknowledge how broker access to your financials works before sharing.');
+      return false;
+    }
+    store.ndaAcknowledged = true;
+  }
+
+  // Prevent duplicate shares of same property+email (unless editing)
+  const existing = store.shares.find(s => s.propertyId === propertyId && s.brokerEmail.toLowerCase() === email.toLowerCase());
+  if(existing && existing.id !== editingId){
+    showShareError('This broker already has access to this property. Revoke first to re-share.');
+    return false;
+  }
+
+  const now = new Date().toISOString();
+  if(editingId){
+    const idx = store.shares.findIndex(s => s.id === editingId);
+    if(idx > -1){
+      store.shares[idx] = { ...store.shares[idx], brokerEmail:email, brokerName:name, tier, message, notifyRealtime, notifyDigest, updatedAt: now };
+    }
+  } else {
+    store.shares.unshift({
+      id: 'share_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8),
+      propertyId, brokerEmail:email, brokerName:name, tier, message,
+      notifyRealtime, notifyDigest,
+      createdAt: now,
+    });
+  }
+  setShareStore(store);
+
+  // Log activity for owner + (when wired) for broker
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const addr = property ? property.address : 'property';
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({
+    type: 'property_shared',
+    propertyId, address: addr,
+    time: now,
+    detail: `Shared with ${name || email} (${tier === 'represent' ? 'Representation' : 'Review only'})`,
+    brokerEmail: email,
+  });
+  ws.activity = ws.activity.slice(0, 25);
+  setWorkspace(ws);
+
+  closeShareModal();
+
+  // If we're inside the property modal, refresh the shares list
+  const openProperty = document.getElementById('propertyId').value;
+  if(openProperty === propertyId){
+    renderPropertyShares(propertyId);
+  }
+  renderSavedProperties();
+  renderActivityFeed();
+  return false;
+}
+
+function revokeShare(shareId){
+  const store = getShareStore();
+  const share = store.shares.find(s => s.id === shareId);
+  if(!share) return;
+  if(!confirm(`Revoke ${share.brokerName || share.brokerEmail}'s access? They'll stop receiving updates immediately.`)) return;
+
+  store.shares = store.shares.filter(s => s.id !== shareId);
+  setShareStore(store);
+
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === share.propertyId);
+  const addr = property ? property.address : 'property';
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({
+    type: 'share_revoked',
+    propertyId: share.propertyId, address: addr,
+    time: new Date().toISOString(),
+    detail: `Revoked access from ${share.brokerName || share.brokerEmail}`,
+    brokerEmail: share.brokerEmail,
+  });
+  ws.activity = ws.activity.slice(0, 25);
+  setWorkspace(ws);
+
+  // Refresh views
+  const openProperty = document.getElementById('propertyId').value;
+  if(openProperty === share.propertyId){
+    renderPropertyShares(share.propertyId);
+  }
+  renderSavedProperties();
+  renderActivityFeed();
+}
+
+/* Open share modal from row action button */
+function shareSavedProperty(propertyId){
+  openShareModal(propertyId);
+}
+
+/* Detect material changes when a property is edited, log per-broker pings.
+   Mutates the passed ws object; caller is responsible for setWorkspace. */
+function logSharedChanges(propertyId, before, after, ws){
+  const shares = getSharesForProperty(propertyId);
+  if(!shares.length) return;
+
+  const changes = [];
+  if(before.lastValuationValue !== after.lastValuationValue){
+    const pct = before.lastValuationValue ? ((after.lastValuationValue - before.lastValuationValue) / before.lastValuationValue) * 100 : 100;
+    changes.push({ kind:'valuation', detail:`Valuation updated to ${fmtDashMoney(after.lastValuationValue)}`, material: Math.abs(pct) >= 10 });
+  }
+  if(before.lastNoi !== after.lastNoi){
+    const pct = before.lastNoi ? ((after.lastNoi - before.lastNoi) / before.lastNoi) * 100 : 100;
+    changes.push({ kind:'noi', detail:`NOI updated to ${fmtDashMoney(after.lastNoi)}`, material: Math.abs(pct) >= 5 });
+  }
+  if(before.occupiedUnits !== after.occupiedUnits){
+    const delta = (after.occupiedUnits || 0) - (before.occupiedUnits || 0);
+    if(delta < 0){
+      changes.push({ kind:'vacancy', detail:`${Math.abs(delta)} unit${Math.abs(delta) === 1 ? '' : 's'} became vacant`, material: true });
+    } else if(delta > 0){
+      changes.push({ kind:'occupied', detail:`${delta} unit${delta === 1 ? '' : 's'} newly occupied`, material: true });
+    }
+  }
+  if(!changes.length) return;
+
+  ws.activity = ws.activity || [];
+  const brokerLabels = shares.map(s => s.brokerName || s.brokerEmail).join(', ');
+  const now = new Date().toISOString();
+  changes.forEach(c => {
+    ws.activity.unshift({
+      type: 'shared_update',
+      propertyId, address: after.address || before.address,
+      time: now,
+      detail: `${c.detail} · ${c.material ? 'Alert sent to' : 'Logged for'} ${brokerLabels}`,
+    });
+  });
+}
+
+function fmtDashMoney(n){
+  n=Number(n)||0;
+  if(Math.abs(n)>=1000000) return '$'+(n/1000000).toFixed(2)+'M';
+  if(Math.abs(n)>=1000) return '$'+Math.round(n/1000)+'K';
+  return '$'+Math.round(n).toLocaleString();
+}
+function fmtDashPct(n){ n=Number(n)||0; return n.toFixed(2)+'%'; }
+function safeText(v){ return String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+function getPropertyLatestValuation(ws, property){
+  if(!property) return null;
+  if(property.lastValuationId){
+    const direct = (ws.valuations || []).find(v => v.id === property.lastValuationId);
+    if(direct) return direct;
+  }
+  return (ws.valuations || []).find(v => v.propertyId === property.id) || null;
+}
+function getPropertyLatestOM(ws, property){
+  if(!property) return null;
+  if(property.lastOmId){
+    const direct = (ws.oms || []).find(o => o.id === property.lastOmId);
+    if(direct) return direct;
+  }
+  const linked = (ws.oms || []).filter(o => o.propertyId === property.id);
+  linked.sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  return linked[0] || null;
+}
+function getOmProperty(ws, om){
+  if(!om) return null;
+  if(om.propertyId){
+    const direct = (ws.properties || []).find(p => p.id === om.propertyId);
+    if(direct) return direct;
+  }
+  if(om.address){
+    return (ws.properties || []).find(p => String(p.address || '').trim().toLowerCase() === String(om.address || '').trim().toLowerCase()) || null;
+  }
+  return null;
+}
+function getOmMetric(om, property, valuation, keys){
+  for(const key of keys){
+    if(om && om[key] !== undefined && om[key] !== null && om[key] !== '') return om[key];
+    if(property && property[key] !== undefined && property[key] !== null && property[key] !== '') return property[key];
+    if(valuation && valuation[key] !== undefined && valuation[key] !== null && valuation[key] !== '') return valuation[key];
+  }
+  return '';
+}
+
+function renderSavedOms(){
+  const ws = getWorkspace();
+  const oms = (ws.oms || []).slice().sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  const body = document.getElementById('savedOmsBody');
+  const wrap = document.getElementById('savedOmsWrap');
+  const badge = document.getElementById('savedOmsBadge');
+  if(badge) badge.textContent = oms.length;
+  if(!body) return;
+
+  if(!oms.length){
+    if(wrap) wrap.hidden = true;
+    return;
+  }
+
+  if(wrap) wrap.hidden = false;
+  body.innerHTML = '<div class="om-card-grid">' + oms.map(om => {
+    const property = getOmProperty(ws, om) || {};
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    const address = om.address || property.address || 'Untitled OM';
+    const borough = getOmMetric(om, property, valuation, ['city','borough','propertyBorough']) || '';
+    const submarket = getOmMetric(om, property, valuation, ['neighborhood','submarket','subMarket','area']) || '';
+    const propertyType = getOmMetric(om, property, valuation, ['propertyType','assetType','type']) || 'Property';
+    const asking = Number(getOmMetric(om, property, valuation, ['askingPrice','price','lastAskingPrice']) || 0);
+    const noi = Number(getOmMetric(om, property, valuation, ['noi','lastNoi','proformaNoi','noiPF']) || 0);
+    const cap = Number(getOmMetric(om, property, valuation, ['marketCap','capRate','lastCapRate']) || 0);
+    const capDisplay = cap ? (cap > 1 ? cap : cap * 100) : 0;
+    const status = om.status || 'Draft';
+    const updated = om.updatedAt || om.createdAt || property.updatedAt || '';
+    const updatedLabel = updated ? new Date(updated).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'Not dated';
+    const propertyId = om.propertyId || property.id || '';
+
+    return `
+      <div class="om-card">
+        <div class="om-card-top">
+          <div>
+            <div class="om-card-title">${safeText(address)}</div>
+            <div class="om-card-meta">${safeText(propertyType)}${submarket ? ' · '+safeText(submarket) : ''}${borough ? ' · '+safeText(borough) : ''}</div>
+          </div>
+          <span class="om-card-status">${safeText(status)}</span>
+        </div>
+        <div class="om-card-stats">
+          <div class="om-stat"><div class="om-stat-label">Ask</div><div class="om-stat-val">${asking ? fmtDashMoney(asking) : '—'}</div></div>
+          <div class="om-stat"><div class="om-stat-label">NOI</div><div class="om-stat-val">${noi ? fmtDashMoney(noi) : '—'}</div></div>
+          <div class="om-stat"><div class="om-stat-label">Cap</div><div class="om-stat-val">${capDisplay ? fmtDashPct(capDisplay) : '—'}</div></div>
+        </div>
+        <div class="om-card-meta">Last edited ${safeText(updatedLabel)}</div>
+        <div class="om-card-actions">
+          <button class="p-action-btn" onclick="openSavedOm('${om.id}','${propertyId}')">Open</button>
+          <button class="p-action-btn" onclick="duplicateSavedOm('${om.id}')">Duplicate</button>
+          <button class="p-action-btn delete" onclick="deleteSavedOm('${om.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
+function renderSavedProperties(){
+  const ws = getWorkspace();
+  const properties = ws.properties || [];
+  const tbody = document.getElementById('dashboardPropertiesBody');
+  const badge = document.getElementById('myPropertiesBadge');
+  const emptyPreview = document.getElementById('emptyPreviewWrap');
+  const dataPanels = document.getElementById('dataPanelsWrap');
+
+  if(badge) badge.textContent = properties.length;
+  if(!tbody) return;
+
+  if(!properties.length){
+    tbody.innerHTML = `
+      <tr><td colspan="6" style="padding:1.25rem 1.4rem;color:var(--paper-dim);line-height:1.55">
+        No saved properties yet. Go to <a href="valuation.html" style="color:var(--emerald)">Valuation Studio</a>, enter a property, and click Save to Dashboard.
+      </td></tr>`;
+    if(emptyPreview) emptyPreview.hidden = false;
+    if(dataPanels) dataPanels.hidden = true;
+    updateDashboardKpis([]);
+    return;
+  }
+
+  if(emptyPreview) emptyPreview.hidden = true;
+  if(dataPanels) dataPanels.hidden = false;
+
+  tbody.innerHTML = properties.map(property => {
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    const value = Number(property.lastValuationValue || valuation.baseVal || 0);
+    const noi = Number(property.lastNoi || valuation.noi || 0);
+    const capRateRaw = Number(property.capRate || valuation.capRate || 0);
+    const capRateDisplay = capRateRaw > 1 ? capRateRaw : capRateRaw * 100;
+    const units = Number(property.units || valuation.units || 0);
+    const submarket = property.submarket || valuation.submarket || '';
+    const borough = property.borough || valuation.borough || '';
+    const status = property.status || 'Active';
+    const perfScore = value > 0 && noi > 0 && capRateDisplay > 0 ? Math.min(98, Math.max(45, Math.round(100 - (capRateDisplay * 3)))) : 65;
+    const propertyShares = getSharesForProperty(property.id);
+    const sharedPill = propertyShares.length ? `<span class="shared-pill" title="Shared with ${propertyShares.map(s => safeText(s.brokerName || s.brokerEmail)).join(', ')}"><svg viewBox="0 0 24 24"><path d="M8 12l3 3 5-7"/><circle cx="12" cy="12" r="9"/></svg>Shared · ${propertyShares.length}</span>` : '';
+
+    return `
+      <tr>
+        <td>
+          <div class="p-name">
+            <div class="p-thumb"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"/><path d="M6 25.5H26"/><path d="M11.5 11H14"/><path d="M18 11H20.5"/><path d="M11.5 15.5H14"/><path d="M18 15.5H20.5"/><path d="M14 25.5V20H18V25.5"/></svg></div>
+            <div class="p-name-text">
+              <div class="p-addr">${safeText(property.address || 'Untitled Property')}${sharedPill}</div>
+              <div class="p-sub">${[submarket, borough, units ? units+' units' : ''].filter(Boolean).map(s => safeText(s)).join(' · ')}</div>
+            </div>
+          </div>
+        </td>
+        <td class="num">${fmtDashMoney(value)}</td>
+        <td class="num">${fmtDashMoney(noi)}</td>
+        <td>
+          <div class="perf-mini">
+            <div class="perf-bar"><div class="perf-fill" style="width:${perfScore}%"></div></div>
+            <span style="font-family:var(--mono);font-size:0.7rem;color:var(--paper-dim)">${perfScore}</span>
+          </div>
+        </td>
+        <td><span class="status-pill status-analyzing">${safeText(status)}</span></td>
+        <td class="num">
+          <div class="p-actions">
+            <button class="p-action-btn share-btn" onclick="shareSavedProperty('${property.id}')" title="Share with a broker">Share</button>
+            <button class="p-action-btn" onclick="editSavedProperty('${property.id}')">Edit</button>
+            <button class="p-action-btn" onclick="openOmForProperty('${property.id}')">OM</button>
+            <button class="p-action-btn delete" onclick="deleteSavedProperty('${property.id}')">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  updateDashboardKpis(properties);
+  renderActivityFeed();
+  renderSubmarkets();
+  renderChartSnapshot();
+}
+
+function updateDashboardKpis(properties){
+  const ws = getWorkspace();
+  let totalValue = 0, totalNoi = 0, totalUnits = 0, totalOccupied = 0;
+  let capRates = [];
+
+  properties.forEach(property => {
+    const valuation = getPropertyLatestValuation(ws, property) || {};
+    const value = Number(property.lastValuationValue || valuation.baseVal || 0);
+    const noi = Number(property.lastNoi || valuation.noi || 0);
+    const units = Number(property.units || valuation.units || 0);
+    const occupied = property.occupiedUnits != null ? Number(property.occupiedUnits) : units;
+    totalValue += value;
+    totalNoi += noi;
+    totalUnits += units;
+    totalOccupied += occupied;
+    // Derive cap rate from this property if we have value + NOI
+    if(value > 0 && noi > 0){
+      capRates.push((noi / value) * 100);
+    } else {
+      const capRate = Number(valuation.capRate || property.capRate || 0);
+      if(capRate) capRates.push(capRate > 1 ? capRate : capRate * 100);
+    }
+  });
+
+  const avgCap = capRates.length ? capRates.reduce((a,b)=>a+b,0) / capRates.length : 0;
+  const occupancy = totalUnits > 0 ? (totalOccupied / totalUnits) * 100 : 0;
+
+  const v0 = document.getElementById('kpiVal0'), s0 = document.getElementById('kpiSub0');
+  const v1 = document.getElementById('kpiVal1'), s1 = document.getElementById('kpiSub1');
+  const v2 = document.getElementById('kpiVal2'), s2 = document.getElementById('kpiSub2');
+  const v3 = document.getElementById('kpiVal3'), s3 = document.getElementById('kpiSub3');
+
+  if(!properties.length){
+    if(v0) v0.textContent = '$0';
+    if(s0) s0.textContent = 'No properties yet';
+    if(v1) v1.textContent = '$0';
+    if(s1) s1.textContent = 'Add a property to begin';
+    if(v2) v2.textContent = '—';
+    if(s2) s2.textContent = 'Derived from NOI ÷ Value';
+    if(v3) v3.textContent = '—';
+    if(s3) s3.textContent = 'Across all units';
+    return;
+  }
+
+  if(v0) v0.textContent = fmtDashMoney(totalValue);
+  if(s0) s0.textContent = `Across ${properties.length} ${properties.length === 1 ? 'property' : 'properties'} · ${totalUnits} units`;
+  if(v1) v1.textContent = fmtDashMoney(totalNoi);
+  if(s1) s1.textContent = 'Combined annual NOI';
+  if(v2) v2.textContent = avgCap ? fmtDashPct(avgCap) : '—';
+  if(s2) s2.textContent = 'Derived from NOI ÷ Value';
+  if(v3) v3.textContent = occupancy ? fmtDashPct(occupancy).replace('.00','') : '—';
+  if(s3) s3.textContent = `${totalOccupied} of ${totalUnits} units occupied`;
+}
+
+function editSavedProperty(propertyId){
+  openPropertyModal(propertyId);
+}
+
+/* ── Activity Feed ── */
+function timeAgo(iso){
+  if(!iso) return '';
+  const then = new Date(iso).getTime();
+  if(isNaN(then)) return '';
+  const seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
+  if(seconds < 60) return 'Just now';
+  const mins = Math.floor(seconds / 60);
+  if(mins < 60) return mins + (mins === 1 ? ' min ago' : ' mins ago');
+  const hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + (hrs === 1 ? ' hour ago' : ' hours ago');
+  const days = Math.floor(hrs / 24);
+  if(days < 7) return days + (days === 1 ? ' day ago' : ' days ago');
+  const weeks = Math.floor(days / 7);
+  if(weeks < 5) return weeks + (weeks === 1 ? ' week ago' : ' weeks ago');
+  return new Date(iso).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+
+function renderActivityFeed(){
+  const feed = document.getElementById('activityFeed');
+  if(!feed) return;
+  const ws = getWorkspace();
+  const items = (ws.activity || []).slice(0, 6);
+  if(!items.length){
+    feed.innerHTML = '<div style="padding:1rem 0.25rem;color:var(--paper-mute);font-size:0.78rem;line-height:1.5">No activity yet. Add a property, run a valuation, or generate an OM and entries will appear here.</div>';
+    return;
+  }
+  const dotClass = (type) => {
+    if(type === 'property_deleted' || type === 'om_deleted' || type === 'share_revoked') return 'warn';
+    if(type === 'broker_reviewed' || type === 'broker_note') return ''; // emerald — broker engagement
+    if(type === 'property_added' || type === 'valuation_completed' || type === 'om_added' || type === 'property_shared') return '';
+    return 'neutral';
+  };
+  feed.innerHTML = items.map(a => `
+    <div class="feed-item">
+      <div class="feed-dot ${dotClass(a.type)}"></div>
+      <div class="feed-content">
+        <div class="feed-title">${safeText(a.detail || 'Activity')}${a.address ? ' · <b>' + safeText(a.address) + '</b>' : ''}</div>
+        <div class="feed-time">${safeText(timeAgo(a.time))}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── Submarkets (derived from saved properties) ── */
+function renderSubmarkets(){
+  const body = document.getElementById('submarketsBody');
+  if(!body) return;
+  const ws = getWorkspace();
+  const properties = ws.properties || [];
+
+  // Group by submarket and average cap rate as a stand-in for "signal"
+  const groups = {};
+  properties.forEach(p => {
+    const key = (p.submarket || p.borough || 'Unspecified').trim();
+    if(!groups[key]) groups[key] = { name: key, count: 0, totalValue: 0, totalNoi: 0, totalUnits: 0 };
+    groups[key].count++;
+    groups[key].totalValue += Number(p.lastValuationValue || 0);
+    groups[key].totalNoi += Number(p.lastNoi || 0);
+    groups[key].totalUnits += Number(p.units || 0);
+  });
+
+  const rows = Object.values(groups).sort((a,b) => b.totalValue - a.totalValue);
+  if(!rows.length){
+    body.innerHTML = '<div style="padding:0.5rem 0;color:var(--paper-mute);font-size:0.78rem">Submarkets you own in will appear here.</div>';
+    return;
+  }
+
+  body.innerHTML = rows.map(g => {
+    const cap = g.totalValue > 0 ? (g.totalNoi / g.totalValue) * 100 : 0;
+    const dotColor = cap >= 7 ? '#9e1a0c' : cap >= 5.5 ? '#c96030' : cap >= 4 ? '#3aa676' : '#2c7c58';
+    const valLabel = cap ? cap.toFixed(2) + '% cap' : (g.totalUnits + ' units');
+    return `
+      <div class="sig-row">
+        <div class="sig-left">
+          <div class="sig-dot" style="background:${dotColor}"></div>
+          <div class="sig-name">${safeText(g.name)}</div>
+        </div>
+        <span class="sig-val">${safeText(valLabel)}</span>
+      </div>`;
+  }).join('');
+}
+
+/* ── Chart footer (current NOI snapshot, no fake history) ── */
+function renderChartSnapshot(){
+  const ws = getWorkspace();
+  const properties = ws.properties || [];
+  let totalNoi = 0, totalUnits = 0;
+  properties.forEach(p => {
+    totalNoi += Number(p.lastNoi || 0);
+    totalUnits += Number(p.units || 0);
+  });
+  const noiEl = document.getElementById('chartCurrentNoi');
+  const countEl = document.getElementById('chartProperties');
+  const perUnitEl = document.getElementById('chartAvgPerUnit');
+  if(noiEl) noiEl.textContent = fmtDashMoney(totalNoi);
+  if(countEl) countEl.textContent = String(properties.length);
+  if(perUnitEl) perUnitEl.textContent = totalUnits > 0 ? fmtDashMoney(totalNoi / totalUnits) : '—';
+}
+
+function deleteSavedProperty(propertyId){
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const label = property?.address || 'this property';
+  if(!confirm('Delete '+label+' from My Properties? This will also remove saved valuations and OMs tied to it.')) return;
+
+  ws.properties = (ws.properties || []).filter(p => p.id !== propertyId);
+  ws.valuations = (ws.valuations || []).filter(v => v.propertyId !== propertyId);
+  ws.oms = (ws.oms || []).filter(o => o.propertyId !== propertyId);
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({type:'property_deleted', propertyId, address:label, time:new Date().toISOString(), detail:'Property deleted from dashboard'});
+  ws.activity = ws.activity.slice(0,25);
+  setWorkspace(ws);
+  renderSavedProperties();
+}
+
+function openOmForProperty(propertyId){
+  const ws = getWorkspace();
+  const property = (ws.properties || []).find(p => p.id === propertyId);
+  const om = getPropertyLatestOM(ws, property);
+  let url = 'om-studio.html?propertyId=' + encodeURIComponent(propertyId);
+  if(om && om.id) url += '&omId=' + encodeURIComponent(om.id);
+  window.location.href = url;
+}
+
+function openSavedOm(omId, propertyId){
+  let url = 'om-studio.html?omId=' + encodeURIComponent(omId);
+  if(propertyId) url += '&propertyId=' + encodeURIComponent(propertyId);
+  window.location.href = url;
+}
+
+function duplicateSavedOm(omId){
+  const ws = getWorkspace();
+  const original = (ws.oms || []).find(o => o.id === omId);
+  if(!original) return alert('Could not find that saved OM.');
+  const copy = JSON.parse(JSON.stringify(original));
+  copy.id = 'om_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+  copy.status = 'Draft Copy';
+  copy.createdAt = new Date().toISOString();
+  copy.updatedAt = copy.createdAt;
+  copy.title = (original.title || original.address || 'Offering Memorandum') + ' Copy';
+  ws.oms = ws.oms || [];
+  ws.oms.unshift(copy);
+  if(copy.propertyId){
+    const property = (ws.properties || []).find(p => p.id === copy.propertyId);
+    if(property){ property.lastOmId = copy.id; property.updatedAt = copy.updatedAt; }
+  }
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({type:'om_duplicated', propertyId:copy.propertyId || '', address:copy.address || original.address || 'OM', time:copy.updatedAt, detail:'OM draft duplicated'});
+  ws.activity = ws.activity.slice(0,25);
+  setWorkspace(ws);
+  renderSavedOms();
+  renderSavedProperties();
+}
+
+function deleteSavedOm(omId){
+  const ws = getWorkspace();
+  const om = (ws.oms || []).find(o => o.id === omId);
+  const label = om?.address || om?.title || 'this OM';
+  if(!confirm('Delete '+label+' from Saved OMs?')) return;
+  ws.oms = (ws.oms || []).filter(o => o.id !== omId);
+  (ws.properties || []).forEach(property => {
+    if(property.lastOmId === omId){
+      const next = (ws.oms || []).find(o => o.propertyId === property.id);
+      property.lastOmId = next ? next.id : '';
+    }
+  });
+  ws.activity = ws.activity || [];
+  ws.activity.unshift({type:'om_deleted', propertyId:om?.propertyId || '', address:label, time:new Date().toISOString(), detail:'OM draft deleted'});
+  ws.activity = ws.activity.slice(0,25);
+  setWorkspace(ws);
+  renderSavedOms();
+  renderSavedProperties();
+}
+
+/* ── Insight banner ── */
+function getTodayDismissKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function setInsightButton(id, label, href, action){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = label;
+  if (el.tagName === 'A') el.href = href;
+  if (action){ el.dataset.action = action; } else { delete el.dataset.action; }
+}
+function renderInsightBanner(){
+  const banner = document.getElementById('insightBanner');
+  if(!banner) return;
+
+  const dismissed = localStorage.getItem('bricDashboardInsightDismissed');
+  if(dismissed === getTodayDismissKey()){
+    banner.style.display = 'none';
+    return;
+  }
+
+  const ws = getWorkspace();
+  const properties = (ws.properties || []).slice().sort((a,b)=> new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+  const property = properties[0] || null;
+  const textEl = document.getElementById('insightText');
+  const metrics = document.getElementById('insightMetrics');
+
+  function renderMetrics(items){
+    if(!metrics) return;
+    metrics.innerHTML = items.map(item => `
+      <div class="hero-metric">
+        <div class="hero-metric-k">${safeText(item.k)}</div>
+        <div class="hero-metric-v">${safeText(item.v)}</div>
+      </div>`).join('');
+  }
+
+  if(!property){
+    if(textEl) textEl.innerHTML = 'Add your first property and this dashboard fills in automatically — value, NOI, cap rate, occupancy, market signals, and OM drafts, all in one place.';
+    if(metrics){
+      metrics.innerHTML = `
+        <div class="hero-checklist">
+          <div class="hero-check-item">
+            <span class="hero-check-num">1</span>
+            <div class="hero-check-text">
+              <span class="hero-check-title">Add a property</span>
+              <span class="hero-check-sub">Address, units, basic financials</span>
+            </div>
+          </div>
+          <div class="hero-check-item">
+            <span class="hero-check-num">2</span>
+            <div class="hero-check-text">
+              <span class="hero-check-title">Run a valuation</span>
+              <span class="hero-check-sub">NOI, cap rate, current value</span>
+            </div>
+          </div>
+          <div class="hero-check-item">
+            <span class="hero-check-num">3</span>
+            <div class="hero-check-text">
+              <span class="hero-check-title">Generate an OM</span>
+              <span class="hero-check-sub">Lender or buyer-ready PDF</span>
+            </div>
+          </div>
+        </div>`;
+    }
+    setInsightButton('insightPrimary','Add First Property →', '#', 'add-property');
+    setInsightButton('insightSecondary','Open Learning Studio →','learning.html');
+    setInsightButton('insightLearn','Learn valuation basics','learning.html#guides');
+    return;
+  }
+
+  const valuation = getPropertyLatestValuation(ws, property) || {};
+  const om = getPropertyLatestOM(ws, property);
+  const address = property.address || 'Saved Property';
+  const propertyId = property.id || '';
+  const valuationId = property.lastValuationId || valuation.id || '';
+  const value = Number(property.lastValuationValue || valuation.baseVal || 0);
+  const noi = Number(property.lastNoi || valuation.noi || 0);
+  const capRaw = Number(valuation.capRate || property.capRate || 0);
+  const cap = capRaw ? (capRaw > 1 ? capRaw : capRaw * 100) : 0;
+  const submarket = property.submarket || valuation.submarket || property.neighborhood || valuation.neighborhood || 'your submarket';
+  const units = Number(property.units || valuation.units || 0);
+
+  const valuationUrl = 'valuation.html?propertyId=' + encodeURIComponent(propertyId) + (valuationId ? '&valuationId=' + encodeURIComponent(valuationId) : '');
+  const omUrl = 'om-studio.html?propertyId=' + encodeURIComponent(propertyId) + (om && om.id ? '&omId=' + encodeURIComponent(om.id) : '');
+
+  if(!om){
+    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> has a saved valuation but no OM yet. Generate one to get it ready for lenders, pricing conversations, or a sale.`;
+    setInsightButton('insightPrimary','Open Valuation →',valuationUrl);
+    setInsightButton('insightSecondary','Generate OM →',omUrl);
+  } else {
+    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> is set up with a valuation and OM draft. Review assumptions before using externally, or check ${safeText(submarket)} signals.`;
+    setInsightButton('insightPrimary','Review Valuation →',valuationUrl);
+    setInsightButton('insightSecondary','Open Saved OM →',omUrl);
+  }
+  // Populated state: clear the metrics row entirely. KPI cards below cover this.
+  if(metrics) metrics.innerHTML = '';
+}
+function dismissInsightBanner(){
+  localStorage.setItem('bricDashboardInsightDismissed', getTodayDismissKey());
+  const banner = document.getElementById('insightBanner');
+  if(banner) banner.style.display = 'none';
+}
+
+/* ── Vetted Pros Waitlist ── */
+function isValidEmail(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim());
+}
+function initWaitlist(){
+  const form = document.getElementById('waitlistForm');
+  const row = document.getElementById('waitlistRow');
+  const success = document.getElementById('waitlistSuccess');
+  const input = document.getElementById('waitlistEmail');
+  if(!form || !row || !success || !input) return;
+
+  // If already signed up, show success state on load
+  const existing = localStorage.getItem('bricVettedProsWaitlist');
+  if(existing){
+    row.hidden = true;
+    success.hidden = false;
+    return;
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = input.value.trim();
+    if(!isValidEmail(email)){
+      input.classList.add('error');
+      input.focus();
+      return;
+    }
+    input.classList.remove('error');
+    // Save locally — replace with API POST when backend is wired
+    const payload = { email, joinedAt: new Date().toISOString() };
+    try{ localStorage.setItem('bricVettedProsWaitlist', JSON.stringify(payload)); } catch(err){}
+    row.hidden = true;
+    success.hidden = false;
+  });
+
+  input.addEventListener('input', () => input.classList.remove('error'));
+}
+
+/* ═══ INIT ═══ */
+document.addEventListener('DOMContentLoaded', function(){
+  // Remember this dashboard so index.html's "Open Dashboard" routes here next time
+  try { localStorage.setItem('bricLastDashboard', 'owner'); } catch(e){}
+  // Sync the moon/sun icons to the saved theme that was applied pre-render
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  applyPlanVisibility();
+  positionModeSlider();
+  renderSavedProperties();
+  renderSavedOms();
+  renderInsightBanner();
+  initWaitlist();
+
+  const insightDismiss = document.getElementById('insightDismiss');
+  if(insightDismiss) insightDismiss.addEventListener('click', dismissInsightBanner);
+
+  // Modals: backdrop click + ESC closes any open modal
+  const upgradeModal = document.getElementById('upgradeModal');
+  const propertyModal = document.getElementById('propertyModal');
+  const shareModal = document.getElementById('shareModal');
+  upgradeModal.addEventListener('click', e => { if (e.target === upgradeModal) closeUpgradeModal(); });
+  propertyModal.addEventListener('click', e => { if (e.target === propertyModal) closePropertyModal(); });
+  if(shareModal) shareModal.addEventListener('click', e => { if (e.target === shareModal) closeShareModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){
+      closeUpgradeModal();
+      closePropertyModal();
+      closeShareModal();
+    }
+  });
+
+  // Live cap rate calc in the property modal
+  ['pfValue','pfNoi'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', updateDerivedCap);
+  });
+
+  // Empty state CTA: insightPrimary becomes Add Property when no data
+  document.addEventListener('click', e => {
+    const target = e.target.closest('#insightPrimary');
+    if(target && target.dataset.action === 'add-property'){
+      e.preventDefault();
+      openPropertyModal();
+    }
+  });
+
+  window.addEventListener('resize', positionModeSlider);
+
+  // Cross-tab sync: if the broker dashboard updates shares or writes back
+  // (reviewed / note), refresh our views immediately.
+  window.addEventListener('storage', e => {
+    if(e.key === 'bricWorkspaceV1' || e.key === 'bricBrokerShares'){
+      renderSavedProperties();
+      renderSavedOms();
+      renderActivityFeed();
+      renderInsightBanner();
+    }
+  });
+});
+</script>
+</body>
+</html>
