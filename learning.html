@@ -7,25 +7,58 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#060807;--panel:rgba(255,255,255,.045);--cream:#f4f3ee;--muted:#b9afa1;--line:rgba(245,239,228,.115);--line2:rgba(147,179,142,.28);--green:#00b84a;--green2:#55765a;--green3:#c8e0bd;--max:1180px;--shadow:0 30px 90px rgba(0,0,0,.42)}
+:root{--bg:#060807;--panel:rgba(255,255,255,.045);--cream:#f4f3ee;--muted:#b9afa1;--line:rgba(245,239,228,.115);--line2:rgba(147,179,142,.28);--green:#0e9d52;--green2:#55765a;--green3:#c8e0bd;--max:1180px;--shadow:0 30px 90px rgba(0,0,0,.42)}
+[data-theme="light"]{
+  --bg:#f7f4ed;
+  --panel:rgba(15,20,15,.035);
+  --cream:#16201a;            /* core text flips to deep green-black */
+  --muted:rgba(22,32,26,.62);
+  --line:rgba(15,20,15,.10);
+  --line2:rgba(31,111,61,.30);
+  --green:#1f6f3d;            /* muted green reads on cream */
+  --green2:#5a7d60;
+  --green3:#2c7c58;
+  --shadow:0 24px 70px rgba(31,40,30,.14);
+}
+/* light-mode targeted fixes for hardcoded values */
+[data-theme="light"] body{background:var(--bg)}
+[data-theme="light"] .site-header{background:rgba(247,244,237,.86);border-bottom-color:var(--line)}
+[data-theme="light"] .nav-links a{color:rgba(22,32,26,.74)}
+[data-theme="light"] .nav-links a:hover,[data-theme="light"] .nav-links a.active{background:rgba(31,111,61,.10);color:#16201a}
+[data-theme="light"] .nav-links a::before{display:none}
+[data-theme="light"] .btn{background:rgba(15,20,15,.04);color:#16201a;border-color:var(--line2)}
+[data-theme="light"] .btn:hover{background:rgba(31,111,61,.08)}
+[data-theme="light"] .btn-primary{background:linear-gradient(135deg,#2c7c58,#1f6f3d);color:#fff;border-color:rgba(31,111,61,.6)}
+[data-theme="light"] .btn-ghost{background:transparent;color:#16201a}
+[data-theme="light"] .btn-gold{color:#3a2a08}
+[data-theme="light"] .b-logo-bg{fill:#0e1612}
+[data-theme="light"] .b-logo-main{fill:#f7f4ed}
+[data-theme="light"] .b-logo-cut{fill:#1f6f3d}
+[data-theme="light"] .brand-text span{color:rgba(22,32,26,.55)}
+[data-theme="light"] .mobile-menu a{color:#16201a;border-bottom-color:var(--line)}
+/* theme toggle button */
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:rgba(255,255,255,.045);color:var(--cream);border-radius:999px;padding:9px 13px;font-size:12px;font-weight:800;cursor:pointer;transition:.18s ease;white-space:nowrap}
+.theme-toggle:hover{transform:translateY(-1px);border-color:rgba(147,179,142,.45)}
+.theme-toggle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+[data-theme="light"] .theme-toggle{background:rgba(15,20,15,.04);color:#16201a}
 *{box-sizing:border-box} html{scroll-behavior:smooth} body{
   margin:0;
   color:var(--cream);
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   line-height:1.5;
   background:
-    radial-gradient(circle at top left, rgba(214,200,180,.06), transparent 22%),
+    radial-gradient(circle at top left, rgba(203,180,155,.06), transparent 22%),
     radial-gradient(circle at top right, rgba(0,200,5,.05), transparent 18%),
     linear-gradient(180deg,#0a0d0b 0%,#060807 100%);
 }
 a{color:inherit;text-decoration:none}button,input{font:inherit}.container{width:min(var(--max),calc(100% - 40px));margin:0 auto}.site-header{position:sticky;top:0;z-index:50;background:rgba(6,8,7,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{display:flex;align-items:center;gap:12px;min-width:190px}.brand-mark{width:42px;height:42px;border:1px solid var(--line2);border-radius:14px;display:grid;place-items:center;color:var(--green3);font-weight:900;letter-spacing:-.06em;background:linear-gradient(145deg,rgba(147,179,142,.13),rgba(255,255,255,.035))}.brand-text strong{display:block;font-family:"Playfair Display",serif;font-size:20px;letter-spacing:-.03em;line-height:1}.brand-text span{display:block;color:var(--muted);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-top:4px}.nav-links{display:flex;align-items:center;gap:8px}.nav-links a{color:#ded6ca;font-size:13px;font-weight:800;padding:10px 12px;border-radius:999px;transition:.18s ease}.nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.07);color:#fff8ec}.nav-actions{display:flex;align-items:center;gap:10px}.btn{border:1px solid var(--line2);background:rgba(255,255,255,.045);color:var(--cream);border-radius:999px;padding:11px 16px;font-size:13px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;transition:.18s ease}.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.075);border-color:rgba(147,179,142,.45)}.btn-primary{background:linear-gradient(135deg,var(--green3),var(--green));border-color:rgba(147,179,142,.6);color:#08100b;box-shadow:0 16px 42px rgba(147,179,142,.12)}.btn-ghost{background:transparent}.btn-gold{background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);border-color:rgba(255,218,143,.92);color:#07100b;box-shadow:0 12px 30px rgba(217,167,66,.18)}.btn-gold:hover{background:linear-gradient(135deg,#fff0bd,#e1b24e 54%,#b8872d);border-color:rgba(255,226,160,1);color:#07100b;box-shadow:0 14px 34px rgba(217,167,66,.24),0 0 0 3px rgba(217,167,66,.10)}.mobile-menu-btn{display:none;width:42px;height:42px;padding:0;border-radius:12px;flex-direction:column}.mobile-menu-btn span{width:20px;height:2px;background:var(--cream);display:block;margin:2.5px auto;border-radius:99px;pointer-events:none}.mobile-menu{display:none;border-top:1px solid var(--line);padding:10px 0 18px}.mobile-menu.open{display:block}.mobile-menu a{display:block;padding:12px 0;color:#ddd6ca;font-weight:800;border-bottom:1px solid rgba(255,255,255,.06)}
 .hero{padding:74px 0 34px}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid var(--line2);background:rgba(147,179,142,.065);color:var(--green3);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em}h1,h2,h3{margin:0;letter-spacing:-.045em}h1{font-family:"Playfair Display",serif;font-size:clamp(46px,6.2vw,84px);line-height:.92;margin-top:20px;max-width:850px}.hero p{color:#d8d0c3;font-size:18px;max-width:710px;margin:22px 0 0}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.hero-card{border:1px solid var(--line2);background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025)),#0f1411;border-radius:30px;box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden}.hero-card:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(147,179,142,.10);right:-110px;top:-120px;filter:blur(4px)}.preview{position:relative;display:grid;gap:14px}.preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}.preview-head small{color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.16em}.live-pill{font-size:10px;font-weight:900;color:#07100b;background:var(--green3);border-radius:999px;padding:5px 8px;text-transform:uppercase}.preview-row{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.085);background:rgba(0,0,0,.22);cursor:pointer;transition:.18s ease}.preview-row:hover{border-color:rgba(147,179,142,.58);background:linear-gradient(180deg,rgba(147,179,142,.11),rgba(147,179,142,.055));box-shadow:0 0 0 3px rgba(147,179,142,.045),0 16px 34px rgba(147,179,142,.07);transform:translateY(-1px)}.icon-badge{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(147,179,142,.11);color:var(--green3);font-weight:900}.preview-row strong{display:block;font-size:14px}.preview-row span span{display:block;color:var(--muted);font-size:12px;margin-top:2px}.preview-row em{font-style:normal;color:#07100b;background:var(--green3);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}
-.section{padding:54px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}.section h2{font-family:"Playfair Display",serif;font-size:clamp(31px,4vw,50px);line-height:1}.section-head p{color:var(--muted);margin:10px 0 0;max-width:720px}.access-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.access-card{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:26px;padding:22px;transition:.18s ease}.access-card:hover{border-color:rgba(147,179,142,.58);background:linear-gradient(180deg,rgba(147,179,142,.105),rgba(255,255,255,.035));box-shadow:0 0 0 3px rgba(147,179,142,.05),0 18px 36px rgba(147,179,142,.08);transform:translateY(-1px)}.access-card.featured{border-color:rgba(147,179,142,.33);background:linear-gradient(180deg,rgba(147,179,142,.06),rgba(255,255,255,.032))}.access-card.featured:hover{border-color:rgba(214,200,180,.68);background:linear-gradient(180deg,rgba(214,200,180,.115),rgba(147,179,142,.055));box-shadow:0 0 0 3px rgba(214,200,180,.055),0 20px 42px rgba(214,200,180,.08);transform:translateY(-1px)}.access-card h3{font-family:"Playfair Display",serif;font-size:30px}.access-card p{color:var(--muted);margin:8px 0 14px}.access-card ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}.access-card li{color:#e8dfd2;font-size:14px;padding-left:23px;position:relative}.access-card li:before{content:"✓";position:absolute;left:0;color:var(--green3);font-weight:900}.plan-switch{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.plan-btn.active{border-color:rgba(147,179,142,.62)}.access-card.featured .plan-btn{border-color:rgba(221,174,74,.58);background:linear-gradient(135deg,rgba(221,174,74,.18),rgba(214,200,180,.08));color:#f7ead0}.access-card.featured:hover .plan-btn,.access-card.featured .plan-btn:hover,.access-card.featured .plan-btn.active{background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);border-color:rgba(255,218,143,.92);color:#07100b;box-shadow:0 12px 30px rgba(217,167,66,.22),0 0 0 3px rgba(217,167,66,.10)}.access-card:not(.featured) .plan-btn{background:rgba(0,0,0,.16);color:var(--cream);border-color:rgba(147,179,142,.30);box-shadow:none}.access-card:not(.featured) .plan-btn.active{background:rgba(147,179,142,.08);color:#eaf7e5;border-color:rgba(147,179,142,.50);box-shadow:0 0 0 2px rgba(147,179,142,.035)}.access-card:not(.featured):hover .plan-btn,.access-card:not(.featured) .plan-btn:hover{background:linear-gradient(135deg,var(--green3),var(--green));color:#07100b;border-color:rgba(147,179,142,.72);box-shadow:0 12px 30px rgba(147,179,142,.18),0 0 0 3px rgba(147,179,142,.08)}
+.section{padding:54px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}.section h2{font-family:"Playfair Display",serif;font-size:clamp(31px,4vw,50px);line-height:1}.section-head p{color:var(--muted);margin:10px 0 0;max-width:720px}.access-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.access-card{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:26px;padding:22px;transition:.18s ease}.access-card:hover{border-color:rgba(147,179,142,.58);background:linear-gradient(180deg,rgba(147,179,142,.105),rgba(255,255,255,.035));box-shadow:0 0 0 3px rgba(147,179,142,.05),0 18px 36px rgba(147,179,142,.08);transform:translateY(-1px)}.access-card.featured{border-color:rgba(147,179,142,.33);background:linear-gradient(180deg,rgba(147,179,142,.06),rgba(255,255,255,.032))}.access-card.featured:hover{border-color:rgba(203,180,155,.68);background:linear-gradient(180deg,rgba(203,180,155,.115),rgba(147,179,142,.055));box-shadow:0 0 0 3px rgba(203,180,155,.055),0 20px 42px rgba(203,180,155,.08);transform:translateY(-1px)}.access-card h3{font-family:"Playfair Display",serif;font-size:30px}.access-card p{color:var(--muted);margin:8px 0 14px}.access-card ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}.access-card li{color:#e8dfd2;font-size:14px;padding-left:23px;position:relative}.access-card li:before{content:"✓";position:absolute;left:0;color:var(--green3);font-weight:900}.plan-switch{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.plan-btn.active{border-color:rgba(147,179,142,.62)}.access-card.featured .plan-btn{border-color:rgba(221,174,74,.58);background:linear-gradient(135deg,rgba(221,174,74,.18),rgba(203,180,155,.08));color:#f7ead0}.access-card.featured:hover .plan-btn,.access-card.featured .plan-btn:hover,.access-card.featured .plan-btn.active{background:linear-gradient(135deg,#ffe3a1,#d9a742 54%,#a87924);border-color:rgba(255,218,143,.92);color:#07100b;box-shadow:0 12px 30px rgba(217,167,66,.22),0 0 0 3px rgba(217,167,66,.10)}.access-card:not(.featured) .plan-btn{background:rgba(0,0,0,.16);color:var(--cream);border-color:rgba(147,179,142,.30);box-shadow:none}.access-card:not(.featured) .plan-btn.active{background:rgba(147,179,142,.08);color:#eaf7e5;border-color:rgba(147,179,142,.50);box-shadow:0 0 0 2px rgba(147,179,142,.035)}.access-card:not(.featured):hover .plan-btn,.access-card:not(.featured) .plan-btn:hover{background:linear-gradient(135deg,var(--green3),var(--green));color:#07100b;border-color:rgba(147,179,142,.72);box-shadow:0 12px 30px rgba(147,179,142,.18),0 0 0 3px rgba(147,179,142,.08)}
 .lookup-shell{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:30px;padding:22px}.lookup-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.search-input{width:100%;border:1px solid var(--line);background:rgba(0,0,0,.26);color:var(--cream);border-radius:18px;padding:15px 16px;outline:none}.search-input:focus{border-color:rgba(147,179,142,.6);box-shadow:0 0 0 4px rgba(147,179,142,.08)}.helper-line{color:var(--muted);font-size:13px;margin:12px 0 0}.quick-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}.chip{border:1px solid var(--line);background:rgba(0,0,0,.18);color:#e8dfd2;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer;transition:.18s ease}.chip:hover,.chip.active{border-color:rgba(147,179,142,.48);background:rgba(147,179,142,.10);color:#f2ffe9}.topic-card{text-align:left;border:1px solid var(--line);background:rgba(0,0,0,.20);color:var(--cream);border-radius:18px;padding:15px;cursor:pointer;transition:.18s ease}.topic-card:hover,.topic-card.active{border-color:rgba(147,179,142,.46);background:rgba(147,179,142,.075);transform:translateY(-1px)}.topic-card strong{display:block;font-size:15px}.topic-card span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.results-panel{margin-top:18px;border-top:1px solid var(--line);padding-top:18px;display:none}.results-panel.open{display:block}.results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.results-head h3{font-family:"Playfair Display",serif;font-size:26px}.result-count{color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em}.term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.term-card{border:1px solid var(--line);background:rgba(255,255,255,.038);border-radius:20px;overflow:hidden;transition:.18s ease}.term-card:hover{border-color:rgba(147,179,142,.35);transform:translateY(-1px)}.term-toggle{width:100%;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:16px;cursor:pointer}.term-toggle small{display:block;color:var(--green3);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}.term-toggle strong{display:block;font-size:17px;letter-spacing:-.02em}.term-toggle em{font-style:normal;border:1px solid var(--line2);border-radius:999px;padding:5px 8px;color:#daf1d0;font-size:10px;font-weight:900;text-transform:uppercase;white-space:nowrap}.term-detail{display:none;border-top:1px solid var(--line);padding:0 16px 16px;color:#d7cfc2;font-size:14px}.term-card.open .term-detail{display:block}.term-detail p{margin:12px 0 0}.term-detail b{color:#f8f3e9}.locked-note{border:1px solid rgba(147,179,142,.28);background:rgba(147,179,142,.07);color:#dcefd2;border-radius:16px;padding:12px;margin-top:12px;font-size:13px}.empty-state{border:1px dashed rgba(245,239,228,.18);border-radius:22px;padding:22px;color:var(--muted);background:rgba(0,0,0,.16)}
 .playbook-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.playbook-card{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:24px;padding:20px;cursor:pointer;transition:.18s ease}.playbook-card:hover,.playbook-card.open{border-color:rgba(147,179,142,.36);background:rgba(147,179,142,.055)}.playbook-card small{color:var(--green3);text-transform:uppercase;font-weight:900;letter-spacing:.12em;font-size:10px}.playbook-card h3{font-family:"Playfair Display",serif;font-size:26px;margin-top:7px}.playbook-card p{color:var(--muted);font-size:14px}.playbook-detail{display:none;margin-top:12px;border-top:1px solid var(--line);padding-top:12px;color:#ded6ca;font-size:14px}.playbook-card.open .playbook-detail{display:block}.playbook-detail ol{margin:0;padding-left:18px}.playbook-detail li{margin:7px 0}.cta{border:1px solid rgba(147,179,142,.28);border-radius:30px;padding:30px;background:linear-gradient(135deg,rgba(147,179,142,.075),rgba(255,255,255,.028));display:flex;align-items:center;justify-content:space-between;gap:20px}.cta h2{font-family:"Playfair Display",serif;font-size:42px}.cta p{color:var(--muted);margin:8px 0 0;max-width:720px}footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:13px}.footer-grid{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap}footer strong{color:var(--cream);font-family:"Playfair Display",serif;font-size:20px}
 @media(max-width:980px){.nav-links,.nav-actions{display:none}.mobile-menu-btn{display:inline-flex;align-items:center;justify-content:center}.hero-grid,.access-grid,.term-grid{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.playbook-grid{grid-template-columns:1fr 1fr}.section-head,.cta{align-items:flex-start;flex-direction:column}}@media(max-width:640px){.container{width:min(100% - 28px,var(--max))}.hero{padding-top:48px}h1{font-size:48px}.lookup-top{grid-template-columns:1fr}.category-grid,.playbook-grid{grid-template-columns:1fr}.preview-row{grid-template-columns:42px 1fr}.preview-row em{grid-column:2;width:max-content}}
 
-.brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:14px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+.brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:14px;overflow:hidden;box-shadow:0 12px 26px rgba(14,157,82,.14),inset 0 1px 0 rgba(255,255,255,.08)}
 .brand-mark-b svg{width:100%;height:100%;display:block}.b-logo-bg{fill:#0b1510}.b-logo-main{fill:#f4f1e8}.b-logo-cut{fill:#143b25}
 .icon-badge svg{width:21px;height:21px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:720px){.brand-mark-b{width:38px;height:38px;border-radius:14px}}
@@ -291,7 +324,7 @@ body{overflow-x:hidden;}
   border:1px solid rgba(255,255,255,.08);
   border-radius:30px;
   background:
-    radial-gradient(circle at 14% 10%,rgba(214,200,180,.10),transparent 30%),
+    radial-gradient(circle at 14% 10%,rgba(203,180,155,.10),transparent 30%),
     linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));
   padding:30px;
   display:grid;
@@ -307,8 +340,8 @@ body{overflow-x:hidden;}
   gap:8px;
   padding:8px 11px;
   border-radius:999px;
-  border:1px solid rgba(214,200,180,.20);
-  background:rgba(214,200,180,.07);
+  border:1px solid rgba(203,180,155,.20);
+  background:rgba(203,180,155,.07);
   color:#e8d8bd;
   font-size:11px;
   font-weight:900;
@@ -366,7 +399,7 @@ body{overflow-x:hidden;}
   padding:22px;
   background:
     linear-gradient(160deg,#0c130f 0%,#131d17 52%,#060807 100%);
-  border:1px solid rgba(214,200,180,.22);
+  border:1px solid rgba(203,180,155,.22);
   box-shadow:0 24px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
   display:flex;
   flex-direction:column;
@@ -379,7 +412,7 @@ body{overflow-x:hidden;}
   content:"";
   position:absolute;
   inset:0;
-  background:radial-gradient(circle at 20% 10%,rgba(214,200,180,.16),transparent 34%),radial-gradient(circle at 86% 26%,rgba(0,184,74,.10),transparent 32%);
+  background:radial-gradient(circle at 20% 10%,rgba(203,180,155,.16),transparent 34%),radial-gradient(circle at 86% 26%,rgba(14,157,82,.10),transparent 32%);
   pointer-events:none;
 }
 
@@ -389,7 +422,7 @@ body{overflow-x:hidden;}
   font-size:10px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  color:#d6c8b4;
+  color:#cbb49b;
   font-weight:900;
 }
 
@@ -461,15 +494,15 @@ body{overflow-x:hidden;}
 
 .library-stat-btn:hover{
   transform:translateY(-2px);
-  border-color:rgba(0,184,74,.32);
+  border-color:rgba(14,157,82,.32);
   background:
-    radial-gradient(circle at 18% 50%,rgba(0,184,74,.14),transparent 38%),
-    linear-gradient(90deg,rgba(0,184,74,.10),rgba(0,184,74,.02) 55%,transparent 90%);
+    radial-gradient(circle at 18% 50%,rgba(14,157,82,.14),transparent 38%),
+    linear-gradient(90deg,rgba(14,157,82,.10),rgba(14,157,82,.02) 55%,transparent 90%);
   box-shadow:0 14px 34px rgba(0,0,0,.22);
 }
 
 .library-stat-btn:focus-visible{
-  outline:2px solid rgba(0,184,74,.65);
+  outline:2px solid rgba(14,157,82,.65);
   outline-offset:4px;
 }
 
@@ -504,11 +537,11 @@ body{overflow-x:hidden;}
 .playbook-card.open,
 .bridge-card:hover,
 .book-card:hover{
-  border-color:rgba(0,184,74,.28) !important;
+  border-color:rgba(14,157,82,.28) !important;
   background:
-    radial-gradient(circle at 18% 20%,rgba(0,184,74,.16),transparent 40%),
-    linear-gradient(90deg,rgba(0,184,74,.10),rgba(0,184,74,.025) 52%,rgba(255,255,255,.018) 88%) !important;
-  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(0,184,74,.035) !important;
+    radial-gradient(circle at 18% 20%,rgba(14,157,82,.16),transparent 40%),
+    linear-gradient(90deg,rgba(14,157,82,.10),rgba(14,157,82,.025) 52%,rgba(255,255,255,.018) 88%) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(14,157,82,.035) !important;
   transform:translateY(-2px);
 }
 
@@ -528,10 +561,10 @@ body{overflow-x:hidden;}
 }
 
 .book-card:hover{
-  border-color:rgba(214,200,180,.32) !important;
+  border-color:rgba(203,180,155,.32) !important;
   background:
-    radial-gradient(circle at 14% 10%,rgba(214,200,180,.16),transparent 32%),
-    radial-gradient(circle at 85% 20%,rgba(0,184,74,.10),transparent 32%),
+    radial-gradient(circle at 14% 10%,rgba(203,180,155,.16),transparent 32%),
+    radial-gradient(circle at 85% 20%,rgba(14,157,82,.10),transparent 32%),
     linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)) !important;
 }
 
@@ -551,7 +584,7 @@ body{overflow-x:hidden;}
 .plan-btn,
 .mobile-menu-btn{
   cursor:pointer !important;
-  -webkit-tap-highlight-color:rgba(0,184,74,.14);
+  -webkit-tap-highlight-color:rgba(14,157,82,.14);
   touch-action:manipulation;
 }
 
@@ -572,7 +605,7 @@ body{overflow-x:hidden;}
 .playbook-card:focus-visible,
 .library-stat-btn:focus-visible,
 .bridge-card:focus-visible{
-  outline:2px solid rgba(0,184,74,.70);
+  outline:2px solid rgba(14,157,82,.70);
   outline-offset:4px;
 }
 
@@ -585,7 +618,7 @@ body{overflow-x:hidden;}
   position:absolute;
   right:18px;
   top:18px;
-  color:rgba(214,200,180,.82);
+  color:rgba(203,180,155,.82);
   font-weight:900;
 }
 
@@ -630,10 +663,10 @@ body{overflow-x:hidden;}
 .book-action-tile:hover,
 .book-action-tile:focus-visible{
   transform:translateY(-2px);
-  border-color:rgba(0,184,74,.30);
+  border-color:rgba(14,157,82,.30);
   background:
-    radial-gradient(circle at 18% 20%,rgba(0,184,74,.15),transparent 40%),
-    linear-gradient(90deg,rgba(0,184,74,.09),rgba(255,255,255,.018));
+    radial-gradient(circle at 18% 20%,rgba(14,157,82,.15),transparent 40%),
+    linear-gradient(90deg,rgba(14,157,82,.09),rgba(255,255,255,.018));
   box-shadow:0 16px 34px rgba(0,0,0,.24);
   outline:none;
 }
@@ -857,8 +890,8 @@ h2{
   font-size:9.5px !important;
   letter-spacing:.13em !important;
   margin-bottom:10px !important;
-  color:rgba(214,200,180,.9) !important;
-  background:rgba(214,200,180,.045) !important;
+  color:rgba(203,180,155,.9) !important;
+  background:rgba(203,180,155,.045) !important;
 }
 
 .book-action-grid{
@@ -972,8 +1005,8 @@ h2{
 /* 5/11 click + hue correction pass
    Rule: Free/default surfaces = green hue. Growth-only surfaces = gold hue. */
 :root{
-  --bric-green-glow:rgba(0,184,74,.16);
-  --bric-green-line:rgba(0,184,74,.36);
+  --bric-green-glow:rgba(14,157,82,.16);
+  --bric-green-line:rgba(14,157,82,.36);
   --bric-gold-glow:rgba(221,174,74,.20);
   --bric-gold-line:rgba(221,174,74,.58);
 }
@@ -1004,8 +1037,8 @@ h2{
   border-color:var(--bric-green-line) !important;
   background:
     radial-gradient(circle at 18% 20%,var(--bric-green-glow),transparent 42%),
-    linear-gradient(90deg,rgba(0,184,74,.10),rgba(255,255,255,.022) 62%,rgba(255,255,255,.014)) !important;
-  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(0,184,74,.045) !important;
+    linear-gradient(90deg,rgba(14,157,82,.10),rgba(255,255,255,.022) 62%,rgba(255,255,255,.014)) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(14,157,82,.045) !important;
   transform:translateY(-2px);
 }
 
@@ -1077,7 +1110,7 @@ h2{
 .guide-layout{display:grid;grid-template-columns:280px 1fr 300px;gap:16px;align-items:start}.guide-panel,.guide-reader,.guide-notes-panel{border:1px solid rgba(255,255,255,.08);border-radius:24px;background:rgba(0,0,0,.18);overflow:hidden}.guide-panel{padding:12px}.guide-reader{padding:22px;min-height:430px}.guide-notes-panel{padding:16px}.guide-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(216,180,106,.42);background:rgba(216,180,106,.09);color:#f4dda7;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;font-family:var(--mono)}
 .guide-chapter-btn{width:100%;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.018);color:var(--cream);border-radius:17px;padding:13px;margin-bottom:9px;text-align:left;cursor:pointer;transition:.18s ease}.guide-chapter-btn strong{display:block;font-size:13.5px;letter-spacing:-.01em}.guide-chapter-btn span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35;margin-top:4px}.guide-chapter-btn:hover,.guide-chapter-btn.active{transform:translateY(-1px);border-color:rgba(216,180,106,.50);background:radial-gradient(circle at 18% 20%,rgba(216,180,106,.18),transparent 40%),linear-gradient(90deg,rgba(216,180,106,.10),rgba(255,255,255,.018))}
 .guide-reader-head{display:flex;justify-content:space-between;gap:14px;align-items:start;margin-bottom:14px}.guide-reader h3{font-family:var(--serif);font-size:clamp(29px,3vw,43px);line-height:1.02;margin:10px 0 8px;letter-spacing:-.025em}.guide-reader p{color:#dcd3c7;font-size:14.5px;line-height:1.68;margin:0 0 13px}.guide-section-list{display:grid;gap:10px;margin:16px 0 18px}.guide-section-item{border:1px solid rgba(255,255,255,.075);border-radius:16px;padding:12px;background:rgba(255,255,255,.018);transition:.18s ease}.guide-section-item.highlighted{border-color:rgba(216,180,106,.68);background:linear-gradient(90deg,rgba(216,180,106,.14),rgba(255,255,255,.018));box-shadow:0 0 0 3px rgba(216,180,106,.055)}.guide-section-item strong{display:block;font-size:14px;margin-bottom:4px}.guide-section-item span{display:block;color:var(--muted);font-size:13px;line-height:1.45}
-.guide-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.guide-action-btn{border:1px solid rgba(216,180,106,.40);background:rgba(216,180,106,.08);color:#f6e3b2;border-radius:999px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;transition:.18s ease}.guide-action-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1b1305;transform:translateY(-1px)}.guide-related{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}.guide-related a{font-size:12px;font-weight:900;border:1px solid rgba(0,184,74,.24);background:rgba(0,184,74,.06);padding:8px 10px;border-radius:999px}.guide-related a:hover{background:rgba(0,184,74,.13);border-color:rgba(0,184,74,.36)}
+.guide-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.guide-action-btn{border:1px solid rgba(216,180,106,.40);background:rgba(216,180,106,.08);color:#f6e3b2;border-radius:999px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;transition:.18s ease}.guide-action-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1b1305;transform:translateY(-1px)}.guide-related{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}.guide-related a{font-size:12px;font-weight:900;border:1px solid rgba(14,157,82,.24);background:rgba(14,157,82,.06);padding:8px 10px;border-radius:999px}.guide-related a:hover{background:rgba(14,157,82,.13);border-color:rgba(14,157,82,.36)}
 .guide-note-box{display:grid;gap:9px;margin-top:12px}.guide-note-box textarea,.guide-question-box textarea{width:100%;min-height:88px;resize:vertical;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.26);color:var(--cream);border-radius:16px;padding:12px;outline:none;font-family:var(--sans);font-size:13px}.guide-note-box textarea:focus,.guide-question-box textarea:focus{border-color:rgba(216,180,106,.58);box-shadow:0 0 0 3px rgba(216,180,106,.055)}.guide-mini-title{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.guide-mini-title strong{font-size:14px;letter-spacing:-.01em}.guide-mini-title span{font-family:var(--mono);font-size:10px;color:#e2c784;text-transform:uppercase;letter-spacing:.11em;font-weight:900}.saved-guide-list{display:grid;gap:9px;margin-top:12px;max-height:330px;overflow:auto;padding-right:3px}.saved-guide-item{border:1px solid rgba(255,255,255,.075);border-radius:15px;padding:11px;background:rgba(255,255,255,.018)}.saved-guide-item small{display:block;color:#e2c784;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}.saved-guide-item p{margin:0;color:#ded6ca;font-size:12.5px;line-height:1.42}.guide-answer{display:none;margin-top:10px;border:1px solid rgba(216,180,106,.24);background:rgba(216,180,106,.07);border-radius:16px;padding:12px;color:#ecdcb8;font-size:13px;line-height:1.5}.guide-answer.open{display:block}.empty-guide-note{color:var(--muted);font-size:12.5px;line-height:1.45;border:1px dashed rgba(255,255,255,.12);border-radius:15px;padding:12px}
 @media(max-width:1100px){.guide-layout{grid-template-columns:1fr 1fr}.guide-reader{grid-column:1 / -1;order:2}.guide-notes-panel{order:3}.guide-panel{order:1}}@media(max-width:760px){.guide-studio{padding:14px;border-radius:24px}.guide-layout{grid-template-columns:1fr}.guide-reader,.guide-panel,.guide-notes-panel{order:initial}.guide-reader{padding:17px;min-height:0}.guide-reader-head{flex-direction:column}.guide-actions .guide-action-btn{width:100%}.guide-related a{width:100%;text-align:center}.saved-guide-list{max-height:none}}
 
@@ -1089,10 +1122,10 @@ h2{
 .btn.btn-primary,
 a.btn.btn-primary,
 button.btn.btn-primary{
-  background:linear-gradient(135deg,#c8e0bd 0%,#00b84a 100%) !important;
+  background:linear-gradient(135deg,#c8e0bd 0%,#0e9d52 100%) !important;
   color:#06110a !important;
   border-color:rgba(147,179,142,.72) !important;
-  box-shadow:0 14px 34px rgba(0,184,74,.16),0 0 0 1px rgba(200,224,189,.08) !important;
+  box-shadow:0 14px 34px rgba(14,157,82,.16),0 0 0 1px rgba(200,224,189,.08) !important;
 }
 
 .btn.btn-primary:hover,
@@ -1101,10 +1134,10 @@ a.btn.btn-primary:hover,
 a.btn.btn-primary:focus-visible,
 button.btn.btn-primary:hover,
 button.btn.btn-primary:focus-visible{
-  background:linear-gradient(135deg,#e1f1d8 0%,#37d879 55%,#00b84a 100%) !important;
+  background:linear-gradient(135deg,#e1f1d8 0%,#37d879 55%,#0e9d52 100%) !important;
   color:#06110a !important;
   border-color:rgba(200,224,189,.95) !important;
-  box-shadow:0 16px 38px rgba(0,184,74,.22),0 0 0 3px rgba(0,184,74,.10) !important;
+  box-shadow:0 16px 38px rgba(14,157,82,.22),0 0 0 3px rgba(14,157,82,.10) !important;
   transform:translateY(-2px) !important;
 }
 
@@ -1142,13 +1175,87 @@ a.btn.btn-ghost:hover{
   color:#f8fff3 !important;
 }
 
+/* ============================================================
+   CONSOLIDATED CLEANUP (final cascade layer — wins over earlier rules)
+   ============================================================ */
+
+/* Hero action hierarchy: one primary, rest quiet. Not full-width bars. */
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.hero-actions .btn{flex:0 0 auto;width:auto}
+.btn-outline{
+  background:transparent !important;
+  border:1px solid var(--line2) !important;
+  color:var(--cream) !important;
+  box-shadow:none !important;
+}
+.btn-outline:hover{
+  background:rgba(14,157,82,.08) !important;
+  border-color:rgba(14,157,82,.40) !important;
+  transform:translateY(-1px);
+}
+.btn-quiet{
+  background:transparent !important;
+  border:1px solid transparent !important;
+  color:var(--muted) !important;
+  box-shadow:none !important;
+}
+.btn-quiet:hover{
+  color:var(--cream) !important;
+  background:rgba(255,255,255,.04) !important;
+  border-color:var(--line) !important;
+  transform:translateY(-1px);
+}
+[data-theme="light"] .btn-outline{color:#16201a !important}
+[data-theme="light"] .btn-quiet{color:rgba(22,32,26,.62) !important}
+[data-theme="light"] .btn-quiet:hover{color:#16201a !important;background:rgba(15,20,15,.04) !important}
+/* keep the green primary, but soften it slightly so it doesn't scream */
+.btn-primary{
+  background:linear-gradient(135deg,#3db96f,#0e9d52) !important;
+  border-color:rgba(14,157,82,.55) !important;
+  color:#06120b !important;
+  box-shadow:0 12px 32px rgba(14,157,82,.16) !important;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 16px 40px rgba(14,157,82,.24) !important}
+
+/* FIX: unify ALL card hover states — no more black flash, consistent green wash */
+.playbook-card:hover,.playbook-card.open,
+.bridge-card:hover,
+.book-card:hover,
+.book-action-tile:hover{
+  border-color:rgba(14,157,82,.30) !important;
+  background:
+    radial-gradient(circle at 16% 18%,rgba(14,157,82,.14),transparent 44%),
+    linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.018)) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.22) !important;
+  transform:translateY(-3px) !important;
+}
+[data-theme="light"] .playbook-card:hover,[data-theme="light"] .playbook-card.open,
+[data-theme="light"] .bridge-card:hover,
+[data-theme="light"] .book-card:hover,
+[data-theme="light"] .book-action-tile:hover{
+  border-color:rgba(31,111,61,.30) !important;
+  background:
+    radial-gradient(circle at 16% 18%,rgba(31,111,61,.10),transparent 44%),
+    linear-gradient(135deg,#ffffff,#f7f4ed) !important;
+  box-shadow:0 18px 44px rgba(31,40,30,.10) !important;
+}
+
+/* FIX: btn-ghost / Valuation buttons must never go black */
+.btn.btn-ghost:hover,a.btn.btn-ghost:hover{
+  background:rgba(255,255,255,.06) !important;
+  color:var(--cream) !important;
+  border-color:var(--line2) !important;
+}
+[data-theme="light"] .btn.btn-ghost:hover,[data-theme="light"] a.btn.btn-ghost:hover{
+  background:rgba(15,20,15,.05) !important;color:#16201a !important;
+}
 </style>
 </head>
 <body data-plan="Free">
-<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="brand-text"><strong>BRIC Studios</strong><span>Property Intelligence</span></span></a><nav class="nav-links" aria-label="Main navigation"><a href="index.html#platform">Platform</a><a href="index.html#owners">For Owners</a><a href="index.html#pricing">Pricing</a><a href="dashboard.html">Dashboard</a><a class="active" href="learning.html">Learning Studio</a><a href="shop.html">Shop</a></nav><div class="nav-actions"><a class="btn btn-ghost" href="om-studio.html">OM Studio</a><a class="btn btn-primary" href="valuation.html">Open Valuation Studio</a></div><button class="btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu"><span></span><span></span><span></span></button></div><div class="container mobile-menu" id="mobileMenu"><a href="index.html#platform">Platform</a><a href="index.html#owners">For Owners</a><a href="index.html#pricing">Pricing</a><a href="valuation.html">Valuation Studio</a><a href="om-studio.html">OM Studio</a><a href="dashboard.html">Dashboard</a><a href="shop.html">Shop</a></div></header>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark-b" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg></span><span class="brand-text"><strong>BRIC Studios</strong><span>Property Intelligence</span></span></a><nav class="nav-links" aria-label="Main navigation"><a href="index.html#platform">Platform</a><a href="index.html#owners">For Owners</a><a href="index.html#pricing">Pricing</a><a href="dashboard.html">Dashboard</a><a class="active" href="learning.html">Learning Studio</a><a href="shop.html">Shop</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark mode"><svg id="iconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="iconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><span id="themeLabel">Light</span></button><a class="btn btn-ghost" href="om-studio.html">OM Studio</a><a class="btn btn-primary" href="valuation.html">Open Valuation Studio</a></div><button class="btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu"><span></span><span></span><span></span></button></div><div class="container mobile-menu" id="mobileMenu"><a href="index.html#platform">Platform</a><a href="index.html#owners">For Owners</a><a href="index.html#pricing">Pricing</a><a href="valuation.html">Valuation Studio</a><a href="om-studio.html">OM Studio</a><a href="dashboard.html">Dashboard</a><a href="shop.html">Shop</a></div></header>
 
 <main>
-<section class="hero"><div class="container hero-grid"><div><span class="eyebrow">Learning Studio</span><h1 class="hero-title">Understand the numbers before you make a move.</h1><p>Search plain-English real estate definitions, owner playbooks, and deal concepts tied directly to valuation, financing, due diligence, zoning, expenses, and investment strategy.</p><button class="library-stat library-stat-btn" type="button" data-jump-dictionary><strong>1,000+</strong> searchable terms, examples, and owner tips</button><div class="hero-actions"><a class="btn btn-primary" href="#dictionary">Start Search</a><a class="btn" href="#playbooks">Explore Playbooks</a><a class="btn btn-gold" href="#interactive-guide">Interactive Field Guide</a><a class="btn btn-ghost" href="valuation.html">Use Valuation Studio →</a></div></div><aside class="hero-card"><div class="preview"><div class="preview-head"><small>Owner Education Layer</small><span class="live-pill">Live</span></div><div class="preview-row" role="button" tabindex="0" data-preview-action="dictionary"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5c0-1.1.9-2 2-2h5.5c1.6 0 3 .7 4 1.8 1-1.1 2.4-1.8 4-1.8H20v13h-5.5c-1 0-1.9.4-2.5 1.1-.6-.7-1.5-1.1-2.5-1.1H4v-11Z"></path><path d="M12 6.5v12"></path></svg></span><span><strong>Smart Lookup</strong><span>Jump to search and topic lookup.</span></span><em>Free</em></div><div class="preview-row growth-row" role="button" tabindex="0" data-preview-action="playbooks"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M9 9h6"></path><path d="M9 12h6"></path><path d="M9 15h4"></path><path d="M9 2.5h6"></path></svg></span><span><strong>Playbooks</strong><span>Jump to sell, refinance, renovate, hold, buy, and OM prep.</span></span><em>Growth</em></div><div class="preview-row" role="button" tabindex="0" data-preview-action="full-glossary"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 10 12 13 15 19 9"></path><path d="M14 9h5v5"></path><path d="M5 5v14h14"></path></svg></span><span><strong>Built-In Dictionary</strong><span>Open the full glossary stored in-page.</span></span><em>Ready</em></div></div></aside></div></section>
+<section class="hero"><div class="container hero-grid"><div><span class="eyebrow">Learning Studio</span><h1 class="hero-title">Understand the numbers before you make a move.</h1><p>Search plain-English real estate definitions, owner playbooks, and deal concepts tied directly to valuation, financing, due diligence, zoning, expenses, and investment strategy.</p><button class="library-stat library-stat-btn" type="button" data-jump-dictionary><strong>1,000+</strong> searchable terms, examples, and owner tips</button><div class="hero-actions"><a class="btn btn-primary" href="#dictionary">Start Search</a><a class="btn btn-outline" href="#playbooks">Explore Playbooks</a><a class="btn btn-outline" href="#interactive-guide">Interactive Field Guide</a><a class="btn btn-quiet" href="valuation.html">Use Valuation Studio →</a></div></div><aside class="hero-card"><div class="preview"><div class="preview-head"><small>Owner Education Layer</small><span class="live-pill">Live</span></div><div class="preview-row" role="button" tabindex="0" data-preview-action="dictionary"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5c0-1.1.9-2 2-2h5.5c1.6 0 3 .7 4 1.8 1-1.1 2.4-1.8 4-1.8H20v13h-5.5c-1 0-1.9.4-2.5 1.1-.6-.7-1.5-1.1-2.5-1.1H4v-11Z"></path><path d="M12 6.5v12"></path></svg></span><span><strong>Smart Lookup</strong><span>Jump to search and topic lookup.</span></span><em>Free</em></div><div class="preview-row growth-row" role="button" tabindex="0" data-preview-action="playbooks"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M9 9h6"></path><path d="M9 12h6"></path><path d="M9 15h4"></path><path d="M9 2.5h6"></path></svg></span><span><strong>Playbooks</strong><span>Jump to sell, refinance, renovate, hold, buy, and OM prep.</span></span><em>Growth</em></div><div class="preview-row" role="button" tabindex="0" data-preview-action="full-glossary"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 10 12 13 15 19 9"></path><path d="M14 9h5v5"></path><path d="M5 5v14h14"></path></svg></span><span><strong>Built-In Dictionary</strong><span>Open the full glossary stored in-page.</span></span><em>Ready</em></div></div></aside></div></section>
 <section class="section" id="access"><div class="container"><div class="section-head"><div><span class="eyebrow">Access</span><h2>Free learning. Deeper strategy with Growth.</h2><p>Free users get core terms and plain-English guidance. Growth previews advanced underwriting, returns, diligence, and investment strategy concepts.</p></div></div><div class="access-grid"><article class="access-card"><h3>Free</h3><p>For owners who want to understand the basics before acting.</p><ul><li>Core CRE dictionary</li><li>Valuation, income, expense, zoning, and financing terms</li><li>Plain-English owner tips</li></ul><div class="plan-switch"><button class="btn plan-btn active" data-plan="Free" type="button">View Free</button></div></article><article class="access-card featured growth-card"><h3>Growth</h3><p>For owners preparing to sell, refinance, renovate, or underwrite more seriously.</p><ul><li>Advanced diligence and underwriting definitions</li><li>Strategy playbooks and checklists</li><li>Buyer-pool, risk, financing, and exit-planning concepts</li></ul><div class="plan-switch"><button class="btn plan-btn growth-btn" data-plan="Growth" type="button">Preview Growth</button></div></article></div></div></section>
 <section class="section" id="dictionary"><div class="container"><div class="section-head"><div><span class="eyebrow">Dictionary</span><h2>Search first. Browse when needed.</h2><p>Start with a term, then expand into the category. This keeps the page useful instead of forcing users through a giant wall of definitions.</p></div></div><div class="lookup-shell"><div class="lookup-top"><input id="termSearch" class="search-input" placeholder="Search NOI, FAR, DSCR, CityFHEPS, Section 8, HASA, 485-x..." type="search" autocomplete="off" /><button class="btn btn-primary" id="searchBtn" type="button">Search</button></div><p class="helper-line" id="accessNote">Currently viewing <b>Free</b>. Growth-only terms show a preview note until Growth is selected.</p><div class="quick-row"><button class="chip quick-term" type="button" data-term="NOI">NOI</button><button class="chip quick-term" type="button" data-term="Cap Rate">Cap Rate</button><button class="chip quick-term" type="button" data-term="FAR">FAR</button><button class="chip quick-term" type="button" data-term="DSCR">DSCR</button><button class="chip quick-term" type="button" data-term="485-x">485-x</button><button class="chip quick-term" type="button" data-term="CityFHEPS Tenant">CityFHEPS</button><button class="chip quick-term" type="button" data-term="Section 8 Tenant">Section 8</button><button class="chip quick-term" type="button" data-term="HASA Tenant">HASA</button><button class="chip quick-term" type="button" data-term="FHEPS Tenant">FHEPS</button><button class="chip quick-term" type="button" data-term="Cash Tenant">Cash Tenant</button><button class="chip quick-term" type="button" data-term="PSA">PSA</button><button class="chip" id="showAllBtn" type="button">Open Full Glossary</button><button class="chip" id="clearBtn" type="button">Clear</button></div><div class="category-grid collapsed" id="categoryGrid"><button class="topic-card" type="button" data-category="Valuation"><strong>Valuation</strong><span>Open valuation terms</span></button><button class="topic-card" type="button" data-category="Appraisal"><strong>Appraisal</strong><span>Open appraisal terms</span></button><button class="topic-card" type="button" data-category="Income"><strong>Income</strong><span>Open income terms</span></button><button class="topic-card" type="button" data-category="Expenses"><strong>Expenses</strong><span>Open expenses terms</span></button><button class="topic-card" type="button" data-category="Insurance"><strong>Insurance</strong><span>Open insurance terms</span></button><button class="topic-card" type="button" data-category="Financing"><strong>Financing</strong><span>Open financing terms</span></button><button class="topic-card" type="button" data-category="Lending / Capital Markets"><strong>Lending / Capital Markets</strong><span>Open lending / capital markets terms</span></button><button class="topic-card" type="button" data-category="Syndication / Capital Raising"><strong>Syndication / Capital Raising</strong><span>Open syndication / capital raising terms</span></button><button class="topic-card" type="button" data-category="Property Types"><strong>Property Types</strong><span>Open property types terms</span></button><button class="topic-card" type="button" data-category="Ownership / Title"><strong>Ownership / Title</strong><span>Open ownership / title terms</span></button><button class="topic-card" type="button" data-category="Entity / Ownership Structure"><strong>Entity / Ownership Structure</strong><span>Open entity / ownership structure terms</span></button><button class="topic-card" type="button" data-category="Closing / Title"><strong>Closing / Title</strong><span>Open closing / title terms</span></button><button class="topic-card" type="button" data-category="Construction / Building Systems"><strong>Construction / Building Systems</strong><span>Open construction / building systems terms</span></button><button class="topic-card" type="button" data-category="Mechanical / Building Equipment"><strong>Mechanical / Building Equipment</strong><span>Open mechanical / building equipment terms</span></button><button class="topic-card" type="button" data-category="Environmental"><strong>Environmental</strong><span>Open environmental terms</span></button><button class="topic-card" type="button" data-category="Energy / Sustainability"><strong>Energy / Sustainability</strong><span>Open energy / sustainability terms</span></button><button class="topic-card" type="button" data-category="Development Feasibility"><strong>Development Feasibility</strong><span>Open development feasibility terms</span></button><button class="topic-card" type="button" data-category="Zoning"><strong>Zoning</strong><span>Open zoning terms</span></button><button class="topic-card" type="button" data-category="Regulation"><strong>Regulation</strong><span>Open regulation terms</span></button><button class="topic-card" type="button" data-category="NYC Rent Regulation"><strong>NYC Rent Regulation</strong><span>Open nyc rent regulation terms</span></button><button class="topic-card" type="button" data-category="Tax / Incentives"><strong>Tax / Incentives</strong><span>Open tax / incentives terms</span></button><button class="topic-card" type="button" data-category="1031 Exchange"><strong>1031 Exchange</strong><span>Open 1031 exchange terms</span></button><button class="topic-card" type="button" data-category="Diligence"><strong>Diligence</strong><span>Open diligence terms</span></button><button class="topic-card" type="button" data-category="Operating / Property Management"><strong>Operating / Property Management</strong><span>Open operating / property management terms</span></button><button class="topic-card" type="button" data-category="Leasing"><strong>Leasing</strong><span>Open leasing terms</span></button><button class="topic-card" type="button" data-category="Retail / Commercial Leasing"><strong>Retail / Commercial Leasing</strong><span>Open retail / commercial leasing terms</span></button><button class="topic-card" type="button" data-category="Tenant / Voucher Types"><strong>Tenant / Voucher Types</strong><span>Open tenant / voucher types terms</span></button><button class="topic-card" type="button" data-category="Returns"><strong>Returns</strong><span>Open returns terms</span></button><button class="topic-card" type="button" data-category="Strategy"><strong>Strategy</strong><span>Open strategy terms</span></button><button class="topic-card" type="button" data-category="Transaction"><strong>Transaction</strong><span>Open transaction terms</span></button><button class="topic-card" type="button" data-category="Seller / Transaction Prep"><strong>Seller / Transaction Prep</strong><span>Open seller / transaction prep terms</span></button><button class="topic-card" type="button" data-category="Legal / Contract"><strong>Legal / Contract</strong><span>Open legal / contract terms</span></button><button class="topic-card" type="button" data-category="Distressed Assets"><strong>Distressed Assets</strong><span>Open distressed assets terms</span></button><button class="topic-card" type="button" data-category="Brokerage / Marketing"><strong>Brokerage / Marketing</strong><span>Open brokerage / marketing terms</span></button><button class="topic-card" type="button" data-category="Broker Services / A La Carte"><strong>Broker Services / A La Carte</strong><span>Open broker services / a la carte terms</span></button><button class="topic-card" type="button" data-category="Buyer Psychology / Negotiation"><strong>Buyer Psychology / Negotiation</strong><span>Open buyer psychology / negotiation terms</span></button><button class="topic-card" type="button" data-category="Documents Checklist"><strong>Documents Checklist</strong><span>Open documents checklist terms</span></button></div><button class="chip show-more-topics" id="showMoreTopics" type="button" aria-expanded="false">Show More Topics</button><div class="results-panel" id="resultsPanel" aria-live="polite"><div class="results-head"><h3 id="resultsTitle">Results</h3><span class="result-count" id="resultCount">0 terms</span></div><div class="term-grid" id="termGrid"></div></div></div></div></section>
 <section class="section" id="playbooks"><div class="container"><div class="section-head"><div><span class="eyebrow">Playbooks</span><h2>Turn education into action.</h2><p>Simple owner and new-broker playbooks: what to confirm, what to collect, and where deals usually get delayed, discounted, or retraded.</p></div></div><div class="playbook-grid">
@@ -1810,6 +1917,27 @@ document.addEventListener('click', function(e){
 </script>
 
 
+<script>
+/* ===== Light/Dark theme toggle (dark default) ===== */
+(function(){
+  var KEY='bricLearningTheme';
+  window.applyTheme=function(t){
+    document.documentElement.setAttribute('data-theme',t);
+    var moon=document.getElementById('iconMoon'),sun=document.getElementById('iconSun'),label=document.getElementById('themeLabel');
+    if(moon&&sun){moon.style.display=(t==='light')?'':'none';sun.style.display=(t==='light')?'none':'';}
+    if(label)label.textContent=(t==='light')?'Dark':'Light';
+  };
+  window.toggleTheme=function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'dark';
+    var next=cur==='light'?'dark':'light';
+    try{localStorage.setItem(KEY,next);}catch(e){}
+    window.applyTheme(next);
+  };
+  var saved='dark';
+  try{saved=localStorage.getItem(KEY)||'dark';}catch(e){}
+  window.applyTheme(saved);
+})();
+</script>
 <script>
 /* 5/11 click reliability override — keeps one consistent behavior layer on top of older handlers. */
 (function(){
