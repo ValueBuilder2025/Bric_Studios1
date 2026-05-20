@@ -330,15 +330,95 @@ input[type=text]:hover,input[type=number]:hover,input[type=date]:hover,input[typ
   vertical-align:middle;
 }
 
-/* Advanced Debt Modeling block */
+/* Advanced Debt Modeling — Collapsible block
+   ============================================
+   Collapsed by default to keep the form clean for first-timers. Click the
+   toggle row to expand. The body contains plain-language explainers and
+   preset buttons so users don't need to know what "IO" or "balloon" mean
+   to use the feature. */
 .debt-advanced-wrap{
-  margin-top:1rem;padding:.85rem 1rem;border-radius:12px;
+  margin-top:1rem;border-radius:12px;
   border:1px dashed rgba(201,168,76,.28);
   background:linear-gradient(180deg,rgba(201,168,76,.03),rgba(201,168,76,.01));
+  overflow:hidden;
 }
-.debt-advanced-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem}
-.debt-advanced-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);font-weight:800}
-.debt-advanced-note{font-family:var(--mono);font-size:.62rem;color:var(--muted-2);letter-spacing:.03em;line-height:1.5;margin-top:.6rem}
+.debt-advanced-toggle{
+  display:flex;align-items:center;gap:.55rem;width:100%;
+  padding:.75rem 1rem;background:transparent;border:none;cursor:pointer;
+  font-family:var(--mono);text-align:left;
+  transition:background .12s ease;
+}
+.debt-advanced-toggle:hover{background:rgba(201,168,76,.04)}
+.debt-advanced-toggle-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:4px;
+  background:rgba(201,168,76,.18);color:var(--gold-light);
+  font-weight:800;font-size:.85rem;line-height:1;flex-shrink:0;
+  transition:transform .15s ease;
+}
+.debt-advanced-toggle.expanded .debt-advanced-toggle-icon{transform:rotate(45deg)}
+.debt-advanced-toggle-label{
+  font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold-light);font-weight:800;
+}
+.debt-advanced-toggle-hint{
+  font-size:.6rem;color:var(--muted-2);letter-spacing:.04em;flex:1;
+  font-weight:600;text-transform:none;
+}
+.debt-advanced-body{padding:0 1rem 1rem}
+.debt-advanced-section{
+  margin-top:.9rem;padding-top:.9rem;
+  border-top:1px solid rgba(201,168,76,.15);
+}
+.debt-advanced-section:first-child{
+  margin-top:0;padding-top:0;border-top:none;
+}
+.debt-advanced-section-head{display:flex;flex-direction:column;gap:.4rem}
+.debt-advanced-section-title{
+  font-family:var(--sans);font-size:.85rem;font-weight:800;
+  color:var(--text);letter-spacing:-.01em;
+}
+.debt-advanced-section-explainer{
+  font-family:var(--sans);font-size:.72rem;line-height:1.55;
+  color:var(--muted-2);letter-spacing:0;
+}
+.debt-advanced-section-explainer b{color:var(--text);font-weight:700}
+.debt-advanced-preset-row{
+  display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;
+  margin-top:.6rem;
+}
+.debt-advanced-preset-label{
+  font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted-2);font-weight:700;
+  margin-right:.2rem;
+}
+.debt-advanced-preset{
+  padding:.4rem .65rem;border-radius:999px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  color:var(--muted);font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.04em;font-weight:700;cursor:pointer;
+  transition:all .12s ease;
+}
+.debt-advanced-preset:hover{
+  background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.3);
+  color:var(--text);
+}
+.debt-advanced-preset.active{
+  background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.45);
+  color:var(--gold-light);font-weight:800;
+}
+.debt-advanced-preset:disabled,
+.debt-advanced-preset.locked{
+  opacity:.45;cursor:not-allowed;
+}
+.debt-advanced-impact-line{
+  margin-top:.45rem;padding:.45rem .6rem;border-radius:6px;
+  background:rgba(0,184,74,.06);border:1px solid rgba(0,184,74,.18);
+  font-family:var(--mono);font-size:.6rem;color:var(--green-tint);
+  letter-spacing:.02em;line-height:1.4;
+}
+.debt-advanced-impact-line b{color:var(--text);font-weight:800}
+.debt-advanced-note{font-family:var(--mono);font-size:.6rem;color:var(--muted-2);letter-spacing:.03em;line-height:1.5}
 .debt-advanced-note a{color:var(--gold-light);cursor:pointer;text-decoration:underline;font-weight:700}
 .growth-gated-label{display:flex;align-items:center;gap:.35rem;color:var(--muted-2)}
 .growth-gated-input{opacity:.55;cursor:not-allowed!important;background:rgba(0,0,0,.18)!important}
@@ -2434,24 +2514,71 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
         </div>
       </div>
 
-      <!-- Advanced Debt Modeling — Growth-only -->
+      <!-- Advanced Debt Modeling — Growth-only, collapsible to keep the form clean -->
       <div class="debt-advanced-wrap">
-        <div class="debt-advanced-head">
-          <span class="debt-advanced-title">Advanced Debt Modeling</span>
-          <span class="growth-pill" onclick="openPaywall('debt-advanced')">Growth</span>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label class="growth-gated-label">IO Period (Months) <span class="growth-mini-pill">Growth</span></label>
-            <input type="number" id="debtIOMonths" min="0" max="120" step="1" placeholder="0" disabled class="growth-gated-input" oninput="recalcDebt()">
+        <button type="button" class="debt-advanced-toggle" onclick="toggleAdvancedDebt()" id="debtAdvancedToggle">
+          <span class="debt-advanced-toggle-icon">+</span>
+          <span class="debt-advanced-toggle-label">Advanced loan options</span>
+          <span class="debt-advanced-toggle-hint">Interest-only periods · Balloon refi</span>
+          <span class="growth-pill" onclick="event.stopPropagation();openPaywall('debt-advanced')">Growth</span>
+        </button>
+
+        <div class="debt-advanced-body" id="debtAdvancedBody" style="display:none">
+
+          <!-- Interest-Only section -->
+          <div class="debt-advanced-section">
+            <div class="debt-advanced-section-head">
+              <div class="debt-advanced-section-title">Interest-Only Period</div>
+              <div class="debt-advanced-section-explainer">
+                Most commercial loans let you pay <b>only interest</b> for the first 1-5 years, then switch to full payments (principal + interest). This <b>lowers your monthly payment</b> during the IO period — useful if you're stabilizing the property or doing a value-add and want maximum cash flow upfront. Trade-off: you build no equity through paydown during IO, and your payment jumps when amortization kicks in.
+              </div>
+              <div class="debt-advanced-preset-row">
+                <span class="debt-advanced-preset-label">Common choices:</span>
+                <button type="button" class="debt-advanced-preset" onclick="setIOMonths(0)" data-iomonths="0">None</button>
+                <button type="button" class="debt-advanced-preset" onclick="setIOMonths(12)" data-iomonths="12">1 year</button>
+                <button type="button" class="debt-advanced-preset" onclick="setIOMonths(24)" data-iomonths="24">2 years</button>
+                <button type="button" class="debt-advanced-preset" onclick="setIOMonths(36)" data-iomonths="36">3 years</button>
+                <button type="button" class="debt-advanced-preset" onclick="setIOMonths(60)" data-iomonths="60">5 years</button>
+              </div>
+              <div class="field" style="margin-top:.7rem">
+                <label style="display:flex;align-items:center;gap:.4rem;font-size:.62rem">Or enter a custom number of months <span class="growth-mini-pill">Growth</span></label>
+                <div style="display:flex;gap:.5rem;align-items:center">
+                  <input type="number" id="debtIOMonths" min="0" max="120" step="1" placeholder="0" disabled class="growth-gated-input" oninput="recalcDebt();updateIOPresetActive()" style="flex:1;max-width:140px">
+                  <span style="font-family:var(--mono);font-size:.62rem;color:var(--muted-2)" id="debtIOMonthsLabel">months</span>
+                </div>
+                <div class="debt-advanced-impact-line" id="debtIOImpact" style="display:none"></div>
+              </div>
+            </div>
           </div>
-          <div class="field">
-            <label class="growth-gated-label">Balloon at Year <span class="growth-mini-pill">Growth</span></label>
-            <input type="number" id="debtBalloonYear" min="0" max="40" step="1" placeholder="—" disabled class="growth-gated-input" oninput="recalcDebt()">
+
+          <!-- Balloon section -->
+          <div class="debt-advanced-section">
+            <div class="debt-advanced-section-head">
+              <div class="debt-advanced-section-title">Balloon / Refi Year</div>
+              <div class="debt-advanced-section-explainer">
+                Most commercial loans don't fully pay off during the loan term — they require a <b>balloon payment</b> at maturity. Typical NYC loans are <b>5, 7, or 10-year</b> balloons on a 25-30 year amortization. At the balloon date, you'll need to refinance, sell, or pay the remaining principal in cash. <b>Leave blank if your loan fully amortizes</b> (residential-style).
+              </div>
+              <div class="debt-advanced-preset-row">
+                <span class="debt-advanced-preset-label">Common choices:</span>
+                <button type="button" class="debt-advanced-preset" onclick="setBalloonYear(0)" data-balloon="0">No balloon</button>
+                <button type="button" class="debt-advanced-preset" onclick="setBalloonYear(5)" data-balloon="5">Year 5</button>
+                <button type="button" class="debt-advanced-preset" onclick="setBalloonYear(7)" data-balloon="7">Year 7</button>
+                <button type="button" class="debt-advanced-preset" onclick="setBalloonYear(10)" data-balloon="10">Year 10</button>
+              </div>
+              <div class="field" style="margin-top:.7rem">
+                <label style="display:flex;align-items:center;gap:.4rem;font-size:.62rem">Or enter a custom year <span class="growth-mini-pill">Growth</span></label>
+                <div style="display:flex;gap:.5rem;align-items:center">
+                  <input type="number" id="debtBalloonYear" min="0" max="40" step="1" placeholder="—" disabled class="growth-gated-input" oninput="recalcDebt();updateBalloonPresetActive()" style="flex:1;max-width:140px">
+                  <span style="font-family:var(--mono);font-size:.62rem;color:var(--muted-2)">year of loan</span>
+                </div>
+                <div class="debt-advanced-impact-line" id="debtBalloonImpact" style="display:none"></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="debt-advanced-note">
-          Unlock Cash-on-Cash, IO-period modeling, balloon scheduling, and rate-sensitivity analysis with <a onclick="openPaywall('debt-advanced')">Growth</a>.
+
+          <div class="debt-advanced-note" style="margin-top:.8rem">
+            All advanced options unlock with <a onclick="openPaywall('debt-advanced')">Growth</a>. Free tier still includes full DSCR, monthly payment, and annual debt service.
+          </div>
         </div>
       </div>
 
@@ -4064,6 +4191,12 @@ async function lookupPublicRecords(force){
 }
 
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+// Tooltip helper used by the document-style renderResults pipeline. Renders
+// a small "?" badge that shows the explanation on hover. Defined at module
+// scope so every build*Page/Card helper can use it without parameter passing.
+function tip(text){
+  return `<span class="tip" data-tip="${String(text||'').replace(/"/g,'&quot;')}">?</span>`;
+}
 
 // NYC FY 2025-26 property tax rates by class (as published by DOF).
 // Used in both the Public Records panel display and the expense auto-fill,
@@ -4167,13 +4300,11 @@ function setValuationTier(tier){
   const desc=document.getElementById('tierDesc');
   if(desc)desc.textContent=growth?'Growth unlocks development-site analysis, buildable SF, zoning inputs, and live valuation review.':'Free includes itemized rent roll and itemized expenses. Growth unlocks development-site analysis and advisor review.';
   syncGrowthLockedFields();handlePropertyTypeChange();
-  // Tier toggle should also unlock the access-gated features (CoC, IO, Balloon, Hold Projection)
-  // so users get a consistent experience whether they flip the tier button or unlock via promo.
+  // Tier toggle should also unlock the access-gated features (CoC, IO, Balloon,
+  // Hold Projection, Market column). refreshSubscriptionStatusPill cascades
+  // through every Growth-gated element and re-renders results — single source
+  // of truth for tier propagation.
   if(typeof refreshSubscriptionStatusPill === 'function') refreshSubscriptionStatusPill();
-  // Re-render results pane if a valuation has been generated, so the Hold Projection card flips state
-  if(growth && typeof currentValuationPDFData !== 'undefined' && currentValuationPDFData && typeof renderResults === 'function') {
-    renderResults(currentValuationPDFData);
-  }
 }
 // Unified source of truth: Growth is unlocked if the tier toggle is on OR the user has
 // paid/promo access. Either signal grants access to Growth-gated features.
@@ -5096,6 +5227,7 @@ function syncRentRollRows(){
   updateAllExpenseBenchmarks();
 }
 function updateRentRollTotals(){
+  try {
   let mo=0, marketMo=0, totalSF=0, occupiedRent=0, occupiedSF=0, marketRentSum=0, marketSFSum=0;
   document.querySelectorAll('#rrRows .rr-row').forEach(row=>{
     const status=row.querySelector('.rr-status')?.value||'occupied';
@@ -5112,8 +5244,10 @@ function updateRentRollTotals(){
     }
   });
   document.querySelectorAll('#retailRows .ret-rent').forEach(el=>{mo+=parseFloat(el.value)||0; marketMo+=parseFloat(el.value)||0;});
-  document.getElementById('rrTotalMo').textContent='$'+Math.round(mo).toLocaleString()+'/mo';
-  document.getElementById('rrTotalYr').textContent='$'+Math.round(mo*12).toLocaleString()+'/yr';
+  const totalMoEl=document.getElementById('rrTotalMo');
+  if(totalMoEl) totalMoEl.textContent='$'+Math.round(mo).toLocaleString()+'/mo';
+  const totalYrEl=document.getElementById('rrTotalYr');
+  if(totalYrEl) totalYrEl.textContent='$'+Math.round(mo*12).toLocaleString()+'/yr';
   const marketSummary=document.getElementById('rrMarketSummary');
   const marketDelta=document.getElementById('rrMarketDelta');
   if(marketSummary && marketDelta){
@@ -5136,18 +5270,22 @@ function updateRentRollTotals(){
       const inPlacePSF=occupiedSF>0?(occupiedRent*12)/occupiedSF:0;
       const marketPSF=marketSFSum>0?(marketRentSum*12)/marketSFSum:0;
       const gap=marketPSF-inPlacePSF;
-      document.getElementById('rrPSFInPlace').textContent=inPlacePSF>0?'$'+inPlacePSF.toFixed(2)+'/SF/yr':'—';
-      document.getElementById('rrPSFMarket').textContent=marketPSF>0?'$'+marketPSF.toFixed(2)+'/SF/yr':'—';
+      const inPlaceEl=document.getElementById('rrPSFInPlace');
+      if(inPlaceEl) inPlaceEl.textContent=inPlacePSF>0?'$'+inPlacePSF.toFixed(2)+'/SF/yr':'—';
+      const mktPSFEl=document.getElementById('rrPSFMarket');
+      if(mktPSFEl) mktPSFEl.textContent=marketPSF>0?'$'+marketPSF.toFixed(2)+'/SF/yr':'—';
       const gapEl=document.getElementById('rrPSFGap');
-      if(gap>0.5){
-        gapEl.textContent='+$'+gap.toFixed(2)+'/SF/yr';
-        gapEl.style.color='#efb88f';
-      } else if(gap<-0.5){
-        gapEl.textContent='-$'+Math.abs(gap).toFixed(2)+'/SF/yr';
-        gapEl.style.color='var(--green-tint)';
-      } else {
-        gapEl.textContent='~ at market';
-        gapEl.style.color='var(--muted-2)';
+      if(gapEl){
+        if(gap>0.5){
+          gapEl.textContent='+$'+gap.toFixed(2)+'/SF/yr';
+          gapEl.style.color='#efb88f';
+        } else if(gap<-0.5){
+          gapEl.textContent='-$'+Math.abs(gap).toFixed(2)+'/SF/yr';
+          gapEl.style.color='var(--green-tint)';
+        } else {
+          gapEl.textContent='~ at market';
+          gapEl.style.color='var(--muted-2)';
+        }
       }
     } else {
       psfSummary.style.display='none';
@@ -5162,6 +5300,9 @@ function updateRentRollTotals(){
   // total feeds getGrossIncomeValue() which feeds getContext().grossIncome.
   // Without this, typing rent into Apt 1 wouldn't update the management fee.
   if(typeof updateAllExpenseBenchmarks === 'function') updateAllExpenseBenchmarks();
+  } catch(err){
+    console.warn('updateRentRollTotals threw:', err);
+  }
 }
 
 /* Compute per-row Yr 1 / Yr 2 rent readouts shown inline in the rent roll.
@@ -5341,6 +5482,137 @@ function markPurchasePriceEdited(){
   if(badge) badge.style.display='none';
 }
 
+// === Advanced Debt — Collapsible & Preset Handlers ===
+// The advanced debt section starts collapsed to keep the form uncluttered for
+// first-time users. Clicking the toggle expands the body. Presets let users
+// pick common IO/balloon values without typing.
+function toggleAdvancedDebt(){
+  const body=document.getElementById('debtAdvancedBody');
+  const toggle=document.getElementById('debtAdvancedToggle');
+  if(!body || !toggle) return;
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  toggle.classList.toggle('expanded', !isOpen);
+}
+function setIOMonths(months){
+  // If user doesn't have Growth access, open the paywall instead of setting the value
+  if(typeof isGrowthUnlocked==='function' && !isGrowthUnlocked()){
+    if(typeof openPaywall==='function') openPaywall('debt-advanced');
+    return;
+  }
+  const input=document.getElementById('debtIOMonths');
+  if(input){
+    input.value=months;
+    updateIOPresetActive();
+    if(typeof recalcDebt==='function') recalcDebt();
+  }
+}
+function setBalloonYear(year){
+  if(typeof isGrowthUnlocked==='function' && !isGrowthUnlocked()){
+    if(typeof openPaywall==='function') openPaywall('debt-advanced');
+    return;
+  }
+  const input=document.getElementById('debtBalloonYear');
+  if(input){
+    input.value=year;
+    updateBalloonPresetActive();
+    if(typeof recalcDebt==='function') recalcDebt();
+  }
+}
+// Highlight the preset button that matches the current input value.
+function updateIOPresetActive(){
+  const input=document.getElementById('debtIOMonths');
+  const val=parseInt(input?.value, 10);
+  document.querySelectorAll('.debt-advanced-preset[data-iomonths]').forEach(btn=>{
+    const presetVal=parseInt(btn.dataset.iomonths, 10);
+    btn.classList.toggle('active', presetVal===val || (isNaN(val) && presetVal===0));
+  });
+  // Show the impact line if IO is set to a meaningful value
+  updateIOImpactLine();
+}
+function updateBalloonPresetActive(){
+  const input=document.getElementById('debtBalloonYear');
+  const val=parseInt(input?.value, 10);
+  document.querySelectorAll('.debt-advanced-preset[data-balloon]').forEach(btn=>{
+    const presetVal=parseInt(btn.dataset.balloon, 10);
+    btn.classList.toggle('active', presetVal===val || (isNaN(val) && presetVal===0));
+  });
+  updateBalloonImpactLine();
+}
+// Show a small green hint line under the input describing the effect.
+// e.g., "2 years IO saves ~$420/mo during IO; payment jumps to $X after"
+function updateIOImpactLine(){
+  const line=document.getElementById('debtIOImpact');
+  if(!line) return;
+  const months=parseInt(document.getElementById('debtIOMonths')?.value, 10) || 0;
+  if(months <= 0){
+    line.style.display='none';
+    return;
+  }
+  // Compute the IO payment vs the amortizing payment
+  const inp=(typeof getDebtInputs==='function')?getDebtInputs():null;
+  if(!inp || !inp.ltv || !inp.rate || !inp.amort) {
+    line.style.display='block';
+    line.innerHTML=`During the first <b>${months} month${months===1?'':'s'}</b>, you'd pay <b>interest only</b> — lower monthly payment but no equity buildup. Fill in loan terms to see the dollar impact.`;
+    return;
+  }
+  let price=inp.price;
+  if(!price && typeof currentValuationPDFData!=='undefined' && currentValuationPDFData?.baseVal>0){
+    price=currentValuationPDFData.baseVal;
+  }
+  if(!price){
+    line.style.display='block';
+    line.innerHTML=`During the first <b>${months} month${months===1?'':'s'}</b>, you'd pay interest only — lower monthly payment but no equity buildup. Add a purchase price to see the dollar impact.`;
+    return;
+  }
+  const loanAmt=price * (inp.ltv/100);
+  const monthlyRate=(inp.rate/100)/12;
+  const ioPmt=loanAmt * monthlyRate;
+  // Standard amortizing payment for comparison
+  const n=inp.amort * 12;
+  const amortPmt=monthlyRate>0 ? loanAmt * (monthlyRate * Math.pow(1+monthlyRate, n)) / (Math.pow(1+monthlyRate, n) - 1) : loanAmt/n;
+  const savings=amortPmt - ioPmt;
+  const years=months/12;
+  line.style.display='block';
+  line.innerHTML=`<b>$${Math.round(ioPmt).toLocaleString()}/mo</b> during IO (${years%1===0?years:years.toFixed(1)} year${years===1?'':'s'}) — saves <b>~$${Math.round(savings).toLocaleString()}/mo</b> vs full amortizing. Payment jumps to <b>~$${Math.round(amortPmt).toLocaleString()}/mo</b> when IO ends.`;
+}
+function updateBalloonImpactLine(){
+  const line=document.getElementById('debtBalloonImpact');
+  if(!line) return;
+  const year=parseInt(document.getElementById('debtBalloonYear')?.value, 10) || 0;
+  if(year <= 0){
+    line.style.display='none';
+    return;
+  }
+  const inp=(typeof getDebtInputs==='function')?getDebtInputs():null;
+  if(!inp || !inp.ltv || !inp.rate || !inp.amort) {
+    line.style.display='block';
+    line.innerHTML=`At year <b>${year}</b>, you'd refinance or pay off the remaining balance. Fill in loan terms to see the balloon amount.`;
+    return;
+  }
+  let price=inp.price;
+  if(!price && typeof currentValuationPDFData!=='undefined' && currentValuationPDFData?.baseVal>0){
+    price=currentValuationPDFData.baseVal;
+  }
+  if(!price){
+    line.style.display='block';
+    line.innerHTML=`At year <b>${year}</b>, you'd refinance or pay off the remaining balance. Add a purchase price to see the balloon amount.`;
+    return;
+  }
+  const loanAmt=price * (inp.ltv/100);
+  // Use the same remaining-balance formula as the hold projection
+  const balance=(typeof computeRemainingPrincipal==='function')
+    ? computeRemainingPrincipal(loanAmt, inp.rate, inp.amort, year*12, false)
+    : 0;
+  if(balance <= 0){
+    line.style.display='block';
+    line.innerHTML=`At year <b>${year}</b>, your loan would be fully paid off — no balloon needed.`;
+    return;
+  }
+  line.style.display='block';
+  line.innerHTML=`Balloon payment at year <b>${year}</b>: <b>~$${Math.round(balance).toLocaleString()}</b>. You'd need to refinance, sell, or pay this in cash.`;
+}
+
 function recalcDebt(){
   const inp=getDebtInputs();
   const summary=document.getElementById('debtSummary');
@@ -5425,6 +5697,10 @@ function recalcDebt(){
       warn.style.display='none';
     }
   }
+  // Refresh the IO / Balloon preset highlights + impact lines whenever debt
+  // inputs change, so the visible feedback stays in sync.
+  if(typeof updateIOPresetActive==='function') updateIOPresetActive();
+  if(typeof updateBalloonPresetActive==='function') updateBalloonPresetActive();
 }
 
 /* ============================================================
@@ -6460,59 +6736,63 @@ function parsePasteInput(){
 
 function applyPasteToRentRoll(){
   if(!rrPasteParsedData || !rrPasteParsedData.rows.length) return;
-  const kind=rrPasteParsedData.kind;
-  const rows=rrPasteParsedData.rows;
+  try {
+    const kind=rrPasteParsedData.kind;
+    const rows=rrPasteParsedData.rows;
 
-  // Ensure rent roll section is open and visible
-  if(!rentRollActive){
-    rentRollActive=true;
-    document.getElementById('rentRollToggle')?.classList.add('on');
-    document.getElementById('rentRollSection')?.classList.add('visible');
-  }
+    // Ensure rent roll section is open and visible
+    if(!rentRollActive){
+      rentRollActive=true;
+      document.getElementById('rentRollToggle')?.classList.add('on');
+      document.getElementById('rentRollSection')?.classList.add('visible');
+    }
 
-  if(kind==='res'){
-    const rr=document.getElementById('rrRows');
-    rr.innerHTML='';
-    rows.forEach((item,i)=>rr.insertAdjacentHTML('beforeend', resRowHTML(i+1, {
-      unit:item.unit||('Apt '+(i+1)),
-      bed:item.bed, bath:item.bath, sqft:item.sqft,
-      rent:item.rent, market:item.market, status:item.status
-    })));
-    // Sync the unit count selector to roughly the right value
-    const countEl=document.getElementById('resUnitCount');
-    if(countEl){
-      // Find best matching option (or just allow custom by setting to closest)
-      const target=String(rows.length);
-      const opts=Array.from(countEl.options).map(o=>o.value);
-      if(opts.includes(target)) countEl.value=target;
-      else {
-        // Add an option if needed
-        const opt=new Option(target, target, false, true);
-        countEl.add(opt);
+    if(kind==='res'){
+      const rr=document.getElementById('rrRows');
+      if(!rr) throw new Error('Rent roll container not found');
+      rr.innerHTML='';
+      rows.forEach((item,i)=>rr.insertAdjacentHTML('beforeend', resRowHTML(i+1, {
+        unit:item.unit||('Apt '+(i+1)),
+        bed:item.bed, bath:item.bath, sqft:item.sqft,
+        rent:item.rent, market:item.market, status:item.status
+      })));
+      // Update the unit count input. It's now a <input type="number">, not a select,
+      // so we set .value directly instead of trying to manipulate .options.
+      const countEl=document.getElementById('resUnitCount');
+      if(countEl){
+        countEl.value=rows.length;
+        // Mark as user-edited so the auto-sync logic won't overwrite this
+        if(typeof unitCountUserEdited !== 'undefined') unitCountUserEdited.res=true;
+      }
+    } else {
+      const ret=document.getElementById('retailRows');
+      if(!ret) throw new Error('Retail rows container not found');
+      ret.innerHTML='';
+      rows.forEach((item,i)=>ret.insertAdjacentHTML('beforeend', retailRowHTML(i+1, {
+        space:item.space||('Retail '+(i+1)),
+        tenant:item.tenant, start:item.start, exp:item.exp,
+        inc:item.inc, rent:item.rent
+      })));
+      const countEl=document.getElementById('retailUnitCount');
+      if(countEl){
+        countEl.value=rows.length;
+        if(typeof unitCountUserEdited !== 'undefined') unitCountUserEdited.retail=true;
       }
     }
-  } else {
-    const ret=document.getElementById('retailRows');
-    ret.innerHTML='';
-    rows.forEach((item,i)=>ret.insertAdjacentHTML('beforeend', retailRowHTML(i+1, {
-      space:item.space||('Retail '+(i+1)),
-      tenant:item.tenant, start:item.start, exp:item.exp,
-      inc:item.inc, rent:item.rent
-    })));
-    const countEl=document.getElementById('retailUnitCount');
-    if(countEl){
-      const target=String(rows.length);
-      const opts=Array.from(countEl.options).map(o=>o.value);
-      if(opts.includes(target)) countEl.value=target;
-      else {
-        const opt=new Option(target, target, false, true);
-        countEl.add(opt);
-      }
+    if(typeof updateRentRollTotals === 'function') updateRentRollTotals();
+    if(typeof updateAllExpenseBenchmarks === 'function') updateAllExpenseBenchmarks();
+    closeRentRollPaste();
+  } catch(err){
+    console.error('applyPasteToRentRoll failed:', err);
+    const status=document.getElementById('rrPastePreviewBody');
+    if(status){
+      status.innerHTML=`<div style="color:#f08c6e;padding:.6rem;border:1px solid rgba(240,140,110,.3);border-radius:6px;font-family:var(--mono);font-size:.7rem">
+        <b>Could not apply rows to rent roll.</b><br>
+        Technical detail: ${escapeHtml(err.message||String(err))}<br>
+        Try the paste flow again or reach out for support.
+      </div>`;
     }
   }
-  updateRentRollTotals();
-  updateAllExpenseBenchmarks();
-  closeRentRollPaste();
 }
 
 
@@ -7911,9 +8191,6 @@ function _renderResultsImpl(d, panel){
   const intentLabel=d.intentLabel || BVI_INTENT_LABELS[d.intent||bviSelectedIntent] || '';
   const generatedDate=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 
-  // Helper for tooltips — keeps the markup readable in the giant template literal
-  const tip=(text)=>`<span class="tip" data-tip="${text.replace(/"/g,'&quot;')}">?</span>`;
-
   // === COVER PAGE ===
   const coverPage = `<div class="doc-page bric-cover">
     <div class="bric-cover-logo">BRIC</div>
@@ -8883,19 +9160,29 @@ function refreshSubscriptionStatusPill(){
     // Hide the mini pills on labels
     document.querySelectorAll('.growth-mini-pill').forEach(el=>el.style.display='none');
     document.querySelectorAll('.growth-gated-label').forEach(el=>el.classList.remove('growth-gated-label'));
+    // Unlock preset buttons
+    document.querySelectorAll('.debt-advanced-preset').forEach(btn=>btn.classList.remove('locked'));
   } else {
     if(ioInput && !ioInput.disabled){ ioInput.disabled=true; ioInput.classList.add('growth-gated-input'); }
     if(balloonInput && !balloonInput.disabled){ balloonInput.disabled=true; balloonInput.classList.add('growth-gated-input'); }
     // Re-show pills if they were hidden
     document.querySelectorAll('.growth-mini-pill').forEach(el=>el.style.display='');
+    // Lock preset buttons (they still open the paywall on click)
+    document.querySelectorAll('.debt-advanced-preset').forEach(btn=>btn.classList.add('locked'));
   }
   // Refresh CoC display in case access state changed mid-session
   if(typeof recalcDebt==='function') recalcDebt();
+  // Refresh the rent roll Market column too — those cells gate on isGrowthUnlocked()
+  // and must flip immediately when the user toggles the tier, otherwise they stay
+  // stale until the user types in the rent roll.
+  if(typeof updateRentRollProjections==='function') updateRentRollProjections();
   // Also sync the development panel + dev fields, since access state flows into isGrowthUnlocked()
   if(typeof syncGrowthLockedFields==='function') syncGrowthLockedFields();
   if(typeof handlePropertyTypeChange==='function') handlePropertyTypeChange();
-  // Re-render results pane if a valuation has been generated, so the Hold Projection card flips state
-  if(growthUnlocked && typeof currentValuationPDFData !== 'undefined' && currentValuationPDFData && typeof renderResults === 'function') {
+  // Re-render results pane if a valuation has been generated. Re-render BOTH
+  // directions (lock→unlock AND unlock→lock) so the Hold Projection card and
+  // any other gated content reflects the current state.
+  if(typeof currentValuationPDFData !== 'undefined' && currentValuationPDFData && typeof renderResults === 'function') {
     renderResults(currentValuationPDFData);
   }
 }
