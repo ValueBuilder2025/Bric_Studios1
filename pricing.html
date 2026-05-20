@@ -16,12 +16,12 @@
     --text:#f4f3ee;
     --muted:rgba(244,243,238,.70);
     --muted-2:rgba(244,243,238,.48);
-    --green:#00b84a;
+    --green:#0e9d52;
     --green-soft:rgba(0,200,5,.13);
-    --green-tint:#8fd9a0;
-    --warm:#d6c8b4;
-    --warm-soft:rgba(214,200,180,.14);
-    --warm-strong:rgba(214,200,180,.32);
+    --green-tint:#7fc99a;
+    --warm:#cbb49b;
+    --warm-soft:rgba(203,180,155,.14);
+    --warm-strong:rgba(203,180,155,.32);
     --indigo:#8b9ee8;
     --shadow:0 26px 90px rgba(0,0,0,.38);
     --radius-xl:36px;
@@ -38,7 +38,7 @@
     font-family:var(--sans);
     color:var(--text);
     background:
-      radial-gradient(circle at top left, rgba(214,200,180,.045), transparent 24%),
+      radial-gradient(circle at top left, rgba(203,180,155,.045), transparent 24%),
       radial-gradient(circle at top right, rgba(255,255,255,.025), transparent 22%),
       linear-gradient(180deg,#0A0B0D 0%,#07080A 100%);
     overflow-x:hidden;
@@ -64,16 +64,16 @@
   .nav-links a::before{
     content:"";position:absolute;inset:0;border-radius:999px;
     background:
-      radial-gradient(circle at 18% 50%, rgba(0,184,74,.14), transparent 38%),
-      linear-gradient(90deg, rgba(0,184,74,.10), rgba(0,184,74,.02) 55%, transparent 90%);
+      radial-gradient(circle at 18% 50%, rgba(14,157,82,.14), transparent 38%),
+      linear-gradient(90deg, rgba(14,157,82,.10), rgba(14,157,82,.02) 55%, transparent 90%);
     opacity:0;transition:opacity .2s ease;pointer-events:none;
   }
-  .nav-links a:hover{color:var(--text);border-color:rgba(0,184,74,.14);transform:translateY(-1px)}
+  .nav-links a:hover{color:var(--text);border-color:rgba(14,157,82,.14);transform:translateY(-1px)}
   .nav-links a:hover::before{opacity:1}
   .nav-links a.active{
     color:var(--text);
-    border-color:rgba(0,184,74,.20);
-    background:rgba(0,184,74,.06);
+    border-color:rgba(14,157,82,.20);
+    background:rgba(14,157,82,.06);
   }
   .nav-links a span,.nav-links a{z-index:1}
   .nav-cta{
@@ -81,13 +81,13 @@
     padding:11px 22px;border-radius:999px;
     background:rgba(255,255,255,.98);color:#08100b !important;
     -webkit-text-fill-color:#08100b;font-weight:800;letter-spacing:-.01em;
-    transition:.2s ease;box-shadow:0 0 0 rgba(0,184,74,0);
+    transition:.2s ease;box-shadow:0 0 0 rgba(14,157,82,0);
     border:1px solid rgba(255,255,255,.82);position:relative;z-index:2;
   }
-  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,184,74,.12)}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(14,157,82,.12)}
 
   /* B logo */
-  .brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+  .brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(14,157,82,.14),inset 0 1px 0 rgba(255,255,255,.08)}
   .brand-mark-b svg,.foot-mark-b svg{width:100%;height:100%;display:block}
   .b-logo-bg{fill:#111317}
   .b-logo-main{fill:#f4f1e8}
@@ -114,7 +114,7 @@
 
   /* ============ HERO ============ */
   .hero{padding:64px 0 28px;position:relative;overflow:hidden}
-  .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(214,200,180,.16), transparent 66%);filter:blur(12px)}
+  .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(203,180,155,.16), transparent 66%);filter:blur(12px)}
   .hero:after{content:"";position:absolute;left:-180px;bottom:-180px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.035), transparent 70%);filter:blur(14px)}
   .hero-inner{position:relative;z-index:2;text-align:center;max-width:780px;margin:0 auto}
   .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--line);font-size:.8rem;font-weight:800;color:var(--muted);margin-bottom:24px}
@@ -139,7 +139,7 @@
   .rc-tab.active{
     background:linear-gradient(180deg,#f7f4ed,#ddd1be);
     color:#09100b;
-    box-shadow:0 8px 24px rgba(214,200,180,.18);
+    box-shadow:0 8px 24px rgba(203,180,155,.18);
   }
   .rc-tab.active .rc-tab-sub{color:rgba(9,16,11,.65)}
   .rc-tab-icon{
@@ -172,14 +172,14 @@
   .bt-btn.active{
     background:linear-gradient(180deg,#f7f4ed,#ddd1be);
     color:#09100b;
-    box-shadow:0 6px 18px rgba(214,200,180,.18);
+    box-shadow:0 6px 18px rgba(203,180,155,.18);
   }
   .bt-save{
     font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;
     background:var(--green-soft);color:var(--green-tint);
-    padding:2px 8px;border-radius:999px;border:1px solid rgba(0,184,74,.25);
+    padding:2px 8px;border-radius:999px;border:1px solid rgba(14,157,82,.25);
   }
-  .bt-btn.active .bt-save{background:rgba(0,184,74,.16);color:#0a6b1f;border-color:rgba(10,107,31,.3)}
+  .bt-btn.active .bt-save{background:rgba(14,157,82,.16);color:#0a6b1f;border-color:rgba(10,107,31,.3)}
 
   /* ============ SECTION ============ */
   .section{padding:40px 0 60px}
@@ -202,20 +202,20 @@
   .plan::before{
     content:"";position:absolute;inset:0;border-radius:inherit;
     background:
-      radial-gradient(circle at 18% 20%, rgba(0,184,74,.16), transparent 40%),
-      linear-gradient(90deg, rgba(0,184,74,.10), rgba(0,184,74,.025) 52%, transparent 88%);
+      radial-gradient(circle at 18% 20%, rgba(14,157,82,.16), transparent 40%),
+      linear-gradient(90deg, rgba(14,157,82,.10), rgba(14,157,82,.025) 52%, transparent 88%);
     opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:0;
     overflow:hidden;
   }
   .plan > *{position:relative;z-index:1}
   .plan:hover{
     transform:translateY(-4px);
-    border-color:rgba(0,184,74,.18);
+    border-color:rgba(14,157,82,.18);
     box-shadow:0 32px 100px rgba(0,0,0,.5), 0 18px 44px rgba(0,0,0,.26);
   }
   .plan:hover::before{opacity:1}
   .plan.featured{
-    background:linear-gradient(180deg,rgba(214,200,180,.10),rgba(214,200,180,.02));
+    background:linear-gradient(180deg,rgba(203,180,155,.10),rgba(203,180,155,.02));
     border:1.5px solid var(--warm-strong);
     transform:translateY(-8px);
     box-shadow:0 32px 90px rgba(0,0,0,.45);
@@ -247,16 +247,16 @@
 
   /* Broker variant — green-tinted */
   .plan.broker-card{
-    background:linear-gradient(180deg,rgba(0,184,74,.04),rgba(255,255,255,.02));
+    background:linear-gradient(180deg,rgba(14,157,82,.04),rgba(255,255,255,.02));
   }
   .plan.broker-card.featured{
-    background:linear-gradient(180deg,rgba(214,200,180,.10),rgba(0,184,74,.04));
+    background:linear-gradient(180deg,rgba(203,180,155,.10),rgba(14,157,82,.04));
     border-color:var(--warm-strong);
   }
 
   /* Dual card */
   .plan.dual-card{
-    background:linear-gradient(160deg,rgba(139,158,232,.10) 0%,rgba(214,200,180,.08) 60%,rgba(255,255,255,.02) 100%);
+    background:linear-gradient(160deg,rgba(139,158,232,.10) 0%,rgba(203,180,155,.08) 60%,rgba(255,255,255,.02) 100%);
     border:1.5px solid rgba(139,158,232,.30);
   }
   .plan.dual-card.featured{border-color:rgba(139,158,232,.50)}
@@ -266,7 +266,7 @@
     background:linear-gradient(180deg,#f7f4ed,#ddd1be);color:#09100b;
     font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
     text-transform:uppercase;padding:6px 14px;border-radius:999px;
-    font-weight:800;box-shadow:0 8px 20px rgba(214,200,180,.22);
+    font-weight:800;box-shadow:0 8px 20px rgba(203,180,155,.22);
     white-space:nowrap;
     border:1px solid rgba(221,174,74,.35);
     transition:all .25s ease;
@@ -294,7 +294,7 @@
     font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;
     background:var(--green-soft);color:var(--green-tint);
     padding:2px 8px;border-radius:999px;
-    border:1px solid rgba(0,184,74,.25);
+    border:1px solid rgba(14,157,82,.25);
     font-weight:700;text-transform:uppercase;
     margin-left:6px;vertical-align:middle;
     white-space:nowrap;
@@ -311,17 +311,17 @@
     border:1px solid var(--line-strong);background:rgba(255,255,255,.03);color:var(--text);
   }
   .plan-btn:hover{
-    background:rgba(0,184,74,.06);
-    border-color:rgba(0,184,74,.25);
+    background:rgba(14,157,82,.06);
+    border-color:rgba(14,157,82,.25);
     transform:translateY(-1px);
   }
   .plan-btn.warm{
     background:linear-gradient(180deg,#f7f4ed,#ddd1be);
     color:#09100b;
     border-color:#ddd1be;
-    box-shadow:0 8px 24px rgba(214,200,180,.18);
+    box-shadow:0 8px 24px rgba(203,180,155,.18);
   }
-  .plan-btn.warm:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(214,200,180,.24)}
+  .plan-btn.warm:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(203,180,155,.24)}
 
   .plan-divider{height:1px;background:var(--line);margin:0 -26px 18px;position:relative}
   .plan-divider-label{
@@ -350,14 +350,14 @@
   /* DUAL CALLOUT (Owner side) */
   .dual-callout{
     margin:24px 0 0;padding:24px 30px;border-radius:var(--radius-lg);
-    background:linear-gradient(90deg,rgba(139,158,232,.08) 0%,rgba(214,200,180,.08) 100%);
+    background:linear-gradient(90deg,rgba(139,158,232,.08) 0%,rgba(203,180,155,.08) 100%);
     border:1px solid rgba(139,158,232,.25);
     display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
     transition:all .25s ease;
   }
   .dual-callout:hover{
     border-color:rgba(139,158,232,.45);
-    background:linear-gradient(90deg,rgba(139,158,232,.14) 0%,rgba(214,200,180,.12) 100%);
+    background:linear-gradient(90deg,rgba(139,158,232,.14) 0%,rgba(203,180,155,.12) 100%);
     transform:translateY(-2px);
     box-shadow:0 22px 60px rgba(0,0,0,.32), 0 0 0 1px rgba(139,158,232,.18);
   }
@@ -370,9 +370,9 @@
     padding:12px 22px;border-radius:999px;border:none;cursor:pointer;
     font-family:var(--sans);font-size:.85rem;font-weight:800;letter-spacing:-.01em;
     transition:all .2s;white-space:nowrap;
-    box-shadow:0 8px 24px rgba(214,200,180,.18);
+    box-shadow:0 8px 24px rgba(203,180,155,.18);
   }
-  .dc-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(214,200,180,.24)}
+  .dc-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(203,180,155,.24)}
 
   /* DUAL HERO MATH */
   .dual-hero-section{margin-top:40px}
@@ -411,29 +411,29 @@
   .ac-card::before{
     content:"";position:absolute;inset:0;border-radius:inherit;
     background:
-      radial-gradient(circle at 18% 20%, rgba(0,184,74,.14), transparent 42%),
-      linear-gradient(90deg, rgba(0,184,74,.08), rgba(0,184,74,.02) 55%, transparent 90%);
+      radial-gradient(circle at 18% 20%, rgba(14,157,82,.14), transparent 42%),
+      linear-gradient(90deg, rgba(14,157,82,.08), rgba(14,157,82,.02) 55%, transparent 90%);
     opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:0;
   }
   .ac-card > *{position:relative;z-index:1}
   .ac-card:hover{
-    border-color:rgba(0,184,74,.22);
+    border-color:rgba(14,157,82,.22);
     transform:translateY(-3px);
     box-shadow:0 20px 50px rgba(0,0,0,.32);
   }
   .ac-card:hover::before{opacity:1}
   .ac-icon{
     width:42px;height:42px;border-radius:12px;
-    background:rgba(0,184,74,.10);color:var(--green-tint);
+    background:rgba(14,157,82,.10);color:var(--green-tint);
     display:flex;align-items:center;justify-content:center;
     font-size:1.2rem;margin-bottom:14px;
     font-family:var(--serif);font-weight:700;
     transition:all .25s ease;
   }
   .ac-card:hover .ac-icon{
-    background:rgba(0,184,74,.18);
+    background:rgba(14,157,82,.18);
     color:#a8e2b8;
-    box-shadow:0 0 0 1px rgba(0,184,74,.20), 0 6px 18px rgba(0,184,74,.18);
+    box-shadow:0 0 0 1px rgba(14,157,82,.20), 0 6px 18px rgba(14,157,82,.18);
   }
   .ac-name{font-size:1.05rem;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
   .ac-desc{font-size:.84rem;color:var(--muted);margin-bottom:18px;line-height:1.55;font-weight:500}
@@ -442,17 +442,17 @@
   .ac-add-btn{
     font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
     padding:9px 14px;background:transparent;
-    color:var(--green-tint);border:1px solid rgba(0,184,74,.30);border-radius:999px;
+    color:var(--green-tint);border:1px solid rgba(14,157,82,.30);border-radius:999px;
     cursor:pointer;transition:all .2s ease;font-weight:700;
   }
   .ac-add-btn:hover{
-    background:rgba(0,184,74,.14);
+    background:rgba(14,157,82,.14);
     border-color:var(--green);
     transform:translateY(-1px);
-    box-shadow:0 6px 16px rgba(0,184,74,.22);
+    box-shadow:0 6px 16px rgba(14,157,82,.22);
   }
   .ac-add-btn.added{background:var(--green);color:#09100b;border-color:var(--green)}
-  .ac-add-btn.added:hover{background:var(--green);box-shadow:0 6px 16px rgba(0,184,74,.32)}
+  .ac-add-btn.added:hover{background:var(--green);box-shadow:0 6px 16px rgba(14,157,82,.32)}
 
   /* ============ CHECKOUT ============ */
   .checkout-section{margin-top:60px;padding-top:48px;border-top:1px solid var(--line)}
@@ -470,8 +470,8 @@
     cursor:pointer;transition:all .15s;
     display:flex;align-items:center;justify-content:center;gap:6px;
   }
-  .pf-tab:hover{border-color:rgba(0,184,74,.25);color:var(--text)}
-  .pf-tab.active{background:var(--green-soft);border-color:rgba(0,184,74,.30);color:var(--green-tint)}
+  .pf-tab:hover{border-color:rgba(14,157,82,.25);color:var(--text)}
+  .pf-tab.active{background:var(--green-soft);border-color:rgba(14,157,82,.30);color:var(--green-tint)}
 
   .field{margin-bottom:14px}
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
@@ -484,7 +484,7 @@
     padding:11px 14px;border-radius:14px;outline:none;
     transition:border-color .2s,background .2s;-webkit-appearance:none;
   }
-  input:focus{border-color:rgba(0,184,74,.40);background:rgba(0,184,74,.04)}
+  input:focus{border-color:rgba(14,157,82,.40);background:rgba(14,157,82,.04)}
   input::placeholder{color:var(--muted-2);opacity:.6}
 
   .pay-submit{
@@ -495,9 +495,9 @@
     letter-spacing:-.01em;
     transition:all .2s;margin-top:14px;
     display:flex;align-items:center;justify-content:center;gap:8px;
-    box-shadow:0 12px 32px rgba(214,200,180,.20);
+    box-shadow:0 12px 32px rgba(203,180,155,.20);
   }
-  .pay-submit:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(214,200,180,.26)}
+  .pay-submit:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(203,180,155,.26)}
 
   .pay-trust{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:14px;font-family:var(--mono);font-size:.66rem;color:var(--muted-2);letter-spacing:.04em;flex-wrap:wrap;font-weight:600}
   .pt-item{display:flex;align-items:center;gap:5px}
@@ -527,7 +527,7 @@
     border-radius:14px;cursor:pointer;text-transform:uppercase;
     transition:all .15s;font-weight:700;
   }
-  .os-promo button:hover{border-color:rgba(0,184,74,.30);color:var(--green-tint)}
+  .os-promo button:hover{border-color:rgba(14,157,82,.30);color:var(--green-tint)}
 
   .os-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:.9rem;color:var(--muted);font-weight:500}
   .os-line.discount{color:var(--green-tint)}
@@ -544,7 +544,7 @@
     transition:border-color .2s ease;
     border-radius:0;
   }
-  .faq-item:hover{border-bottom-color:rgba(0,184,74,.30)}
+  .faq-item:hover{border-bottom-color:rgba(14,157,82,.30)}
   .faq-q{
     display:flex;justify-content:space-between;align-items:center;
     font-size:1.05rem;font-weight:700;letter-spacing:-.01em;gap:14px;
@@ -622,6 +622,11 @@
     .footer-grid{grid-template-columns:1fr}
     .foot-bottom{display:grid}
   }
+
+  .rc-tab-icon svg{width:20px;height:20px;display:block}
+  .ac-icon svg{width:22px;height:22px;display:block}
+  .pf-ic{display:inline-flex;align-items:center}
+  .pf-ic svg{width:15px;height:15px;display:block}
 </style>
 </head>
 <body>
@@ -645,6 +650,7 @@
       <a href="index.html#learning">Learning Studio</a>
       <a href="shop.html">Shop</a>
       <a href="pricing.html" class="active">Pricing</a>
+      <a href="partners.html">Partners</a>
       <a href="dashboard.html">Dashboard</a>
       <a href="index.html#early-access" class="nav-cta">Early Access</a>
     </div>
@@ -659,6 +665,7 @@
     <a href="index.html#learning">Learning Studio</a>
     <a href="shop.html">Shop</a>
     <a href="pricing.html">Pricing</a>
+    <a href="partners.html">Partners</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="index.html#early-access" class="mobile-menu-cta">Early Access</a>
   </div>
@@ -677,14 +684,14 @@
         <div class="rc-label">— I am a —</div>
         <div class="rc-tabs">
           <button class="rc-tab active" onclick="switchRole('owner', this)">
-            <div class="rc-tab-icon">⌂</div>
+            <div class="rc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/><path d="M9.5 20v-5h5v5"/></svg></div>
             <div class="rc-tab-text">
               <div class="rc-tab-name">Property Owner</div>
               <div class="rc-tab-sub">I own buildings. Track value & performance.</div>
             </div>
           </button>
           <button class="rc-tab" onclick="switchRole('broker', this)">
-            <div class="rc-tab-icon">▲</div>
+            <div class="rc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V10"/><path d="M11 20V5"/><path d="M16 20v-7"/></svg></div>
             <div class="rc-tab-text">
               <div class="rc-tab-name">Broker / Brokerage</div>
               <div class="rc-tab-sub">I run valuations & proposals.</div>
@@ -790,14 +797,53 @@
 
       </div>
 
-      <!-- DUAL CALLOUT (Owner side) -->
-      <div class="dual-callout">
-        <div class="dc-content">
-          <div class="dc-eyebrow">★ Also Broker?</div>
-          <div class="dc-title">You don't have to pay for two subscriptions.</div>
-          <div class="dc-text">Plenty of owners broker on the side. Our <span class="serif" style="font-style:italic">Dual</span> plan gives you full Owner + full Broker access for one price — and saves you <b style="color:var(--green-tint)">$400/mo</b> vs. buying both.</div>
+      <!-- DUAL HERO (Owner side — owner-framed) -->
+      <div class="dual-hero-section">
+        <div class="dual-hero-head">
+          <div class="kicker">★ For Owner-Brokers</div>
+          <h2>Also broker on the side? <span class="serif">One login</span>.</h2>
+          <p>Plenty of owners broker too. The Dual plan gives you the full Owner dashboard <em>and</em> the full Broker workspace — for less than buying both.</p>
         </div>
-        <button class="dc-btn" onclick="switchRole('broker', document.querySelectorAll('.rc-tab')[1])">See Dual Plan →</button>
+
+        <div class="dual-hero-grid">
+          <div class="dual-math">
+            <div class="dual-math-label">Owner Growth</div>
+            <div class="dual-math-val">$320</div>
+            <div class="dual-math-plus">+</div>
+            <div class="dual-math-label">Broker Pro</div>
+            <div class="dual-math-val">$640</div>
+            <div class="dual-math-eq">= $960/mo</div>
+          </div>
+
+          <div class="card plan dual-card featured">
+            <div class="plan-badge dual-badge">⬡ Owner + Broker</div>
+            <div class="plan-tier">Dual</div>
+            <h3>Dual Workspace</h3>
+            <div class="plan-desc">Full Owner dashboard + Full Broker workspace. Toggle anytime. One login, one bill.</div>
+            <div class="plan-price-row">
+              <span class="plan-price" data-monthly="700" data-annual="560">$560</span>
+              <span class="plan-price-period">/mo</span>
+              <span class="plan-price-original dual-orig">$960</span>
+            </div>
+            <div class="plan-price-sub"><b class="dual-sub">Save $400/mo · $4,800/yr</b></div>
+            <button class="plan-btn warm" onclick="selectPlan('Dual',560)">Start 14-Day Trial</button>
+            <div class="plan-divider"><span class="plan-divider-label">Includes Everything</span></div>
+            <ul class="feat-list">
+              <li class="feat-item"><span class="feat-check">✓</span>Full <b>Owner Growth</b> ($320 value)</li>
+              <li class="feat-item"><span class="feat-check">✓</span>Full <b>Broker Pro</b> ($640 value)</li>
+              <li class="feat-item"><span class="feat-check">✓</span>One-click view toggle in nav</li>
+              <li class="feat-item"><span class="feat-check">✓</span>Unified buyer matching</li>
+              <li class="feat-item"><span class="feat-check">✓</span>Priority support across both</li>
+              <li class="feat-item"><span class="feat-check">✓</span>Single bill, single login</li>
+            </ul>
+          </div>
+
+          <div class="dual-math right">
+            <div class="dual-result-label">Your Price</div>
+            <div class="dual-result-val">$560</div>
+            <div class="dual-result-save">↓ Save 42%</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -910,9 +956,9 @@
             <div class="plan-price-row">
               <span class="plan-price" data-monthly="700" data-annual="560">$560</span>
               <span class="plan-price-period">/mo</span>
-              <span class="plan-price-original" id="dualOrig">$960</span>
+              <span class="plan-price-original dual-orig" id="dualOrig">$960</span>
             </div>
-            <div class="plan-price-sub"><b id="dualSub">Save $400/mo · $4,800/yr</b></div>
+            <div class="plan-price-sub"><b class="dual-sub" id="dualSub">Save $400/mo · $4,800/yr</b></div>
             <button class="plan-btn warm" onclick="selectPlan('Dual',560)">Start 14-Day Trial</button>
             <div class="plan-divider"><span class="plan-divider-label">Includes Everything</span></div>
             <ul class="feat-list">
@@ -935,7 +981,7 @@
     </div>
 
     <!-- ============ À LA CARTE ============ -->
-    <div class="alacarte-section">
+    <div class="alacarte-section" id="alacarte-section">
       <div class="als-header">
         <div class="als-eyebrow">One-Time Purchases</div>
         <div class="als-title">À La Carte</div>
@@ -943,7 +989,7 @@
       </div>
       <div class="alacarte-grid">
         <div class="card ac-card">
-          <div class="ac-icon">▤</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 16h6"/></svg></div>
           <div class="ac-name">Single OM Download</div>
           <div class="ac-desc">Full Offering Memorandum with all sections, PDF export, investor-ready.</div>
           <div class="ac-price">
@@ -952,7 +998,7 @@
           </div>
         </div>
         <div class="card ac-card">
-          <div class="ac-icon">▲</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V10"/><path d="M11 20V5"/><path d="M16 20v-7"/></svg></div>
           <div class="ac-name">Deep Valuation Report</div>
           <div class="ac-desc">Comprehensive valuation with sensitivity analysis and comp set.</div>
           <div class="ac-price">
@@ -961,7 +1007,7 @@
           </div>
         </div>
         <div class="card ac-card">
-          <div class="ac-icon">✦</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></div>
           <div class="ac-name">Deal Studio Credits (5)</div>
           <div class="ac-desc">5 AI-generated deal narratives with multiple variants and snippets.</div>
           <div class="ac-price">
@@ -970,7 +1016,7 @@
           </div>
         </div>
         <div class="card ac-card">
-          <div class="ac-icon">◫</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg></div>
           <div class="ac-name">Seller Pack</div>
           <div class="ac-desc">OM + Valuation + Deal Studio credits. Everything to list your property professionally.</div>
           <div class="ac-price">
@@ -979,7 +1025,7 @@
           </div>
         </div>
         <div class="card ac-card">
-          <div class="ac-icon">▶</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M3 12h18"/></svg></div>
           <div class="ac-name">Investor Pack</div>
           <div class="ac-desc">Valuation + Deal Studio + OM credits. Built for active buyers evaluating opportunities.</div>
           <div class="ac-price">
@@ -988,7 +1034,7 @@
           </div>
         </div>
         <div class="card ac-card">
-          <div class="ac-icon">◈</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
           <div class="ac-name">Quick Analysis</div>
           <div class="ac-desc">Single property snapshot — value range, basic financials, recommendations.</div>
           <div class="ac-price">
@@ -1012,8 +1058,8 @@
 
           <div class="pf-tabs">
             <button class="pf-tab active"><span>◻</span> Credit Card</button>
-            <button class="pf-tab"><span>◈</span> ACH / Bank</button>
-            <button class="pf-tab"><span>◆</span> Invoice</button>
+            <button class="pf-tab"><span class="pf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/><path d="M3 20h18"/></svg></span> ACH / Bank</button>
+            <button class="pf-tab"><span class="pf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H6V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15h6"/></svg></span> Invoice</button>
           </div>
 
           <div class="field">
@@ -1028,7 +1074,7 @@
             <label>Card Number</label>
             <div class="input-wrap">
               <input type="text" placeholder="1234 1234 1234 1234" maxlength="19"/>
-              <span class="input-icon">VISA ◆ MC</span>
+              <span class="input-icon">VISA · MC</span>
             </div>
           </div>
           <div class="field-row">
@@ -1199,6 +1245,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="index.html#learning">Learning Studio</a></li>
+          <li><a href="partners.html">Become a Partner</a></li>
           <li><a href="shop.html">Shop</a></li>
           <li><a href="pricing.html">Pricing</a></li>
           <li><a href="index.html#early-access">Early Access</a></li>
@@ -1282,22 +1329,20 @@
       }
     });
 
-    const dualSub = document.getElementById('dualSub');
-    if (dualSub) {
-      dualSub.textContent = type === 'monthly'
+    document.querySelectorAll('.dual-sub').forEach(el => {
+      el.textContent = type === 'monthly'
         ? 'Save $300/mo vs. buying both'
         : 'Save $400/mo · $4,800/yr';
-    }
+    });
 
     const growthOrig = document.getElementById('growthOrig');
     if (growthOrig) growthOrig.style.display = type === 'monthly' ? 'none' : 'inline';
     const brokerProOrig = document.getElementById('brokerProOrig');
     if (brokerProOrig) brokerProOrig.style.display = type === 'monthly' ? 'none' : 'inline';
-    const dualOrig = document.getElementById('dualOrig');
-    if (dualOrig) {
-      dualOrig.style.display = 'inline';
-      dualOrig.textContent = type === 'monthly' ? '$1,000' : '$960';
-    }
+    document.querySelectorAll('.dual-orig').forEach(el => {
+      el.style.display = 'inline';
+      el.textContent = type === 'monthly' ? '$1,000' : '$960';
+    });
 
     if (PRICE_TABLE[currentPlan.name]) {
       currentPlan.price = PRICE_TABLE[currentPlan.name][type];
