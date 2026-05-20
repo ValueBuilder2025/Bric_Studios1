@@ -35,7 +35,7 @@
       font-family:var(--sans);
       color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(214,200,180,.045), transparent 24%),
+        radial-gradient(circle at top left, rgba(203,180,155,.045), transparent 24%),
         radial-gradient(circle at top right, rgba(255,255,255,.025), transparent 22%),
         linear-gradient(180deg,#0A0B0D 0%,#07080A 100%);
       overflow-x:hidden;
@@ -103,7 +103,7 @@
 
     .btn{display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 22px;border-radius:999px;font-weight:800;border:1px solid var(--line-strong);transition:.18s ease}
     .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(180deg,#f7f4ed,#ddd1be);border-color:#ddd1be;color:#09100b;box-shadow:0 8px 24px rgba(214,200,180,.18)}
+    .btn-primary{background:linear-gradient(180deg,#f7f4ed,#d8c4a8);border-color:#d8c4a8;color:#09100b;box-shadow:0 8px 24px rgba(203,180,155,.18)}
     .btn-secondary{background:transparent;color:var(--text)}
     .btn-secondary:hover{background:rgba(255,255,255,.04)}
     .dashboard-cta{position:relative;overflow:hidden}
@@ -114,7 +114,7 @@
     .dashboard-cta::after{content:"";position:relative;z-index:-1}
 
     .hero{padding:48px 0 28px;position:relative;overflow:hidden}
-    .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(214,200,180,.16), transparent 66%);filter:blur(12px)}
+    .hero:before{content:"";position:absolute;right:-160px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(203,180,155,.16), transparent 66%);filter:blur(12px)}
     .hero:after{content:"";position:absolute;left:-180px;bottom:-180px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.035), transparent 70%);filter:blur(14px)}
 
     /* ═══ CENTERED HERO (premium, restraint-first) ═══ */
@@ -136,7 +136,7 @@
       width:520px;height:520px;
       left:auto;bottom:-280px;
       right:8%;
-      background:radial-gradient(circle, rgba(214,200,180,.07), transparent 65%);
+      background:radial-gradient(circle, rgba(203,180,155,.07), transparent 65%);
       filter:blur(36px);
       animation:hero-drift-2 18s ease-in-out infinite alternate;
     }
@@ -250,14 +250,15 @@
     /* ═══ QUICK ACTIONS SECTION (relocated insight rail) ═══ */
     .quick-actions-section{padding:64px 0;position:relative}
     .quick-actions-head{margin-bottom:30px;max-width:680px}
-    .insight-rail-standalone{
+    .quick-actions-section .insight-rail-standalone{
       display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+      width:100%;max-width:none;justify-self:stretch;margin-top:0;
     }
     @media (max-width:1080px){
-      .insight-rail-standalone{grid-template-columns:repeat(2,1fr)}
+      .quick-actions-section .insight-rail-standalone{grid-template-columns:repeat(2,1fr)}
     }
     @media (max-width:560px){
-      .insight-rail-standalone{grid-template-columns:1fr}
+      .quick-actions-section .insight-rail-standalone{grid-template-columns:1fr}
       .quick-actions-section{padding:44px 0}
     }
 
@@ -347,13 +348,49 @@
 
     .hero-visual{position:relative;display:block;min-height:auto;padding-top:10px}
     .mockup-shell{position:relative;width:100%;max-width:570px;margin-left:0;margin-top:0}
-    .mockup-shell:before{content:"";position:absolute;inset:auto 0 -24px 0;height:80%;background:radial-gradient(circle at center, rgba(214,200,180,.14), transparent 70%);filter:blur(22px)}
+    .mockup-shell:before{content:"";position:absolute;inset:auto 0 -24px 0;height:80%;background:radial-gradient(circle at center, rgba(203,180,155,.14), transparent 70%);filter:blur(22px)}
     .mockup{position:relative;background:#0C0D10;border:10px solid #0C0D10;border-radius:44px;box-shadow:0 50px 120px rgba(0,0,0,.48);overflow:hidden;z-index:2}
     .screen{background:#f5f8f4;color:#08100c;border-radius:34px;overflow:hidden;min-height:0}
     .screen-top{padding:18px 20px 10px;display:flex;align-items:center;justify-content:space-between}
     .screen-title{font-size:1.06rem;font-weight:800;letter-spacing:-.02em}
     .screen-sub{font-size:.72rem;color:rgba(8,16,12,.46);font-weight:700;margin-top:2px}
     .live-badge{font-family:var(--mono);font-size:.62rem;padding:7px 9px;border-radius:999px;background:#dfffe3;color:#006f0a}
+
+    /* ===== SHARED-DATA HERO VISUAL ===== */
+    .sync-stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:14px;padding:8px 18px 14px}
+    .sync-side{display:flex;flex-direction:column;gap:8px;min-width:0}
+    .sync-side-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .sync-role{font-size:.78rem;font-weight:800;letter-spacing:-.01em}
+    .sync-role.owner{color:#0e7d44}
+    .sync-role.broker{color:#5b6bc0}
+    .sync-tag{font-family:var(--mono);font-size:.54rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(8,16,12,.42);font-weight:700;white-space:nowrap}
+    .sync-panel{flex:1;background:#fff;border:1px solid rgba(8,16,12,.10);border-radius:18px;padding:15px;box-shadow:0 8px 22px rgba(8,16,12,.06);display:flex;flex-direction:column;gap:12px}
+    .sync-prop-name{font-size:.96rem;font-weight:800;letter-spacing:-.02em;color:#08100c}
+    .sync-prop-meta{font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;color:rgba(8,16,12,.4);margin-top:3px;font-weight:700}
+    .sync-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sync-metric{background:#f3f6f2;border-radius:12px;padding:10px 11px}
+    .sync-metric small{display:block;font-family:var(--mono);font-size:.54rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(8,16,12,.42);font-weight:700;margin-bottom:4px}
+    .sync-metric strong{font-size:.92rem;font-weight:800;letter-spacing:-.02em;color:#08100c;font-variant-numeric:tabular-nums}
+    .sync-edit{display:flex;align-items:flex-start;gap:8px;font-size:.72rem;font-weight:600;line-height:1.4;color:rgba(8,16,12,.62);background:rgba(14,157,82,.08);border-radius:11px;padding:9px 11px}
+    .sync-edit.broker{background:rgba(91,107,192,.09);color:rgba(40,46,90,.78)}
+    .sync-edit-dot{width:7px;height:7px;border-radius:50%;background:#0e9d52;flex-shrink:0;margin-top:4px}
+    .sync-edit.broker .sync-edit-dot{background:#5b6bc0}
+    /* connector */
+    .sync-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 2px;position:relative}
+    .sync-link-line{position:absolute;top:50%;left:0;right:0;height:2px;background:linear-gradient(90deg,#0e9d52,#5b6bc0);opacity:.4}
+    .sync-link-badge{position:relative;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid rgba(8,16,12,.12);box-shadow:0 6px 16px rgba(8,16,12,.12);display:flex;align-items:center;justify-content:center;color:#0e9d52;z-index:1}
+    .sync-link-badge svg{width:19px;height:19px}
+    .sync-link-note{position:relative;font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(8,16,12,.45);font-weight:700;white-space:nowrap;background:#f5f8f4;padding:2px 5px;border-radius:6px;z-index:1}
+    /* footer principles */
+    .sync-foot{display:flex;flex-wrap:wrap;gap:6px 18px;padding:13px 18px 18px;border-top:1px solid rgba(8,16,12,.08);margin-top:2px}
+    .sync-foot-item{display:flex;align-items:center;gap:7px;font-size:.7rem;font-weight:700;color:rgba(8,16,12,.55)}
+    .sync-foot-dot{width:6px;height:6px;border-radius:50%;background:#0e9d52}
+    @media(max-width:680px){
+      .sync-stage{grid-template-columns:1fr;gap:10px}
+      .sync-link{flex-direction:row;padding:4px 0}
+      .sync-link-line{top:50%;height:2px}
+      .sync-link-note{display:none}
+    }
     .value-card{margin:4px 16px 12px;background:#11151A;color:white;border-radius:28px;padding:18px 18px 16px;position:relative;overflow:hidden;isolation:isolate}
     .value-card:before{content:"";position:absolute;top:-40px;right:-40px;width:156px;height:156px;border-radius:50%;background:rgba(14,157,82,.12);z-index:0}.value-card > *{position:relative;z-index:1}
     .value-label{font-size:.74rem;font-weight:700;color:rgba(255,255,255,.62)}
@@ -385,7 +422,7 @@
     .insight-card small{display:block;font-family:var(--mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:6px}
     .insight-card strong{display:block;font-size:1.08rem;letter-spacing:-.02em;font-weight:800}
     .insight-card span{display:block;font-size:.74rem;color:var(--muted);font-weight:700;margin-top:4px}
-    .insight-card.warm{background:linear-gradient(180deg, rgba(214,200,180,.12), rgba(214,200,180,.06));border-color:rgba(214,200,180,.18)}
+    .insight-card.warm{background:linear-gradient(180deg, rgba(203,180,155,.12), rgba(203,180,155,.06));border-color:rgba(203,180,155,.18)}
 
 
     /* v18 hero rebalance */
@@ -452,6 +489,60 @@
     .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green-tint);font-weight:700;margin-bottom:12px}
     .section-title{font-size:clamp(1.25rem,1.9vw,1.7rem);line-height:1.15;letter-spacing:-.015em;font-weight:700;max-width:680px}
     .section-copy{max-width:420px;color:var(--muted);font-size:.98rem;line-height:1.55;font-weight:500}
+
+    /* ===== VALUATION STUDIO SHOWCASE ===== */
+    .vs-intro{max-width:680px;margin-bottom:14px}
+    .vs-lead{color:var(--muted);font-size:1.06rem;line-height:1.6;font-weight:500;max-width:620px}
+    .vs-lead b{color:var(--text);font-weight:700}
+    .vs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px}
+    .vs-card{position:relative;overflow:hidden;padding:26px;border-radius:var(--radius-lg,30px);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.018));border:1px solid var(--line);box-shadow:var(--shadow);transition:all .25s ease;display:flex;flex-direction:column}
+    .vs-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 16% 14%, rgba(14,157,82,.12), transparent 46%);opacity:0;transition:opacity .25s ease;pointer-events:none}
+    .vs-card:hover{transform:translateY(-4px);border-color:rgba(14,157,82,.18);box-shadow:0 22px 56px rgba(0,0,0,.32)}
+    .vs-card:hover::before{opacity:1}
+    .vs-card>*{position:relative;z-index:1}
+    .vs-tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green-tint);font-weight:700;margin-bottom:8px}
+    .vs-card h3{font-size:1.18rem;font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
+    .vs-card p{color:var(--muted);font-size:.88rem;line-height:1.5;font-weight:500;margin-bottom:20px}
+    .vs-snap{margin-top:auto;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:16px;padding:16px}
+
+    /* value range snapshot */
+    .vs-vr-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:5px}
+    .vs-vr-val{font-size:1.65rem;font-weight:800;letter-spacing:-.03em;color:var(--green-tint);font-variant-numeric:tabular-nums}
+    .vs-vr-bar{height:7px;border-radius:999px;background:rgba(255,255,255,.06);margin:12px 0 8px;position:relative;overflow:hidden}
+    .vs-vr-fill{position:absolute;left:14%;right:18%;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,rgba(203,180,155,.6),rgba(14,157,82,.7))}
+    .vs-vr-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted-2)}
+
+    /* expense benchmark snapshot */
+    .vs-bench-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+    .vs-bench-row:last-child{margin-bottom:0}
+    .vs-bench-name{font-size:.74rem;font-weight:600;color:var(--muted);width:74px;flex-shrink:0}
+    .vs-bench-track{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.06);position:relative}
+    .vs-bench-range{position:absolute;top:0;bottom:0;border-radius:999px;background:rgba(255,255,255,.10)}
+    .vs-bench-mid{position:absolute;top:-2px;width:2px;height:10px;background:var(--warm);border-radius:1px}
+    .vs-bench-you{position:absolute;top:-3px;width:3px;height:12px;border-radius:1px;box-shadow:0 0 0 2px rgba(10,11,13,.9)}
+    .vs-bench-you.ok{background:var(--green-tint)}
+    .vs-bench-you.warn{background:#e8c87a}
+    .vs-bench-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;width:46px;text-align:right;flex-shrink:0}
+    .vs-bench-tag.ok{color:var(--green-tint)}
+    .vs-bench-tag.warn{color:#e8c87a}
+
+    /* sensitivity grid snapshot */
+    .vs-sens{display:grid;grid-template-columns:auto repeat(3,1fr);gap:4px}
+    .vs-sens-cell{font-family:var(--mono);font-size:.62rem;text-align:center;padding:7px 4px;border-radius:7px;font-variant-numeric:tabular-nums;color:var(--muted)}
+    .vs-sens-cell.head{color:var(--muted-2);font-size:.56rem;letter-spacing:.06em;text-transform:uppercase;background:transparent}
+    .vs-sens-cell.rowhead{color:var(--muted-2);text-align:left;font-size:.58rem}
+    .vs-sens-cell.lo{background:rgba(232,160,111,.12);color:#e8b88f}
+    .vs-sens-cell.mid{background:rgba(14,157,82,.14);color:var(--green-tint);font-weight:700}
+    .vs-sens-cell.hi{background:rgba(14,157,82,.22);color:#a8e2b8;font-weight:700}
+
+    /* debt/returns snapshot */
+    .vs-kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:12px;overflow:hidden}
+    .vs-kpi{background:rgba(17,19,23,.6);padding:12px 14px}
+    .vs-kpi-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:4px}
+    .vs-kpi-val{font-size:1.12rem;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .vs-kpi-val.green{color:var(--green-tint)}
+    .vs-kpi-val.warm{color:var(--warm)}
+    @media(max-width:720px){.vs-grid{grid-template-columns:1fr}}
 
     /* ═══ AUDIENCE PICKER ═══ */
     .audience-section{padding:54px 0 36px;position:relative;overflow:hidden}
@@ -597,7 +688,7 @@
       opacity:0;transition:opacity .22s ease;pointer-events:none}
     .module-card:hover{transform:translateY(-4px);border-color:rgba(14,157,82,.18);box-shadow:0 18px 44px rgba(0,0,0,.26)}
     .module-card:hover::before{opacity:1}
-    .module-card.primary{background:linear-gradient(180deg,rgba(17,19,23,.94),rgba(10,11,13,.98));border-color:rgba(214,200,180,.12)}
+    .module-card.primary{background:linear-gradient(180deg,rgba(17,19,23,.94),rgba(10,11,13,.98));border-color:rgba(203,180,155,.12)}
     .module-link{margin-top:auto;color:var(--green-tint);font-weight:800;position:relative;z-index:1}
     .module-icon,.module-title,.module-copy{position:relative;z-index:1}
 
@@ -615,6 +706,9 @@
     .portfolio-shell{padding:34px;display:grid;grid-template-columns:.92fr 1.08fr;gap:24px;align-items:center}
     .portfolio-copy h2{font-size:clamp(1.6rem,2.8vw,2.4rem);line-height:1.1;letter-spacing:-.02em;font-weight:700;margin-bottom:14px}
     .portfolio-copy p{color:var(--muted);font-size:1.04rem;line-height:1.64;font-weight:500;margin-bottom:22px;max-width:480px}
+    .privacy-note{display:flex;align-items:flex-start;gap:10px;max-width:480px;margin:-6px 0 24px;padding:13px 15px;border-radius:14px;background:rgba(14,157,82,.06);border:1px solid rgba(14,157,82,.16);font-size:.85rem;line-height:1.5;color:var(--muted);font-weight:500}
+    .privacy-note .pn-ic{flex-shrink:0;width:18px;height:18px;color:var(--green-tint);margin-top:1px}
+    .privacy-note .pn-ic svg{width:18px;height:18px;display:block}
     .portfolio-ui{background:#f5f8f4;color:#08100c;border-radius:30px;padding:18px}
     .portfolio-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .portfolio-title{font-weight:800;letter-spacing:-.02em}
@@ -898,20 +992,20 @@
   top:0;
   bottom:0;
   width:45%;
-  background:linear-gradient(90deg, transparent, rgba(214,200,180,.16), transparent);
+  background:linear-gradient(90deg, transparent, rgba(203,180,155,.16), transparent);
   animation:shimmer 4.8s ease-in-out infinite;
 }
 .animated-chart svg{position:absolute;inset:12px 14px;width:calc(100% - 28px);height:calc(100% - 24px);overflow:visible}
 .animated-chart .line-main{
   fill:none;
-  stroke:#d6c8b4;
+  stroke:#cbb49b;
   stroke-width:4;
   stroke-linecap:round;
   stroke-linejoin:round;
   stroke-dasharray:520;
   stroke-dashoffset:520;
   animation:drawLine 3.8s ease-in-out infinite alternate;
-  filter:drop-shadow(0 0 10px rgba(214,200,180,.24));
+  filter:drop-shadow(0 0 10px rgba(203,180,155,.24));
 }
 .animated-chart .line-area{
   fill:rgba(14,157,82,.10);
@@ -931,7 +1025,7 @@
   transform-origin:center;
   animation:pulseDot 2.3s ease-in-out infinite;
 }
-.animated-chart .chart-dot.warm{fill:#d6c8b4;animation-delay:.6s}
+.animated-chart .chart-dot.warm{fill:#cbb49b;animation-delay:.6s}
 .market-motion-card{
   margin:0 16px 0;
   background:#fff;
@@ -980,7 +1074,7 @@
 .market-intel-chart{position:absolute;inset:10px 12px 34px 12px;width:calc(100% - 24px);height:calc(100% - 44px)}
 .market-intel-chart .area{fill:url(#marketAreaFill)}
 .market-intel-chart .line-main{fill:none;stroke:#0e9d52;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px rgba(14,157,82,.18))}
-.market-intel-chart .line-soft{fill:none;stroke:#d6c8b4;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.market-intel-chart .line-soft{fill:none;stroke:#cbb49b;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
 .market-intel-chart .point{fill:#0e9d52;stroke:#dcf7e4;stroke-width:4}
 .market-intel-chart .axis-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;fill:#93a096;text-transform:uppercase}
 .market-intel-chart .gridline{stroke:rgba(8,16,12,.06);stroke-width:1}
@@ -1078,7 +1172,7 @@
 .motion-mini svg{width:100%;height:100%;overflow:visible}
 .motion-mini path{
   fill:none;
-  stroke:#d6c8b4;
+  stroke:#cbb49b;
   stroke-width:3;
   stroke-linecap:round;
   stroke-linejoin:round;
@@ -1116,7 +1210,7 @@
 }
 .bar-chart{position:relative;z-index:1;display:flex;align-items:flex-end;gap:10px;height:58px}
 .bar-col{flex:1;display:flex;align-items:flex-end;height:100%}
-.bar-fill{width:100%;border-radius:10px 10px 3px 3px;background:linear-gradient(180deg, rgba(214,200,180,.95), rgba(214,200,180,.55));transform-origin:bottom;animation:riseBar 2.6s ease-in-out infinite alternate}
+.bar-fill{width:100%;border-radius:10px 10px 3px 3px;background:linear-gradient(180deg, rgba(203,180,155,.95), rgba(203,180,155,.55));transform-origin:bottom;animation:riseBar 2.6s ease-in-out infinite alternate}
 .bar-col:nth-child(1) .bar-fill{height:34%;animation-delay:.05s}
 .bar-col:nth-child(2) .bar-fill{height:48%;animation-delay:.12s}
 .bar-col:nth-child(3) .bar-fill{height:44%;animation-delay:.18s}
@@ -1129,11 +1223,11 @@
 .benchmark-wrap,.range-wrap{position:relative;z-index:1;padding-top:8px}
 .benchmark-track,.range-track{position:relative;height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
 .benchmark-range{position:absolute;left:20%;width:48%;top:0;bottom:0;background:linear-gradient(90deg, rgba(14,157,82,.35), rgba(14,157,82,.18))}
-.benchmark-fill{position:absolute;left:0;top:0;bottom:0;width:74%;border-radius:999px;background:linear-gradient(90deg, rgba(214,200,180,.75), rgba(214,200,180,.4))}
+.benchmark-fill{position:absolute;left:0;top:0;bottom:0;width:74%;border-radius:999px;background:linear-gradient(90deg, rgba(203,180,155,.75), rgba(203,180,155,.4))}
 .benchmark-marker,.range-marker{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;border:3px solid #0a0d0b;transform:translate(-50%,-50%);animation:pulseDot 2.4s ease-in-out infinite}
-.benchmark-marker{left:74%;background:#d6c8b4;box-shadow:0 0 0 3px rgba(214,200,180,.15)}
+.benchmark-marker{left:74%;background:#cbb49b;box-shadow:0 0 0 3px rgba(203,180,155,.15)}
 .benchmark-scale,.range-points{margin-top:10px}
-.range-fill{position:absolute;left:22%;width:54%;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg, rgba(214,200,180,.35), rgba(14,157,82,.35))}
+.range-fill{position:absolute;left:22%;width:54%;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg, rgba(203,180,155,.35), rgba(14,157,82,.35))}
 .range-marker{left:56%;width:16px;height:16px;background:#0e9d52}
 .range-points span:nth-child(2){color:var(--warm)}
 
@@ -1201,7 +1295,7 @@
 }
 
 .mobile-menu-cta{
-  background:linear-gradient(180deg,#f7f4ed,#ddd1be) !important;
+  background:linear-gradient(180deg,#f7f4ed,#d8c4a8) !important;
   color:#09100b !important;
   border:none !important;
   text-align:center;
@@ -1502,12 +1596,12 @@
   font-weight:800;
 }
 .insight-card.warm{
-  background:linear-gradient(180deg,rgba(214,200,180,.09),rgba(255,255,255,.02));
-  border-color:rgba(214,200,180,.18);
+  background:linear-gradient(180deg,rgba(203,180,155,.09),rgba(255,255,255,.02));
+  border-color:rgba(203,180,155,.18);
 }
 .insight-card.warm:hover{
-  border-color:rgba(214,200,180,.34);
-  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(214,200,180,.04);
+  border-color:rgba(203,180,155,.34);
+  box-shadow:0 18px 44px rgba(0,0,0,.24),0 0 0 1px rgba(203,180,155,.04);
 }
 .insight-card.warm em{color:var(--warm);}
 @media(max-width:720px){
@@ -1520,7 +1614,7 @@
 /* Neutral dark palette update: keep the base cleaner and use green only as an accent */
 body{
   background:
-    radial-gradient(circle at top left, rgba(214,200,180,.045), transparent 24%),
+    radial-gradient(circle at top left, rgba(203,180,155,.045), transparent 24%),
     radial-gradient(circle at top right, rgba(255,255,255,.025), transparent 22%),
     linear-gradient(180deg,#0A0B0D 0%,#07080A 100%);
 }
@@ -1548,7 +1642,7 @@ nav{background:rgba(10,11,13,.86);}
 .value-scenario-chart .scenario-band{fill:url(#scenarioBand);}
 .value-scenario-chart .scenario-line{fill:none;stroke:url(#scenarioLine);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px rgba(14,157,82,.18));}
 .value-scenario-chart .scenario-dot{fill:#0e9d52;stroke:#11151A;stroke-width:4;}
-.value-scenario-chart .scenario-dot.warm{fill:#d6c8b4;}
+.value-scenario-chart .scenario-dot.warm{fill:#cbb49b;}
 .value-scenario-chart .scenario-dot.active{fill:#b8f7c5;stroke:#0e9d52;stroke-width:3;}
 .value-scenario-chart .scenario-point{font-family:var(--sans);font-size:10px;fill:#f4f3ee;font-weight:800;}
 .value-scenario-chart .scenario-point.active{fill:#b8f7c5;}
@@ -1667,168 +1761,65 @@ nav{background:rgba(10,11,13,.86);}
             <div class="screen">
               <div class="screen-top">
                 <div>
-                  <div class="screen-title">Valuation Studio</div>
-                  <div class="screen-sub">Mixed-use property · 5 units + retail</div>
+                  <div class="screen-title">One property · two views</div>
+                  <div class="screen-sub">Mixed-use · 5 units + retail · shared with 1 broker</div>
                 </div>
-                <div class="live-badge">LIVE</div>
+                <div class="live-badge">SYNCED</div>
               </div>
 
-              <div class="value-card">
-                <div class="value-label">Estimated Value Range</div>
-                <div class="value-main">$1.92M–$2.18M</div>
-                <div class="value-note">Based on income, expenses, and local market assumptions</div>
-                <div class="value-scenario-chart" aria-label="How value may improve chart">
-                  <div class="value-scenario-head">
-                    <div>
-                      <strong>How value may improve</strong>
-                      <span>Current income, expense cleanup, and rent upside.</span>
-                    </div>
-                    <em>Current → Stabilized</em>
+              <div class="sync-stage" aria-label="Owner and broker working from the same data">
+                <!-- OWNER SIDE -->
+                <div class="sync-side">
+                  <div class="sync-side-head">
+                    <span class="sync-role owner">Owner view</span>
+                    <span class="sync-tag">Private workspace</span>
                   </div>
-                  <svg viewBox="0 0 520 190" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="scenarioBand" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#0e9d52" stop-opacity=".26"/>
-                        <stop offset="100%" stop-color="#0e9d52" stop-opacity=".02"/>
-                      </linearGradient>
-                      <linearGradient id="scenarioLine" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stop-color="#d6c8b4"/>
-                        <stop offset="100%" stop-color="#0e9d52"/>
-                      </linearGradient>
-                    </defs>
-                    <line x1="52" y1="32" x2="500" y2="32" class="scenario-grid"/>
-                    <line x1="52" y1="70" x2="500" y2="70" class="scenario-grid"/>
-                    <line x1="52" y1="108" x2="500" y2="108" class="scenario-grid"/>
-                    <line x1="52" y1="146" x2="500" y2="146" class="scenario-grid"/>
-                    <text x="8" y="36" class="scenario-axis">$2.2M</text>
-                    <text x="8" y="74" class="scenario-axis">$2.1M</text>
-                    <text x="8" y="112" class="scenario-axis">$2.0M</text>
-                    <text x="8" y="150" class="scenario-axis">$1.9M</text>
-                    <path d="M72,142 C150,134 202,121 262,102 C332,82 390,63 470,40 L470,150 L72,150 Z" class="scenario-band"/>
-                    <path d="M72,142 C150,134 202,121 262,102 C332,82 390,63 470,40" class="scenario-line"/>
-                    <circle cx="72" cy="142" r="7" class="scenario-dot warm"/>
-                    <circle cx="205" cy="121" r="7" class="scenario-dot"/>
-                    <circle cx="340" cy="78" r="7" class="scenario-dot"/>
-                    <circle cx="470" cy="40" r="8" class="scenario-dot active"/>
-                    <text x="55" y="130" class="scenario-point">$1.92M</text>
-                    <text x="430" y="27" class="scenario-point active">$2.18M</text>
-                    <text x="72" y="179" class="scenario-x">Current</text>
-                    <text x="205" y="179" class="scenario-x">Expense cleanup</text>
-                    <text x="340" y="179" class="scenario-x">Rent upside</text>
-                    <text x="470" y="179" class="scenario-x">Stabilized</text>
-                  </svg>
+                  <div class="sync-panel">
+                    <div class="sync-prop">
+                      <div class="sync-prop-name">1200 Birchwood Avenue</div>
+                      <div class="sync-prop-meta">Last updated by you · just now</div>
+                    </div>
+                    <div class="sync-metrics">
+                      <div class="sync-metric"><small>Value range</small><strong>$1.92M–$2.18M</strong></div>
+                      <div class="sync-metric"><small>Net income</small><strong>$182K</strong></div>
+                    </div>
+                    <div class="sync-edit"><span class="sync-edit-dot"></span>You updated the rent roll — retail now $4,800/mo</div>
+                  </div>
                 </div>
-                <div class="value-drivers" aria-label="Valuation drivers">
-                  <div class="value-driver"><small>Net income</small><strong>$182K</strong></div>
-                  <div class="value-driver"><small>Market guide</small><strong>6.15%</strong></div>
-                  <div class="value-driver"><small>Opportunity</small><strong>Expense cleanup</strong></div>
+
+                <!-- SYNC CONNECTOR -->
+                <div class="sync-link" aria-hidden="true">
+                  <div class="sync-link-line"></div>
+                  <div class="sync-link-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><path d="M8 12h8"/></svg>
+                  </div>
+                  <div class="sync-link-note">Flows instantly</div>
+                </div>
+
+                <!-- BROKER SIDE -->
+                <div class="sync-side">
+                  <div class="sync-side-head">
+                    <span class="sync-role broker">Broker view</span>
+                    <span class="sync-tag">Shared by owner</span>
+                  </div>
+                  <div class="sync-panel">
+                    <div class="sync-prop">
+                      <div class="sync-prop-name">1200 Birchwood Avenue</div>
+                      <div class="sync-prop-meta">Updated by owner · just now</div>
+                    </div>
+                    <div class="sync-metrics">
+                      <div class="sync-metric"><small>Value range</small><strong>$1.92M–$2.18M</strong></div>
+                      <div class="sync-metric"><small>OM status</small><strong>Auto-refreshed</strong></div>
+                    </div>
+                    <div class="sync-edit broker"><span class="sync-edit-dot"></span>Your OM and pricing updated automatically — no re-send</div>
+                  </div>
                 </div>
               </div>
 
-              <div class="hero-ui-grid">
-                <div class="hero-ui-col">
-                  <div class="screen-section compact">
-                    <div class="mini-title">Snapshot</div>
-                    <div class="metrics">
-                      <div class="metric"><div class="metric-k">Net income</div><div class="metric-v">$182K</div><small>Annual estimate</small></div>
-                      <div class="metric"><div class="metric-k">Per unit</div><div class="metric-v">$337K</div><small>6 units</small></div>
-                      <div class="metric"><div class="metric-k">Market guide</div><div class="metric-v">6.15%</div><small>Local benchmark</small></div>
-                      <div class="metric"><div class="metric-k">Occupancy</div><div class="metric-v">100%</div><small>Currently full</small></div>
-                    </div>
-                  </div>
-
-                  <div class="screen-section compact rent-roll-preview">
-                    <div class="mini-title">Current rent roll</div>
-                    <div class="table-card">
-                      <div class="table-head"><span>Unit</span><span class="bed-bath-head">Bed / Bath</span><span>Rent</span><span>PF Rent</span></div>
-                      <div class="table-row"><span>1A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,650</span><span>$2,850</span></div>
-                      <div class="table-row"><span>2A</span><span class="bed-bath">2 <em>/</em> 1</span><span>$2,700</span><span>$2,900</span></div>
-                      <div class="table-row"><span>3A</span><span class="bed-bath">1 <em>/</em> 1</span><span>$2,250</span><span>$2,450</span></div>
-                      <div class="table-row"><span>4A</span><span class="bed-bath">1 <em>/</em> 1</span><span>$2,300</span><span>$2,500</span></div>
-                      <div class="table-row"><span>4B</span><span class="bed-bath">Studio</span><span>$1,950</span><span>$2,150</span></div>
-                      <div class="table-row"><span>Retail</span><span class="bed-bath">Storefront</span><span>$4,800</span><span>$5,250</span></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="hero-ui-col">
-                  <div class="heatmap-card market-intel-preview">
-                    <div class="heatmap-head">
-                      <strong>Market intelligence</strong>
-                      <span>LIVE TREND</span>
-                    </div>
-                    <div class="mini-heatmap value-trend-card" aria-label="Market intelligence value trend chart">
-                      <div class="value-chart-top">
-                        <span>Value trend</span>
-                        <small>Last 12 months</small>
-                      </div>
-                      <svg class="market-intel-chart value-trend-chart" viewBox="0 0 360 150" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id="marketAreaFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#1ad760" stop-opacity=".18"/>
-                            <stop offset="100%" stop-color="#1ad760" stop-opacity=".02"/>
-                          </linearGradient>
-                        </defs>
-
-                        <line class="gridline" x1="44" y1="30" x2="344" y2="30"></line>
-                        <line class="gridline" x1="44" y1="62" x2="344" y2="62"></line>
-                        <line class="gridline" x1="44" y1="94" x2="344" y2="94"></line>
-                        <line class="gridline" x1="44" y1="126" x2="344" y2="126"></line>
-
-                        <text class="axis-label y-label" x="4" y="34">$140M</text>
-                        <text class="axis-label y-label" x="4" y="66">$120M</text>
-                        <text class="axis-label y-label" x="4" y="98">$100M</text>
-                        <text class="axis-label y-label" x="6" y="130">$80M</text>
-
-                        <path class="area" d="M54,118 L54,105 L84,88 L114,92 L144,79 L174,68 L204,54 L234,57 L264,39 L294,34 L324,26 L324,126 L54,126 Z"></path>
-                        <path class="line-main" d="M54,105 L84,88 L114,92 L144,79 L174,68 L204,54 L234,57 L264,39 L294,34 L324,26"></path>
-
-                        <circle class="point-small" cx="54" cy="105" r="3.2"></circle>
-                        <circle class="point-small" cx="84" cy="88" r="3.2"></circle>
-                        <circle class="point-small" cx="114" cy="92" r="3.2"></circle>
-                        <circle class="point-small" cx="144" cy="79" r="3.2"></circle>
-                        <circle class="point-small" cx="174" cy="68" r="3.2"></circle>
-                        <circle class="point-small" cx="204" cy="54" r="3.2"></circle>
-                        <circle class="point-small" cx="234" cy="57" r="3.2"></circle>
-                        <circle class="point-small active" cx="264" cy="39" r="4.5"></circle>
-                        <circle class="point-small" cx="294" cy="34" r="3.2"></circle>
-                        <circle class="point-small" cx="324" cy="26" r="3.2"></circle>
-
-                        <text class="axis-label x-label" x="48" y="145">May ’23</text>
-                        <text class="axis-label x-label" x="124" y="145">Aug ’23</text>
-                        <text class="axis-label x-label" x="198" y="145">Nov ’23</text>
-                        <text class="axis-label x-label" x="266" y="145">Feb ’24</text>
-                        <text class="axis-label x-label" x="314" y="145">May ’24</text>
-                      </svg>
-                    </div>
-                    <div class="heatmap-stats">
-                      <div class="heatmap-stat">
-                        <small>Buyer activity</small>
-                        <strong>+18%</strong>
-                        <span>vs. prior 30 days</span>
-                      </div>
-                      <div class="heatmap-stat">
-                        <small>Lead volume</small>
-                        <strong>26 active</strong>
-                        <span>Owners + buyers synced</span>
-                      </div>
-                      <div class="heatmap-stat">
-                        <small>Pricing drift</small>
-                        <strong>+3.2%</strong>
-                        <span>Modeled submarket move</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="screen-section compact recent-signals-preview">
-                    <div class="mini-title">Suggested next steps</div>
-                    <div class="feed">
-                      <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Water expense may be high</span><span class="feed-time">NOW</span></div>
-                      <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Build an OM from this valuation</span><span class="feed-time">6M</span></div>
-                      <div class="feed-row"><span class="feed-dot"></span><span class="feed-text">Buyer activity is up nearby</span><span class="feed-time">1H</span></div>
-                    </div>
-                  </div>
-                </div>
+              <div class="sync-foot" aria-label="How sharing works">
+                <span class="sync-foot-item"><span class="sync-foot-dot"></span>Owner owns the data</span>
+                <span class="sync-foot-item"><span class="sync-foot-dot"></span>Shared property by property</span>
+                <span class="sync-foot-item"><span class="sync-foot-dot"></span>Revoke access anytime</span>
               </div>
             </div>
           </div>
@@ -1900,7 +1891,7 @@ nav{background:rgba(10,11,13,.86);}
         <h2 class="section-title">What you can do <span class="serif">right now</span>.</h2>
       </div>
       <div class="insight-rail insight-rail-standalone" aria-label="What you can do with BRIC">
-        <a class="insight-card warm" href="valuation.html">
+        <a class="insight-card" href="valuation.html">
           <small>Valuation</small>
           <strong>Estimate your property value</strong>
           <span>Get a value range using your income, expenses, and market assumptions.</span>
@@ -1950,18 +1941,118 @@ nav{background:rgba(10,11,13,.86);}
           <div class="module-copy">Turn property details into a cleaner offering package.</div>
           <div class="module-link">Open OM Studio →</div>
         </a>
-        <a href="heatmap.html" class="card module-card">
-          <div class="module-icon custom-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 11l7-4 6 4 7-4v14l-7 4-6-4-7 4z"/><path d="M13 7v14"/><path d="M19 11v14"/><circle cx="19" cy="11" r="2"/></svg></div>
-          <div class="module-title">Market Signals</div>
-          <div class="module-copy">See where buyer activity and market signals may be changing.</div>
-          <div class="module-link">View Market Signals →</div>
-        </a>
         <a href="learning.html" class="card module-card">
           <div class="module-icon custom-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 8h8a4 4 0 0 1 4 4v15H11a4 4 0 0 1-4-4z"/><path d="M25 8h-6v19h3a3 3 0 0 0 3-3z"/><path d="M11 13h4"/><path d="M11 17h4"/><circle cx="24" cy="10" r="2"/></svg></div>
           <div class="module-title">Learning Studio</div>
           <div class="module-copy">Understand the terms behind valuation, financing, and deal decisions.</div>
           <div class="module-link">Open Learning Studio →</div>
         </a>
+        <a href="heatmap.html" class="card module-card">
+          <div class="module-icon custom-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 11l7-4 6 4 7-4v14l-7 4-6-4-7 4z"/><path d="M13 7v14"/><path d="M19 11v14"/><circle cx="19" cy="11" r="2"/></svg></div>
+          <div class="module-title">Market Signals</div>
+          <div class="module-copy">See where buyer activity and market signals may be changing.</div>
+          <div class="module-link">View Market Signals →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="valuation-studio">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Valuation Studio</div>
+          <h2 class="section-title vs-intro">Not a guess. A <span class="serif">defensible value range</span> from your property's real numbers.</h2>
+          <p class="vs-lead">Enter income, expenses, and a market cap rate. Valuation Studio builds a clean income-approach valuation — then <b>pressure-tests it</b>: benchmarks your expenses against the market, shows how value moves with your assumptions, and models debt and returns. Output is a downloadable, broker-ready report.</p>
+        </div>
+      </div>
+
+      <div class="vs-grid">
+
+        <!-- VALUE RANGE -->
+        <div class="vs-card">
+          <div class="vs-tag">Value Range</div>
+          <h3>A range, not a single number</h3>
+          <p>See a defensible low–high range built from your NOI and a market cap rate — with the midpoint you'd actually take to a lender or buyer.</p>
+          <div class="vs-snap">
+            <div class="vs-vr-label">Estimated Value Range</div>
+            <div class="vs-vr-val">$1.92M – $2.18M</div>
+            <div class="vs-vr-bar"><div class="vs-vr-fill"></div></div>
+            <div class="vs-vr-row"><span>Conservative</span><span>Midpoint $2.05M</span><span>Upside</span></div>
+          </div>
+        </div>
+
+        <!-- EXPENSE BENCHMARK -->
+        <div class="vs-card">
+          <div class="vs-tag">Expense Benchmark</div>
+          <h3>See where you're over market</h3>
+          <p>Every expense line is compared to local benchmarks, so you can spot overspending and the upside hiding in your operating costs.</p>
+          <div class="vs-snap">
+            <div class="vs-bench-row">
+              <span class="vs-bench-name">Taxes</span>
+              <span class="vs-bench-track"><span class="vs-bench-range" style="left:18%;right:30%"></span><span class="vs-bench-mid" style="left:50%"></span><span class="vs-bench-you ok" style="left:44%"></span></span>
+              <span class="vs-bench-tag ok">In line</span>
+            </div>
+            <div class="vs-bench-row">
+              <span class="vs-bench-name">Insurance</span>
+              <span class="vs-bench-track"><span class="vs-bench-range" style="left:22%;right:34%"></span><span class="vs-bench-mid" style="left:48%"></span><span class="vs-bench-you warn" style="left:78%"></span></span>
+              <span class="vs-bench-tag warn">High</span>
+            </div>
+            <div class="vs-bench-row">
+              <span class="vs-bench-name">Repairs</span>
+              <span class="vs-bench-track"><span class="vs-bench-range" style="left:20%;right:28%"></span><span class="vs-bench-mid" style="left:52%"></span><span class="vs-bench-you ok" style="left:40%"></span></span>
+              <span class="vs-bench-tag ok">In line</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SENSITIVITY -->
+        <div class="vs-card">
+          <div class="vs-tag">Sensitivity Analysis</div>
+          <h3>How value moves with assumptions</h3>
+          <p>Watch the valuation shift across cap rate and NOI scenarios at a glance — so you know which assumptions matter most before you commit.</p>
+          <div class="vs-snap">
+            <div class="vs-sens">
+              <span class="vs-sens-cell head"></span>
+              <span class="vs-sens-cell head">Cap 5.5%</span>
+              <span class="vs-sens-cell head">Cap 6.0%</span>
+              <span class="vs-sens-cell head">Cap 6.5%</span>
+              <span class="vs-sens-cell rowhead">NOI −5%</span>
+              <span class="vs-sens-cell lo">$1.78M</span>
+              <span class="vs-sens-cell mid">$1.92M</span>
+              <span class="vs-sens-cell lo">$1.68M</span>
+              <span class="vs-sens-cell rowhead">NOI base</span>
+              <span class="vs-sens-cell mid">$2.05M</span>
+              <span class="vs-sens-cell hi">$2.18M</span>
+              <span class="vs-sens-cell mid">$1.94M</span>
+              <span class="vs-sens-cell rowhead">NOI +5%</span>
+              <span class="vs-sens-cell hi">$2.21M</span>
+              <span class="vs-sens-cell hi">$2.34M</span>
+              <span class="vs-sens-cell mid">$2.09M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEBT & RETURNS -->
+        <div class="vs-card">
+          <div class="vs-tag">Debt &amp; Returns</div>
+          <h3>Model the financing, see the returns</h3>
+          <p>Layer in a loan — rate, term, interest-only, refi year — and Valuation Studio returns the metrics that decide the deal.</p>
+          <div class="vs-snap">
+            <div class="vs-kpis">
+              <div class="vs-kpi"><div class="vs-kpi-label">Cap Rate</div><div class="vs-kpi-val green">6.0%</div></div>
+              <div class="vs-kpi"><div class="vs-kpi-label">DSCR</div><div class="vs-kpi-val green">1.38x</div></div>
+              <div class="vs-kpi"><div class="vs-kpi-label">Cash-on-Cash</div><div class="vs-kpi-val green">8.4%</div></div>
+              <div class="vs-kpi"><div class="vs-kpi-label">Loan / Value</div><div class="vs-kpi-val warm">68%</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hero-actions" style="margin-top:32px">
+        <a href="valuation.html" class="btn btn-primary">Try Valuation Studio</a>
+        <a href="learning.html" class="btn btn-secondary">Learn the terms first</a>
       </div>
     </div>
   </section>
@@ -1996,7 +2087,8 @@ nav{background:rgba(10,11,13,.86);}
         <div class="portfolio-copy">
           <div class="kicker">Live Data</div>
           <h2>One source of truth. <span class="serif">Always current.</span></h2>
-          <p>Every change owners make flows to their brokers instantly. Market shifts adjust valuations automatically. Stale OMs and outdated rent rolls become a thing of the past.</p>
+          <p>When an owner connects with a broker, every change flows between them instantly. Market shifts adjust valuations automatically. Stale OMs and outdated rent rolls become a thing of the past.</p>
+          <div class="privacy-note"><span class="pn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span> Your data stays private by default. Nothing is shared until you choose to connect with a broker — and you can disconnect anytime.</div>
           <a href="dashboard.html" class="btn btn-secondary dashboard-cta" onclick="openDashboard(event)">Open Dashboard</a>
         </div>
         <div class="dashboard-preview">
