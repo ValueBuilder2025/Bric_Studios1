@@ -252,6 +252,142 @@
   .serif-it{font-family:var(--serif);font-style:italic;font-weight:600;color:var(--warm)}
 
   /* ============ NAV (matches Bric site) ============ */
+  /* ═══ APP SHELL + SIDEBAR ═══ */
+  .app{
+    display:grid;
+    grid-template-columns:248px 1fr;
+    min-height:100vh;
+    transition:grid-template-columns .22s cubic-bezier(.4,0,.2,1);
+  }
+  .app.collapsed{grid-template-columns:68px 1fr}
+
+  .sidebar{
+    position:sticky;top:0;height:100vh;
+    background:var(--panel-2);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    z-index:80;
+  }
+  [data-theme="light"] .sidebar{background:linear-gradient(180deg,#ffffff,#f6f2ea)}
+
+  .sb-header{
+    padding:18px 16px 14px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .sb-logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1rem;letter-spacing:-.02em;color:var(--text);min-width:0}
+  .sb-brand-mark{
+    width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+    flex:0 0 auto;border-radius:12px;overflow:hidden;
+    box-shadow:0 10px 22px rgba(11,122,63,.12), inset 0 1px 0 var(--ink-a08);
+  }
+  .sb-brand-mark svg{width:100%;height:100%;display:block}
+  .b-logo-bg{fill:#111317}
+  .b-logo-main{fill:#f4f1e8}
+  .b-logo-cut{fill:#1F6F3D}
+  [data-theme="light"] .b-logo-bg{fill:#0e1612}
+  [data-theme="light"] .b-logo-main{fill:#f7f4ed}
+  [data-theme="light"] .b-logo-cut{fill:#089c3e}
+  .sb-wordmark{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .15s ease}
+  .sb-collapse{
+    background:transparent;border:1px solid var(--line-strong);color:var(--muted);
+    width:28px;height:28px;border-radius:8px;flex-shrink:0;
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:.15s ease;
+  }
+  .sb-collapse:hover{color:var(--text);border-color:var(--green-line);background:var(--green-soft)}
+  .sb-collapse svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s ease}
+  .app.collapsed .sb-collapse svg{transform:rotate(180deg)}
+
+  .sb-team{padding:14px 16px 10px;border-bottom:1px solid var(--line-soft)}
+  .sb-team-eyebrow{
+    font-family:var(--mono);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted-2);font-weight:600;margin-bottom:5px;
+  }
+  .sb-team-name{
+    display:inline-flex;align-items:center;gap:7px;width:100%;
+    background:transparent;border:none;cursor:pointer;text-align:left;
+    font-family:var(--sans);font-size:.96rem;font-weight:800;letter-spacing:-.02em;
+    color:var(--text);padding:0;transition:.14s ease;
+  }
+  .sb-team-name:hover{color:var(--green-tint)}
+  .sb-team-name span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sb-team-edit{width:13px;height:13px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .14s ease}
+  .sb-team-name:hover .sb-team-edit{opacity:.7}
+
+  .sb-mode{padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+  .sb-mode .mode-toggle{width:100%}
+
+  .sb-section{padding:12px 12px;flex:1;overflow-y:auto;overflow-x:hidden}
+  .sb-section::-webkit-scrollbar{width:3px}
+  .sb-section::-webkit-scrollbar-thumb{background:var(--ink-a08);border-radius:2px}
+  .sb-label{
+    font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted-3);padding:10px 10px 6px;white-space:nowrap;
+  }
+  .sb-item{
+    display:flex;align-items:center;gap:11px;
+    padding:9px 10px;border-radius:9px;
+    font-size:.84rem;font-weight:600;color:var(--muted);
+    text-decoration:none;cursor:pointer;
+    transition:background .16s ease, color .16s ease;
+    margin-bottom:2px;position:relative;white-space:nowrap;
+  }
+  .sb-item:hover{background:var(--ink-a04);color:var(--text)}
+  .sb-item.active{
+    background:linear-gradient(90deg, var(--green-soft), transparent 85%);
+    color:var(--text);
+    box-shadow:inset 2px 0 0 var(--green);
+  }
+  .sb-icon{
+    width:28px;height:28px;flex-shrink:0;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--ink-a03);border:1px solid var(--line);
+    color:var(--muted);transition:.16s ease;
+  }
+  .sb-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .sb-item:hover .sb-icon{background:var(--ink-a05);color:var(--text)}
+  .sb-item.active .sb-icon{background:var(--green-soft);border-color:var(--green-line);color:var(--green)}
+  .sb-text{transition:opacity .15s ease}
+
+  .sb-footer{padding:12px;border-top:1px solid var(--line)}
+  .sb-user{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:10px}
+  .sb-avatar{
+    width:32px;height:32px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(180deg,#2e8c5a,#0b7a3f);color:#f4f3ee;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;
+    box-shadow:inset 0 1px 0 var(--ink-a18);
+  }
+  [data-theme="light"] .sb-avatar{color:#fff}
+  .sb-user-info{min-width:0}
+  .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sb-user-role{font-size:.66rem;color:var(--muted-2);font-family:var(--mono);letter-spacing:.04em;white-space:nowrap}
+
+  /* Collapsed state — icon rail */
+  .app.collapsed .sb-wordmark,
+  .app.collapsed .sb-team,
+  .app.collapsed .sb-mode,
+  .app.collapsed .sb-label,
+  .app.collapsed .sb-text,
+  .app.collapsed .sb-user-info{
+    opacity:0;pointer-events:none;
+    width:0;height:0;overflow:hidden;margin:0;padding:0;
+  }
+  .app.collapsed .sb-header{justify-content:center;padding:18px 0 14px}
+  .app.collapsed .sb-collapse{position:absolute;top:18px;right:10px;opacity:0}
+  .app.collapsed .sidebar:hover .sb-collapse{opacity:1}
+  .app.collapsed .sb-section{padding:12px 10px}
+  .app.collapsed .sb-item{justify-content:center;padding:9px 0;gap:0}
+  .app.collapsed .sb-footer{display:flex;justify-content:center}
+  .app.collapsed .sb-user{padding:6px 0}
+
+  .app-main{min-width:0;display:flex;flex-direction:column}
+
+  .sb-scrim{display:none}
+  .nav-hamburger{display:none}
+
+  /* ═══ SLIM TOP BAR ═══ */
   nav.bric-nav{
     position:sticky;top:0;z-index:60;
     background:var(--nav-bg);
@@ -260,10 +396,10 @@
     border-bottom:1px solid var(--line);
   }
   .nav-inner{
-    max-width:1480px;margin:0 auto;
-    padding:14px 28px;
-    display:flex;align-items:center;justify-content:space-between;gap:22px;
+    padding:12px 28px;
+    display:flex;align-items:center;gap:16px;
   }
+  .nav-spacer{flex:1}
   .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.08rem;letter-spacing:-.02em}
   .brand-mark-b{
     width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;
@@ -271,27 +407,13 @@
     box-shadow:0 12px 26px rgba(11,122,63,.14), inset 0 1px 0 var(--ink-a08);
   }
   .brand-mark-b svg{width:100%;height:100%;display:block}
-  .b-logo-bg{fill:#111317}
-  .b-logo-main{fill:#f4f1e8}
-  .b-logo-cut{fill:#1F6F3D}
-  [data-theme="light"] .b-logo-bg{fill:#0e1612}
-  [data-theme="light"] .b-logo-main{fill:#f7f4ed}
-  [data-theme="light"] .b-logo-cut{fill:#089c3e}
   .brand-wordmark{display:inline-flex;align-items:baseline;gap:6px}
   .brand-wordmark .ws-sub{
     font-family:var(--serif);font-style:italic;font-weight:600;
     color:var(--green-tint);font-size:.95rem;letter-spacing:-.01em;
   }
 
-  .nav-links{display:flex;gap:6px;align-items:center;color:var(--muted);font-weight:600}
-  .nav-links a{
-    position:relative;display:inline-flex;align-items:center;justify-content:center;
-    padding:9px 14px;border-radius:999px;color:var(--muted);
-    font-size:.86rem;
-    transition:.2s ease;border:1px solid transparent;
-  }
-  .nav-links a:hover{color:var(--text);border-color:rgba(11,122,63,.16);background:rgba(11,122,63,.04)}
-  .nav-links a.active{color:var(--text);background:rgba(11,122,63,.10);border-color:rgba(11,122,63,.24)}
+  .nav-links{display:none}
 
   /* ═══ MODE TOGGLE (Owner ↔ Broker) ═══ */
   .mode-toggle{
@@ -1815,13 +1937,42 @@
     /* prevent any sideways page scroll */
     html,body{overflow-x:hidden;max-width:100%}
 
-    /* nav: brand left, controls right; mode-toggle wraps to its own centered row if needed */
-    .nav-inner{padding:10px 14px;gap:10px;flex-wrap:wrap}
-    .brand{font-size:.98rem;min-width:0;flex:1}
-    .brand-wordmark{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .nav-right{gap:6px;flex-shrink:0;order:2}
-    .mode-toggle{order:3;flex-basis:100%;justify-content:center}
-    /* shrink theme toggle to icon-only on phones */
+    /* app shell collapses to single column; sidebar becomes a drawer */
+    .app, .app.collapsed{grid-template-columns:1fr}
+    .sidebar{
+      position:fixed;left:-280px;top:0;width:264px;height:100vh;
+      transition:left .26s cubic-bezier(.4,0,.2,1);
+      box-shadow:0 0 60px rgba(0,0,0,.4);
+    }
+    .sidebar.mobile-open{left:0}
+    /* force expanded look inside the drawer even if collapsed state set */
+    .app.collapsed .sidebar .sb-wordmark,
+    .app.collapsed .sidebar .sb-team,
+    .app.collapsed .sidebar .sb-mode,
+    .app.collapsed .sidebar .sb-label,
+    .app.collapsed .sidebar .sb-text,
+    .app.collapsed .sidebar .sb-user-info{
+      opacity:1;width:auto;height:auto;overflow:visible;margin:initial;padding:initial;pointer-events:auto;
+    }
+    .app.collapsed .sidebar .sb-item{justify-content:flex-start;padding:9px 10px;gap:11px}
+    .app.collapsed .sidebar .sb-header{justify-content:space-between;padding:18px 16px 14px}
+    .app.collapsed .sidebar .sb-collapse{display:none}
+    .sb-collapse{display:none}
+    .sb-scrim{
+      display:block;position:fixed;inset:0;z-index:70;
+      background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .26s ease;
+    }
+    .sb-scrim.show{opacity:1;pointer-events:auto}
+
+    /* slim topbar: show hamburger */
+    .nav-hamburger{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:38px;height:38px;border-radius:10px;flex-shrink:0;
+      background:transparent;border:1px solid var(--line-strong);color:var(--muted);cursor:pointer;
+    }
+    .nav-hamburger svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .nav-inner{padding:10px 14px;gap:10px}
+    .nav-right{gap:6px;flex-shrink:0}
     #themeToggle .theme-label{display:none}
     #themeToggle{padding:0 10px;width:38px}
     .nav-icon-btn{width:38px;height:38px}
@@ -1921,88 +2072,165 @@
 </head>
 <body>
 
-<nav class="bric-nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand" aria-label="BRIC Studios">
-      <span class="brand-mark-b" aria-hidden="true">
-        <svg viewBox="0 0 64 64">
-          <rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect>
-          <path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path>
-          <path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path>
-        </svg>
-      </span>
-      <span class="brand-wordmark">BRIC Studios<span class="ws-sub">brokers</span></span>
-    </a>
+<div class="app" id="app">
 
-    <div class="mode-toggle" role="tablist" aria-label="Workspace mode">
-      <div class="mode-slider" id="modeSlider"></div>
-      <button class="mode-btn" id="modeOwnerBtn" data-mode="owner" role="tab" aria-selected="false" onclick="setMode('owner')">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 14L16 6L26 14V25C26 25.6 25.6 26 25 26H7C6.4 26 6 25.6 6 25V14Z"/><path d="M13 26V18H19V26"/></svg>
-        <span class="mode-label-long">Owner</span><span style="display:none" class="mode-label-short">O</span>
-        <svg class="lock-mini" id="ownerLockIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      </button>
-      <button class="mode-btn active" id="modeBrokerBtn" data-mode="broker" role="tab" aria-selected="true" onclick="setMode('broker')">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 12H27L25 24H7L5 12Z"/><path d="M11 12V9C11 7.3 12.3 6 14 6H18C19.7 6 21 7.3 21 9V12"/><path d="M11 17V19"/><path d="M21 17V19"/></svg>
-        <span class="mode-label-long">Broker</span><span style="display:none" class="mode-label-short">B</span>
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <a href="index.html" class="sb-logo" aria-label="BRIC Studios">
+        <span class="sb-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><rect class="b-logo-bg" x="4" y="4" width="56" height="56" rx="15"></rect><path class="b-logo-main" d="M18 14h17.8c7.7 0 13.2 4.8 13.2 11.4 0 4.4-2.4 7.8-6.2 9.3 4.9 1.3 8.1 5.2 8.1 10.4 0 7.2-5.9 12.9-14.7 12.9H18V14Zm11.2 9.5v8.2h6.2c3.1 0 5.1-1.6 5.1-4.1 0-2.6-2-4.1-5.1-4.1h-6.2Zm0 17.3v8.8h7.1c3.4 0 5.5-1.7 5.5-4.4 0-2.8-2.1-4.4-5.5-4.4h-7.1Z"></path><path class="b-logo-cut" d="M18 42.5 32.8 58H18V42.5Z"></path></svg>
+        </span>
+        <span class="sb-wordmark">BRIC Studios</span>
+      </a>
+      <button class="sb-collapse" id="sbCollapse" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
     </div>
 
-    <div class="nav-links">
-      <a href="valuation.html">Valuation</a>
-      <a href="om-studio.html">OM Builder</a>
-      <a href="buyer-intelligence.html">Buyers</a>
-      <a href="heatmap.html">Market Intel</a>
+    <!-- Team identity -->
+    <div class="sb-team">
+      <div class="sb-team-eyebrow">Team</div>
+      <button class="sb-team-name" onclick="promptTeamName()" title="Rename team">
+        <span id="sbTeamName">The Peters Team</span>
+        <svg class="sb-team-edit" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+      </button>
     </div>
 
-    <div class="nav-right">
-      <button class="nav-icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle theme">
-        <svg id="iconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg id="iconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-        <span class="theme-label" id="themeLabel">Light</span>
-      </button>
-      <button class="nav-icon-btn" onclick="clearAllData()" title="Clear all data" aria-label="Clear all">
-        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
-      </button>
-      <button class="nav-icon-btn" title="Notifications" aria-label="Notifications">
-        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-      </button>
-      <div class="user-chip" title="Maya Rosen — Senior Broker">
-        <div class="user-avatar" id="userInitials">MR</div>
-        <div>
-          <div class="user-name" id="userName">Maya Rosen</div>
-          <div class="user-role">NYC METRO</div>
+    <!-- Mode toggle (Owner / Broker) -->
+    <div class="sb-mode">
+      <div class="mode-toggle" role="tablist" aria-label="Workspace mode">
+        <div class="mode-slider" id="modeSlider"></div>
+        <button class="mode-btn" id="modeOwnerBtn" data-mode="owner" role="tab" aria-selected="false" onclick="setMode('owner')">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 14L16 6L26 14V25C26 25.6 25.6 26 25 26H7C6.4 26 6 25.6 6 25V14Z"/><path d="M13 26V18H19V26"/></svg>
+          <span class="mode-label-long">Owner</span>
+          <svg class="lock-mini" id="ownerLockIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        </button>
+        <button class="mode-btn active" id="modeBrokerBtn" data-mode="broker" role="tab" aria-selected="true" onclick="setMode('broker')">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 12H27L25 24H7L5 12Z"/><path d="M11 12V9C11 7.3 12.3 6 14 6H18C19.7 6 21 7.3 21 9V12"/><path d="M11 17V19"/><path d="M21 17V19"/></svg>
+          <span class="mode-label-long">Broker</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="sb-section">
+      <div class="sb-label">Workspace</div>
+      <a class="sb-item active" data-target="top" onclick="sbJump(event,'top')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6.5 24.5H25.5"/><path d="M9 21V16.5"/><path d="M13.5 21V11.5"/><path d="M18 21V14.5"/><path d="M22.5 21V8.5"/></svg></span>
+        <span class="sb-text">Overview</span>
+      </a>
+      <a class="sb-item" data-target="valuationsSection" onclick="sbJump(event,'valuationsSection')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"/><path d="M8.5 21V16.5"/><path d="M13 21V12.5"/><path d="M17.5 21V15"/><path d="M22 21V9.5"/></svg></span>
+        <span class="sb-text">Valuations</span>
+      </a>
+      <a class="sb-item" data-target="proposalsSection" onclick="sbJump(event,'proposalsSection')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><path d="M11 19H17"/></svg></span>
+        <span class="sb-text">Proposals</span>
+      </a>
+      <a class="sb-item" data-target="coverageSection" onclick="sbJump(event,'coverageSection')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 6C12 6 9 9 9 13c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7Z"/><circle cx="16" cy="13" r="2.5"/></svg></span>
+        <span class="sb-text">Coverage</span>
+      </a>
+      <a class="sb-item" data-target="teamListingsSection" onclick="sbJump(event,'teamListingsSection')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"/><path d="M6 25.5H26"/><path d="M14 25.5V20H18V25.5"/></svg></span>
+        <span class="sb-text">Team Listings</span>
+      </a>
+      <a class="sb-item" data-target="pipelineSection" onclick="sbJump(event,'pipelineSection')">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="7" width="5" height="18" rx="1.2"/><rect x="13.5" y="7" width="5" height="11" rx="1.2"/><rect x="21" y="7" width="5" height="14" rx="1.2"/></svg></span>
+        <span class="sb-text">Pipeline</span>
+      </a>
+
+      <div class="sb-label" style="margin-top:.6rem">Studios</div>
+      <a class="sb-item" href="valuation.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"/><path d="M8.5 21V16.5"/><path d="M13 21V12.5"/><path d="M17.5 21V15"/><path d="M22 21V9.5"/><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"/></svg></span>
+        <span class="sb-text">Valuation Studio</span>
+      </a>
+      <a class="sb-item" href="om-studio.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></span>
+        <span class="sb-text">OM Studio</span>
+      </a>
+      <a class="sb-item" href="deal-studio.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="6.5" width="12" height="18" rx="2"/><path d="M10.5 11H15.5"/><path d="M10.5 15H15.5"/><path d="M10.5 19H14"/><path d="M21 11.5L25.8 16.3"/></svg></span>
+        <span class="sb-text">Deal Studio</span>
+      </a>
+      <a class="sb-item" href="heatmap.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"/><path d="M13 7V22"/><path d="M19 9.5V24.5"/></svg></span>
+        <span class="sb-text">Market Heatmap</span>
+      </a>
+      <a class="sb-item" href="shop.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 9h20l-1.5 13.5a2 2 0 0 1-2 1.8H9.5a2 2 0 0 1-2-1.8L6 9Z"/><path d="M11 9V7a5 5 0 0 1 10 0v2"/></svg></span>
+        <span class="sb-text">Shop</span>
+      </a>
+      <a class="sb-item" href="learning.html">
+        <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/></svg></span>
+        <span class="sb-text">Learning Studio</span>
+      </a>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbUserInitials">MR</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sbUserName">Maya Rosen</div>
+          <div class="sb-user-role">Senior Broker</div>
         </div>
       </div>
     </div>
+  </aside>
+
+  <div class="sb-scrim" id="sbScrim" onclick="closeSidebarMobile()"></div>
+
+  <!-- ═══ MAIN COLUMN ═══ -->
+  <div class="app-main">
+
+  <nav class="bric-nav">
+    <div class="nav-inner">
+      <button class="nav-hamburger" id="navHamburger" onclick="openSidebarMobile()" aria-label="Open menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="nav-spacer"></div>
+      <div class="nav-right">
+        <button class="nav-icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle theme">
+          <svg id="iconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="iconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <span class="theme-label" id="themeLabel">Light</span>
+        </button>
+        <button class="nav-icon-btn" onclick="clearAllData()" title="Clear all data" aria-label="Clear all">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
+        </button>
+        <button class="nav-icon-btn" title="Notifications" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-head fade-in" id="top">
+    <div>
+      <div class="kicker">Production Workspace</div>
+      <h1>Broker <span class="accent">workspace</span></h1>
+      <p class="lede">Track every valuation, proposal, and owner conversation. Stale valuations flag automatically — keep your numbers defensible.</p>
+    </div>
+    <div class="page-actions">
+      <div class="team-block" id="brokerSwitch"></div>
+      <button class="btn" onclick="exportCSV()">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn btn-green" onclick="openCaptureModal()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Valuation
+      </button>
+    </div>
   </div>
-</nav>
 
-<div class="page-head fade-in">
-  <div>
-    <div class="kicker">Production Workspace</div>
-    <h1>Broker <span class="accent">workspace</span></h1>
-    <p class="lede">Track every valuation, proposal, and owner conversation. Stale valuations flag automatically — keep your numbers defensible.</p>
+  <div class="page" style="padding-bottom:0">
+    <div id="actionInbox"></div>
   </div>
-  <div class="page-actions">
-    <div class="team-block" id="brokerSwitch"></div>
-    <button class="btn" onclick="exportCSV()">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export CSV
-    </button>
-    <button class="btn btn-green" onclick="openCaptureModal()">
-      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      New Valuation
-    </button>
-  </div>
-</div>
 
-<div class="page" style="padding-bottom:0">
-  <div id="actionInbox"></div>
-</div>
+  <main class="page">
 
-<main class="page">
-
-  <!-- ═══ SHARED WITH ME — prominent top feature ═══ -->
+    <!-- ═══ SHARED WITH ME — prominent top feature ═══ -->
   <section class="section fade-in-up" id="sharedWithMeSection" style="margin-top:18px" hidden>
     <div class="section-head">
       <div>
@@ -2023,7 +2251,7 @@
     <div class="metrics" id="metricsRow"></div>
   </section>
 
-  <section class="section fade-in-up">
+  <section class="section fade-in-up" id="valuationsSection">
     <div class="section-head">
       <div>
         <div class="section-title">Valuation <span class="accent">tracker</span></div>
@@ -2079,7 +2307,7 @@
     </div>
   </section>
 
-  <section class="section fade-in-up">
+  <section class="section fade-in-up" id="proposalsSection">
     <div class="section-head">
       <div>
         <div class="section-title">Proposal <span class="accent">list</span></div>
@@ -2143,7 +2371,7 @@
     </div>
   </section>
 
-  <section class="section fade-in-up">
+  <section class="section fade-in-up" id="coverageSection">
     <div class="section-head">
       <div>
         <div class="section-title">Submarket <span class="accent">coverage</span></div>
@@ -2160,7 +2388,7 @@
     </div>
   </section>
 
-  <section class="section fade-in-up">
+  <section class="section fade-in-up" id="teamListingsSection">
     <div class="section-head">
       <div>
         <div class="section-title">Team <span class="accent">listings</span></div>
@@ -2219,7 +2447,7 @@
     </div>
   </section>
 
-  <section class="section fade-in-up">
+  <section class="section fade-in-up" id="pipelineSection">
     <div class="section-head">
       <div>
         <div class="section-title">Proposal <span class="accent">pipeline</span></div>
@@ -2255,7 +2483,10 @@
     <div>BRIC Studios · Broker Workspace · Data stored locally in your browser.</div>
     <div>Last session: <span id="lastSession">—</span></div>
   </div>
-</main>
+  </main>
+
+  </div><!-- /.app-main -->
+</div><!-- /.app -->
 
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
@@ -2595,6 +2826,47 @@
   const TEAM_KEY    = 'bric_broker_teamname_v1';
   const THEME_KEY   = 'bric_theme';            // shared across owner + broker
   const THEME_KEY_LEGACY = 'bric_broker_theme_v1'; // fallback for existing users
+  const SIDEBAR_KEY = 'bric_broker_sidebar_v1'; // 'collapsed' | 'expanded'
+
+  /* ═══ SIDEBAR ═══ */
+  function applySidebar(state){
+    const app = document.getElementById('app');
+    if (!app) return;
+    if (state === 'collapsed') app.classList.add('collapsed');
+    else app.classList.remove('collapsed');
+  }
+  function toggleSidebar(){
+    const app = document.getElementById('app');
+    const collapsed = app.classList.toggle('collapsed');
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? 'collapsed' : 'expanded'); } catch(e){}
+  }
+  function openSidebarMobile(){
+    document.getElementById('sidebar')?.classList.add('mobile-open');
+    document.getElementById('sbScrim')?.classList.add('show');
+  }
+  function closeSidebarMobile(){
+    document.getElementById('sidebar')?.classList.remove('mobile-open');
+    document.getElementById('sbScrim')?.classList.remove('show');
+  }
+  function sbJump(e, targetId){
+    e.preventDefault();
+    // active state
+    document.querySelectorAll('.sb-item[data-target]').forEach(i=>i.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    const el = targetId === 'top' ? document.getElementById('top') : document.getElementById(targetId);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    closeSidebarMobile();
+  }
+  // Apply saved sidebar state immediately. Default: collapsed (clean look).
+  (function(){
+    let st = 'collapsed';
+    try { st = localStorage.getItem(SIDEBAR_KEY) || 'collapsed'; } catch(e){}
+    // wait for DOM
+    document.addEventListener('DOMContentLoaded', ()=>applySidebar(st));
+    // also apply now in case DOM already parsed
+    setTimeout(()=>applySidebar(st), 0);
+  })();
+
   // Shared keys — must match owner dashboard
   const WORKSPACE_KEY = 'bricWorkspaceV1';
   const SHARES_KEY = 'bricBrokerShares';
@@ -2647,7 +2919,8 @@
   function setTeamName(name) {
     teamName = (name || '').trim() || 'My Team';
     try { localStorage.setItem(TEAM_KEY, teamName); } catch(e) {}
-    renderBrokerSwitch();
+    const el = document.getElementById('sbTeamName');
+    if (el) el.textContent = teamName;
   }
   function promptTeamName() {
     const next = prompt('Team name', teamName);
@@ -2992,6 +3265,10 @@
   }
 
   function renderBrokerSwitch() {
+    // keep sidebar team name in sync
+    const tn = document.getElementById('sbTeamName');
+    if (tn) tn.textContent = teamName;
+
     const el = document.getElementById('brokerSwitch');
     if (!el) return;
     if (valuations.length === 0) { el.style.display = 'none'; return; }
@@ -3012,13 +3289,6 @@
     }).join('');
 
     el.innerHTML = `
-      <div class="team-header">
-        <span class="team-eyebrow">Team</span>
-        <button class="team-name" onclick="promptTeamName()" title="Rename team">
-          ${escapeHtml(teamName)}
-          <svg class="team-edit" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
-        </button>
-      </div>
       <div class="broker-switch" role="group" aria-label="Filter by broker">
         <span class="broker-switch-label">View</span>
         ${pills}
@@ -3779,6 +4049,13 @@
   load();
   renderAll();
   applyTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  // sync sidebar identity + state
+  (function(){
+    const tn = document.getElementById('sbTeamName'); if (tn) tn.textContent = teamName;
+    let st = 'collapsed';
+    try { st = localStorage.getItem(SIDEBAR_KEY) || 'collapsed'; } catch(e){}
+    applySidebar(st);
+  })();
 
   document.getElementById('modalBackdrop').addEventListener('click', (e) => {
     if (e.target.id === 'modalBackdrop') closeModal();
