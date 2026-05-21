@@ -138,7 +138,13 @@ body::after{
 }
 
 /* ═══ APP SHELL ═══ */
-.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.app{
+  display:grid;grid-template-columns:248px 1fr;min-height:100vh;
+  transition:grid-template-columns .22s cubic-bezier(.4,0,.2,1);
+}
+.app.collapsed{grid-template-columns:68px 1fr}
+.sb-scrim{display:none}
+.nav-hamburger{display:none}
 
 /* ═══ SIDEBAR ═══ */
 .sidebar{
@@ -146,13 +152,26 @@ body::after{
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   position:sticky;top:0;height:100vh;
+  overflow:hidden;
 }
-.sb-header{padding:1.35rem 1.15rem 1rem;border-bottom:1px solid var(--border)}
+.sb-header{
+  padding:1.35rem 1.15rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;
+}
 .sb-logo{
   font-family:var(--sans);font-weight:700;font-size:1rem;letter-spacing:-0.015em;
   color:var(--paper);text-decoration:none;
-  display:flex;align-items:center;gap:0.7rem;
+  display:flex;align-items:center;gap:0.7rem;min-width:0;
 }
+.sb-collapse{
+  background:transparent;border:1px solid var(--border);color:var(--paper-dim);
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .15s ease;
+}
+.sb-collapse:hover{color:var(--paper);border-color:var(--emerald-line);background:var(--emerald-soft)}
+.sb-collapse svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s ease}
+.app.collapsed .sb-collapse svg{transform:rotate(180deg)}
 .sb-brand-mark{
   width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
   border-radius:11px;overflow:hidden;
@@ -162,11 +181,36 @@ body::after{
 .b-logo-bg{fill:#0b1510}
 .b-logo-main{fill:var(--ivory)}
 .b-logo-cut{fill:#143b25}
-.sb-wordmark{display:inline-flex;align-items:baseline;white-space:nowrap;font-weight:600}
+.sb-wordmark{display:inline-flex;align-items:baseline;white-space:nowrap;font-weight:600;transition:opacity .15s ease}
 .sb-tag{
   font-family:var(--mono);font-size:0.54rem;letter-spacing:0.22em;text-transform:uppercase;
   color:var(--paper-mute);margin-top:0.6rem;margin-left:3rem;
 }
+
+/* ── Collapsed icon-rail state ── */
+.app.collapsed .sb-wordmark,
+.app.collapsed .sb-tag,
+.app.collapsed .sb-label,
+.app.collapsed .sb-item-text,
+.app.collapsed .sb-badge,
+.app.collapsed .sb-lock,
+.app.collapsed .sb-user-info,
+.app.collapsed .sb-team-block{
+  opacity:0;width:0;height:0;overflow:hidden;margin:0;padding:0;pointer-events:none;white-space:nowrap;
+}
+.app.collapsed .sb-header{
+  flex-direction:column;align-items:center;gap:0.6rem;
+  padding:1.35rem 0 0.9rem;
+}
+.app.collapsed .sb-collapse{
+  position:static;opacity:1;
+  width:32px;height:26px;
+}
+.app.collapsed .sb-section{padding:0.85rem 0.65rem}
+.app.collapsed .sb-item{justify-content:center;padding:0.55rem 0;gap:0}
+.app.collapsed .sb-footer{display:flex;justify-content:center}
+.app.collapsed .sb-user{padding:0.5rem 0}
+
 
 .sb-section{padding:0.85rem 0.75rem;flex:1;overflow-y:auto}
 .sb-section::-webkit-scrollbar{width:3px}
@@ -445,12 +489,45 @@ body::after{
   transition:all 0.15s ease;
 }
 .hero-dismiss:hover{color:var(--paper);border-color:rgba(243,238,226,0.16);background:rgba(243,238,226,0.03)}
-.hero-dismiss svg{width:13px;height:13px}
+.hero-dismiss svg{width:14px;height:14px}
+
+/* Collapsed hero bar — slim, clickable, re-opens the hero */
+.hero-collapsed{
+  width:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  background:linear-gradient(135deg, rgba(168,148,114,0.05), rgba(58,166,118,0.045) 100%);
+  border:1px solid rgba(243,238,226,0.08);
+  border-radius:12px;
+  padding:0.85rem 1.1rem;
+  margin-bottom:1.5rem;
+  cursor:pointer;text-align:left;
+  transition:border-color 0.16s ease, background 0.16s ease;
+}
+.hero-collapsed:hover{
+  border-color:var(--emerald-line);
+  background:linear-gradient(135deg, rgba(168,148,114,0.07), rgba(58,166,118,0.07) 100%);
+}
+.hero-collapsed-left{display:inline-flex;align-items:center;gap:0.6rem;min-width:0}
+.hero-collapsed-text{
+  font-family:var(--serif);font-size:1.05rem;font-weight:600;letter-spacing:-0.01em;
+  color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hero-collapsed-cta{
+  display:inline-flex;align-items:center;gap:0.4rem;flex-shrink:0;
+  font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;
+  color:var(--emerald);
+}
+.hero-collapsed-cta svg{width:13px;height:13px}
+:root:not([data-theme="dark"]) .hero-collapsed{
+  background:linear-gradient(135deg, rgba(168,148,114,0.06), rgba(44,138,92,0.05) 100%);
+  border-color:rgba(26,24,20,0.08);
+}
 
 .hero-metrics{
   display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:0.55rem;
   margin:0 0 1.1rem;max-width:680px;position:relative;
 }
+.hero-metrics:has(.hero-checklist){max-width:760px;display:block}
 .hero-metric{
   background:rgba(243,238,226,0.025);
   border:1px solid rgba(243,238,226,0.06);
@@ -463,11 +540,15 @@ body::after{
 }
 .hero-metric-v{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--paper);line-height:1.1}
 
-/* Empty-state checklist: SIMPLE block layout, no flex on the text wrapper. */
+/* Empty-state checklist: 3-up grid so steps fill the hero width. */
 .hero-checklist{
   margin:0 0 1.1rem;
   width:100%;
+  max-width:760px;
   position:relative;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:0.65rem;
 }
 .hero-check-item{
   position:relative;
@@ -476,7 +557,7 @@ body::after{
   border:1px solid rgba(243,238,226,0.06);
   border-radius:9px;
   padding:0.85rem 1rem 0.85rem 3.5rem;
-  margin-bottom:0.5rem;
+  margin-bottom:0;
   box-sizing:border-box;
   min-height:62px;
 }
@@ -609,7 +690,16 @@ body::after{
   background:rgba(168,148,114,0.08);
   border:1px solid rgba(168,148,114,0.25);
   padding:0.28rem 0.55rem;border-radius:4px;white-space:nowrap;
-  flex-shrink:0;align-self:flex-start;
+  flex-shrink:0;align-self:flex-start;transform-origin:right center;
+  transition:color .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+/* Hovering the service tiles lights up the Coming Soon pill */
+#vettedProsPanel:hover .coming-pill{
+  color:var(--emerald);
+  background:var(--emerald-soft);
+  border-color:var(--emerald);
+  box-shadow:0 0 0 3px var(--emerald-soft);
+  transform:scale(1.06);
 }
 
 /* Pro tiles */
@@ -1164,9 +1254,32 @@ select.form-input{
   .grid-2{grid-template-columns:1fr}
 }
 @media(max-width:900px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:fixed;left:-248px;top:0;z-index:200;transition:left 0.3s}
-  .sidebar.open{left:0}
+  .app, .app.collapsed{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-280px;top:0;width:264px;z-index:200;transition:left 0.26s cubic-bezier(.4,0,.2,1);box-shadow:0 0 60px rgba(0,0,0,.4)}
+  .sidebar.mobile-open{left:0}
+  /* force expanded look inside the drawer even if collapsed state set */
+  .app.collapsed .sidebar .sb-wordmark,
+  .app.collapsed .sidebar .sb-tag,
+  .app.collapsed .sidebar .sb-label,
+  .app.collapsed .sidebar .sb-item-text,
+  .app.collapsed .sidebar .sb-badge,
+  .app.collapsed .sidebar .sb-lock,
+  .app.collapsed .sidebar .sb-user-info,
+  .app.collapsed .sidebar .sb-team-block{
+    opacity:1;width:auto;height:auto;overflow:visible;margin:initial;padding:initial;pointer-events:auto;
+  }
+  .app.collapsed .sidebar .sb-item{justify-content:flex-start;padding:0.55rem 0.85rem;gap:0.7rem}
+  .app.collapsed .sidebar .sb-header{justify-content:space-between;padding:1.35rem 1.15rem 1rem}
+  .app.collapsed .sidebar .sb-collapse,
+  .sb-collapse{display:none}
+  .sb-scrim{display:block;position:fixed;inset:0;z-index:190;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .26s ease}
+  .sb-scrim.show{opacity:1;pointer-events:auto}
+  .nav-hamburger{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:38px;height:38px;border-radius:10px;flex-shrink:0;order:0;
+    background:transparent;border:1px solid var(--border);color:var(--paper-dim);cursor:pointer;
+  }
+  .nav-hamburger svg{width:18px;height:18px}
   .topbar{padding:0.85rem 1.25rem;flex-wrap:wrap;gap:0.65rem}
   .content{padding:1.5rem 1.25rem 3rem}
   .kpi-row{grid-template-columns:1fr 1fr;gap:0.75rem}
@@ -1204,6 +1317,7 @@ select.form-input{
   .hero-actions{gap:0.4rem}
   .hero-btn{padding:0.5rem 0.85rem;font-size:0.76rem}
   /* Checklist tiles get a bit tighter on mobile */
+  .hero-checklist{grid-template-columns:1fr;gap:0.5rem}
   .hero-check-item{padding:0.65rem 0.8rem;gap:0.7rem}
   .hero-check-num{width:24px;height:24px;font-size:0.68rem}
   .hero-check-title{font-size:0.82rem}
@@ -1451,6 +1565,20 @@ select.form-input{
 :root:not([data-theme="dark"]) .om-stat{background:rgba(168,148,114,0.05);border:1px solid rgba(26,24,20,0.06)}
 
 /* Vetted Pros */
+/* Highlight when its sidebar link is hovered */
+#vettedProsPanel{
+  transition:box-shadow .22s ease, border-color .22s ease, transform .22s ease;
+}
+#vettedProsPanel.nav-highlight{
+  border-color:var(--emerald-line);
+  box-shadow:0 0 0 1px var(--emerald-line), 0 18px 50px rgba(58,166,118,0.18);
+  transform:translateY(-2px);
+}
+#vettedProsPanel.nav-highlight .coming-pill{
+  background:var(--emerald-soft);
+  border-color:var(--emerald-line);
+  color:var(--emerald);
+}
 :root:not([data-theme="dark"]) .pro-tile{
   background:#fdfaf2;
 }
@@ -1592,66 +1720,71 @@ select.form-input{
         </span>
         <span class="sb-wordmark">BRIC Studios</span>
       </a>
-      <div class="sb-tag" id="sbTag">Owner Workspace</div>
+      <button class="sb-collapse" id="sbCollapse" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
     </div>
+    <div class="sb-tag" id="sbTag" style="padding:0 1.15rem 0.6rem">Owner Workspace</div>
 
     <nav class="sb-section" id="sbNav">
       <div class="sb-label">Workspace</div>
       <a class="sb-item active">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6.5 24.5H25.5"/><path d="M9 21V16.5"/><path d="M13.5 21V11.5"/><path d="M18 21V14.5"/><path d="M22.5 21V8.5"/></svg></span>
-        Overview
+        <span class="sb-item-text">Overview</span>
       </a>
       <a class="sb-item">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 25.5V8.5C8 7.4 8.9 6.5 10 6.5H22C23.1 6.5 24 7.4 24 8.5V25.5"/><path d="M6 25.5H26"/><path d="M11.5 11H14"/><path d="M18 11H20.5"/><path d="M11.5 15.5H14"/><path d="M18 15.5H20.5"/><path d="M14 25.5V20H18V25.5"/></svg></span>
-        My Properties
+        <span class="sb-item-text">My Properties</span>
         <span class="sb-badge" id="myPropertiesBadge">0</span>
       </a>
       <a class="sb-item">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="8"/><path d="M16 8V16L21 19"/><path d="M6 16H4"/><path d="M28 16H26"/></svg></span>
-        Activity
+        <span class="sb-item-text">Activity</span>
       </a>
       <a class="sb-item">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></span>
-        Saved OMs
+        <span class="sb-item-text">Saved OMs</span>
         <span class="sb-badge" id="savedOmsBadge">0</span>
       </a>
 
       <div class="sb-label" style="margin-top:0.65rem">Studios</div>
       <a class="sb-item" href="valuation.html">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24.5H26"/><path d="M8.5 21V16.5"/><path d="M13 21V12.5"/><path d="M17.5 21V15"/><path d="M22 21V9.5"/><path d="M8 11.5L12.5 8.5L16.5 11L23.5 6.5"/><path d="M21 6.5H23.5V9"/></svg></span>
-        Valuation Studio
+        <span class="sb-item-text">Valuation Studio</span>
       </a>
       <a class="sb-item" href="om-studio.html">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="5.5" width="18" height="21" rx="2.2"/><path d="M11 11H21"/><path d="M11 15H21"/><rect x="11" y="18" width="10" height="5.5" rx="1.1"/></svg></span>
-        OM Studio
+        <span class="sb-item-text">OM Studio</span>
       </a>
       <a class="sb-item" href="learning.html">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8.5h8.5c2.2 0 4 1.8 4 4V26H10c-2.2 0-4-1.8-4-4V8.5Z"/><path d="M26 8.5h-7.5v17.5H22c2.2 0 4-1.8 4-4V8.5Z"/><path d="M10 13h4"/><path d="M10 17h4"/><path d="M21 13h2"/></svg></span>
-        Learning Studio
+        <span class="sb-item-text">Learning Studio</span>
       </a>
       <a class="sb-item" href="deal-studio.html">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="6.5" width="12" height="18" rx="2"/><path d="M10.5 11H15.5"/><path d="M10.5 15H15.5"/><path d="M10.5 19H14"/><path d="M21 11.5L25.8 16.3"/><path d="M23.1 9.4L27.9 14.2"/><path d="M20.1 18.3L17.8 20.6"/></svg></span>
-        Deal Studio
+        <span class="sb-item-text">Deal Studio</span>
       </a>
       <a class="sb-item" href="heatmap.html">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 10.5L13 7L19 9.5L26 6.5V21.5L19 24.5L13 22L6 25.5Z"/><path d="M13 7V22"/><path d="M19 9.5V24.5"/><rect x="16.4" y="13.2" width="4.4" height="4.4" rx="0.9"/></svg></span>
-        Market Heatmap
+        <span class="sb-item-text">Market Heatmap</span>
       </a>
 
       <!-- Broker-only items (locked unless plan includes broker) -->
       <div class="sb-label" id="brokerLabel" style="margin-top:0.65rem">Broker Tools</div>
       <a class="sb-item locked" data-broker-only="1" onclick="handleBrokerLockedClick(event)">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7.5"/><circle cx="16" cy="16" r="2"/><path d="M16 4.5V8"/><path d="M27.5 16H24"/><path d="M16 27.5V24"/><path d="M4.5 16H8"/><circle cx="23.7" cy="8.3" r="1.7"/></svg></span>
-        Buyer Intelligence
+        <span class="sb-item-text">Buyer Intelligence</span>
         <span class="sb-lock">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         </span>
       </a>
 
       <div class="sb-label" style="margin-top:0.65rem">Network</div>
-      <a class="sb-item" href="network.html">
+      <a class="sb-item" href="network.html"
+         onmouseenter="highlightVettedPros(true)" onmouseleave="highlightVettedPros(false)"
+         onfocus="highlightVettedPros(true)" onblur="highlightVettedPros(false)">
         <span class="sb-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="9.5" cy="12" r="3"/><circle cx="22.5" cy="12" r="3"/><path d="M6 24C6.8 20.8 9 19.2 12.5 19.2"/><path d="M26 24C25.2 20.8 23 19.2 19.5 19.2"/><path d="M13 22H19"/><path d="M16 18V25"/></svg></span>
-        Find Vetted Pros
+        <span class="sb-item-text">Find Vetted Pros</span>
         <span class="sb-badge" style="background:rgba(168,148,114,0.08);border-color:rgba(168,148,114,0.22);color:var(--paper-soft)">Soon</span>
       </a>
     </nav>
@@ -1667,11 +1800,16 @@ select.form-input{
     </div>
   </aside>
 
+  <div class="sb-scrim" id="sbScrim" onclick="closeSidebarMobile()"></div>
+
   <!-- ═══ MAIN ═══ -->
   <main class="main">
 
     <!-- Topbar -->
     <div class="topbar">
+      <button class="nav-hamburger" id="navHamburger" onclick="openSidebarMobile()" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <!-- Mode Toggle -->
       <div class="mode-toggle" role="tablist" aria-label="Dashboard mode">
         <div class="mode-slider" id="modeSlider"></div>
@@ -1728,8 +1866,8 @@ select.form-input{
 
       <!-- HERO (greeting + next best action merged) -->
       <section class="hero fade-up" id="insightBanner">
-        <button type="button" class="hero-dismiss" id="insightDismiss" aria-label="Dismiss for today">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg>
+        <button type="button" class="hero-dismiss" id="insightDismiss" aria-label="Collapse" title="Collapse">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
         </button>
         <div class="hero-eyebrow">
           <span class="hero-eyebrow-dot"></span>
@@ -1743,6 +1881,18 @@ select.form-input{
           <a href="om-studio.html" class="hero-btn" id="insightSecondary">Generate OM →</a>
         </div>
       </section>
+
+      <!-- Collapsed hero bar — click to re-expand -->
+      <button type="button" class="hero-collapsed" id="insightCollapsed" onclick="expandInsightBanner()" hidden>
+        <span class="hero-collapsed-left">
+          <span class="hero-eyebrow-dot"></span>
+          <span class="hero-collapsed-text" id="heroCollapsedText">Good afternoon, Matthew</span>
+        </span>
+        <span class="hero-collapsed-cta">
+          Expand
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </button>
 
       <!-- KPI ROW (owner-focused) -->
       <div class="kpi-row">
@@ -1857,7 +2007,7 @@ select.form-input{
 
       <!-- Find Vetted Professionals (Coming Soon teaser) -->
       <div style="margin-bottom:1rem">
-        <div class="panel">
+        <div class="panel" id="vettedProsPanel">
           <div class="panel-hd">
             <div>
               <div class="panel-title">Find Vetted Professionals</div>
@@ -2254,6 +2404,41 @@ function toggleTheme(){
   } catch(e){}
   applyTheme(next);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR (collapse/expand) — shared key with broker dashboard
+   ═══════════════════════════════════════════════════════════ */
+const SIDEBAR_KEY = 'bric_broker_sidebar_v1'; // shared so both dashboards stay in sync
+function applySidebar(state){
+  const app = document.querySelector('.app');
+  if (!app) return;
+  if (state === 'collapsed') app.classList.add('collapsed');
+  else app.classList.remove('collapsed');
+}
+function toggleSidebar(){
+  const app = document.querySelector('.app');
+  const collapsed = app.classList.toggle('collapsed');
+  try { localStorage.setItem(SIDEBAR_KEY, collapsed ? 'collapsed' : 'expanded'); } catch(e){}
+}
+function openSidebarMobile(){
+  document.getElementById('sidebar')?.classList.add('mobile-open');
+  document.getElementById('sbScrim')?.classList.add('show');
+}
+function closeSidebarMobile(){
+  document.getElementById('sidebar')?.classList.remove('mobile-open');
+  document.getElementById('sbScrim')?.classList.remove('show');
+}
+function highlightVettedPros(on){
+  const panel = document.getElementById('vettedProsPanel');
+  if (!panel) return;
+  panel.classList.toggle('nav-highlight', !!on);
+}
+(function(){
+  let st = 'collapsed';
+  try { st = localStorage.getItem(SIDEBAR_KEY) || 'collapsed'; } catch(e){}
+  document.addEventListener('DOMContentLoaded', ()=>applySidebar(st));
+  setTimeout(()=>applySidebar(st), 0);
+})();
 
 /* ═══════════════════════════════════════════════════════════
    PLAN STATE
@@ -3284,10 +3469,16 @@ function renderInsightBanner(){
   const banner = document.getElementById('insightBanner');
   if(!banner) return;
 
-  const dismissed = localStorage.getItem('bricDashboardInsightDismissed');
-  if(dismissed === getTodayDismissKey()){
+  // If the user collapsed it before, show the slim bar instead of the full hero.
+  let collapsed = false;
+  try { collapsed = localStorage.getItem('bricDashboardInsightCollapsed') === '1'; } catch(e){}
+  if(collapsed){
     banner.style.display = 'none';
-    return;
+    const bar = document.getElementById('insightCollapsed');
+    const greet = document.getElementById('heroGreeting');
+    const txt = document.getElementById('heroCollapsedText');
+    if(greet && txt) txt.textContent = greet.textContent.replace(/\.$/, '');
+    if(bar) bar.hidden = false;
   }
 
   const ws = getWorkspace();
@@ -3355,21 +3546,36 @@ function renderInsightBanner(){
   const omUrl = 'om-studio.html?propertyId=' + encodeURIComponent(propertyId) + (om && om.id ? '&omId=' + encodeURIComponent(om.id) : '');
 
   if(!om){
-    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> has a saved valuation but no OM yet. Generate one to get it ready for lenders, pricing conversations, or a sale.`;
+    if(textEl) textEl.innerHTML = `You've got a saved valuation ready. Generate an OM to get it lender- and buyer-ready, or revisit your assumptions.`;
     setInsightButton('insightPrimary','Open Valuation →',valuationUrl);
     setInsightButton('insightSecondary','Generate OM →',omUrl);
   } else {
-    if(textEl) textEl.innerHTML = `<b>${safeText(address)}</b> is set up with a valuation and OM draft. Review assumptions before using externally, or check ${safeText(submarket)} signals.`;
+    if(textEl) textEl.innerHTML = `Your valuation and OM draft are set up. Review the assumptions before sharing externally, or run a new valuation anytime.`;
     setInsightButton('insightPrimary','Review Valuation →',valuationUrl);
     setInsightButton('insightSecondary','Open Saved OM →',omUrl);
   }
   // Populated state: clear the metrics row entirely. KPI cards below cover this.
   if(metrics) metrics.innerHTML = '';
 }
-function dismissInsightBanner(){
-  localStorage.setItem('bricDashboardInsightDismissed', getTodayDismissKey());
+function collapseInsightBanner(){
+  try { localStorage.setItem('bricDashboardInsightCollapsed', '1'); } catch(e){}
   const banner = document.getElementById('insightBanner');
+  const bar = document.getElementById('insightCollapsed');
   if(banner) banner.style.display = 'none';
+  if(bar){
+    // mirror the current greeting into the collapsed bar
+    const greet = document.getElementById('heroGreeting');
+    const txt = document.getElementById('heroCollapsedText');
+    if(greet && txt) txt.textContent = greet.textContent.replace(/\.$/, '');
+    bar.hidden = false;
+  }
+}
+function expandInsightBanner(){
+  try { localStorage.removeItem('bricDashboardInsightCollapsed'); } catch(e){}
+  const banner = document.getElementById('insightBanner');
+  const bar = document.getElementById('insightCollapsed');
+  if(bar) bar.hidden = true;
+  if(banner) banner.style.display = '';
 }
 
 /* ── Vetted Pros Waitlist ── */
@@ -3424,7 +3630,7 @@ document.addEventListener('DOMContentLoaded', function(){
   initWaitlist();
 
   const insightDismiss = document.getElementById('insightDismiss');
-  if(insightDismiss) insightDismiss.addEventListener('click', dismissInsightBanner);
+  if(insightDismiss) insightDismiss.addEventListener('click', collapseInsightBanner);
 
   // Modals: backdrop click + ESC closes any open modal
   const upgradeModal = document.getElementById('upgradeModal');
