@@ -66,7 +66,23 @@ select option{background:#111514;color:#f5f2ec}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.45rem 0;cursor:pointer}.toggle-label-wrap{flex:1}.toggle-main{font-size:.85rem;color:rgba(255,255,255,.9);font-weight:600;display:flex;align-items:center;gap:.5rem}.toggle-sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.15rem}.pill-badge{display:inline-block;font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.15rem .5rem;border-radius:999px;background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);text-transform:uppercase}
 .toggle{width:38px;height:22px;border-radius:12px;background:rgba(255,255,255,.1);position:relative;transition:background .2s;flex-shrink:0}.toggle.on{background:var(--gold)}.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}.toggle.on::after{transform:translateX(16px)}
 .rr-section{display:none;margin-top:.7rem}.rr-section.visible{display:block;animation:slideDown .25s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.rr-controls{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.35rem 0 .75rem}.upload-box{margin-bottom:.8rem;padding:.75rem .85rem;border:1px dashed rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.02)}.upload-note{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:.35rem}
+.rr-controls{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.35rem 0 .75rem}
+.upload-box{position:relative;z-index:1;margin-bottom:.8rem;padding:1rem 1.05rem;border:1.5px dashed rgba(0,184,74,.4);border-radius:12px;background:linear-gradient(180deg,rgba(0,184,74,.06),rgba(0,184,74,.02))}
+.upload-box label{color:rgba(255,255,255,.92)!important;font-weight:700}
+.upload-note{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:.4rem;line-height:1.45}
+/* Style the bare file input so it's clearly clickable, not a faint native control */
+.upload-box input[type="file"]{
+  width:100%;margin-top:.2rem;padding:.55rem;border-radius:8px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(0,184,74,.25);
+  color:rgba(255,255,255,.85);font-family:var(--mono);font-size:.72rem;cursor:pointer;
+}
+.upload-box input[type="file"]::file-selector-button{
+  margin-right:.7rem;padding:.45rem .85rem;border-radius:7px;cursor:pointer;
+  background:rgba(0,184,74,.18);border:1px solid rgba(0,184,74,.45);
+  color:var(--green-tint);font-family:var(--mono);font-size:.66rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;transition:all .12s ease;
+}
+.upload-box input[type="file"]::file-selector-button:hover{background:rgba(0,184,74,.3);border-color:rgba(0,184,74,.6)}
 .rr-subtitle{font-family:var(--mono);font-size:.58rem;color:rgba(255,255,255,.28);letter-spacing:.1em;text-transform:uppercase;margin:.8rem 0 .45rem}
 .rr-header{display:grid;grid-template-columns:54px 82px 82px 92px 30px;gap:.4rem;margin-bottom:.35rem;padding:0 .25rem}.rr-header span{font-family:var(--mono);font-size:.55rem;color:rgba(255,255,255,.32);letter-spacing:.08em;text-transform:uppercase}.rr-header .num{text-align:right}
 .rr-row{display:grid;grid-template-columns:54px 82px 82px 92px 30px;gap:.4rem;align-items:center;margin-bottom:.35rem}.rr-row input,.rr-row select{font-size:.78rem;padding:.42rem .55rem}.rr-row .num-input{text-align:right}
@@ -133,7 +149,7 @@ input[type="range"]{width:100%;height:3px;appearance:none;background:rgba(255,25
 :root{--bg:#060807;--bg-2:#0b100d;--panel:#101713;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.12);--text:#f4f3ee;--muted:rgba(244,243,238,.70);--muted-2:rgba(244,243,238,.48);--green:#00b84a;--green-soft:rgba(0,200,5,.13);--green-tint:#8fd9a0;--warm:#d6c8b4;--warm-soft:rgba(214,200,180,.14);--shadow:0 26px 90px rgba(0,0,0,.38);--radius-xl:36px;--radius-lg:30px;--radius-md:22px;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--gold:var(--green);--gold-light:var(--green-tint);--gold-dim:var(--green-soft);--border-gold:rgba(0,184,74,.28)}
 body{font-family:var(--sans);color:var(--text);background:radial-gradient(circle at top left,rgba(214,200,180,.06),transparent 22%),radial-gradient(circle at top right,rgba(0,200,5,.06),transparent 18%),linear-gradient(180deg,#0a0d0b 0%,#060807 100%)!important}body::after{opacity:.18}
 nav{padding:16px 28px!important;background:rgba(6,8,7,.84)!important;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)!important;gap:22px}.bric-logo-lockup{display:flex!important;align-items:center!important;gap:12px!important;font-family:var(--sans)!important;font-weight:800!important;font-size:1.18rem!important;letter-spacing:-.02em!important}.brand-mark-b{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:15px;overflow:hidden;box-shadow:0 12px 26px rgba(0,184,74,.14),inset 0 1px 0 rgba(255,255,255,.08)}.brand-mark-b svg{width:100%;height:100%;display:block}.b-logo-bg{fill:#0b1510}.b-logo-main{fill:#f4f1e8}.b-logo-cut{fill:#143b25}.brand-wordmark{display:inline-flex;align-items:baseline;gap:2px}.nav-badge{font-family:var(--mono)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.26)!important;background:rgba(0,184,74,.06);border-radius:999px!important;padding:8px 12px!important}.nav-right{gap:10px!important}.nav-back{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;color:var(--muted)!important;transition:.2s ease;border:1px solid transparent;font-weight:700}.nav-back:before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 18% 50%,rgba(0,184,74,.14),transparent 38%),linear-gradient(90deg,rgba(0,184,74,.10),rgba(0,184,74,.02) 55%,transparent 90%);opacity:0;transition:opacity .2s ease;pointer-events:none}.nav-back:hover{color:var(--text)!important;border-color:rgba(0,184,74,.14);transform:translateY(-1px)}.nav-back:hover:before{opacity:1}
-.tier-bar{background:rgba(255,255,255,.018)!important;border-bottom:1px solid var(--line)!important;padding:.85rem 2.25rem!important}.tier-label,.mini-copy{color:var(--muted-2)!important}.tier-wrap{background:rgba(255,255,255,.035)!important;border:1px solid var(--line)!important}.tier-btn{color:var(--muted)!important}.tier-btn.active{background:linear-gradient(180deg,#f7f4ed,#ddd1be)!important;color:#09100b!important}.app{grid-template-columns:minmax(540px,var(--panel-left-width)) 10px minmax(0,1fr);min-height:calc(100vh - 112px)}.panel-left{background:rgba(6,8,7,.18);border-right:1px solid var(--line)!important}.panel-resizer{background:rgba(255,255,255,.02)!important;border-color:var(--line)!important}.panel-resizer:hover,.panel-resizer.dragging{background:rgba(0,184,74,.12)!important}.panel-resizer:before{background:rgba(0,184,74,.55)!important}
+.tier-bar{background:rgba(255,255,255,.018)!important;border-bottom:1px solid var(--line)!important;padding:.85rem 2.25rem!important}.tier-label,.mini-copy{color:var(--muted-2)!important}.tier-wrap{background:rgba(255,255,255,.035)!important;border:1px solid var(--line)!important}.tier-btn{color:var(--muted)!important}.tier-btn.active{background:linear-gradient(180deg,#f7f4ed,#ddd1be)!important;color:#09100b!important}.app{grid-template-columns:minmax(540px,var(--panel-left-width)) 10px minmax(0,1fr);min-height:calc(100vh - 112px)}.panel-left{background:#0a0c0b!important;border-right:1px solid var(--line)!important;z-index:2}.panel-resizer{background:rgba(255,255,255,.02)!important;border-color:var(--line)!important}.panel-resizer:hover,.panel-resizer.dragging{background:rgba(0,184,74,.12)!important}.panel-resizer:before{background:rgba(0,184,74,.55)!important}
 .panel-header{padding:2.2rem 2.1rem 1.4rem!important;border-bottom:1px solid var(--line)!important;background:radial-gradient(circle at top left,rgba(0,184,74,.12),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.012))}.panel-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--muted)!important;font-size:.72rem!important;font-weight:800;letter-spacing:.11em!important}.eyebrow-dot{width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block}.panel-title{font-family:var(--sans)!important;font-size:clamp(2.1rem,4.3vw,4rem)!important;line-height:.95!important;letter-spacing:-.045em!important;font-weight:800!important;color:var(--text)!important;margin-top:18px}.panel-sub{color:var(--muted)!important;font-size:1rem!important;line-height:1.62!important;font-weight:500;max-width:620px;margin-top:16px!important}.form-section{padding:1.45rem 2.1rem!important;border-bottom:1px solid rgba(255,255,255,.055)!important}.form-section-title{color:var(--green-tint)!important;letter-spacing:.14em!important}.form-section-title:after{background:var(--line)!important}label{color:var(--muted)!important;font-weight:700!important}input[type=text],input[type=number],input[type=date],input[type=file],select{background:rgba(255,255,255,.035)!important;border:1px solid var(--line-strong)!important;color:var(--text)!important;border-radius:16px!important;min-height:46px;font-weight:600}input:focus,select:focus{border-color:rgba(0,184,74,.46)!important;background:rgba(0,184,74,.045)!important;box-shadow:0 0 0 4px rgba(0,184,74,.08)}select option{background:#0b100d;color:#f4f3ee}.input-prefix,.input-suffix{color:var(--muted-2)!important}.toggle-main{color:var(--text)!important}.toggle-sub{color:var(--muted-2)!important}.pill-badge{background:rgba(0,184,74,.12)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.22)!important}.toggle.on{background:var(--green)!important}
 .expense-block,.upload-box{background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.014))!important;border:1px solid var(--line)!important;border-radius:18px!important}.expense-block.good{border-color:rgba(0,184,74,.24)!important;background:rgba(0,184,74,.04)!important}.expense-block.over{border-color:rgba(214,200,180,.26)!important;background:rgba(214,200,180,.055)!important}.expense-total-box,.rr-summary{border-radius:18px!important;border:1px solid rgba(0,184,74,.16)!important;background:rgba(0,184,74,.07)!important}.expense-total-value,.rr-summary-val{color:var(--green-tint)!important}.add-btn{border-radius:16px!important;border:1px dashed rgba(0,184,74,.22)!important;color:var(--green-tint)!important}.add-btn:hover{background:rgba(0,184,74,.08)!important;border-color:rgba(0,184,74,.38)!important}.calc-btn{height:54px;border-radius:999px!important;background:linear-gradient(180deg,#f7f4ed,#ddd1be)!important;color:#09100b!important;box-shadow:0 8px 24px rgba(214,200,180,.16);letter-spacing:.08em}.action-row .calc-btn:nth-child(2){background:rgba(255,255,255,.035)!important;color:var(--green-tint)!important;border:1px solid rgba(0,184,74,.28)!important;box-shadow:none}.action-row .calc-btn:nth-child(2):hover{background:rgba(0,184,74,.08)!important}.slider-val{background:rgba(0,184,74,.12)!important;color:var(--green-tint)!important;border-color:rgba(0,184,74,.24)!important}input[type=range]::-webkit-slider-thumb{background:var(--green)!important;box-shadow:0 0 0 4px rgba(0,184,74,.16)!important}#capNote{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))!important;border:1px solid var(--line)!important;border-radius:18px!important;color:var(--muted)!important}
 .panel-right{padding:2rem!important;background:radial-gradient(circle at top right,rgba(0,184,74,.06),transparent 28%),radial-gradient(circle at bottom left,rgba(214,200,180,.045),transparent 24%)}.valuation-hero-card{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));border:1px solid var(--line);border-radius:32px;padding:30px;box-shadow:var(--shadow)}.valuation-hero-card:before{content:"";position:absolute;right:-130px;top:-130px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(0,184,74,.16),transparent 68%);filter:blur(12px);pointer-events:none}.valuation-hero-card>*{position:relative;z-index:1}.hero-kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green-tint);font-weight:700;margin-bottom:14px}.valuation-hero-card h1{font-family:var(--sans);font-size:clamp(2.7rem,5vw,5.4rem);line-height:.94;letter-spacing:-.045em;font-weight:800;max-width:830px}.valuation-hero-card h1 span{font-family:var(--serif);font-weight:600;font-style:italic;color:var(--warm)}.valuation-hero-card p{color:var(--muted);max-width:680px;line-height:1.62;margin-top:18px;font-size:1.02rem}.hero-pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.hero-pill-row span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:.77rem;font-weight:800;color:var(--muted)}.empty-state{opacity:1!important;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);margin-top:0}.empty-title{font-family:var(--sans)!important;font-weight:800;letter-spacing:-.03em;color:var(--text)}.empty-sub{color:var(--muted)!important}
@@ -1121,14 +1137,14 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
   --cream-green: #1f6e36;            /* darker green, ~6:1 contrast */
   --cream-green-bg: rgba(31,110,54,.07);
   --cream-green-line: rgba(31,110,54,.28);
-  --cream-gold: #7d6320;             /* darker gold, ~6:1 contrast */
-  --cream-gold-bg: rgba(125,99,32,.07);
-  --cream-gold-line: rgba(125,99,32,.28);
+  --cream-gold: #0a7d8c;             /* vibrant aqua/teal, ~5.5:1 contrast on cream */
+  --cream-gold-bg: rgba(10,125,140,.08);
+  --cream-gold-line: rgba(10,125,140,.30);
   --cream-warn: #9c5717;              /* darker warm rust for warning text */
   --cream-bad: #a83a18;
   --cream-info-bg: #fbf8f0;
-  --cream-callout-bg: rgba(125,99,32,.05);
-  --cream-callout-line: rgba(125,99,32,.18);
+  --cream-callout-bg: rgba(10,125,140,.05);
+  --cream-callout-line: rgba(10,125,140,.20);
   background: var(--cream-bg) !important;
   color: var(--cream-text);
 }
@@ -1221,7 +1237,7 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
   color: var(--cream-green) !important;
 }
 .panel-right .sens-table td.high{ background: rgba(45,138,71,.04) !important; border-color: rgba(45,138,71,.16) !important; }
-.panel-right .sens-table td.low{ background: rgba(156,125,44,.05) !important; border-color: rgba(156,125,44,.18) !important; color: var(--cream-gold) !important; }
+.panel-right .sens-table td.low{ background: rgba(10,125,140,.05) !important; border-color: rgba(10,125,140,.18) !important; color: var(--cream-gold) !important; }
 .panel-right .sens-table tbody td:first-child{
   background: var(--cream-card) !important;
   color: var(--cream-text-faint) !important;
@@ -1278,8 +1294,8 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
   border: 1px dashed var(--cream-gold-line) !important;
 }
 .panel-right .hold-proj-card.locked:hover{
-  background: rgba(156,125,44,.11) !important;
-  border-color: rgba(156,125,44,.4) !important;
+  background: rgba(10,125,140,.11) !important;
+  border-color: rgba(10,125,140,.4) !important;
 }
 .panel-right .hold-proj-kicker{ color: var(--cream-gold) !important; }
 .panel-right .hold-proj-title,
@@ -1294,7 +1310,7 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 .panel-right .hold-proj-locked-stat .val{ color: var(--cream-gold) !important; }
 .panel-right .hold-proj-locked-cta{
   color: var(--cream-gold) !important;
-  background: rgba(156,125,44,.09) !important;
+  background: rgba(10,125,140,.09) !important;
   border: 1px solid var(--cream-gold-line) !important;
 }
 /* Hold proj horizon toggle */
@@ -1305,7 +1321,7 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 .panel-right .hp-horizon-btn{ color: var(--cream-text-muted) !important; }
 .panel-right .hp-horizon-btn:hover{ color: var(--cream-text) !important; }
 .panel-right .hp-horizon-btn.active{
-  background: rgba(156,125,44,.12) !important;
+  background: rgba(10,125,140,.12) !important;
   color: var(--cream-gold) !important;
   border: 1px solid var(--cream-gold-line) !important;
 }
@@ -1412,7 +1428,7 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 .bric-cover::before{
   content: ""; position: absolute; top: -150px; right: -150px;
   width: 400px; height: 400px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(125,99,32,.08), transparent 70%);
+  background: radial-gradient(circle, rgba(10,125,140,.10), transparent 70%);
   pointer-events: none;
 }
 .bric-cover::after{
@@ -1464,7 +1480,32 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
   font-weight: 600;
   color: var(--cream-text-muted);
   letter-spacing: -.01em;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.8rem;
+}
+.bric-cover-preparedfor{
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  padding: .8rem 1.6rem;
+  margin: 0 auto 2rem;
+  border-top: 1px solid var(--cream-gold-line);
+  border-bottom: 1px solid var(--cream-gold-line);
+}
+.bric-cover-preparedfor-label{
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--cream-gold);
+  font-weight: 800;
+}
+.bric-cover-preparedfor-name{
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cream-text);
+  letter-spacing: -.01em;
 }
 .bric-cover-stats{
   display: grid;
@@ -1591,6 +1632,22 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 .callout.green .callout-label{ color: var(--cream-green); }
 .callout.warn{ background: rgba(156,87,23,.06); border-left-color: var(--cream-warn); }
 .callout.warn .callout-label{ color: var(--cream-warn); }
+/* Expense advisory note — appears under a high-running expense with a concrete tip */
+.ec-advisory{
+  display: flex;
+  align-items: flex-start;
+  gap: .4rem;
+  margin: -.05rem 0 .65rem;
+  padding: .5rem .65rem;
+  background: rgba(156,87,23,.05);
+  border: 1px solid rgba(156,87,23,.16);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: .72rem;
+  line-height: 1.5;
+  color: var(--cream-text-muted);
+}
+.ec-advisory-icon{ flex-shrink: 0; font-size: .8rem; line-height: 1.3; }
 
 /* Tooltip — info icon next to jargon terms, expands to a definition on hover */
 .tip{
@@ -2086,6 +2143,9 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
         </div>
         <div id="addressFeedback" style="margin-top:.4rem;font-family:var(--mono);font-size:.62rem;color:var(--muted-2);letter-spacing:.06em;min-height:1em"></div>
       </div>
+      <div class="field"><label>Owner / Prepared For <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">(optional — appears on the report cover)</span></label>
+        <input type="text" id="ownerName" value="" placeholder="e.g. John Smith or Smith Holdings LLC" autocomplete="off"/>
+      </div>
 
       <!-- Public Records Auto-Pull Panel -->
       <div class="pr-panel empty" id="prPanel">
@@ -2403,7 +2463,7 @@ body.growth-mode .development-lock-note{display:none}body.growth-mode .developme
 
               <div class="rr-paste-hint" id="rrPasteHint"></div>
 
-              <textarea class="rr-paste-area" id="rrPasteArea" placeholder="Paste tab-separated or comma-separated rows here. Include a header row if possible — the parser will auto-map columns like 'unit', 'bed', 'bath', 'sqft', 'rent', 'market rent', 'status'.&#10;&#10;Example:&#10;Unit&#9;Bed&#9;Bath&#9;SF&#9;Rent&#9;Market&#9;Status&#10;1A&#9;1&#9;1&#9;650&#9;2400&#9;2650&#9;Occupied&#10;1B&#9;2&#9;1&#9;800&#9;2950&#9;3200&#9;Stabilized&#10;2A&#9;0&#9;1&#9;450&#9;0&#9;2200&#9;Vacant"></textarea>
+              <textarea class="rr-paste-area" id="rrPasteArea" oninput="parsePasteInput()" placeholder="Paste tab-separated or comma-separated rows here. Include a header row if possible — the parser will auto-map columns like 'unit', 'bed', 'bath', 'sqft', 'rent', 'market rent', 'status'.&#10;&#10;Example:&#10;Unit&#9;Bed&#9;Bath&#9;SF&#9;Rent&#9;Market&#9;Status&#10;1A&#9;1&#9;1&#9;650&#9;2400&#9;2650&#9;Occupied&#10;1B&#9;2&#9;1&#9;800&#9;2950&#9;3200&#9;Stabilized&#10;2A&#9;0&#9;1&#9;450&#9;0&#9;2200&#9;Vacant"></textarea>
 
               <div class="rr-paste-preview" id="rrPastePreview" style="display:none">
                 <div class="rr-paste-preview-title">Preview <span id="rrPasteCount"></span></div>
@@ -4013,27 +4073,15 @@ async function lookupPublicRecords(force){
       prSet('prTaxClass', taxClass ? 'Class '+taxClass + (taxYear ? ' · FY'+taxYear : '') : '—');
       prSet('prExemptions', exemptTotal > 0 ? prFmtMoney(exemptTotal) : 'None on record');
 
-      // NYC FY 2025-26 tax rates by class (published by DOF, June 2025).
-      // Numeric form for math, plus display form. We compound 1A/1B/1C/1D into 1
-      // and 2A/2B/2C into 2 since they share the same rate (the letter distinguishes
-      // assessment treatment, not the rate itself).
-      const TAX_RATES = {
-        '1':  0.20085,  // Class 1: 1-3 family homes
-        '1A': 0.20085, '1B': 0.20085, '1C': 0.20085, '1D': 0.20085,
-        '2':  0.12502,  // Class 2: rentals, co-ops, condos
-        '2A': 0.12502, '2B': 0.12502, '2C': 0.12502,
-        '3':  0.12502,  // Class 3: utility
-        '4':  0.10592,  // Class 4: commercial
-        '4A': 0.10592
-      };
-      const rate = TAX_RATES[taxClass];
-      if(rate && taxableTotal > 0){
-        const annualTax = taxableTotal * rate;
+      // Use the shared computeAnnualPropertyTax / NYC_TAX_RATES so the panel
+      // display and the expense auto-fill always agree. Single source of truth
+      // for rates (defined once near the top of the script).
+      const baseClass = String(taxClass).replace(/[^0-9]/g,'');
+      const rate = (typeof NYC_TAX_RATES !== 'undefined') ? (NYC_TAX_RATES[taxClass] || NYC_TAX_RATES[baseClass]) : null;
+      const annualTax = (typeof computeAnnualPropertyTax === 'function') ? computeAnnualPropertyTax(dof) : 0;
+      if(rate && annualTax > 0){
         prSet('prAnnualTax', prFmtMoney(annualTax));
         prSet('prTaxRate', (rate * 100).toFixed(3) + '%');
-      } else if(taxClass){
-        prSet('prAnnualTax', '—');
-        prSet('prTaxRate', '—');
       } else {
         prSet('prAnnualTax', '—');
         prSet('prTaxRate', '—');
@@ -4198,27 +4246,42 @@ function tip(text){
   return `<span class="tip" data-tip="${String(text||'').replace(/"/g,'&quot;')}">?</span>`;
 }
 
-// NYC FY 2025-26 property tax rates by class (as published by DOF).
-// Used in both the Public Records panel display and the expense auto-fill,
-// so they stay in sync. Update annually when the new rates are set.
+// NYC FY 2025-26 property tax rates by class (interim rates published by DOF
+// July 2025; Class Shares revised Oct 2025 via Chapter 487). These change
+// annually — update each summer when DOF publishes new rates.
+//   Class 1 = 20.630%  (1-3 family homes)
+//   Class 2 = 12.340%  (rentals, co-ops, condos, 4+ units)
+//   Class 3 = 11.114%  (utility)
+//   Class 4 = 10.774%  (commercial)
 const NYC_TAX_RATES = {
-  '1':  0.20085, '1A': 0.20085, '1B': 0.20085, '1C': 0.20085, '1D': 0.20085,
-  '2':  0.12502, '2A': 0.12502, '2B': 0.12502, '2C': 0.12502,
-  '3':  0.12502,
-  '4':  0.10592, '4A': 0.10592
+  '1':  0.20630, '1A': 0.20630, '1B': 0.20630, '1C': 0.20630, '1D': 0.20630,
+  '2':  0.12340, '2A': 0.12340, '2B': 0.12340, '2C': 0.12340,
+  '3':  0.11114,
+  '4':  0.10774, '4A': 0.10774
 };
 
 // Compute the estimated annual property tax bill from a DOF record.
-// Uses Final Taxable Total × FY 2025-26 tax rate (by class). Falls back to
-// older rolls (tentative, combined, prior year) if final isn't populated.
-// Returns 0 if data is insufficient to compute.
+// NYC bills on the TAXABLE billable assessed value × class rate. For Class 2
+// transitional properties the billable value can sit between the actual and
+// transitional assessed values, so we prefer the explicit taxable-total field
+// and fall back through the roll stages. If only an assessed total is present
+// (no exemption/taxable breakdown), we use that minus any exemption.
 function computeAnnualPropertyTax(dof){
   if(!dof) return 0;
-  const taxableTotal = parseFloat(
+  // Preferred: the billable taxable total across roll stages
+  let taxableTotal = parseFloat(
     dof.fintxbtot || dof.tentxbtot || dof.cbntxbtot || dof.pytxbtot
   ) || 0;
+  // If taxable total is missing, derive it from assessed minus exemptions
+  if(taxableTotal <= 0){
+    const assessed = parseFloat(dof.finacttot || dof.tenacttot || dof.cbnacttot || dof.pyacttot) || 0;
+    const exempt = parseFloat(dof.finactextot || dof.tenactextot || dof.cbnactextot || dof.pyactextot) || 0;
+    taxableTotal = Math.max(0, assessed - exempt);
+  }
   const taxClass = dof.fintaxclass || dof.tentaxclass || dof.cbntaxclass || dof.pytaxclass || '';
-  const rate = NYC_TAX_RATES[taxClass];
+  // Normalize sub-class (2A/2B/2C → 2 rate, etc.) — strip trailing letters
+  const baseClass = String(taxClass).replace(/[^0-9]/g,'');
+  const rate = NYC_TAX_RATES[taxClass] || NYC_TAX_RATES[baseClass];
   if(rate && taxableTotal > 0) return taxableTotal * rate;
   return 0;
 }
@@ -4927,8 +4990,25 @@ const BENCHMARKS={
   'Heat':{calc:(ctx)=>({low:Math.round(ctx.sqft*1.1),mid:Math.round(ctx.sqft*1.2),high:Math.round(ctx.sqft*1.3)}), type:'flat'},
   'Common Area Electric':{calc:(ctx)=>({low:Math.round(ctx.sqft*.15),mid:Math.round(ctx.sqft*.2),high:Math.round(ctx.sqft*.3)}), type:'flat'},
   'Repairs & Maintenance':{calc:(ctx)=>({low:ctx.resUnits*400,mid:ctx.resUnits*500,high:ctx.resUnits*650}), type:'flat'},
-  'Super / Payroll':{calc:(ctx)=>({low:ctx.totalUnits*500,mid:ctx.totalUnits*600,high:ctx.totalUnits*700}), type:'flat'},
-  'Management Fee':{calc:(ctx)=>{const base=(ctx.grossIncome||0)*0.05; return {low:Math.round(base*0.8),mid:Math.round(base),high:Math.round(base*1.2)};}, type:'flat'}
+  'Super / Payroll':{calc:(ctx)=>{
+    // Super / payroll scales by unit count (staffing burden grows with building size).
+    const units = ctx.units || 1;
+    let low, high;
+    if(units <= 3){ low=1200; high=3000; }
+    else if(units <= 8){ low=3400; high=4200; }
+    else if(units <= 20){ low=4800; high=6500; }
+    else if(units <= 50){ low=7500; high=14000; }
+    else { // 50+ — extrapolate
+      low=Math.round(units*220); high=Math.round(units*340);
+    }
+    return {low:Math.round(low), mid:Math.round((low+high)/2), high:Math.round(high)};
+  }, type:'flat'},
+  'Management Fee':{calc:(ctx)=>{
+    // Management is benchmarked as a % of gross income: 5% midpoint, 3-6% range.
+    // (Anything over 6% gets flagged as high in the advisory note.)
+    const gross = ctx.grossIncome || 0;
+    return {low:Math.round(gross*0.03), mid:Math.round(gross*0.05), high:Math.round(gross*0.06)};
+  }, type:'flat'}
 };
 let expenseIdCounter=0,rentRollActive=false;
 let currentValuationPDFData=null;
@@ -4942,7 +5022,7 @@ function getContext(){
   document.querySelectorAll('#rrRows .rr-bed').forEach(el=>beds+=parseFloat(el.value)||0);
   document.querySelectorAll('#rrRows .rr-bath').forEach(el=>baths+=parseFloat(el.value)||0);
   const grossIncome=getGrossIncomeValue();
-  return {sqft,resUnits,retailUnits,totalUnits,beds,baths,grossIncome};
+  return {sqft,resUnits,retailUnits,totalUnits,units:totalUnits,beds,baths,grossIncome};
 }
 function updateCapDisplay(v){document.getElementById('capDisplay').textContent=parseFloat(v).toFixed(1)+'%'}
 
@@ -5079,18 +5159,24 @@ function updateExpenseBenchmark(id){
   if(status==='bad') block.classList.add('over'); else if(status==='good') block.classList.add('good');
   const min=bench.low*0.65, max=bench.high*1.35;
   const pct=v=>Math.max(0,Math.min(100,((v-min)/(max-min))*100));
-  // For income-tied expenses (Management Fee), show what % of gross income
-  // the benchmark midpoint represents so the user understands the derivation.
+  // For Management Fee, the benchmark is 5% of gross income (3-6% healthy range).
+  // Show what % of gross the current amount represents and flag anything over 6%.
   let pctHint = '';
   if(canonical === 'Management Fee'){
     const ctx = getContext();
     if(ctx.grossIncome > 0){
-      const pctOfGross = (bench.mid / ctx.grossIncome) * 100;
-      const userPct = amount > 0 ? (amount / ctx.grossIncome) * 100 : null;
       const grossSrc = rentRollActive ? 'rent roll' : 'gross income';
-      pctHint = userPct !== null
-        ? ` · <b>${userPct.toFixed(1)}%</b> of ${formatMoney(ctx.grossIncome)} ${grossSrc}`
-        : ` · ~${pctOfGross.toFixed(1)}% of ${formatMoney(ctx.grossIncome)} ${grossSrc}`;
+      pctHint = ` · 5% benchmark of ${formatMoney(ctx.grossIncome)} ${grossSrc}`;
+      if(amount > 0){
+        const userPct = (amount / ctx.grossIncome) * 100;
+        if(userPct > 6){
+          pctHint = ` · <b style="color:var(--cream-warn,#9c5717)">${userPct.toFixed(1)}% of gross — above the 3-6% norm, worth a second quote</b>`;
+        } else if(userPct >= 3){
+          pctHint = ` · <b>${userPct.toFixed(1)}%</b> of ${formatMoney(ctx.grossIncome)} ${grossSrc} (healthy)`;
+        } else {
+          pctHint = ` · <b>${userPct.toFixed(1)}%</b> of ${formatMoney(ctx.grossIncome)} ${grossSrc}`;
+        }
+      }
     } else {
       pctHint = ` · enter rent roll or gross income to size`;
     }
@@ -5189,27 +5275,59 @@ function autoSyncRentRollUnitCounts(){
   }
 }
 function resRowHTML(i,data={}){
+  // Status defaults to a neutral "Select…" placeholder rather than auto-Occupied,
+  // so users consciously choose. onkeydown enables Tab to move DOWN the column
+  // (to the same field in the next row) instead of right across the row.
+  const statusVal = data.status || '';
   return `<div class="rr-row enhanced" id="rr-${i}">
-    <input type="text" class="rr-unit" value="${data.unit||('Apt '+i)}" placeholder="Apt ${i}" oninput="updateRentRollTotals()">
-    <select class="rr-bed" onchange="updateRentRollTotals();updateAllExpenseBenchmarks()"><option value="0" ${data.bed==0?'selected':''}>Studio</option><option value="1" ${data.bed==1?'selected':''}>1</option><option value="2" ${data.bed==2?'selected':''}>2</option><option value="3" ${data.bed==3?'selected':''}>3</option><option value="4" ${data.bed==4?'selected':''}>4</option></select>
-    <select class="rr-bath" onchange="updateRentRollTotals();updateAllExpenseBenchmarks()"><option value="1" ${data.bath==1?'selected':''}>1</option><option value="1.5" ${data.bath==1.5?'selected':''}>1.5</option><option value="2" ${data.bath==2?'selected':''}>2</option><option value="2.5" ${data.bath==2.5?'selected':''}>2.5</option><option value="3" ${data.bath==3?'selected':''}>3</option></select>
-    <input type="number" class="rr-sqft num-input" value="${data.sqft||''}" min="0" placeholder="SF" oninput="markSFEdited(this);updateRentRollTotals()">
-    <div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="rr-rent num-input" value="${data.rent||''}" min="0" placeholder="0" oninput="updateRentRollTotals()"></div>
+    <input type="text" class="rr-unit" value="${data.unit||('Apt '+i)}" placeholder="Apt ${i}" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'rr-unit')">
+    <select class="rr-bed" onchange="updateRentRollTotals();updateAllExpenseBenchmarks()"><option value="0" ${data.bed==0?'selected':''}>Studio</option><option value="1" ${data.bed==1?'selected':''}>1</option><option value="2" ${data.bed==2?'selected':''}>2</option><option value="3" ${data.bed==3?'selected':''}>3</option><option value="4" ${data.bed==4?'selected':''}>4</option><option value="5" ${data.bed==5?'selected':''}>5</option><option value="6" ${data.bed==6?'selected':''}>6</option></select>
+    <select class="rr-bath" onchange="updateRentRollTotals();updateAllExpenseBenchmarks()"><option value="1" ${data.bath==1?'selected':''}>1</option><option value="1.5" ${data.bath==1.5?'selected':''}>1.5</option><option value="2" ${data.bath==2?'selected':''}>2</option><option value="2.5" ${data.bath==2.5?'selected':''}>2.5</option><option value="3" ${data.bath==3?'selected':''}>3</option><option value="3.5" ${data.bath==3.5?'selected':''}>3.5</option><option value="4" ${data.bath==4?'selected':''}>4</option></select>
+    <input type="number" class="rr-sqft num-input" value="${data.sqft||''}" min="0" placeholder="SF" oninput="markSFEdited(this);updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'rr-sqft')">
+    <div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="rr-rent num-input" value="${data.rent||''}" min="0" placeholder="0" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'rr-rent')"></div>
     <div class="rr-projected empty rr-yr1" data-row="${i}"><span class="amt">—</span><span class="pct"></span></div>
     <div class="rr-projected empty rr-yr2" data-row="${i}"><span class="amt">—</span><span class="pct"></span></div>
-    <select class="rr-status rr-status-select" onchange="updateRentRollTotals()"><option value="occupied" ${data.status==='vacant'?'':'selected'}>Occupied</option><option value="vacant" ${data.status==='vacant'?'selected':''}>Vacant</option><option value="stabilized" ${data.status==='stabilized'?'selected':''}>Stabilized</option><option value="market" ${data.status==='market'?'selected':''}>Free Mkt</option></select>
+    <select class="rr-status rr-status-select" onchange="updateRentRollTotals()"><option value="" ${statusVal===''?'selected':''}>Select…</option><option value="market" ${statusVal==='market'?'selected':''}>Free Mkt</option><option value="occupied" ${statusVal==='occupied'?'selected':''}>Occupied</option><option value="vacant" ${statusVal==='vacant'?'selected':''}>Vacant</option><option value="stabilized" ${statusVal==='stabilized'?'selected':''}>Stabilized</option></select>
     <div class="rr-market-locked col-market" onclick="handleMarketCellClick(this)" title="Market comp data tracked by neighborhood and unit type — unlocks with Growth">Growth 🔒<input type="hidden" class="rr-market" value="${data.market||''}"></div>
     <button class="remove-btn" onclick="document.getElementById('rr-${i}').remove();updateRentRollTotals();updateAllExpenseBenchmarks()">×</button>
   </div>`
 }
+// Tab/Enter inside a rent-roll input moves focus DOWN to the same column in the
+// next row (or up with Shift+Tab), instead of the default left-to-right tab order.
+function rrColumnTab(event, el, cls){
+  if(event.key !== 'Tab' && event.key !== 'Enter') return;
+  // Let plain Tab on the last cell behave normally if there's no next row
+  event.preventDefault();
+  const row = el.closest('.rr-row, .rr-retail-row');
+  if(!row) return;
+  const goUp = event.shiftKey;
+  let target = goUp ? row.previousElementSibling : row.nextElementSibling;
+  // Skip non-row siblings
+  while(target && !target.classList.contains('rr-row') && !target.classList.contains('rr-retail-row')){
+    target = goUp ? target.previousElementSibling : target.nextElementSibling;
+  }
+  if(target){
+    const nextInput = target.querySelector('.'+cls);
+    if(nextInput){ nextInput.focus(); if(nextInput.select) nextInput.select(); }
+  } else if(!goUp){
+    // On the last row, Tab moves to the next column's first row for convenience
+    const order=['rr-unit','rr-sqft','rr-rent'];
+    const idx=order.indexOf(cls);
+    if(idx>=0 && idx<order.length-1){
+      const firstRow=document.querySelector('#rrRows .rr-row');
+      const nextCol=firstRow?.querySelector('.'+order[idx+1]);
+      if(nextCol){ nextCol.focus(); if(nextCol.select) nextCol.select(); }
+    }
+  }
+}
 function retailRowHTML(i,data={}){
   return `<div class="rr-retail-row enhanced" id="ret-${i}">
-    <input type="text" class="ret-space" value="${data.space||('Retail '+i)}" placeholder="Space ${i}" oninput="updateRentRollTotals()">
-    <input type="text" class="ret-tenant" value="${data.tenant||''}" placeholder="Tenant name" oninput="updateRentRollTotals()">
+    <input type="text" class="ret-space" value="${data.space||('Retail '+i)}" placeholder="Space ${i}" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'ret-space')">
+    <input type="text" class="ret-tenant" value="${data.tenant||''}" placeholder="Tenant name" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'ret-tenant')">
     <input type="date" class="ret-start" value="${data.start||''}" oninput="updateRentRollTotals()">
     <input type="date" class="ret-exp" value="${data.exp||''}" oninput="updateRentRollTotals()">
-    <input type="number" class="ret-inc num-input" value="${data.inc||''}" min="0" step=".25" placeholder="3" oninput="updateRentRollTotals()">
-    <div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="ret-rent num-input" value="${data.rent||''}" min="0" oninput="updateRentRollTotals()"></div>
+    <input type="number" class="ret-inc num-input" value="${data.inc||''}" min="0" step=".25" placeholder="3" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'ret-inc')">
+    <div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="ret-rent num-input" value="${data.rent||''}" min="0" oninput="updateRentRollTotals()" onkeydown="rrColumnTab(event,this,'ret-rent')"></div>
     <button class="remove-btn" onclick="document.getElementById('ret-${i}').remove();updateRentRollTotals();updateAllExpenseBenchmarks()">×</button>
   </div>`
 }
@@ -5219,7 +5337,7 @@ function syncRentRollRows(){
   const existingRes=[...rr.querySelectorAll('.rr-row')].map(r=>({unit:r.querySelector('.rr-unit')?.value,bed:r.querySelector('.rr-bed')?.value,bath:r.querySelector('.rr-bath')?.value,sqft:r.querySelector('.rr-sqft')?.value,rent:r.querySelector('.rr-rent')?.value,market:r.querySelector('.rr-market')?.value,status:r.querySelector('.rr-status')?.value}));
   const existingRet=[...ret.querySelectorAll('.rr-retail-row')].map(r=>({space:r.querySelector('.ret-space')?.value,tenant:r.querySelector('.ret-tenant')?.value,start:r.querySelector('.ret-start')?.value,exp:r.querySelector('.ret-exp')?.value,inc:r.querySelector('.ret-inc')?.value,rent:r.querySelector('.ret-rent')?.value}));
   rr.innerHTML=''; ret.innerHTML='';
-  for(let i=1;i<=resCount;i++){rr.insertAdjacentHTML('beforeend',resRowHTML(i,existingRes[i-1]||{bed:i===2?2:1,bath:1,rent:'',status:'occupied'}))}
+  for(let i=1;i<=resCount;i++){rr.insertAdjacentHTML('beforeend',resRowHTML(i,existingRes[i-1]||{bed:i===2?2:1,bath:1,rent:'',status:''}))}
   for(let i=1;i<=retCount;i++){ret.insertAdjacentHTML('beforeend',retailRowHTML(i,existingRet[i-1]||{tenant:i===1?'Sample Tenant':'',inc:'3',rent:''}))}
   // Auto-allocate per-unit SF from total building SF for newly-added rows
   if(typeof allocatePerUnitSF === 'function') allocatePerUnitSF();
@@ -7613,14 +7731,57 @@ function computeGrowthProjections(){
     rent:   parseFloat(row.querySelector('.rr-rent')?.value) || 0,
     market: parseFloat(row.querySelector('.rr-market')?.value) || 0,
     status: row.querySelector('.rr-status')?.value || 'occupied'
-  }));
-  if(!rows.length) return null;
+  })).filter(r => r.rent > 0 || r.market > 0); // ignore fully-empty rows
 
   const defaultReg = document.getElementById('growthDefaultReg')?.value || 'auto';
   const cycle = getRGBCycleByValue(document.getElementById('growthLeaseCycle')?.value);
   const fmGrowth = parseFloat(document.getElementById('growthFMRate')?.value) || 3.5;
   const cpi = parseFloat(document.getElementById('growthCPI')?.value) || GCE_PARAMS.cpiDefault;
   const gceMax = getGCEMaxIncrease(cpi);
+
+  // FALLBACK: If the itemized rent roll has no usable rows, but the user has
+  // entered a Gross Rental Income in the income section, project growth on the
+  // building-level gross figure instead. This way the projection panel works
+  // whether the user itemized the rent roll OR just typed a gross number.
+  if(!rows.length){
+    const grossAnnual = (typeof getGrossIncomeValue === 'function') ? getGrossIncomeValue() : 0;
+    if(grossAnnual <= 0) return null;
+    const monthlyGross = grossAnnual / 12;
+    // Determine the building-level reg bucket from the default reg selector
+    // (falls back to FM growth if 'auto' with no profile signal).
+    let reg = defaultReg;
+    if(reg === 'auto'){
+      const profileRS = (typeof getEffectiveRSStatus === 'function') ? getEffectiveRSStatus() : 'none';
+      reg = (profileRS==='full'||profileRS==='mixed'||profileRS==='mixed-RS-likely'||profileRS==='mixed-verify') ? 'rs' : 'fm';
+    }
+    let yr1Pct, yr2Pct;
+    if(reg === 'rs'){ yr1Pct = cycle.oneYr; yr2Pct = cycle.twoYr; }
+    else if(reg === 'gce'){ yr1Pct = gceMax; yr2Pct = ((1+gceMax/100)**2 - 1)*100; }
+    else { yr1Pct = fmGrowth; yr2Pct = ((1+fmGrowth/100)**2 - 1)*100; }
+    const syntheticRow = {
+      idx:0, unit:'Whole building (gross income)', bed:0, bath:0, sqft:0,
+      status:'occupied', isVacant:false, reg, layout:'Building total',
+      currentRent: monthlyGross,
+      yr1Pct, yr2Pct,
+      yr1Rent: monthlyGross*(1+yr1Pct/100),
+      yr2Rent: monthlyGross*(1+yr2Pct/100),
+      marketRent: monthlyGross, upside:0, upsideAchievable:false
+    };
+    return {
+      rows:[syntheticRow],
+      totals:{
+        current: monthlyGross,
+        yr1: syntheticRow.yr1Rent,
+        yr2: syntheticRow.yr2Rent,
+        market: monthlyGross,
+        achievableUpside: 0
+      },
+      regCounts:{rs:reg==='rs'?1:0, gce:reg==='gce'?1:0, fm:reg==='fm'?1:0},
+      cycle, fmGrowth, gceMax, cpi, defaultReg,
+      vacantTotal:0, totalUnits:1,
+      source:'gross' // flag so the panel can note this is building-level, not itemized
+    };
+  }
 
   const projected = rows.map((u, idx) => {
     const reg = resolveUnitRegStatus(u, defaultReg);
@@ -8190,6 +8351,7 @@ function _renderResultsImpl(d, panel){
   const typeLabel=typeLabels[d.propType]||d.propType;
   const intentLabel=d.intentLabel || BVI_INTENT_LABELS[d.intent||bviSelectedIntent] || '';
   const generatedDate=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const ownerName = (document.getElementById('ownerName')?.value || '').trim();
 
   // === COVER PAGE ===
   const coverPage = `<div class="doc-page bric-cover">
@@ -8198,6 +8360,7 @@ function _renderResultsImpl(d, panel){
     <div class="bric-cover-kicker">Property Valuation · ${intentLabel||typeLabel}</div>
     <h1 class="bric-cover-title">${escapeHtml(d.address)}</h1>
     <div class="bric-cover-address">${typeLabel} · ${d.units} ${d.units===1?'unit':'units'}${d.sqft>0?' · '+d.sqft.toLocaleString()+' SF':''}</div>
+    ${ownerName?`<div class="bric-cover-preparedfor"><span class="bric-cover-preparedfor-label">Prepared For</span><span class="bric-cover-preparedfor-name">${escapeHtml(ownerName)}</span></div>`:''}
     <div class="bric-cover-stats">
       <div class="bric-cover-stat"><span class="bric-cover-stat-label">Estimated Value</span><span class="bric-cover-stat-val green">${fmt(Math.max(0,d.baseVal))}</span></div>
       <div class="bric-cover-stat"><span class="bric-cover-stat-label">Net Operating Income</span><span class="bric-cover-stat-val">${fmt(Math.max(0,d.noi))}</span></div>
@@ -8205,7 +8368,7 @@ function _renderResultsImpl(d, panel){
     </div>
     <div class="bric-cover-meta">
       <span><b>Prepared</b>${generatedDate}</span>
-      <span><b>For</b>${intentLabel||'Owner Review'}</span>
+      <span><b>Objective</b>${intentLabel||'Owner Review'}</span>
       <span><b>By</b>BRIC Studios</span>
     </div>
   </div>`;
@@ -8254,11 +8417,46 @@ function _renderResultsImpl(d, panel){
   const sensitivityPage = buildSimplifiedSensitivityPage(d, tip);
 
   // === INCOME & EXPENSE BREAKDOWN PAGE ===
+  // Advisory note shown when an expense is at/over the top of its benchmark.
+  // Plain, encouraging language pointing to a concrete next step.
+  function expenseAdvisory(e){
+    // Only advise when the expense is flagged warn (near top) or bad (over).
+    if(e.status !== 'warn' && e.status !== 'bad') return '';
+    const name = (e.name||'').toLowerCase();
+    let advice = '';
+    if(name.includes('tax')){
+      advice = 'Your taxes are running high — it may be worth reviewing the assessment with a tax certiorari attorney, who can often get the bill reduced.';
+    } else if(name.includes('insurance')){
+      advice = 'Insurance looks elevated — worth getting a second quote from another broker to see if there\'s a better rate.';
+    } else if(name.includes('water') || name.includes('sewer')){
+      advice = 'Water costs are on the high side — worth checking the building for leaks or running toilets, which are the most common culprits.';
+    } else if(name.includes('heat')){
+      advice = 'Heating is expensive here — worth looking into high-efficiency split systems or adding smart temperature controls to cut usage.';
+    } else if(name.includes('electric')){
+      advice = 'Electric is running high — switching common-area fixtures to low-draw LED bulbs is an easy way to bring this down.';
+    } else if(name.includes('management')){
+      // Management uses a % of gross sanity check (3-6% healthy)
+      const gross = d.grossIncome || 0;
+      const pctOfGross = gross > 0 ? (e.amount / gross) * 100 : 0;
+      if(pctOfGross > 6){
+        advice = `Management is about ${pctOfGross.toFixed(1)}% of gross income — above the typical 3-6% range. Worth getting a second quote from another management company.`;
+      } else {
+        advice = 'Management is at the higher end — worth comparing against a second quote to confirm it\'s competitive.';
+      }
+    } else if(name.includes('repair') || name.includes('maintenance')){
+      advice = 'Repairs & maintenance are elevated — worth reviewing recent invoices for recurring issues that a one-time fix could solve.';
+    } else if(name.includes('payroll') || name.includes('super')){
+      advice = 'Payroll is on the high side — worth confirming staffing levels match what a building this size typically needs.';
+    } else {
+      advice = 'This expense is running above the typical range — worth a closer look to see if there\'s room to bring it down.';
+    }
+    return `<div class="ec-advisory"><span class="ec-advisory-icon">💡</span>${advice}</div>`;
+  }
   const expRows=d.expenseList.filter(e=>e.bench).map(e=>{
     const min=e.bench.low*.65,max=e.bench.high*1.35,pct=v=>Math.max(0,Math.min(100,((v-min)/(max-min))*100));
     const tag=e.status==='bad'?'bad':e.status==='warn'?'warn':'good';
     const tagText=e.status==='bad'?'Above Avg':e.status==='warn'?'Near Top':'Below Avg';
-    return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .5rem 0;font-family:var(--mono);font-size:.62rem;color:var(--cream-warn)">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}`;
+    return `<div class="ec-row"><div class="ec-name">${e.name}</div><div class="ec-val">${fmtFull(e.amount)}</div><div class="benchmark-visual"><div class="benchmark-range" style="left:${pct(e.bench.low)}%;right:${100-pct(e.bench.high)}%"></div><div class="benchmark-mid" style="left:${pct(e.bench.mid)}%"></div><div class="benchmark-user" style="left:${pct(e.amount)}%"></div></div><div class="ec-tag ${tag}">${tagText}</div></div>${e.savings>0?`<div style="margin:-.15rem 0 .35rem 0;font-family:var(--mono);font-size:.62rem;color:var(--cream-warn)">Potential savings: ~${fmtFull(e.savings)}/yr</div>`:''}${expenseAdvisory(e)}`;
   }).join('') || `<div style="font-size:.8rem;color:var(--cream-text-faint)">No benchmarked expenses yet.</div>`;
   const expBreakdownHTML=d.expenseList.map(e=>`<div class="breakdown-row"><span class="breakdown-row-name">${e.name}</span><span class="breakdown-row-val expense">(${fmtFull(e.amount)})</span></div>`).join('')||'<div class="breakdown-row"><span class="breakdown-row-name">No expenses entered</span></div>';
 
@@ -9192,23 +9390,104 @@ function downloadValuationPDF(){
     alert('Generate a valuation first before saving as PDF.');
     return;
   }
-  // Gate behind paywall
-  requirePaidAccess('pdf', ()=>{
-    const reportHtml=buildValuationPDFHtml(currentValuationPDFData);
-  const printWindow=window.open('', '_blank');
-  if(!printWindow){
-    alert('Your browser blocked the PDF window. Please allow pop-ups for this site and try again.');
-    return;
+  // Saving/exporting is open to all for now (see SAVING_UNLOCKED_FOR_ALL).
+  // When logins ship, swap canSaveToDashboard() back to requirePaidAccess('pdf', ...).
+  if(typeof canSaveToDashboard === 'function' && canSaveToDashboard()){
+    _generateValuationPDF();
+  } else {
+    requirePaidAccess('pdf', ()=>{ _generateValuationPDF(); });
   }
-  printWindow.document.open();
-  printWindow.document.write(reportHtml);
-  printWindow.document.close();
+}
 
-  setTimeout(function(){
-    try { printWindow.focus(); printWindow.print(); }
-    catch(error) { console.warn('BRIC PDF print failed:', error); }
-  }, 500);
-  });
+function _generateValuationPDF(){
+    // Capture the actual rendered cream document so the PDF matches the screen
+    // exactly. We pull the .results node's HTML and pair it with the page's
+    // cream styles plus print-specific @page rules for clean pagination.
+    const resultsNode = document.querySelector('#panelRight .results');
+    if(!resultsNode){
+      alert('Generate a valuation first before saving as PDF.');
+      return;
+    }
+    // Clone so we can strip interactive-only elements (buttons) from the print
+    const clone = resultsNode.cloneNode(true);
+    // Remove the on-screen action buttons and disclaimers we don't want in print
+    clone.querySelectorAll('.pdf-report-btn, .partner-card-btn').forEach(el=>el.remove());
+    // Neutralize the Growth-locked market cells in the printed copy
+    clone.querySelectorAll('.rr-market-locked').forEach(el=>el.remove());
+
+    // Gather all <style> blocks from the document so the cream theme renders
+    const styles = [...document.querySelectorAll('style')].map(s=>s.textContent).join('\n');
+
+    const printHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BRIC Valuation — ${escapeHtml(currentValuationPDFData.address||'Property')}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+${styles}
+/* ---- Print-specific overrides ---- */
+@page {
+  size: letter;
+  margin: 0.5in;
+}
+html, body {
+  background: #ffffff !important;
+  margin: 0;
+  padding: 0;
+}
+body {
+  /* The results pane normally lives in a cream panel; recreate that bg */
+  background: var(--cream-bg, #f6f1e8) !important;
+  padding: 0 !important;
+}
+.results { max-width: 100%; margin: 0; padding: 0; }
+/* Every doc-page starts on a fresh sheet and never splits across pages */
+.doc-page {
+  page-break-after: always;
+  break-after: page;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  box-shadow: none !important;
+  border: 1px solid var(--cream-line, #e2dac9) !important;
+  margin: 0 0 0.4in 0 !important;
+}
+.doc-page:last-child { page-break-after: auto; break-after: auto; }
+/* Keep cards, callouts, sensitivity blocks, reno/partner cards from splitting */
+.callout, .sens-block, .reno-card, .partner-card, .kpi-card,
+.value-range-card, .expense-comparison, .ec-row, .ec-advisory,
+.profile-summary-card, .debt-result-card, .hold-proj-card, .hypothetical-card {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+/* Tooltips are useless in print — show nothing on hover, strip the badge */
+.tip { display: none !important; }
+/* Ensure the dark back cover prints its background */
+.bric-back-cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+</style>
+</head>
+<body>
+<div class="panel-right" style="all:unset">
+  <div class="results">${clone.innerHTML}</div>
+</div>
+</body>
+</html>`;
+
+    const printWindow = window.open('', '_blank');
+    if(!printWindow){
+      alert('Your browser blocked the PDF window. Please allow pop-ups for this site and try again.');
+      return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(printHtml);
+    printWindow.document.close();
+    // Wait for fonts to load before printing so text metrics are correct
+    setTimeout(function(){
+      try { printWindow.focus(); printWindow.print(); }
+      catch(error) { console.warn('BRIC PDF print failed:', error); }
+    }, 700);
 }
 
 function getWorkspace(){
@@ -9306,6 +9585,15 @@ function buildValuationPayload(){
   };
   return {propertyId:getQueryParam('propertyId')||'',address,intent:bviSelectedIntent,intentLabel:BVI_INTENT_LABELS[bviSelectedIntent]||'',propertyType:propType,borough,submarket,units,sqft,grossIncome,vacancyRate,otherIncome,capRate:capRateInput,vacancyLoss,effectiveGross,totalExpenses,noi,baseVal,lowVal,highVal,pricePerUnit,pricePerSqft,expenseList,totalSavings,fileNames,residentialRentRoll:rr.residential,retailRentRoll:rr.retail,development,developmentUnlocked:isGrowthUnlocked(),debtInputs,buildingProfile,updatedAt:new Date().toISOString()};
 }
+// === TEMPORARY: Dashboard saving unlocked for everyone ===
+// Until login/accounts ship, anyone can save to the Dashboard. When auth is
+// added, flip this to false (or replace with a real entitlement check) to
+// re-gate saving behind paid access.
+const SAVING_UNLOCKED_FOR_ALL = true;
+function canSaveToDashboard(){
+  return SAVING_UNLOCKED_FOR_ALL || getAccessState().hasAccess;
+}
+
 function saveCurrentValuation(){
   if(!bviRequireIntent()) return;
   // Build the payload so we can save it (even partially)
@@ -9318,26 +9606,21 @@ function saveCurrentValuation(){
   }
   if(!payload.address || payload.address==='(No Address Entered)') return;
 
-  // EVERYONE — free or paid — gets a working draft saved to localStorage so they
-  // can't lose work mid-session. The draft is overwritten on every save. The
-  // Dashboard "My Properties" save only happens for paid users.
+  // Always save a local working draft so work is never lost mid-session.
   try {
     localStorage.setItem('bricValuationDraft', JSON.stringify(payload));
     const status=document.getElementById('saveStatus');
     if(status){
-      const access=getAccessState();
-      if(access.hasAccess){
-        status.textContent='Saved to Dashboard Properties · '+new Date().toLocaleString();
-      } else {
-        status.textContent='Draft saved locally · '+new Date().toLocaleTimeString()+' (Unlock to save to Dashboard)';
-      }
+      status.textContent= canSaveToDashboard()
+        ? 'Saved to Dashboard Properties · '+new Date().toLocaleString()
+        : 'Draft saved locally · '+new Date().toLocaleTimeString()+' (Unlock to save to Dashboard)';
     }
   } catch(err){
     console.warn('Local draft save failed:',err);
   }
 
-  // For paid users, also push to Dashboard Properties workspace
-  if(!getAccessState().hasAccess) return;
+  // Push to Dashboard Properties workspace when saving is allowed
+  if(!canSaveToDashboard()) return;
   const valuationId=getQueryParam('valuationId')||uid('val');
   const linked=upsertPropertyFromValuation(payload, valuationId);
   const ws=linked.ws; const property=linked.property;
@@ -9351,19 +9634,20 @@ function saveCurrentValuation(){
   localStorage.setItem('bricValuationTransfer', JSON.stringify(payload));
   const url=new URL(window.location.href); url.searchParams.set('propertyId', property.id); url.searchParams.set('valuationId', valuationId); history.replaceState({},'',url.toString());
 }
-// Explicit save (from Save to Dashboard button) — surfaces paywall if no access
+// Explicit save (from Save to Dashboard button). Saving is open to all for now;
+// when logins arrive, gate this via canSaveToDashboard() / requirePaidAccess.
 function saveCurrentValuationExplicit(){
   if(!bviRequireIntent()) return;
   const addressEl=document.getElementById('address');
   const address=(addressEl?.value||'').trim();
   if(!address || address==='(No Address Entered)'){alert('Add a property address before saving.');return;}
-  requirePaidAccess('save', ()=>{
-    // Force a save by bypassing the access check — we just verified it via requirePaidAccess
-    const _wasAccess = getAccessState().hasAccess;
-    if(_wasAccess) {
-      saveCurrentValuation();
-    }
-  });
+  if(canSaveToDashboard()){
+    saveCurrentValuation();
+    const status=document.getElementById('saveStatus');
+    if(status){ status.style.color='var(--green-tint)'; setTimeout(()=>{if(status)status.style.color='';},3000); }
+  } else {
+    requirePaidAccess('save', ()=>{ if(getAccessState().hasAccess) saveCurrentValuation(); });
+  }
 }
 
 // Manual draft save — explicitly invoked by the "Save Working Draft" button.
